@@ -50,6 +50,7 @@
     <Compile Include="Dto\DeployProjectBranch.cs" />
     <Compile Include="Dto\DeployServer.cs" />
     <Compile Include="Dto\DeployServerGroup.cs" />
+    <Compile Include="Exceptions\DuplicateObjectException.cs" />
     <Compile Include="ProjectManager.cs" />
     <Compile Include="Repository\IBuildRepository.cs" />
     <Compile Include="Repository\IFileRepository.cs" />

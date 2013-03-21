@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Raven.Client;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.RavenDB
@@ -19,6 +20,17 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBuild StoreBuild(string projectId, string projectBranchId, string fileId, Version version)
 		{
+			var existingItem = (from i in this.DocumentSession.Query<DeployBuild>()
+											.Customize(x=>x.WaitForNonStaleResultsAsOfLastWrite())
+								where i.ProjectId == projectId
+									&& i.ProjectBranchId == projectBranchId
+									&& i.FileId == fileId
+									&& i.Version == version
+								select i).FirstOrDefault();
+			if(existingItem != null)
+			{
+				throw new DuplicateObjectException<DeployBuild>(existingItem);
+			}
 			var item = new DeployBuild
 			{
 				ProjectId = projectId,

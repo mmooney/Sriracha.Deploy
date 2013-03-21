@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
 using NUnit.Framework;
 using Raven.Client;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Exceptions;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
@@ -52,7 +54,11 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			[Test]
 			public void DuplicateData_ThrowsError()
 			{
-				Assert.Fail();
+				var testData = TestData.Create(this.DocumentSession);
+
+				var result1 = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectBranchId, testData.FileId, testData.Version);
+
+				Assert.Throws<DuplicateObjectException<DeployBuild>>(delegate { testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectBranchId, testData.FileId, testData.Version); });
 			}
 		}
     }
