@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using NUnit.Framework;
 using Raven.Client;
 
@@ -17,11 +18,10 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			this.DocumentSession = EmbeddedRavenProvider.DocumentStore.OpenSession();
 		}
 
-		[TearDown
-		]
+		[TearDown]
 		public void TearDown()
 		{
-			using (this.DocumentSession) { };
+			using (this.DocumentSession) {};
 			this.DocumentSession = null;
 		}
 

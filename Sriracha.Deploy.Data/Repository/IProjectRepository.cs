@@ -10,7 +10,7 @@ namespace Sriracha.Deploy.Data.Repository
 	{
 		IEnumerable<DeployProject> GetProjectList();
 		DeployProject CreateProject(string projectName);
-		DeployProject GetProject(string id);
+		DeployProject GetProject(string projectId);
 		void UpdateProject(string projectId, string projectName);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		void DeleteProject(string projectId);

@@ -78,7 +78,7 @@ namespace Sriracha.Deploy.Data.Tests
 				};
 				repository.Setup(i => i.GetProject(project.Id)).Returns((DeployProject)null);
 				IProjectManager sut = new ProjectManager(repository.Object);
-				Assert.Throws<ArgumentException>( delegate { sut.GetProject(project.Id); });
+				Assert.Throws<KeyNotFoundException>(delegate { sut.GetProject(project.Id); });
 				repository.Verify(i => i.GetProject(It.IsAny<string>()), Times.Once());
 			}
 		}

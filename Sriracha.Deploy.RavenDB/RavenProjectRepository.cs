@@ -25,6 +25,10 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployProject CreateProject(string projectName)
 		{
+			if(string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
 			var project = new DeployProject
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -35,13 +39,26 @@ namespace Sriracha.Deploy.RavenDB
 			return project;
 		}
 
-		public DeployProject GetProject(string id)
+		public DeployProject GetProject(string projectId)
 		{
-			return _documentSession.Load<DeployProject>(id);
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			var item = _documentSession.Load<DeployProject>(projectId);
+			if(item == null)
+			{
+				throw new KeyNotFoundException("Project not found: " + projectId);
+			}
+			return item;
 		}
 
 		public DeployProjectBranch CreateBranch(string projectId, string branchName)
 		{
+			if(string.IsNullOrEmpty(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
 			var project = this.GetProject(projectId);
 			var branch = new DeployProjectBranch 
 			{
@@ -65,6 +82,10 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void UpdateProject(string projectId, string projectName)
 		{
+			if(string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
 			var item = this.GetProject(projectId);
 			item.ProjectName = projectName;
 			this._documentSession.SaveChanges();

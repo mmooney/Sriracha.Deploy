@@ -11,7 +11,7 @@ using Sriracha.Deploy.Data.Exceptions;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
-	public class RavenDBBuildRepositoryTests
+	public class RavenBuildRepositoryTests
     {
 		public class StoreBuild : RavenTestBase
 		{

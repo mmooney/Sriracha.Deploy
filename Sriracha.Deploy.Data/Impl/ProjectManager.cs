@@ -34,7 +34,7 @@ namespace Sriracha.Deploy.Data.Impl
 			var item = this.ProjectRepository.GetProject(projectId);
 			if(item == null)
 			{
-				throw new ArgumentException("No project found for ID: " + projectId);
+				throw new KeyNotFoundException("No project found for ID: " + projectId);
 			}
 			return item;
 		}
