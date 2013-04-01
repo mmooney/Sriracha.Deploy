@@ -50,12 +50,13 @@
 
     @RenderBody()
 
+    @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/js")
 	@Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+	@Scripts.Render("~/Scripts/angular.js")
+	@Scripts.Render("~/Scripts/angular-resource.js")
 	@Scripts.Render("~/Scripts/Sriracha/index.js")
-	@Scripts.Render("~/Scripts/Sriracha/base.js")
-	@Scripts.Render("~/Scripts/Sriracha/project.js")
+	@Scripts.Render("~/Scripts/Sriracha/ngSriracha.js")
 	</div>
 	<div class="container">
       <footer>
@@ -65,9 +66,3 @@
 </body>
 </html>
 
-<script type="text/javascript">
-	$(function () {
-		Sriracha.start();
-	});
-
-</script>

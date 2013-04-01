@@ -5,6 +5,7 @@ using System.Text;
 using Moq;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Tests
@@ -15,7 +16,7 @@ namespace Sriracha.Deploy.Data.Tests
 		public void CanCreateProject()
 		{
 			var repository = new Mock<IProjectRepository>();
-			var sut = new ProjectManager(repository.Object);
+			IProjectManager sut = new ProjectManager(repository.Object);
 			var project = new DeployProject
 			{
 				ProjectName = Guid.NewGuid().ToString(),
@@ -37,7 +38,7 @@ namespace Sriracha.Deploy.Data.Tests
 				Id = Guid.NewGuid().ToString()
 			};
 			repository.Setup(i=>i.GetProject(project.Id)).Returns(project);
-			var sut = new ProjectManager(repository.Object);
+			IProjectManager sut = new ProjectManager(repository.Object);
 			DeployProject result = sut.GetProject(project.Id);
 			Assert.AreEqual(project, result);
 			repository.Verify(i=>i.GetProject(project.Id), Times.Once());
@@ -55,7 +56,7 @@ namespace Sriracha.Deploy.Data.Tests
 				BranchName = Guid.NewGuid().ToString()
 			};
 			repository.Setup(i=>i.CreateBranch(branch.ProjectId, branch.BranchName)).Returns(branch);
-			var sut = new ProjectManager(repository.Object);
+			IProjectManager sut = new ProjectManager(repository.Object);
 			var result = sut.CreateBranch(branch.ProjectId, branch.BranchName);
 			Assert.AreEqual(branch, result);
 			repository.Verify(i=>i.CreateBranch(branch.ProjectId, branch.BranchName));

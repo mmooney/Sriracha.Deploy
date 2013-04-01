@@ -6,6 +6,7 @@ using MMDB.Shared;
 using Moq;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Tests
@@ -18,7 +19,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				public Mock<IFileRepository> FileRepository { get; set; }
 				public Mock<IBuildRepository> BuildRepository { get; set; }
-				public BuildManager Sut { get; set; }
+				public IBuildManager Sut { get; set; }
 				public byte[] FileData { get; set; }
 				public DeployFile DeployFile { get; set; }
 				public DeployBuild DeployBuild { get; set; }

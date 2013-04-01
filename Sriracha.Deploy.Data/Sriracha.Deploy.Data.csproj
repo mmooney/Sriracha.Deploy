@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildManager.cs" />
+    <Compile Include="IBuildManager.cs" />
+    <Compile Include="Impl\BuildManager.cs" />
     <Compile Include="Dto\DeployBuild.cs" />
     <Compile Include="Dto\DeployEnvironment.cs" />
     <Compile Include="Dto\DeployFile.cs" />
@@ -51,7 +52,8 @@
     <Compile Include="Dto\DeployServer.cs" />
     <Compile Include="Dto\DeployServerGroup.cs" />
     <Compile Include="Exceptions\DuplicateObjectException.cs" />
-    <Compile Include="ProjectManager.cs" />
+    <Compile Include="Impl\ProjectManager.cs" />
+    <Compile Include="IProjectManager.cs" />
     <Compile Include="Repository\IBuildRepository.cs" />
     <Compile Include="Repository\IFileRepository.cs" />
     <Compile Include="Repository\IProjectRepository.cs" />
