@@ -1,1 +1,18 @@
 ﻿<h2>Project {{project.ProjectName}} <a href="#/project/edit/{{project.Id}}">(edit)</a></h2> 
+<h3>Components</h3>
+<table class="table table-border table-striped" ng-show="project.ComponentList.length">
+	<thead>
+		<tr>
+			<th>Component Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="component in project.ComponentList">
+			<td>{{component.ComponentName}}</td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.ComponentList">
+	<em>No Components</em>
+</div>
+<a href="/#/project/{{project.Id}}/component/create">Create Component</a>

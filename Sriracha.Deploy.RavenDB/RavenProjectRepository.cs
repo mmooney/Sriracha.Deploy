@@ -80,7 +80,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public void UpdateProject(string projectId, string projectName)
+		public DeployProject UpdateProject(string projectId, string projectName)
 		{
 			if(string.IsNullOrEmpty(projectName))
 			{
@@ -89,6 +89,31 @@ namespace Sriracha.Deploy.RavenDB
 			var item = this.GetProject(projectId);
 			item.ProjectName = projectName;
 			this._documentSession.SaveChanges();
+			return item;
+		}
+
+
+		public DeployComponent CreateComponent(string projectId, string componentName)
+		{
+			var project = GetProject(projectId);
+			var item = new DeployComponent
+			{
+				Id = Guid.NewGuid().ToString(),
+				ProjectId = projectId,
+				ComponentName = componentName
+			};
+			project.ComponentList.Add(item);
+			this._documentSession.SaveChanges();
+			return item;
+		}
+
+		public DeployComponent UpdateComponent(string projectId, string componentId, string componentName)
+		{
+			var project = GetProject(projectId);
+			var item = project.ComponentList.Single(i=>i.Id == componentId);
+			item.ComponentName = componentName;
+			this._documentSession.SaveChanges();
+			return item;
 		}
 	}
 }

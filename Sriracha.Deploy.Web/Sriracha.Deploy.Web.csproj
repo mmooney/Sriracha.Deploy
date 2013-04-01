@@ -151,6 +151,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ComponentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Global.asax.cs">
@@ -425,6 +426,7 @@
     <Content Include="Scripts\Sriracha\ngSriracha.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\delete-project-template.html" />
+    <Content Include="Templates\edit-component-template.html" />
     <Content Include="Templates\edit-project-template.html" />
     <Content Include="Templates\project-list-template.html" />
     <Content Include="Templates\view-project-template.html" />

@@ -69,7 +69,7 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public void UpdateProject(string projectId, string projectName)
+		public DeployProject UpdateProject(string projectId, string projectName)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -79,7 +79,17 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			this.ProjectRepository.UpdateProject(projectId, projectName);
+			return this.ProjectRepository.UpdateProject(projectId, projectName);
+		}
+
+		public DeployComponent CreateComponent(string projectId, string componentName)
+		{
+			return this.ProjectRepository.CreateComponent(projectId, componentName);
+		}
+
+		public DeployComponent UpdateComponent(string projectId, string componentId, string componentName)
+		{
+			return this.ProjectRepository.UpdateComponent(projectId, componentId, componentName);
 		}
 	}
 }
