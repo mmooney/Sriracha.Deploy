@@ -18,16 +18,37 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployProject CreateProject(string projectName)
 		{
+			if(string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
 			return this.ProjectRepository.CreateProject(projectName);
 		}
 
 		public DeployProject GetProject(string projectId)
 		{
-			return this.ProjectRepository.GetProject(projectId);
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			var item = this.ProjectRepository.GetProject(projectId);
+			if(item == null)
+			{
+				throw new ArgumentException("No project found for ID: " + projectId);
+			}
+			return item;
 		}
 
 		public DeployProjectBranch CreateBranch(string projectId, string branchName)
 		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			if(string.IsNullOrEmpty(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
 			return this.ProjectRepository.CreateBranch(projectId, branchName);
 		}
 
@@ -40,12 +61,24 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public void DeleteProject(string projectId)
 		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
 			this.ProjectRepository.DeleteProject(projectId);
 		}
 
 
 		public void UpdateProject(string projectId, string projectName)
 		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			if(string.IsNullOrEmpty(projectName)) 
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
 			this.ProjectRepository.UpdateProject(projectId, projectName);
 		}
 	}
