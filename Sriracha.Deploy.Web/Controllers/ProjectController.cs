@@ -4,41 +4,55 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Web.Controllers
 {
     public class ProjectController : ApiController
     {
+		private readonly IProjectManager _projectMananger;
+
+		public ProjectController(IProjectManager projectManager)
+		{
+			_projectMananger = DIHelper.VerifyParameter(projectManager);	
+		}
+
         // GET api/project
         public IEnumerable<DeployProject> Get()
         {
-            return new DeployProject[]
-			{
-				new DeployProject { Id="1", ProjectName="test project 1" },
-				new DeployProject { Id="2", ProjectName="test project 2" }
-			};
+			return this._projectMananger.GetProjectList();
         }
 
         // GET api/project/5
-        public DeployProject Get(int id)
+        public DeployProject Get(string id)
         {
-			return new DeployProject { Id=id.ToString(), ProjectName="test project " + id.ToString() };
+			return this._projectMananger.GetProject(id);
         }
 
         // POST api/project
-        public void Post([FromBody]string value)
+        public void Post(DeployProject project)
         {
+			if(string.IsNullOrEmpty(project.Id))
+			{
+				this._projectMananger.CreateProject(project.ProjectName);
+			}
+			else 
+			{
+				this._projectMananger.UpdateProject(project.Id, project.ProjectName);
+			}
         }
 
         // PUT api/project/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, DeployProject project)
         {
+			throw new NotImplementedException();
         }
 
         // DELETE api/project/5
-        public void Delete(int id)
+        public void Delete(string id)
         {
+			this._projectMananger.DeleteProject(id);
         }
     }
 }

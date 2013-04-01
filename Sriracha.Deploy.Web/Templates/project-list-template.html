@@ -1,15 +1,18 @@
-﻿<table class="table table-striped">
+﻿<h2>Project List</h2>
+<table class="table table-striped" ng-show="projectList.length">
 	<thead>
 		<tr>
-			<th>ID</th>
 			<th>Name</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="project in projectList">
-			<td>{{project.Id}}</td>
-			<td>{{project.ProjectName}}</td>
+			<td><a href="#/project/{{project.Id}}">{{project.ProjectName}}</a></td>
+			<td><button class="btn btn-danger" ng-click="delete(project)" data-="">Delete</button></td>
 		</tr>
-
 	</tbody>
 </table>
+<div ng-hide="projectList.length">
+	No projects yet
+</div>
+<a href="#/project/create">Create Project</a>

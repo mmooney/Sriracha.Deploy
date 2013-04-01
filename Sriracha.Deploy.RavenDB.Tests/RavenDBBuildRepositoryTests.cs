@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				public string ProjectBranchId { get; set; }
 				public string FileId { get; set; }
 				public Version Version { get; set; }
-				public RavenDBBuildRepository Sut { get; set; }
+				public RavenBuildRepository Sut { get; set; }
 
 				public static TestData Create(IDocumentSession session)
 				{
@@ -31,7 +31,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 						ProjectBranchId = Guid.NewGuid().ToString(),
 						FileId = Guid.NewGuid().ToString(),
 						Version = TempTestDataHelper.RandomVersion(),
-						Sut = new RavenDBBuildRepository(session)
+						Sut = new RavenBuildRepository(session)
 					};
 					return testData;
 				}

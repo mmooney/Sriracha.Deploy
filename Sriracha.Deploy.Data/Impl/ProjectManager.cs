@@ -30,5 +30,23 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			return this.ProjectRepository.CreateBranch(projectId, branchName);
 		}
+
+
+		public IEnumerable<DeployProject> GetProjectList()
+		{
+			return this.ProjectRepository.GetProjectList();
+		}
+
+
+		public void DeleteProject(string projectId)
+		{
+			this.ProjectRepository.DeleteProject(projectId);
+		}
+
+
+		public void UpdateProject(string projectId, string projectName)
+		{
+			this.ProjectRepository.UpdateProject(projectId, projectName);
+		}
 	}
 }

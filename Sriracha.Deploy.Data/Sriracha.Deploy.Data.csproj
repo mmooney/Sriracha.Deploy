@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DIHelper.cs" />
     <Compile Include="IBuildManager.cs" />
     <Compile Include="Impl\BuildManager.cs" />
     <Compile Include="Dto\DeployBuild.cs" />

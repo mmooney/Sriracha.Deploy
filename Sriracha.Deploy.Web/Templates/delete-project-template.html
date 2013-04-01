@@ -1,0 +1,10 @@
+﻿<div class="alert alert-error">
+	Are you sure you want to delete this project?  This cannot be undone!
+</div>
+<div>
+	<b>Project Name:</b>
+	{{project.ProjectName}}
+</div>
+
+<button class="btn" ng-click="cancel()">Cancel</button>
+<button class="btn btn-danger" ng-click="delete()">Delete</button>
