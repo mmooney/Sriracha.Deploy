@@ -139,11 +139,11 @@ namespace Sriracha.Deploy.Data.Tests
 					new DeployProject { Id = Guid.NewGuid().ToString(), ProjectName = Guid.NewGuid().ToString() },
 					new DeployProject { Id = Guid.NewGuid().ToString(), ProjectName = Guid.NewGuid().ToString() }
 				};
-				repository.Setup(i=>i.GetProjectList()).Returns(projectList);
+				repository.Setup(i=>i.GetProjectList(null)).Returns(projectList);
 				IProjectManager sut = new ProjectManager(repository.Object);
 				var result = sut.GetProjectList();
 				Assert.AreEqual(projectList.Count, result.Count());
-				repository.Verify(i=>i.GetProjectList(), Times.Once());
+				repository.Verify(i=>i.GetProjectList(null), Times.Once());
 			}
 		}
 

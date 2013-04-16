@@ -1,14 +1,14 @@
-﻿<h2>Project {{project.ProjectName}} <a href="#/project/edit/{{project.Id}}">(edit)</a></h2> 
+﻿<h2>Project {{project.projectName}} <a href="#/project/edit/{{project.id}}">(edit)</a></h2> 
 <h3>Components</h3>
-<table class="table table-border table-striped" ng-show="project.ComponentList.length">
+<table class="table table-border table-striped" ng-show="project.componentList.length">
 	<thead>
 		<tr>
 			<th>Component Name</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="component in project.ComponentList">
-			<td><a href="/#/project/{{project.Id}}/component/{{component.Id}}">{{component.ComponentName}}</a></td>
+		<tr ng-repeat="component in project.componentList">
+			<td><a href="/#/project/{{project.id}}/component/{{component.id}}">{{component.componentName}}</a></td>
 			<td><button class="btn btn-danger" ng-click="delete(component)">Delete</button></td>
 		</tr>
 	</tbody>
@@ -16,4 +16,4 @@
 <div ng-hide="project.ComponentList">
 	<em>No Components</em>
 </div>
-<a href="/#/project/{{project.Id}}/component/create">Create Component</a>
+<a href="/#/project/{{project.id}}/component/create">Create Component</a>

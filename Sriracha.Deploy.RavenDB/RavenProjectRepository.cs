@@ -19,9 +19,16 @@ namespace Sriracha.Deploy.RavenDB
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public IEnumerable<DeployProject> GetProjectList()
+		public IEnumerable<DeployProject> GetProjectList(string[] idList = null)
 		{
-			return _documentSession.Query<DeployProject>();
+			if(idList != null && idList.Any())
+			{
+				return _documentSession.Query<DeployProject>().Where(i=>idList.Contains(i.Id));
+			}
+			else 
+			{
+				return _documentSession.Query<DeployProject>();
+			}
 		}
 
 		public DeployProject CreateProject(string projectName)

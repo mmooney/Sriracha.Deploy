@@ -6,19 +6,19 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "/templates/project-list-template.html",
 			controller: "ProjectListController"
 		})
-		.when("/project/create", {
+		.when(Sriracha.Navigation.Project.CreateUrl, {
 			templateUrl: "templates/edit-project-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/:projectId", {
+		.when(Sriracha.Navigation.Project.ViewUrl, {
 			templateUrl: "templates/view-project-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/edit/:projectId", {
+		.when(Sriracha.Navigation.Project.EditUrl, {
 			templateUrl: "templates/edit-project-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/delete/:projectId", {
+		.when(Sriracha.Navigation.Project.DeleteUrl, {
 			templateUrl: "templates/delete-project-template.html",
 			controller: "ProjectController"
 		})
@@ -61,9 +61,8 @@ ngSriracha.directive("taskConfig", function () {
 
 ngSriracha.controller("ProjectListController", function ($scope, $routeParams, SrirachaResource) {
 	$scope.projectList = SrirachaResource.project.query({});
-
-	$scope.delete = function (project) {
-		window.location.href = "/#/project/delete/" + project.Id;
+	$scope.goToDeleteProject = function (project) {
+		Sriracha.Navigation.Project.Delete(project.id);
 	}
 });
 
@@ -91,19 +90,42 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 		$scope.project = new SrirachaResource.project({});
 	}
 
-	$scope.cancel = function () {
-		window.history.back();
+	$scope.cancelDeleteProject = function() {
+		Sriracha.Navigation.Project.List();
+	}
+
+	$scope.deleteProject = function () {
+		SrirachaResource.project.delete(
+			{ id: $routeParams.projectId },
+			function () {
+				Sriracha.Navigation.Project.List();
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	};
+	
+	$scope.cancelProject = function () {
+		Sriracha.Navigation.Project.List();
+	};
+
+	$scope.saveProject = function () {
+		$scope.project.$save(
+			$scope.project,
+			function (item) {
+				Sriracha.Navigation.Project.View(item.id);
+			},
+			function (error) {
+				$scope.reportError("ERROR: " + JSON.stringify(error));
+			}
+		);
 	};
 
 	$scope.reportError = function (error) {
 		alert(error);
 	};
 
-	$scope.saveProject = function () {
-		$scope.project.$save($scope.project, function (x) {
-			alert(x);
-		});
-	};
 
 	$scope.save = function () {
 		event.preventDefault();
@@ -129,9 +151,5 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 		return false;
 	};
 
-	$scope.delete = function () {
-		SrirachaResource.project.delete({ id: $routeParams.projectId });
-		window.history.back();
-	};
 });
 

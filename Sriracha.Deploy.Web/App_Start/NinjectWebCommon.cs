@@ -8,7 +8,10 @@ namespace Sriracha.Deploy.Web.App_Start
 	using System.Web.Http;
 	using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 	using Ninject;
+	using Ninject.Planning.Bindings;
 	using Ninject.Web.Common;
+	using ServiceStack.Configuration;
+	using ServiceStack.ContainerAdapter.Ninject;
 	using Sriracha.Deploy.Data;
 	using Sriracha.Deploy.Data.Impl;
 	using Sriracha.Deploy.Web.Helpers;
@@ -34,21 +37,28 @@ namespace Sriracha.Deploy.Web.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
-        /// <summary>
+
+		public static IContainerAdapter CreateServiceStackAdapter()
+		{
+			if (bootstrapper.Kernel == null)
+			{
+				Start();
+			}
+			return new NinjectContainerAdapter(bootstrapper.Kernel);
+		}
+		        /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+			
+			kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
             
             RegisterServices(kernel);
 
-			GlobalConfiguration.Configuration.DependencyResolver = new NinjectResolver(kernel); 
-			
 			return kernel;
         }
 

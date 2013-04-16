@@ -8,7 +8,7 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IProjectRepository
 	{
-		IEnumerable<DeployProject> GetProjectList();
+		IEnumerable<DeployProject> GetProjectList(string[] idList=null);
 		DeployProject CreateProject(string projectName);
 		DeployProject GetProject(string projectId);
 		DeployProject UpdateProject(string projectId, string projectName);
