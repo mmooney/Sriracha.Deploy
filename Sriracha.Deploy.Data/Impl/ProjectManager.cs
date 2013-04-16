@@ -82,14 +82,29 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.UpdateProject(projectId, projectName);
 		}
 
+		public IEnumerable<DeployComponent> GetComponentList(string projectId)
+		{
+			return _projectRepository.GetComponentList(projectId);
+		}
+
 		public DeployComponent CreateComponent(string projectId, string componentName)
 		{
 			return this._projectRepository.CreateComponent(projectId, componentName);
 		}
 
-		public DeployComponent UpdateComponent(string projectId, string componentId, string componentName)
+		public DeployComponent GetComponent(string componentId)
 		{
-			return this._projectRepository.UpdateComponent(projectId, componentId, componentName);
+			return _projectRepository.GetComponent(componentId);
+		}
+
+		public void DeleteComponent(string componentId)
+		{
+			_projectRepository.DeleteComponent(componentId);
+		}
+
+		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName)
+		{
+			return this._projectRepository.UpdateComponent(componentId, projectId, componentName);
 		}
 
 
@@ -146,5 +161,6 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return this._projectRepository.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions);
 		}
+
 	}
 }

@@ -8,8 +8,9 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="component in project.componentList">
-			<td><a href="/#/project/{{project.id}}/component/{{component.id}}">{{component.componentName}}</a></td>
-			<td><button class="btn btn-danger" ng-click="delete(component)">Delete</button></td>
+			<td><a ng-href="{{getViewComponentUrl(component)}}">{{component.componentName}}</a></td>
+			<td><a class="btn btn-primary" ng-href="{{getEditComponentUrl(component)}}">Edit</a></td>
+			<td><a class="btn btn-danger" ng-href="{{getDeleteComponentUrl(component)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>

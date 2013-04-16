@@ -101,6 +101,12 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
+		public IEnumerable<DeployComponent> GetComponentList(string projectId)
+		{
+			var project = GetProject(projectId);
+			return project.ComponentList;
+		}
+
 		public DeployComponent CreateComponent(string projectId, string componentName)
 		{
 			var project = GetProject(projectId);
@@ -115,7 +121,21 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponent UpdateComponent(string projectId, string componentId, string componentName)
+		public DeployComponent GetComponent(string componentId)
+		{
+			if(string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing Component ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
+			if(project == null)
+			{
+				throw new KeyNotFoundException("No project found for component ID " + componentId);
+			}
+			return project.ComponentList.First(i=>i.Id == componentId);
+		}
+
+		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName)
 		{
 			var project = GetProject(projectId);
 			var item = project.ComponentList.Single(i=>i.Id == componentId);
@@ -124,6 +144,21 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
+		public void DeleteComponent(string componentId)
+		{
+			if (string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing Component ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.Id == componentId));
+			if (project == null)
+			{
+				throw new KeyNotFoundException("No project found for component ID " + componentId);
+			}
+			var component = project.ComponentList.First(i => i.Id == componentId);
+			project.ComponentList.Remove(component);
+			this._documentSession.SaveChanges();
+		}
 
 		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions) 
 		{

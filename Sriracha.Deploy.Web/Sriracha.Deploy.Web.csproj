@@ -174,6 +174,7 @@
     <Compile Include="Helpers\RavenNinjectModule.cs" />
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ComponentService.cs" />
     <Compile Include="Services\ProjectService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -425,7 +426,9 @@
     <Content Include="Scripts\angular\i18n\angular-locale_zh.js" />
     <Content Include="Scripts\angular\jstd-scenario-adapter-config.js" />
     <Content Include="Scripts\angular\jstd-scenario-adapter.js" />
-    <Content Include="Scripts\Sriracha\index.js" />
+    <Content Include="Scripts\jquery\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery\jquery.blockUI.min.js" />
+    <Content Include="Scripts\sriracha\navigation.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\jquery\jquery-1.9.1.js" />
@@ -441,10 +444,11 @@
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\Sriracha\ngSriracha.js" />
+    <Content Include="Scripts\sriracha\ngSriracha.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
+    <Content Include="Templates\delete-component-template.html" />
     <Content Include="Templates\edit-deploymentstep-template.html" />
     <Content Include="Templates\edit-deploymentstep-options-template.html" />
     <Content Include="Templates\view-component-template.html" />

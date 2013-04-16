@@ -1,4 +1,5 @@
-﻿<h2>Project {{project.ProjectName}} - {{component.ComponentName}} Component <a href="#/project/edit/{{project.Id}}/component/{{component.Id}}">(edit)</a> </h2>
+﻿<h2>Project {{project.projectName}} - {{component.componentName}} Component 
+	<a ng-href="{{getEditComponentUrl(component)}}">(edit)</a> </h2>
 <h3>Deployment Steps</h3>
 <table class="table table-border table-striped" ng-show="project.DeploymentStepList.length">
 	<thead>

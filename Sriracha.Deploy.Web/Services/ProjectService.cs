@@ -12,22 +12,22 @@ namespace Sriracha.Deploy.Web.Services
 {
 	public class ProjectService : Service
 	{
-		private readonly IProjectRepository _projectRepository;
+		private readonly IProjectManager _projectManager;
 
-		public ProjectService(IProjectRepository projectRepository)
+		public ProjectService(IProjectManager projectRepository)
 		{
-			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_projectManager = DIHelper.VerifyParameter(projectRepository);
 		}
 
 		public object Get(DeployProject request)
 		{
 			if(request != null && !string.IsNullOrEmpty(request.Id))
 			{
-				return _projectRepository.GetProject(request.Id);				
+				return _projectManager.GetProject(request.Id);				
 			}
 			else 
 			{
-				return _projectRepository.GetProjectList();
+				return _projectManager.GetProjectList();
 			}
 		}
 
@@ -35,17 +35,17 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if(string.IsNullOrEmpty(project.Id))
 			{
-				return _projectRepository.CreateProject(project.ProjectName);
+				return _projectManager.CreateProject(project.ProjectName);
 			}
 			else 
 			{
-				return _projectRepository.UpdateProject(project.Id, project.ProjectName);
+				return _projectManager.UpdateProject(project.Id, project.ProjectName);
 			}
 		}
 
 		public void Delete(DeployProject project) 
 		{
-			_projectRepository.DeleteProject(project.Id);
+			_projectManager.DeleteProject(project.Id);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Sriracha.Deploy.Web.App_Start
 
 	public class AppHost
 		: AppHostBase
-	{		
+	{
 		public AppHost() //Tell ServiceStack the name and where to find your web services
 			: base("StarterTemplate ASP.NET Host", typeof(HelloService).Assembly) { }
 
@@ -48,10 +48,10 @@ namespace Sriracha.Deploy.Web.App_Start
 		
 			//Configure User Defined REST Paths
 			Routes
-			  .Add<Hello>("/hello")
-			  .Add<Hello>("/hello/{Name*}")
-			  .Add<DeployProject>("/project")
-			  .Add<DeployProject>("/project/{id*}");
+				.Add<DeployComponent>("/project/{projectId}/component")
+				.Add<DeployComponent>("/project/{projectId}/component/{id*}")
+				.Add<DeployProject>("/project")
+				.Add<DeployProject>("/project/{id*}");
 
 			container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
 			

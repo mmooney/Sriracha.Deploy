@@ -22,12 +22,20 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/delete-project-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/:projectId/component/create", {
+		.when(Sriracha.Navigation.Component.CreateUrl, {
 			templateUrl: "templates/edit-component-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/:projectId/component/:componentId", {
+		.when(Sriracha.Navigation.Component.ViewUrl, {
 			templateUrl: "templates/view-component-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.Component.EditUrl, {
+			templateUrl: "templates/edit-component-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.Component.DeleteUrl, {
+			templateUrl: "templates/delete-component-template.html",
 			controller: "ProjectController"
 		})
 		.when("/project/:projectId/component/:componentId/step/create", {
@@ -69,9 +77,9 @@ ngSriracha.controller("ProjectListController", function ($scope, $routeParams, S
 ngSriracha.controller("ProjectController", function ($scope, $routeParams, SrirachaResource) {
 	if ($routeParams.projectId) {
 		$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
-			if ($routeParams.componentId && $scope.project.ComponentList) {
-				_.each($scope.project.ComponentList, function (item) {
-					if (item.Id == $routeParams.componentId) {
+			if ($routeParams.componentId && $scope.project.componentList) {
+				_.each($scope.project.componentList, function (item) {
+					if (item.id == $routeParams.componentId) {
 						$scope.component = new SrirachaResource.component(item);
 						
 						$scope.taskMetadataList = SrirachaResource.taskMetadata.query({}, function () {
@@ -122,34 +130,55 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 		);
 	};
 
+	$scope.cancelComponent = function() {
+		Sriracha.Navigation.Project.View($routeParams.projectId);
+	}
+
+	$scope.saveComponent = function () {
+		$scope.component.$save(
+			$scope.component,
+			function () {
+				Sriracha.Navigation.Project.View($routeParams.projectId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+
+	$scope.deleteComponent = function () {
+		SrirachaResource.component.delete(
+			{
+				projectId: $routeParams.projectId,
+				id: $routeParams.componentId
+			},
+			function () {
+				Sriracha.Navigation.Project.View($routeParams.projectId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+
 	$scope.reportError = function (error) {
 		alert(error);
 	};
 
-
-	$scope.save = function () {
-		event.preventDefault();
-		if ($scope.deploymentStep) {
-			$scope.deploymentStep.componentId = $routeParams.componentId;
-			$scope.deploymentStep.projectId = $routeParams.projectId;
-			var item = new SrirachaResource.deploymentStep($scope.deploymentStep);
-			item.$save($scope.deploymentStep, function () {
-				window.history.back();
-			});
+	$scope.getViewComponentUrl = function (component) {
+		if (component) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Component.ViewUrl, { projectId: component.projectId, componentId: component.id });
 		}
-		else if ($scope.component) {
-			$scope.projectId = $routeParams.projectId;
-			$scope.component.$save($scope.component, function () {
-				window.history.back();
-			});
+	}
+	$scope.getEditComponentUrl = function (component) {
+		if (component) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Component.EditUrl, { projectId: component.projectId, componentId: component.id });
 		}
-		else {
-			$scope.project.$save($scope.project, function () {
-				window.history.back();
-			});
+	}
+	$scope.getDeleteComponentUrl = function (component) {
+		if (component) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Component.DeleteUrl, { projectId: component.projectId, componentId: component.id });
 		}
-		return false;
-	};
-
+	}
 });
 

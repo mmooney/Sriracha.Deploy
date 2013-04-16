@@ -15,8 +15,11 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		void DeleteProject(string projectId);
 
+		IEnumerable<DeployComponent> GetComponentList(string projectId);
 		DeployComponent CreateComponent(string projectId, string componentName);
+		DeployComponent GetComponent(string componentId);
 		DeployComponent UpdateComponent(string projectId, string componentId, string componentName);
+		void DeleteComponent(string componentId);
 
 		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions);
 		DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions);
