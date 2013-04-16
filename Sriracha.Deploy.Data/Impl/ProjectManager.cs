@@ -107,8 +107,12 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.UpdateComponent(componentId, projectId, componentName);
 		}
 
+		public List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId)
+		{
+			return this._projectRepository.GetDeploymentStepList(componentId);
+		}
 
-		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions)
+		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -126,14 +130,20 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Task Type Name");
 			}
-			if(taskOptions == null)
+			if(string.IsNullOrEmpty(taskOptionsJson))
 			{
 				throw new ArgumentNullException("Missing Task Options");
 			}
-			return this._projectRepository.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions);
+			return this._projectRepository.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson);
 		}
 
-		public DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions)
+
+		public DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId)
+		{
+			return this._projectRepository.GetDeploymentStep(deploymentStepId);
+		}
+
+		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -155,11 +165,16 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Task Type Name");
 			}
-			if (taskOptions == null)
+			if (string.IsNullOrEmpty(taskOptionsJson))
 			{
 				throw new ArgumentNullException("Missing Task Options");
 			}
-			return this._projectRepository.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions);
+			return this._projectRepository.UpdateDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson);
+		}
+
+		public void DeleteDeploymentStep(string deploymentStepId)
+		{
+			this._projectRepository.DeleteDeploymentStep(deploymentStepId);
 		}
 
 	}

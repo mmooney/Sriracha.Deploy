@@ -1,7 +1,7 @@
 ﻿<h2>Project {{project.projectName}} - {{component.componentName}} Component 
 	<a ng-href="{{getEditComponentUrl(component)}}">(edit)</a> </h2>
 <h3>Deployment Steps</h3>
-<table class="table table-border table-striped" ng-show="project.DeploymentStepList.length">
+<table class="table table-border table-striped" ng-show="component.deploymentStepList.length">
 	<thead>
 		<tr>
 			<th>Name</th>
@@ -9,13 +9,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="deploymentStep in component.DeploymentStepList">
-			<td><a href="/#/project/{{project.Id}}/component/{{component.Id}}/step/{{deploymentStep.Id}}">{{deploymentStep.DeploymentStepName}}</a></td>
-			<td><button class="btn btn-danger" ng-click="delete(deploymentStep)">Delete</button></td>
+		<tr ng-repeat="deploymentStep in component.deploymentStepList">
+			<td><a ng-href="{{getEditDeploymentStepUrl(deploymentStep)}}">{{deploymentStep.stepName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="{{getDeleteDeploymentStepUrl(deploymentStep)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
-<div ng-hide="project.DeploymentStepList.length">
+<div ng-hide="component.deploymentStepList.length">
 	<em>No Deployment Steps</em>
 </div>
-<a href="/#/project/{{project.Id}}/component/{{component.Id}}/step/create">Create Deployment Step</a>
+<a ng-href="{{getCreateDeploymentStepUrl(component)}}" class="btn btn-primary">Create Deployment Step</a>

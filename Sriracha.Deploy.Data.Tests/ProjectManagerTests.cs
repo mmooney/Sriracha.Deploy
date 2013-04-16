@@ -219,23 +219,23 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
-				projectRepository.Setup(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions))
+				projectRepository.Setup(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson))
 									.Returns(new DeployComponentDeploymentStep
 										{
 											Id = Guid.NewGuid().ToString(),
 											StepName = stepName,
 											TaskTypeName = taskTypeName,
-											TaskOptionJSON = Guid.NewGuid().ToString()
+											TaskOptionsJson = taskOptionsJson
 										});
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				var result = sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions);
+				var result = sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(stepName, result.StepName);
-				projectRepository.Verify(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions), Times.Once());
+				projectRepository.Verify(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson), Times.Once());
 			}
 
 			[Test]
@@ -245,12 +245,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(()=>sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(()=>sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -260,12 +260,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = null;
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -275,12 +275,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = Guid.NewGuid().ToString();
 				string stepName = null;
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -290,12 +290,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = null;
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 
@@ -306,12 +306,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string componentId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				object taskOptions = null;
+				string taskOptionsJson = null;
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 		}
 
@@ -329,24 +329,24 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
-				projectRepository.Setup(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions))
+				projectRepository.Setup(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson))
 									.Returns(new DeployComponentDeploymentStep
 									{
 										Id = deploymentStepId,
 										StepName = stepName,
 										TaskTypeName = taskTypeName,
-										TaskOptionJSON = Guid.NewGuid().ToString()
+										TaskOptionsJson = Guid.NewGuid().ToString()
 									});
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				var result = sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions);
+				var result = sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(stepName, result.StepName);
 
-				projectRepository.Verify(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions), Times.Once());
+				projectRepository.Verify(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson), Times.Once());
 			}
 
 			[Test]
@@ -357,12 +357,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -373,12 +373,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -389,12 +389,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = null;
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -405,12 +405,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = null;
 				string taskTypeName = typeof(TestTaskType).ToString();
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 			[Test]
@@ -421,12 +421,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = null;
-				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				string taskOptionsJson = Guid.NewGuid().ToString();
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 
 
@@ -438,12 +438,12 @@ namespace Sriracha.Deploy.Data.Tests
 				string deploymentStepId = Guid.NewGuid().ToString();
 				string stepName = Guid.NewGuid().ToString();
 				string taskTypeName = typeof(TestTaskType).ToString();
-				object taskOptions = null;
+				string taskOptionsJson = null;
 				var projectRepository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(projectRepository.Object);
 
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
-				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptionsJson));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 			}
 		}
 

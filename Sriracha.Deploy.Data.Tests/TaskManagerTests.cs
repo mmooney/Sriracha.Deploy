@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Tests
 				Assert.AreEqual(data.Count, result.Count);
 				foreach(var metadata in result)
 				{
-					Assert.Contains(metadata.TaskType, data);
+					Assert.Contains(Type.GetType(metadata.TaskTypeName), data);
 				}
 			}
 
@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask)), Times.Once());
 				Assert.AreEqual(1, result.Count);
-				Assert.AreEqual(typeof(TestDeployTask1), result[0].TaskType);
+				Assert.AreEqual(typeof(TestDeployTask1).FullName, result[0].TaskTypeName);
 			}
 
 			[Test]
@@ -77,7 +77,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask)), Times.Once());
 				Assert.AreEqual(1, result.Count);
-				Assert.AreEqual(typeof(TestDeployTask1), result[0].TaskType);
+				Assert.AreEqual(typeof(TestDeployTask1).FullName, result[0].TaskTypeName);
 			}
 		}
 	}

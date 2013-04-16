@@ -8,7 +8,6 @@ namespace Sriracha.Deploy.Data.Tasks
 	public class TaskMetadata
 	{
 		public string TaskTypeName { get; set; }
-		public Type TaskType { get; set; }
 
 		public IDeployTask CreateTask()
 		{

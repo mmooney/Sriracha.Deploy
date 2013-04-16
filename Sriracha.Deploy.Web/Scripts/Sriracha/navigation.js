@@ -46,10 +46,6 @@ Sriracha.Navigation = {
 	},
 
 	Component: {
-		//ProjectUrl: Sriracha.Navigation.Project.ViewUrl,
-		//Project: function (projectId) {
-		//	Sriracha.Navigation.Project.View(projectId);
-		//},
 		CreateUrl: "/project/:projectId/component/create",
 		Create: function (projectId) {
 			Sriracha.Navigation.GoTo(this.CreateUrl, { projectId: projectId });
@@ -65,6 +61,21 @@ Sriracha.Navigation = {
 		DeleteUrl: "/project/:projectId/component/delete/:componentId",
 		Delete: function (projectId, componentId) {
 			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, componentId: componentId });
+		}
+	},
+
+	DeploymentStep: {
+		CreateUrl: "/project/:projectId/component/:componentId/step/create",
+		Create: function (projectId, componentId) {
+			Sriracha.Navigation.GoTo(this.CreateUrl, { projectId: projectId, componentId: componentId });
+		},
+		EditUrl: "/project/:projectId/component/:componentId/step/edit/:deploymentStepId",
+		Edit: function (projectId, componentId, deploymentStepId) {
+			Sriracha.Navigation.GoTo(this.EditUrl, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId });
+		},
+		DeleteUrl: "/project/:projectId/component/:componentId/step/delete/:deploymentStepId",
+		Delete: function (projectId, componentId, deploymentStepId) {
+			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId });
 		}
 	}
 

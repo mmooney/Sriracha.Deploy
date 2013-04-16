@@ -21,8 +21,11 @@ namespace Sriracha.Deploy.Data
 		DeployComponent UpdateComponent(string componentId, string projectId, string componentName);
 		void DeleteComponent(string componentId);
 
-		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions);
-		DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions);
+		List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId);
+		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
+		DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId);
+		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
+		void DeleteDeploymentStep(string deploymentStepId);
 
 	}
 }

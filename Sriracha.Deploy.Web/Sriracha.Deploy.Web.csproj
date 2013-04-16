@@ -166,7 +166,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\WebServiceExamples.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -175,7 +174,9 @@
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ComponentService.cs" />
+    <Compile Include="Services\DeploymentStepService.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\TaskMetadataService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-responsive.css" />
@@ -252,7 +253,6 @@
     <Content Include="Content\Site.css" />
     <None Include="Scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="jqunback-1.51.min.js" />
-    <Content Include="README.txt" />
     <Content Include="Scripts\angular\angular-bootstrap-prettify.js" />
     <Content Include="Scripts\angular\angular-bootstrap-prettify.min.js" />
     <Content Include="Scripts\angular\angular-bootstrap.js" />
@@ -448,6 +448,7 @@
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
+    <Content Include="Templates\delete-deploymentstep-template.html" />
     <Content Include="Templates\delete-component-template.html" />
     <Content Include="Templates\edit-deploymentstep-template.html" />
     <Content Include="Templates\edit-deploymentstep-options-template.html" />

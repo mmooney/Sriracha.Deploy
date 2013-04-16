@@ -13,6 +13,8 @@ using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceInterface.ServiceModel;
 using ServiceStack.WebHost.Endpoints;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Web.Services;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
 
@@ -39,7 +41,7 @@ namespace Sriracha.Deploy.Web.App_Start
 		: AppHostBase
 	{
 		public AppHost() //Tell ServiceStack the name and where to find your web services
-			: base("StarterTemplate ASP.NET Host", typeof(HelloService).Assembly) { }
+			: base("Sriracha REST API", typeof(ProjectService).Assembly) { }
 
 		public override void Configure(Funq.Container container)
 		{
@@ -48,10 +50,13 @@ namespace Sriracha.Deploy.Web.App_Start
 		
 			//Configure User Defined REST Paths
 			Routes
+				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step")
+				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step/{id*}")
 				.Add<DeployComponent>("/project/{projectId}/component")
 				.Add<DeployComponent>("/project/{projectId}/component/{id*}")
 				.Add<DeployProject>("/project")
-				.Add<DeployProject>("/project/{id*}");
+				.Add<DeployProject>("/project/{id*}")
+				.Add<TaskMetadata>("/taskMetadata");
 
 			container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
 			
@@ -61,9 +66,6 @@ namespace Sriracha.Deploy.Web.App_Start
 
 			//Enable Authentication
 			//ConfigureAuth(container);
-
-			//Register all your dependencies
-			container.Register(new TodoRepository());			
 
 			//Set MVC to use the same Funq IOC as ServiceStack
 			//ControllerBuilder.Current.SetControllerFactory(new FunqControllerFactory(container));

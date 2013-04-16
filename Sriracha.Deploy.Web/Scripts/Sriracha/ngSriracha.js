@@ -38,8 +38,16 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/delete-component-template.html",
 			controller: "ProjectController"
 		})
-		.when("/project/:projectId/component/:componentId/step/create", {
+		.when(Sriracha.Navigation.DeploymentStep.CreateUrl, {
 			templateUrl: "templates/edit-deploymentstep-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.DeploymentStep.EditUrl, {
+			templateUrl: "templates/edit-deploymentstep-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.DeploymentStep.DeleteUrl, {
+			templateUrl: "templates/delete-deploymentstep-template.html",
 			controller: "ProjectController"
 		})
 		.otherwise({
@@ -61,8 +69,7 @@ ngSriracha.directive("taskConfig", function () {
 	return {
 		templateUrl: "templates/edit-deploymentstep-options-template.html",
 		link: function (scope, element, attrs) {
-			scope.taskType = attrs.taskType;
-			console.log(attrs);
+			scope.taskTypeName = attrs.taskTypeName;
 		}
 	}
 });
@@ -83,8 +90,20 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 						$scope.component = new SrirachaResource.component(item);
 						
 						$scope.taskMetadataList = SrirachaResource.taskMetadata.query({}, function () {
-							console.log($scope.taskMetadataList);
+							//console.log($scope.taskMetadataList);
 						});
+
+						if ($routeParams.deploymentStepId && $scope.component.deploymentStepList) {
+							_.each($scope.component.deploymentStepList, function (deploymentStepItem) {
+								if (deploymentStepItem.id == $routeParams.deploymentStepId) {
+									deploymentStepItem.taskOptions = JSON.parse(deploymentStepItem.taskOptionsJson);
+									$scope.deploymentStep = new SrirachaResource.deploymentStep(deploymentStepItem);
+								}
+							});
+						}
+						else{
+							$scope.deploymentStep = new SrirachaResource.deploymentStep({ projectId: $routeParams.projectId, componentId: $routeParams.componentId });
+						}
 						return false;
 					}
 				});
@@ -98,6 +117,11 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 		$scope.project = new SrirachaResource.project({});
 	}
 
+	$scope.reportError = function (error) {
+		alert(error);
+	};
+
+	//Projects
 	$scope.cancelDeleteProject = function() {
 		Sriracha.Navigation.Project.List();
 	}
@@ -129,11 +153,12 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			}
 		);
 	};
+	//End Projects
 
-	$scope.cancelComponent = function() {
+	//Components
+	$scope.cancelComponent = function () {
 		Sriracha.Navigation.Project.View($routeParams.projectId);
 	}
-
 	$scope.saveComponent = function () {
 		$scope.component.$save(
 			$scope.component,
@@ -145,7 +170,6 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			}
 		);
 	}
-
 	$scope.deleteComponent = function () {
 		SrirachaResource.component.delete(
 			{
@@ -160,11 +184,6 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			}
 		);
 	}
-
-	$scope.reportError = function (error) {
-		alert(error);
-	};
-
 	$scope.getViewComponentUrl = function (component) {
 		if (component) {
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Component.ViewUrl, { projectId: component.projectId, componentId: component.id });
@@ -180,5 +199,54 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Component.DeleteUrl, { projectId: component.projectId, componentId: component.id });
 		}
 	}
+	//End Components
+
+	//Deployment Steps
+	$scope.cancelDeploymentStep = function () {
+		Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
+	}
+
+	$scope.saveDeploymentStep = function () {
+		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);
+		$scope.deploymentStep.$save(
+			$scope.deploymentStep,
+			function () {
+				Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+
+	$scope.deleteDeploymentStep = function () {
+		$scope.deploymentStep.$delete(
+			$scope.deploymentStep,
+			function () {
+				Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+
+	$scope.getCreateDeploymentStepUrl = function (component) {
+		if (component) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.CreateUrl, { projectId: component.projectId, componentId: component.id });
+		}
+	}
+
+	$scope.getEditDeploymentStepUrl = function (deploymentStep) {
+		if (deploymentStep) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.EditUrl, { projectId: deploymentStep.projectId, componentId: deploymentStep.componentId, deploymentStepId: deploymentStep.id });
+		}
+	}
+	$scope.getDeleteDeploymentStepUrl = function (deploymentStep) {
+		if (deploymentStep) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.DeleteUrl, { projectId: deploymentStep.projectId, componentId: deploymentStep.componentId, deploymentStepId: deploymentStep.id });
+		}
+	}
+	//End Deployment Steps
 });
 
