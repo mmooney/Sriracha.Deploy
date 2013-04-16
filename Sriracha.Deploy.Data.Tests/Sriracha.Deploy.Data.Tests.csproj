@@ -48,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleInspectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskManagerTests.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETaskTests.cs" />
     <Compile Include="TempTestDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>

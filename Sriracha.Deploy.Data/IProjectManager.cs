@@ -16,5 +16,7 @@ namespace Sriracha.Deploy.Data
 		void DeleteProject(string projectId);
 		DeployComponent CreateComponent(string projectId, string componentName);
 		DeployComponent UpdateComponent(string projectId, string componentId, string componentName);
+		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions);
+		DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions);
 	}
 }

@@ -42,8 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IModuleInspector.cs" />
+    <Compile Include="Impl\ModuleInspector.cs" />
+    <Compile Include="Tasks\BaseDeployTask.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />
+    <Compile Include="Dto\DeployComponentDeploymentStep.cs" />
     <Compile Include="IBuildManager.cs" />
     <Compile Include="Impl\BuildManager.cs" />
     <Compile Include="Dto\DeployBuild.cs" />
@@ -55,11 +59,20 @@
     <Compile Include="Dto\DeployServerGroup.cs" />
     <Compile Include="Exceptions\DuplicateObjectException.cs" />
     <Compile Include="Impl\ProjectManager.cs" />
+    <Compile Include="Impl\TaskManager.cs" />
     <Compile Include="IProjectManager.cs" />
+    <Compile Include="ITaskManager.cs" />
     <Compile Include="Repository\IBuildRepository.cs" />
     <Compile Include="Repository\IFileRepository.cs" />
     <Compile Include="Repository\IProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\IDeployTask.cs" />
+    <Compile Include="Tasks\DeployTaskEnvironmentConfiguration.cs" />
+    <Compile Include="Tasks\DeployTaskOptions.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousEEnvironmentConfiguration.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
+    <Compile Include="Tasks\TaskMetadata.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

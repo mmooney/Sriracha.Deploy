@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Dto
+namespace Sriracha.Deploy.Data.Tasks
 {
-	public class DeployEnvironment
+	public interface IDeployTask
 	{
 	}
 }

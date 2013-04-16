@@ -19,6 +19,11 @@ namespace Sriracha.Deploy.Web
 				name: "components", 
 				routeTemplate: "api/project/{projectId}/component/{componentId}", 
 				defaults: new { controller = "Component", componentId = RouteParameter.Optional });
+
+			config.Routes.MapHttpRoute(
+				name: "deploymentSteps",
+				routeTemplate: "api/project/{projectId}/component/{componentId}/step/{deploymentStepId}",
+				defaults: new { controller = "DeploymentStep", deploymentStepId=RouteParameter.Optional });
 		}
 	}
 }

@@ -8,7 +8,8 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="component in project.ComponentList">
-			<td>{{component.ComponentName}}</td>
+			<td><a href="/#/project/{{project.Id}}/component/{{component.Id}}">{{component.ComponentName}}</a></td>
+			<td><button class="btn btn-danger" ng-click="delete(component)">Delete</button></td>
 		</tr>
 	</tbody>
 </table>

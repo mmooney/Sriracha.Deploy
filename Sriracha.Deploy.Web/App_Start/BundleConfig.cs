@@ -9,10 +9,10 @@ namespace Sriracha.Deploy.Web
 		public static void RegisterBundles(BundleCollection bundles)
 		{
 			bundles.Add(new ScriptBundle("~/bundles/js")
-				.Include("~/Scripts/jquery-{version}.js")
-				.Include("~/Scripts/jquery-ui-{version}.js")
-				.Include("~/Scripts/jquery.unobtrusive*")
-				.Include("~/Scripts/jquery.validate*")
+				.Include("~/Scripts/jquery/jquery-{version}.js")
+				.Include("~/Scripts/jquery/jquery-ui-{version}.js")
+				.Include("~/Scripts/jquery/jquery.unobtrusive*")
+				.Include("~/Scripts/jquery/jquery.validate*")
 				.Include("~/Scripts/underscore.js")
 				.Include("~/Scripts/backbone.js")
 			);

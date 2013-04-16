@@ -1,0 +1,20 @@
+﻿<h2>Project {{project.ProjectName}} - {{component.ComponentName}} Component <a href="#/project/edit/{{project.Id}}/component/{{component.Id}}">(edit)</a> </h2>
+<h3>Deployment Steps</h3>
+<table class="table table-border table-striped" ng-show="project.DeploymentStepList.length">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Task Type</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="deploymentStep in component.DeploymentStepList">
+			<td><a href="/#/project/{{project.Id}}/component/{{component.Id}}/step/{{deploymentStep.Id}}">{{deploymentStep.DeploymentStepName}}</a></td>
+			<td><button class="btn btn-danger" ng-click="delete(deploymentStep)">Delete</button></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.DeploymentStepList.length">
+	<em>No Deployment Steps</em>
+</div>
+<a href="/#/project/{{project.Id}}/component/{{component.Id}}/step/create">Create Deployment Step</a>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Raven.Client;
+using Raven.Imports.Newtonsoft.Json;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
@@ -112,6 +113,36 @@ namespace Sriracha.Deploy.RavenDB
 			var project = GetProject(projectId);
 			var item = project.ComponentList.Single(i=>i.Id == componentId);
 			item.ComponentName = componentName;
+			this._documentSession.SaveChanges();
+			return item;
+		}
+
+
+		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions) 
+		{
+			var project = GetProject(projectId);
+			var component = project.ComponentList.Single(i => i.Id == componentId);
+			var item = new DeployComponentDeploymentStep
+			{
+				Id = Guid.NewGuid().ToString(),
+				StepName = stepName,
+				TaskTypeName = taskTypeName,
+				TaskOptionJSON = JsonConvert.SerializeObject(taskOptions)
+			};
+		
+			component.DeploymentStepList.Add(item);
+			this._documentSession.SaveChanges();
+			return item;
+		}
+
+		public DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions) 
+		{
+			var project = GetProject(projectId);
+			var component = project.ComponentList.Single(i => i.Id == componentId);
+			var item = component.DeploymentStepList.Single(i=>i.Id == deploymentStepId);
+			item.StepName = stepName;
+			item.TaskTypeName = taskTypeName;
+			item.TaskOptionJSON = JsonConvert.SerializeObject(taskOptions);
 			this._documentSession.SaveChanges();
 			return item;
 		}

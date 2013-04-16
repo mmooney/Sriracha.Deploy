@@ -9,11 +9,11 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class ProjectManager : IProjectManager
 	{
-		private IProjectRepository ProjectRepository { get; set; }
+		private readonly IProjectRepository _projectRepository;
 
 		public ProjectManager(IProjectRepository projectRepository)
 		{
-			this.ProjectRepository = projectRepository;
+			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
 		public DeployProject CreateProject(string projectName)
@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			return this.ProjectRepository.CreateProject(projectName);
+			return this._projectRepository.CreateProject(projectName);
 		}
 
 		public DeployProject GetProject(string projectId)
@@ -31,7 +31,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project ID");
 			}
-			var item = this.ProjectRepository.GetProject(projectId);
+			var item = this._projectRepository.GetProject(projectId);
 			if(item == null)
 			{
 				throw new KeyNotFoundException("No project found for ID: " + projectId);
@@ -49,13 +49,13 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Branch Name");
 			}
-			return this.ProjectRepository.CreateBranch(projectId, branchName);
+			return this._projectRepository.CreateBranch(projectId, branchName);
 		}
 
 
 		public IEnumerable<DeployProject> GetProjectList()
 		{
-			return this.ProjectRepository.GetProjectList();
+			return this._projectRepository.GetProjectList();
 		}
 
 
@@ -65,7 +65,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project ID");
 			}
-			this.ProjectRepository.DeleteProject(projectId);
+			this._projectRepository.DeleteProject(projectId);
 		}
 
 
@@ -79,17 +79,72 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			return this.ProjectRepository.UpdateProject(projectId, projectName);
+			return this._projectRepository.UpdateProject(projectId, projectName);
 		}
 
 		public DeployComponent CreateComponent(string projectId, string componentName)
 		{
-			return this.ProjectRepository.CreateComponent(projectId, componentName);
+			return this._projectRepository.CreateComponent(projectId, componentName);
 		}
 
 		public DeployComponent UpdateComponent(string projectId, string componentId, string componentName)
 		{
-			return this.ProjectRepository.UpdateComponent(projectId, componentId, componentName);
+			return this._projectRepository.UpdateComponent(projectId, componentId, componentName);
+		}
+
+
+		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, dynamic taskOptions)
+		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project Id");
+			}
+			if(string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing Component Id");
+			}
+			if(string.IsNullOrEmpty(stepName))
+			{
+				throw new ArgumentNullException("Missing Step Name");
+			}
+			if(string.IsNullOrEmpty(taskTypeName))
+			{
+				throw new ArgumentNullException("Missing Task Type Name");
+			}
+			if(taskOptions == null)
+			{
+				throw new ArgumentNullException("Missing Task Options");
+			}
+			return this._projectRepository.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions);
+		}
+
+		public DeployComponentDeploymentStep UpdateDeploymentStep(string projectId, string componentId, string deploymentStepId, string stepName, string taskTypeName, dynamic taskOptions)
+		{
+			if (string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project Id");
+			}
+			if (string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing Component Id");
+			}
+			if(string.IsNullOrEmpty(deploymentStepId))
+			{
+				throw new ArgumentNullException("Missing Deployment Step Id");
+			}
+			if (string.IsNullOrEmpty(stepName))
+			{
+				throw new ArgumentNullException("Missing Step Name");
+			}
+			if (string.IsNullOrEmpty(taskTypeName))
+			{
+				throw new ArgumentNullException("Missing Task Type Name");
+			}
+			if (taskOptions == null)
+			{
+				throw new ArgumentNullException("Missing Task Options");
+			}
+			return this._projectRepository.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions);
 		}
 	}
 }

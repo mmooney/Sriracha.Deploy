@@ -1,0 +1,20 @@
+﻿<h2>Project {{project.ProjectName}} - {{component.ComponentName}} Component <a href="#/project/edit/{{project.Id}}/component/{{component.Id}}">(edit)</a> </h2>
+<h2>Deployment Step</h2>
+<table class="table table-bordered">
+	<tr>
+		<th>Step Name:</th>
+		<td><input type="text" required ng-model="deploymentStep.StepName" /></td>
+	</tr>
+	<tr>
+		<th>Step Type:</th>
+		<td>
+			<select class="deploymentStepTaskTypeDropdown" ng-model="deploymentStep.TaskType" ng-options="item.TaskType as item.TaskTypeName for item in taskMetadataList"></select>
+		</td>
+	</tr>
+	<tr>
+		<th>Task Configuration:</th>
+		<th><div task-config taskType="{{deploymentStep.TaskType}}"></div>
+	</tr>
+</table>
+<button class="btn" ng-click="cancel()">Cancel</button>
+<button class="btn" ng-click="save()">Save</button>

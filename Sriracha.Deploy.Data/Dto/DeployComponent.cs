@@ -10,5 +10,6 @@ namespace Sriracha.Deploy.Data.Dto
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
 		public string ComponentName { get; set; }
+		public List<DeployComponentDeploymentStep> DeploymentStepList { get; set; }
 	}
 }

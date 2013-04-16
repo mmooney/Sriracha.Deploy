@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -204,5 +205,247 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 
 		}
+
+		public class CreateDeploymentStep
+		{
+			private class TestTaskType : IDeployTask 
+			{
+			}
+
+			[Test]
+			public void CanCreateDeploymentStep()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				projectRepository.Setup(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions))
+									.Returns(new DeployComponentDeploymentStep
+										{
+											Id = Guid.NewGuid().ToString(),
+											StepName = stepName,
+											TaskTypeName = taskTypeName,
+											TaskOptionJSON = Guid.NewGuid().ToString()
+										});
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				var result = sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions);
+
+				Assert.IsNotNull(result);
+				Assert.AreEqual(stepName, result.StepName);
+				projectRepository.Verify(i=>i.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions), Times.Once());
+			}
+
+			[Test]
+			public void MissingProjectId_ThrowsError()
+			{
+				string projectId = null;
+				string componentId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(()=>sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingComponentId_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = null;
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingStepName_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string stepName = null;
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingTaskTypeName_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = null;
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+
+			[Test]
+			public void MissingTaskOptions_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				object taskOptions = null;
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.CreateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+		}
+
+		public class UpdateDeploymentStep
+		{
+			private class TestTaskType : IDeployTask
+			{
+			}
+
+			[Test]
+			public void CanUpdateDeploymentStep()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				projectRepository.Setup(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions))
+									.Returns(new DeployComponentDeploymentStep
+									{
+										Id = deploymentStepId,
+										StepName = stepName,
+										TaskTypeName = taskTypeName,
+										TaskOptionJSON = Guid.NewGuid().ToString()
+									});
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				var result = sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions);
+
+				Assert.IsNotNull(result);
+				Assert.AreEqual(stepName, result.StepName);
+
+				projectRepository.Verify(i => i.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions), Times.Once());
+			}
+
+			[Test]
+			public void MissingProjectId_ThrowsError()
+			{
+				string projectId = null;
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingComponentId_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = null;
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingDeploymentStepId_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = null;
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingStepName_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = null;
+				string taskTypeName = typeof(TestTaskType).ToString();
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+			[Test]
+			public void MissingTaskTypeName_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = null;
+				var taskOptions = new { TestField1 = Guid.NewGuid().ToString() };
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+
+
+			[Test]
+			public void MissingTaskOptions_ThrowsError()
+			{
+				string projectId = Guid.NewGuid().ToString();
+				string componentId = Guid.NewGuid().ToString();
+				string deploymentStepId = Guid.NewGuid().ToString();
+				string stepName = Guid.NewGuid().ToString();
+				string taskTypeName = typeof(TestTaskType).ToString();
+				object taskOptions = null;
+				var projectRepository = new Mock<IProjectRepository>();
+				IProjectManager sut = new ProjectManager(projectRepository.Object);
+
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStep(projectId, componentId, deploymentStepId, stepName, taskTypeName, taskOptions));
+				projectRepository.Verify(i => i.UpdateDeploymentStep(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<object>()), Times.Never());
+			}
+		}
+
     }
 }

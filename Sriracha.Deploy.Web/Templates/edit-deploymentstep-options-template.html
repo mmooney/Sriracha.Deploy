@@ -1,0 +1,20 @@
+﻿<div ng-show="deploymentStep.TaskType == 'Sriracha.Deploy.Data.Tasks.RoundhousE.RoundhousETask, Sriracha.Deploy.Data, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'">
+	<h4>RoundhousE Configuration</h4>
+	<table class="table table-striped">
+		<tr>
+			<th>Database Type</th>
+			<td>
+				<select ng-model="deploymentStep.TaskOptions.DBType">
+					<option value="SqlServer">SQL Server</option>
+					<option value="Postgres">Postgres</option>
+					<option value="MySql">MySQL</option>
+					<option value="Oracle">Oracle</option>
+					<option value="Other">Other</option>
+			    </select>
+				<div ng-show="deploymentStep.TaskOptions.DBType == 'Other'">
+					<input type="text" ng-model="deploymentStep.TaskOptions.DBTypeOtherValue" />
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
