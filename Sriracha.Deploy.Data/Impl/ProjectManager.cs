@@ -22,7 +22,9 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			return this._projectRepository.CreateProject(projectName);
+			var project = this._projectRepository.CreateProject(projectName);
+			this._projectRepository.CreateBranch(project.Id, "Trunk");
+			return project;
 		}
 
 		public DeployProject GetProject(string projectId)
@@ -38,20 +40,6 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return item;
 		}
-
-		public DeployProjectBranch CreateBranch(string projectId, string branchName)
-		{
-			if(string.IsNullOrEmpty(projectId))
-			{
-				throw new ArgumentNullException("Missing Project ID");
-			}
-			if(string.IsNullOrEmpty(branchName))
-			{
-				throw new ArgumentNullException("Missing Branch Name");
-			}
-			return this._projectRepository.CreateBranch(projectId, branchName);
-		}
-
 
 		public IEnumerable<DeployProject> GetProjectList()
 		{
@@ -177,5 +165,38 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectRepository.DeleteDeploymentStep(deploymentStepId);
 		}
 
+		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
+		{
+			return this._projectRepository.GetBranchList(projectId);
+		}
+
+
+		public DeployProjectBranch CreateBranch(string projectId, string branchName)
+		{
+			if (string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			if (string.IsNullOrEmpty(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
+			return this._projectRepository.CreateBranch(projectId, branchName);
+		}
+
+		public DeployProjectBranch GetBranch(string branchId)
+		{
+			return this._projectRepository.GetBranch(branchId);
+		}
+
+		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
+		{
+			return this._projectRepository.UpdateBranch(branchId, projectId, branchName);
+		}
+
+		public void DeleteBranch(string branchId)
+		{
+			this._projectRepository.DeleteBranch(branchId);
+		}
 	}
 }

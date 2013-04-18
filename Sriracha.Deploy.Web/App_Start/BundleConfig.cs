@@ -13,6 +13,7 @@ namespace Sriracha.Deploy.Web
 				.Include("~/Scripts/jquery/jquery-ui-{version}.js")
 				.Include("~/Scripts/jquery/jquery.unobtrusive*")
 				.Include("~/Scripts/jquery/jquery.validate*")
+				.Include("~/Scripts/jquery/jquery.blockUI.js")
 				.Include("~/Scripts/underscore.js")
 				.Include("~/Scripts/backbone.js")
 			);

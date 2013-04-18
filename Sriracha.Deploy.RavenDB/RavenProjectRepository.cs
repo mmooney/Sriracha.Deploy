@@ -61,25 +61,6 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployProjectBranch CreateBranch(string projectId, string branchName)
-		{
-			if(string.IsNullOrEmpty(branchName))
-			{
-				throw new ArgumentNullException("Missing Branch Name");
-			}
-			var project = this.GetProject(projectId);
-			var branch = new DeployProjectBranch 
-			{
-				Id = Guid.NewGuid().ToString(),
-				BranchName = branchName,
-				ProjectId = projectId 
-			};
-			project.BranchList.Add(branch);
-			this._documentSession.SaveChanges();
-			return branch;
-		}
-
-
 		public void DeleteProject(string projectId)
 		{
 			var item = this.GetProject(projectId);
@@ -225,6 +206,87 @@ namespace Sriracha.Deploy.RavenDB
 			component.DeploymentStepList.Remove(item);
 			this._documentSession.SaveChanges();
 
+		}
+
+
+		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
+		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			var project = GetProject(projectId);
+			return project.BranchList;
+		}
+
+		public DeployProjectBranch CreateBranch(string projectId, string branchName)
+		{
+			if (string.IsNullOrEmpty(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
+			var project = this.GetProject(projectId);
+			var branch = new DeployProjectBranch
+			{
+				Id = Guid.NewGuid().ToString(),
+				BranchName = branchName,
+				ProjectId = projectId
+			};
+			project.BranchList.Add(branch);
+			this._documentSession.SaveChanges();
+			return branch;
+		}
+
+
+		public DeployProjectBranch GetBranch(string branchId)
+		{
+			if(string.IsNullOrEmpty(branchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i=>i.BranchList.Any(j=>j.Id == branchId));
+			if(project == null)
+			{
+				throw new ArgumentException("Unable to find project for branch ID " + branchId);
+			}
+			return project.BranchList.First(i=>i.Id == branchId);
+		}
+
+		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
+		{
+			if(string.IsNullOrEmpty(branchId)) 
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			if(string.IsNullOrEmpty(branchName)) 
+			{
+				throw new ArgumentNullException("Missing branch name");
+			}
+			var project = GetProject(projectId);
+			var branch = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
+			if(branchId == null)
+			{
+				throw new ArgumentException("Unable to find branch " + branchId + " in project " + projectId);
+			}
+			branch.BranchName = branchName;
+			this._documentSession.SaveChanges();
+			return branch;
+		}
+
+		public void DeleteBranch(string branchId)
+		{
+			if(string.IsNullOrEmpty(branchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i=>i.BranchList.Any(j=>j.Id == branchId));
+			if(project == null)
+			{
+				throw new ArgumentException("Unable to find project for branch ID " + branchId);
+			}
+			var branch = project.BranchList.First(i=>i.Id == branchId);
+			project.BranchList.Remove(branch);
+			this._documentSession.SaveChanges();
 		}
 	}
 }

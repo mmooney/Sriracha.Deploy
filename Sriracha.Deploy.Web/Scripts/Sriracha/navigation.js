@@ -77,6 +77,21 @@ Sriracha.Navigation = {
 		Delete: function (projectId, componentId, deploymentStepId) {
 			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId });
 		}
+	},
+
+	Branch: {
+		CreateUrl: "/project/:projectId/branch/create",
+		Create: function(projectId) {
+			Sriracha.Navigation.GoTo(this.CreateUrl, { projectId: projectId });
+		},
+		EditUrl: "/project/:projectId/branch/edit/:branchId",
+		Edit: function (projectId, branchId) {
+			Sriracha.Navigation.GoTo(this.EditUrl, { projectId: projectId, branchId: branchId });
+		},
+		DeleteUrl: "/project/:projectId/branch/delete/:branchId",
+		Delete: function (projectId, branchId) {
+			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, branchId: branchId });
+		}
 	}
 
 };
