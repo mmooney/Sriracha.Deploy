@@ -288,5 +288,98 @@ namespace Sriracha.Deploy.RavenDB
 			project.BranchList.Remove(branch);
 			this._documentSession.SaveChanges();
 		}
+
+
+		public IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId)
+		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			var project = GetProject(projectId);
+			return project.EnvironmentList;
+		}
+
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName)
+		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			if(string.IsNullOrEmpty(environmentName))
+			{
+				throw new ArgumentNullException("Missing environment name");
+			}
+			var project = GetProject(projectId);
+			var environment = new DeployEnvironment
+			{
+				Id = Guid.NewGuid().ToString(),
+				ProjectId = projectId,
+				EnvironmentName = environmentName
+			};
+			if(project.EnvironmentList == null)
+			{
+				project.EnvironmentList = new List<DeployEnvironment>();
+			}
+			project.EnvironmentList.Add(environment);
+			this._documentSession.SaveChanges();
+			return environment;
+		}
+
+		public DeployEnvironment GetEnvironment(string environmentId)
+		{
+			if (string.IsNullOrEmpty(environmentId))
+			{
+				throw new ArgumentNullException("Missing environment ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i=>i.EnvironmentList.Any(j=>j.Id == environmentId));
+			if(project == null)
+			{
+				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+			}
+			var environment = project.EnvironmentList.First(i=>i.Id == environmentId);
+			return environment;
+		}
+
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName)
+		{
+			if (string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			if (string.IsNullOrEmpty(environmentId))
+			{
+				throw new ArgumentNullException("Missing environment ID");
+			}
+			if (string.IsNullOrEmpty(environmentName))
+			{
+				throw new ArgumentNullException("Missing environment name");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
+			if (project == null)
+			{
+				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+			}
+			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
+			environment.EnvironmentName = environmentName;
+			this._documentSession.SaveChanges();
+			return environment;
+		}
+
+		public void DeleteEnvironment(string environmentId)
+		{
+			if (string.IsNullOrEmpty(environmentId))
+			{
+				throw new ArgumentNullException("Missing environment ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
+			if (project == null)
+			{
+				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+			}
+			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
+			project.EnvironmentList.Remove(environment);
+			this._documentSession.SaveChanges();
+		}
 	}
 }

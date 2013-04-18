@@ -11,11 +11,13 @@ namespace Sriracha.Deploy.Data.Dto
 		public string ProjectName { get; set; }
 		public List<DeployProjectBranch> BranchList { get; set; }
 		public List<DeployComponent> ComponentList { get; set; }
+		public List<DeployEnvironment> EnvironmentList { get; set; }
 
 		public DeployProject()
 		{
 			this.BranchList = new List<DeployProjectBranch>();
 			this.ComponentList = new List<DeployComponent>();
+			this.EnvironmentList = new List<DeployEnvironment>();
 		}
 	}
 }

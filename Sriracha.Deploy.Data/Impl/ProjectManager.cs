@@ -198,5 +198,31 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			this._projectRepository.DeleteBranch(branchId);
 		}
+
+
+		public IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId)
+		{
+			return this._projectRepository.GetEnvironmentList(projectId);
+		}
+
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName)
+		{
+			return this._projectRepository.CreateEnvironment(projectId, environmentName);
+		}
+
+		public DeployEnvironment GetEnvironment(string environmentId)
+		{
+			return this._projectRepository.GetEnvironment(environmentId);
+		}
+
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName)
+		{
+			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName);
+		}
+
+		public void DeleteEnvironment(string environmentId)
+		{
+			this._projectRepository.DeleteEnvironment(environmentId);
+		}
 	}
 }

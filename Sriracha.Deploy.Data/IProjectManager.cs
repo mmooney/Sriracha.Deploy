@@ -33,5 +33,10 @@ namespace Sriracha.Deploy.Data
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId);
 
+		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
+		DeployEnvironment CreateEnvironment(string projectId, string environmentName);
+		DeployEnvironment GetEnvironment(string environmentId);
+		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName);
+		void DeleteEnvironment(string environmentId);
 	}
 }

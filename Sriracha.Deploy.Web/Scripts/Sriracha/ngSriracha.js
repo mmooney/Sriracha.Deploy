@@ -62,6 +62,22 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/branch-delete-template.html",
 			controller: "ProjectController"
 		})
+		.when(Sriracha.Navigation.Environment.CreateUrl, {
+			templateUrl: "templates/environment-edit-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.Environment.ViewUrl, {
+			templateUrl: "templates/environment-view-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.Environment.EditUrl, {
+			templateUrl: "templates/environment-edit-template.html",
+			controller: "ProjectController"
+		})
+		.when(Sriracha.Navigation.Environment.DeleteUrl, {
+			templateUrl: "templates/environment-delete-template.html",
+			controller: "ProjectController"
+		})
 		.otherwise({
 			template: "<h1>Not Found</h1>"
 		})
@@ -73,6 +89,7 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 		project: $resource("/api/project"),
 		component: $resource("/api/project/:projectId/component"),
 		branch: $resource("/api/project/:projectId/branch"),
+		environment: $resource("/api/project/:projectId/environment"),
 		deploymentStep: $resource("/api/project/:projectId/component/:componentId/step", { projectId: "@projectId", componentId: "@componentId" }),
 		taskMetadata: $resource("/api/taskmetadata")
 	}
@@ -119,6 +136,7 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			if(!$scope.component) {
 				$scope.component = new SrirachaResource.component({ projectId: $routeParams.projectId });
 			}
+
 			if ($routeParams.branchId && $scope.project.branchList) {
 				var branch = _.find($scope.project.branchList, function (b) { return b.id == $routeParams.branchId });
 				if (branch) {
@@ -127,6 +145,16 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 			}
 			if (!$scope.branch) {
 				$scope.branch = new SrirachaResource.branch({ projectId: $routeParams.projectId });
+			}
+
+			if ($routeParams.environmentId && $scope.project.environmentList) {
+				var environment = _.find($scope.project.environmentList, function (e) { return e.id == $routeParams.environmentId });
+				if (environment) {
+					$scope.environment = new SrirachaResource.environment(environment);
+				}
+			}
+			if (!$scope.environment) {
+				$scope.environment = new SrirachaResource.environment({ projectId: $routeParams.projectId });
 			}
 		});
 	}
@@ -313,5 +341,53 @@ ngSriracha.controller("ProjectController", function ($scope, $routeParams, Srira
 		);
 	}
 	//End Branches
+
+	//Environments
+	$scope.getCreateEnvironmentUrl = function (project) {
+		if (project) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.CreateUrl, { projectId: project.id });
+		}
+	}
+	$scope.getViewEnvironmentUrl = function (environment) {
+		if (environment) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.ViewUrl, { projectId: environment.projectId, environmentId: environment.id });
+		}
+	}
+	$scope.getEditEnvironmentUrl = function (environment) {
+		if (environment) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
+		}
+	}
+	$scope.getDeleteEnvironmentUrl = function (environment) {
+		if (environment) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.DeleteUrl, { projectId: environment.projectId, environmentId: environment.id });
+		}
+	}
+	$scope.cancelEnvironment = function () {
+		Sriracha.Navigation.Project.View($routeParams.projectId);
+	}
+	$scope.saveEnvironment = function () {
+		$scope.environment.$save(
+			$scope.environment,
+			function () {
+				Sriracha.Navigation.Project.View($routeParams.projectId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+	$scope.deleteEnvironment = function () {
+		$scope.environment.$delete(
+			$scope.environment,
+			function () {
+				Sriracha.Navigation.Project.View($routeParams.projectId);
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+	//End Environments
 });
 

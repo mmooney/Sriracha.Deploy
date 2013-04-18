@@ -92,6 +92,25 @@ Sriracha.Navigation = {
 		Delete: function (projectId, branchId) {
 			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, branchId: branchId });
 		}
+	},
+
+	Environment: {
+		CreateUrl: "/project/:projectId/environment/create",
+		Create: function (projectId) {
+			Sriracha.Navigation.GoTo(this.CreateUrl, { projectId: projectId });
+		},
+		ViewUrl: "/project/:projectId/environment/:environmentId",
+		View: function (projectId, environmentId) {
+			Sriracha.Navigation.GoTo(this.ViewUrl, { projectId: projectId, environmentId: environmentId });
+		},
+		EditUrl: "/project/:projectId/environment/edit/:environmentId",
+		Edit: function (projectId, environmentId) {
+			Sriracha.Navigation.GoTo(this.EditUrl, { projectId: projectId, environmentId: environmentId });
+		},
+		DeleteUrl: "/project/:projectId/environment/delete/:environmentId",
+		Delete: function (projectId, environmentId) {
+			Sriracha.Navigation.GoTo(this.DeleteUrl, { projectId: projectId, environmentId: environmentId });
+		},
 	}
 
 };

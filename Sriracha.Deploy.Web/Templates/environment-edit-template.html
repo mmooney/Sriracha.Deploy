@@ -1,0 +1,8 @@
+﻿<h2 ng-hide="branch.id">Create a environment in project {{project.projectName}}</h2>
+<h2 ng-show="branch.id">Edit Environment: {{environment.environmentName}} in project {{project.projectName}}</h2>
+<div>
+	<b>Environment Name:</b>
+	<input type="text" ng-model="environment.environmentName" />
+</div>
+<button class="btn btn-action" ng-click="cancelEnvironment()">Cancel</button>
+<button class="btn btn-action" ng-click="saveEnvironment()">Save</button>

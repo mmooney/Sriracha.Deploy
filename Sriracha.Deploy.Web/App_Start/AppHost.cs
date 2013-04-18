@@ -56,6 +56,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployComponent>("/project/{projectId}/component/{id*}")
 				.Add<DeployProjectBranch>("/project/{projectId}/branch")
 				.Add<DeployProjectBranch>("/project/{projectId}/branch/{id*}")
+				.Add<DeployEnvironment>("/project/{projectId}/environment")
+				.Add<DeployEnvironment>("/project/{projectId}/environment/{id*}")
 				.Add<DeployProject>("/project")
 				.Add<DeployProject>("/project/{id*}")
 				.Add<TaskMetadata>("/taskMetadata");
