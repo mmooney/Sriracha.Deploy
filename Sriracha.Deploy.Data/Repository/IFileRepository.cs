@@ -8,6 +8,10 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IFileRepository
 	{
-		DeployFile StoreFile(string fileName, byte[] data);
+		IEnumerable<DeployFile> GetFileList();
+		DeployFile CreateFile(string fileName, byte[] data);
+		DeployFile GetFile(string fileId);
+		DeployFile UpdateFile(string fileId, string fileName, byte[] fileData);
+		void DeleteFile(string fileId);
 	}
 }

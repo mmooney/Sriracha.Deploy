@@ -1,4 +1,4 @@
-﻿var ngSriracha = angular.module("ngSriracha", ["ngResource", "SharedServices"]);
+﻿var ngSriracha = angular.module("ngSriracha", ["ngResource", "SharedServices", "ngUpload"]);
 
 ngSriracha.config(function ($routeProvider) {
 	$routeProvider

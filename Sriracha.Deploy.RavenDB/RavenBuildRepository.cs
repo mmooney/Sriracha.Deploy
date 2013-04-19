@@ -19,12 +19,13 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public DeployBuild StoreBuild(string projectId, string projectName, string projectBranchId, string projectBranchName, string fileId, Version version)
+		public DeployBuild StoreBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, Version version)
 		{
 			var existingItem = (from i in this._documentSession.Query<DeployBuild>()
 											.Customize(x=>x.WaitForNonStaleResultsAsOfLastWrite())
 								where i.ProjectId == projectId
 									&& i.ProjectBranchId == projectBranchId
+									&& i.ProjectComponentId == projectComponentId
 									&& i.FileId == fileId
 									&& i.Version == version
 								select i).FirstOrDefault();
@@ -36,6 +37,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				ProjectId = projectId,
 				ProjectName = projectName,
+				ProjectComponentId = projectComponentId,
+				ProjectComponentName = projectComponentName,
 				ProjectBranchId = projectBranchId,
 				ProjectBranchName = projectBranchName,
 				FileId = fileId,

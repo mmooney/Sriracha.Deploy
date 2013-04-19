@@ -20,12 +20,13 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
-		public DeployBuild SubmitBuild(string projectId, string branchId, string fileName, byte[] fileData, Version version)
+		public DeployBuild SubmitBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, Version version)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			var branch = _projectRepository.GetBranch(project, branchId);
-			var file = this._fileRepository.StoreFile(fileName, fileData);
-			return this._buildRepository.StoreBuild(projectId, project.ProjectName, branchId, branch.BranchName, file.Id, version);
+			var component = _projectRepository.GetComponent(project, componentId);
+			var file = this._fileRepository.CreateFile(fileName, fileData);
+			return this._buildRepository.StoreBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
 		}
 
 		public IEnumerable<DeployBuild> GetBuildList()

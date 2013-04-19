@@ -70,6 +70,7 @@ namespace Sriracha.Deploy.Web.App_Start
         {
 			kernel.Bind<IProjectManager>().To<ProjectManager>();
 			kernel.Bind<IBuildManager>().To<BuildManager>();
+			kernel.Bind<IFileManager>().To<FileManager>();
 			kernel.Bind<ITaskManager>().To<TaskManager>();
 			kernel.Bind<IModuleInspector>().To<ModuleInspector>();
 			kernel.Load(new RavenDBNinjectModule());

@@ -116,6 +116,24 @@ namespace Sriracha.Deploy.RavenDB
 			return project.ComponentList.First(i=>i.Id == componentId);
 		}
 
+		public DeployComponent GetComponent(DeployProject project, string componentId)
+		{
+			if (string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing component ID");
+			}
+			if (project == null)
+			{
+				throw new ArgumentNullException("Project is null");
+			}
+			var component = project.ComponentList.FirstOrDefault(i => i.Id == componentId);
+			if (componentId == null)
+			{
+				throw new ArgumentException("Unable to find component " + componentId + " in project " + project.Id);
+			}
+			return component;	
+		}
+
 		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName)
 		{
 			var project = GetProject(projectId);
@@ -399,6 +417,5 @@ namespace Sriracha.Deploy.RavenDB
 			project.EnvironmentList.Remove(environment);
 			this._documentSession.SaveChanges();
 		}
-
 	}
 }

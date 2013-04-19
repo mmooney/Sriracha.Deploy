@@ -45,6 +45,8 @@ namespace Sriracha.Deploy.Data.Tests
 							Id = Guid.NewGuid().ToString(),
 							ProjectId = Guid.NewGuid().ToString(),
 							ProjectName = Guid.NewGuid().ToString(),
+							ProjectComponentId = Guid.NewGuid().ToString(),
+							ProjectComponentName = Guid.NewGuid().ToString(),
 							ProjectBranchId = Guid.NewGuid().ToString(),
 							ProjectBranchName = Guid.NewGuid().ToString(),
 							Version = new Version(TestDataHelper.RandomInt(0, 500), TestDataHelper.RandomInt(0, 500), TestDataHelper.RandomInt(0, 500), TestDataHelper.RandomInt(0, 500))
@@ -62,17 +64,26 @@ namespace Sriracha.Deploy.Data.Tests
 								ProjectId = testData.DeployBuild.ProjectId,
 								BranchName = testData.DeployBuild.ProjectBranchName
 							}
+						},
+						ComponentList = new List<DeployComponent>
+						{
+							new DeployComponent
+							{
+								Id = testData.DeployBuild.ProjectComponentId,
+								ComponentName = testData.DeployBuild.ProjectComponentName
+							}
 						}
 					};
 
 					testData.DeployBuild.FileId = testData.DeployFile.Id;
 
-					testData.FileRepository.Setup(i => i.StoreFile(testData.DeployFile.FileName, testData.FileData)).Returns(testData.DeployFile);
+					testData.FileRepository.Setup(i => i.CreateFile(testData.DeployFile.FileName, testData.FileData)).Returns(testData.DeployFile);
 
-					testData.BuildRepository.Setup(i => i.StoreBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectName, testData.DeployBuild.ProjectBranchId, testData.DeployBuild.ProjectBranchName, testData.DeployBuild.FileId, testData.DeployBuild.Version)).Returns(testData.DeployBuild);
+					testData.BuildRepository.Setup(i => i.StoreBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectName, testData.DeployBuild.ProjectComponentId, testData.DeployBuild.ProjectComponentName, testData.DeployBuild.ProjectBranchId, testData.DeployBuild.ProjectBranchName, testData.DeployBuild.FileId, testData.DeployBuild.Version)).Returns(testData.DeployBuild);
 
 					testData.ProjectRepository.Setup(i=>i.GetProject(testData.DeployBuild.ProjectId)).Returns(testData.DeployProject);
 					testData.ProjectRepository.Setup(i=>i.GetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
+					testData.ProjectRepository.Setup(i=>i.GetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
 
 					testData.Sut = new BuildManager(testData.BuildRepository.Object, testData.FileRepository.Object, testData.ProjectRepository.Object);
 
@@ -85,23 +96,23 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				var testData = TestData.Create();
 
-				var result = testData.Sut.SubmitBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectBranchId, testData.DeployFile.FileName, testData.FileData, testData.DeployBuild.Version);
+				var result = testData.Sut.SubmitBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectComponentId, testData.DeployBuild.ProjectBranchId, testData.DeployFile.FileName, testData.FileData, testData.DeployBuild.Version);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(testData.DeployFile.Id, result.FileId);
-				testData.FileRepository.Verify(i => i.StoreFile(testData.DeployFile.FileName, testData.FileData), Times.Once());
+				testData.FileRepository.Verify(i => i.CreateFile(testData.DeployFile.FileName, testData.FileData), Times.Once());
 			}
 
 			[Test]
 			public void SubmitBuild_StoresBuildInfo()
 			{
 				var testData = TestData.Create();
-			
-				var result = testData.Sut.SubmitBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectBranchId, testData.DeployFile.FileName, testData.FileData, testData.DeployBuild.Version);
+
+				var result = testData.Sut.SubmitBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectComponentId, testData.DeployBuild.ProjectBranchId, testData.DeployFile.FileName, testData.FileData, testData.DeployBuild.Version);
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(testData.DeployBuild.Id, result.Id);
-				testData.BuildRepository.Verify(i => i.StoreBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectName, testData.DeployBuild.ProjectBranchId, testData.DeployBuild.ProjectBranchName, testData.DeployBuild.FileId, testData.DeployBuild.Version), Times.Once());
+				testData.BuildRepository.Verify(i => i.StoreBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectName, testData.DeployBuild.ProjectComponentId, testData.DeployBuild.ProjectComponentName, testData.DeployBuild.ProjectBranchId, testData.DeployBuild.ProjectBranchName, testData.DeployBuild.FileId, testData.DeployBuild.Version), Times.Once());
 			}
 		}
 	}

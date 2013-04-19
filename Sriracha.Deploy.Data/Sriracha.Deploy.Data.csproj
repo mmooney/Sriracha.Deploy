@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IFileManager.cs" />
     <Compile Include="IModuleInspector.cs" />
+    <Compile Include="Impl\FileManager.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Tasks\BaseDeployTask.cs" />
     <Compile Include="DIHelper.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
     <Compile Include="Tasks\TaskMetadata.cs" />
+    <Compile Include="TempStreamHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

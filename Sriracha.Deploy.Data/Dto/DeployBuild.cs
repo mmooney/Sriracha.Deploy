@@ -12,6 +12,8 @@ namespace Sriracha.Deploy.Data.Dto
 		public string ProjectName { get; set; }
 		public string ProjectBranchId { get; set; }
 		public string ProjectBranchName { get; set; }
+		public string ProjectComponentId { get; set; }
+		public string ProjectComponentName { get; set; }
 		public string FileId { get; set; }
 		public Version Version { get; set; }
 	}

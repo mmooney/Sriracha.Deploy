@@ -9,6 +9,6 @@ namespace Sriracha.Deploy.Data
 	public interface IBuildManager
 	{
 		IEnumerable<DeployBuild> GetBuildList();
-		DeployBuild SubmitBuild(string projectId, string branchId, string fileName, byte[] fileData, Version version);
+		DeployBuild SubmitBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, Version version);
 	}
 }
