@@ -18,7 +18,9 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			private class TestData
 			{
 				public string ProjectId { get; set; }
+				public string ProjectName { get; set; }
 				public string ProjectBranchId { get; set; }
+				public string ProjectBranchName { get; set; }
 				public string FileId { get; set; }
 				public Version Version { get; set; }
 				public RavenBuildRepository Sut { get; set; }
@@ -28,7 +30,9 @@ namespace Sriracha.Deploy.RavenDB.Tests
 					var testData = new TestData
 					{
 						ProjectId = Guid.NewGuid().ToString(),
+						ProjectName = Guid.NewGuid().ToString(),
 						ProjectBranchId = Guid.NewGuid().ToString(),
+						ProjectBranchName = Guid.NewGuid().ToString(),
 						FileId = Guid.NewGuid().ToString(),
 						Version = TempTestDataHelper.RandomVersion(),
 						Sut = new RavenBuildRepository(session)
@@ -42,7 +46,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				var testData = TestData.Create(this.DocumentSession);
 
-				var result = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectBranchId, testData.FileId, testData.Version);
+				var result = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectBranchId, testData.ProjectBranchId, testData.FileId, testData.Version);
 
 				Assert.IsNotNull(result);
 				Assert.AreNotEqual(0, result.Id);
@@ -56,9 +60,9 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				var testData = TestData.Create(this.DocumentSession);
 
-				var result1 = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectBranchId, testData.FileId, testData.Version);
+				var result1 = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version);
 
-				Assert.Throws<DuplicateObjectException<DeployBuild>>(delegate { testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectBranchId, testData.FileId, testData.Version); });
+				Assert.Throws<DuplicateObjectException<DeployBuild>>(delegate { testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version); });
 			}
 		}
     }

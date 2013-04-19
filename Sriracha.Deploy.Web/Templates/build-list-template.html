@@ -1,0 +1,21 @@
+﻿<h2>Build List</h2>
+<table class="table table-striped" ng-show="buildList.length">
+	<thead>
+		<tr>
+			<th>Project</th>
+			<th>Branch</th>
+			<th>Version</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="build in buildList">
+			<td>{{build.projectName}}</td>
+			<th>{{build.projectBranchName}}</th>
+			<td><a ng-href="{{getViewBuildUrl(build)}}">{{build.version}}</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="buildList.length">
+	No builds yet
+</div>
+<a ng-href="{{getSubmitBuildUrl()}}">Submit Build</a>

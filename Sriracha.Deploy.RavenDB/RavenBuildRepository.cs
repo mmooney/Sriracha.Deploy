@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Raven.Client;
+using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Repository;
@@ -11,16 +12,16 @@ namespace Sriracha.Deploy.RavenDB
 {
 	public class RavenBuildRepository : IBuildRepository
 	{
-		private IDocumentSession DocumentSession { get; set; }
+		private readonly IDocumentSession _documentSession;
 
 		public RavenBuildRepository(IDocumentSession documentSession)
 		{
-			this.DocumentSession = documentSession;
+			this._documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public DeployBuild StoreBuild(string projectId, string projectBranchId, string fileId, Version version)
+		public DeployBuild StoreBuild(string projectId, string projectName, string projectBranchId, string projectBranchName, string fileId, Version version)
 		{
-			var existingItem = (from i in this.DocumentSession.Query<DeployBuild>()
+			var existingItem = (from i in this._documentSession.Query<DeployBuild>()
 											.Customize(x=>x.WaitForNonStaleResultsAsOfLastWrite())
 								where i.ProjectId == projectId
 									&& i.ProjectBranchId == projectBranchId
@@ -34,13 +35,21 @@ namespace Sriracha.Deploy.RavenDB
 			var item = new DeployBuild
 			{
 				ProjectId = projectId,
+				ProjectName = projectName,
 				ProjectBranchId = projectBranchId,
+				ProjectBranchName = projectBranchName,
 				FileId = fileId,
 				Version = version
 			};
-			this.DocumentSession.Store(item);
-			this.DocumentSession.SaveChanges();
+			this._documentSession.Store(item);
+			this._documentSession.SaveChanges();
 			return item;
+		}
+
+
+		public IEnumerable<DeployBuild> GetBuildList()
+		{
+			return this._documentSession.Query<DeployBuild>();
 		}
 	}
 }

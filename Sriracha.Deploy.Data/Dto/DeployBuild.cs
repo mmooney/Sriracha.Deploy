@@ -9,7 +9,9 @@ namespace Sriracha.Deploy.Data.Dto
 	{
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
+		public string ProjectName { get; set; }
 		public string ProjectBranchId { get; set; }
+		public string ProjectBranchName { get; set; }
 		public string FileId { get; set; }
 		public Version Version { get; set; }
 	}

@@ -8,11 +8,11 @@
 	<tbody>
 		<tr ng-repeat="project in projectList">
 			<td><a href="#/project/{{project.id}}">{{project.projectName}}</a></td>
-			<td><button class="btn btn-danger" ng-click="goToDeleteProject(project)">Delete</button></td>
+			<td><a class="btn btn-danger" ng-href="getDeleteProjectUrl(project)">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="projectList.length">
 	No projects yet
 </div>
-<a href="#/project/create">Create Project</a>
+<a ng-href="{{getCreateProjectUrl()}}">Create Project</a>

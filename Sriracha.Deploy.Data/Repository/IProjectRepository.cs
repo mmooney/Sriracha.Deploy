@@ -29,6 +29,7 @@ namespace Sriracha.Deploy.Data.Repository
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		DeployProjectBranch GetBranch(string branchId);
+		DeployProjectBranch GetBranch(DeployProject project, string branchId);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId);
 
@@ -37,5 +38,6 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployEnvironment GetEnvironment(string environmentId);
 		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName);
 		void DeleteEnvironment(string environmentId);
+
 	}
 }

@@ -252,6 +252,24 @@ namespace Sriracha.Deploy.RavenDB
 			return project.BranchList.First(i=>i.Id == branchId);
 		}
 
+		public DeployProjectBranch GetBranch(DeployProject project, string branchId)
+		{
+			if(string.IsNullOrEmpty(branchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			if(project == null)
+			{
+				throw new ArgumentNullException("Project is null");
+			}
+			var branch = project.BranchList.FirstOrDefault(i => i.Id == branchId);
+			if (branchId == null)
+			{
+				throw new ArgumentException("Unable to find branch " + branchId + " in project " + project.Id);
+			}
+			return branch;	
+		}
+
 		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
 		{
 			if(string.IsNullOrEmpty(branchId)) 
@@ -381,5 +399,6 @@ namespace Sriracha.Deploy.RavenDB
 			project.EnvironmentList.Remove(environment);
 			this._documentSession.SaveChanges();
 		}
+
 	}
 }

@@ -69,6 +69,7 @@ namespace Sriracha.Deploy.Web.App_Start
         private static void RegisterServices(IKernel kernel)
         {
 			kernel.Bind<IProjectManager>().To<ProjectManager>();
+			kernel.Bind<IBuildManager>().To<BuildManager>();
 			kernel.Bind<ITaskManager>().To<TaskManager>();
 			kernel.Bind<IModuleInspector>().To<ModuleInspector>();
 			kernel.Load(new RavenDBNinjectModule());

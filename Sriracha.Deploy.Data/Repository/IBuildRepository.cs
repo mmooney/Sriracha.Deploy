@@ -8,6 +8,8 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IBuildRepository
 	{
-		DeployBuild StoreBuild(string projectId, string projectBranchId, string fileId, Version version);
+		DeployBuild StoreBuild(string projectId, string projectName, string projectBranchId, string projectBranchName, string fileId, Version version);
+
+		IEnumerable<DeployBuild> GetBuildList();
 	}
 }

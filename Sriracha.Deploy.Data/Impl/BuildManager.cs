@@ -9,19 +9,29 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class BuildManager: IBuildManager
 	{
-		private IFileRepository FileRepository { get; set; }
-		private IBuildRepository BuildRepository { get; set; }
+		private readonly IFileRepository _fileRepository;
+		private readonly IBuildRepository _buildRepository;
+		private readonly IProjectRepository _projectRepository;
 
-		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository)
+		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository)
 		{
-			this.FileRepository = fileRepository;
-			this.BuildRepository = buildRepository;
+			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
+			this._buildRepository = DIHelper.VerifyParameter(buildRepository);
+			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
 		public DeployBuild SubmitBuild(string projectId, string branchId, string fileName, byte[] fileData, Version version)
 		{
-			var file = this.FileRepository.StoreFile(fileName, fileData);
-			return this.BuildRepository.StoreBuild(projectId, branchId, file.Id, version);
+			var project = _projectRepository.GetProject(projectId);
+			var branch = _projectRepository.GetBranch(project, branchId);
+			var file = this._fileRepository.StoreFile(fileName, fileData);
+			return this._buildRepository.StoreBuild(projectId, project.ProjectName, branchId, branch.BranchName, file.Id, version);
 		}
+
+		public IEnumerable<DeployBuild> GetBuildList()
+		{
+			return this._buildRepository.GetBuildList();
+		}
+
 	}
 }
