@@ -3,6 +3,10 @@
 	$scope.uploadMessage = "Please upload the deploy package file first";
 	$scope.build = new SrirachaResource.build({});
 
+	$scope.reportError = function (error) {
+		alert("ERROR: \r\n" + JSON.stringify(error));
+	};
+
 	$scope.uploadComplete = function (content, isComplete) {
 		if (isComplete) {
 			$scope.uploadMessage = "File Uploaded!";
@@ -19,10 +23,13 @@
 	}
 
 	$scope.saveBuild = function () {
+		$scope.build.projectId = $scope.project.id;
+		$scope.build.projectComponentId = $scope.component.id;
+		$scope.build.projectBranchId = $scope.branch.id;
 		$scope.build.$save(
 			$scope.build,
 			function () {
-				Sriracha.Navigation.Project.View($routeParams.projectId);
+				Sriracha.Navigation.Build.List();
 			},
 			function (error) {
 				$scope.reportError(error);

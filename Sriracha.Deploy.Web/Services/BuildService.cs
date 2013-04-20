@@ -22,5 +22,16 @@ namespace Sriracha.Deploy.Web.Services
 			return _buildManager.GetBuildList();
 		}
 
+		public object Post(DeployBuild build)
+		{
+			if(string.IsNullOrEmpty(build.Id))
+			{
+				return this._buildManager.CreateBuild(build.ProjectId, build.ProjectComponentId, build.ProjectBranchId, build.FileId, build.Version);
+			}
+			else 
+			{
+				return this._buildManager.UpdateBuild(build.Id, build.ProjectId, build.ProjectComponentId, build.ProjectBranchId, build.FileId, build.Version);
+			}
+		}
 	}
 }

@@ -10,7 +10,7 @@
 	<tbody>
 		<tr ng-repeat="build in buildList">
 			<td>{{build.projectName}}</td>
-			<th>{{build.projectBranchName}}</th>
+			<td>{{build.projectBranchName}}</td>
 			<td><a ng-href="{{getViewBuildUrl(build)}}">{{build.version}}</a></td>
 		</tr>
 	</tbody>

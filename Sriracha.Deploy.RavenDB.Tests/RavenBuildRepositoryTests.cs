@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				public string ProjectBranchId { get; set; }
 				public string ProjectBranchName { get; set; }
 				public string FileId { get; set; }
-				public Version Version { get; set; }
+				public string Version { get; set; }
 				public RavenBuildRepository Sut { get; set; }
 
 				public static TestData Create(IDocumentSession session)
@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 						ProjectBranchId = Guid.NewGuid().ToString(),
 						ProjectBranchName = Guid.NewGuid().ToString(),
 						FileId = Guid.NewGuid().ToString(),
-						Version = TempTestDataHelper.RandomVersion(),
+						Version = Guid.NewGuid().ToString(),
 						Sut = new RavenBuildRepository(session)
 					};
 					return testData;
@@ -50,7 +50,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				var testData = TestData.Create(this.DocumentSession);
 
-				var result = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version);
+				var result = testData.Sut.CreateBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version);
 
 				Assert.IsNotNull(result);
 				Assert.AreNotEqual(0, result.Id);
@@ -64,9 +64,9 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				var testData = TestData.Create(this.DocumentSession);
 
-				var result1 = testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version);
+				var result1 = testData.Sut.CreateBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version);
 
-				Assert.Throws<DuplicateObjectException<DeployBuild>>(delegate { testData.Sut.StoreBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version); });
+				Assert.Throws<DuplicateObjectException<DeployBuild>>(delegate { testData.Sut.CreateBuild(testData.ProjectId, testData.ProjectName, testData.ProjectComponentId, testData.ProjectComponentName, testData.ProjectBranchId, testData.ProjectBranchName, testData.FileId, testData.Version); });
 			}
 		}
     }

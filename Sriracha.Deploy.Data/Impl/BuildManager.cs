@@ -20,19 +20,44 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
-		public DeployBuild SubmitBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, Version version)
-		{
-			var project = _projectRepository.GetProject(projectId);
-			var branch = _projectRepository.GetBranch(project, branchId);
-			var component = _projectRepository.GetComponent(project, componentId);
-			var file = this._fileRepository.CreateFile(fileName, fileData);
-			return this._buildRepository.StoreBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
-		}
-
 		public IEnumerable<DeployBuild> GetBuildList()
 		{
 			return this._buildRepository.GetBuildList();
 		}
 
+		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, string version)
+		{
+			var project = _projectRepository.GetProject(projectId);
+			var branch = _projectRepository.GetBranch(project, branchId);
+			var component = _projectRepository.GetComponent(project, componentId);
+			var file = this._fileRepository.CreateFile(fileName, fileData);
+			return this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
+		}
+
+		public DeployBuild GetBuild(string buildId)
+		{
+			return this._buildRepository.GetBuild(buildId);
+		}
+
+		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileId, string version)
+		{
+			var project = _projectRepository.GetProject(projectId);
+			var branch = _projectRepository.GetBranch(project, branchId);
+			var component = _projectRepository.GetComponent(project, componentId);
+			return this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, fileId, version);
+		}
+
+		public DeployBuild UpdateBuild(string buildId, string projectId, string componentId, string branchId, string fileId, string version)
+		{
+			var project = _projectRepository.GetProject(projectId);
+			var branch = _projectRepository.GetBranch(project, branchId);
+			var component = _projectRepository.GetComponent(project, componentId);
+			return this._buildRepository.UpdateBuild(buildId, projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, fileId, version);
+		}
+
+		public void DeleteBuild(string buildId)
+		{
+			this._buildRepository.DeleteBuild(buildId);
+		}
 	}
 }

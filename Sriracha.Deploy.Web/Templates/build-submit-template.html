@@ -1,19 +1,19 @@
 ﻿<h2>Submit Build</h2>
 <div>
 	<b>Project:</b>
-	<select ng-model="build.project" ng-options="item as item.projectName for item in projectList"></select>
+	<select ng-model="project" ng-options="item as item.projectName for item in projectList"></select>
 </div>
 <div>
 	<b>Component:</b>
-	<select ng-model="build.component" ng-options="item as item.componentName for item in build.project.componentList"></select>
+	<select ng-model="component" ng-options="item as item.componentName for item in project.componentList"></select>
 </div>
 <div>
 	<b>Branch:</b>
-	<select ng-model="build.branch" ng-options="item as item.branchName for item in build.project.branchList"></select>
+	<select ng-model="branch" ng-options="item as item.branchName for item in project.branchList"></select>
 </div>
 <div>
 	<b>Version #:</b>
-	<input type="text" ng-model="Version" />
+	<input type="text" ng-model="build.version" />
 </div>
 <div>
     <form ng-upload="uploadComplete" action="/api/file/upload?format=json" method="post">

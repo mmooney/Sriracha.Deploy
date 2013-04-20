@@ -19,7 +19,12 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public DeployBuild StoreBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, Version version)
+		public IEnumerable<DeployBuild> GetBuildList()
+		{
+			return this._documentSession.Query<DeployBuild>();
+		}
+
+		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
 		{
 			var existingItem = (from i in this._documentSession.Query<DeployBuild>()
 											.Customize(x=>x.WaitForNonStaleResultsAsOfLastWrite())
@@ -49,10 +54,71 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-
-		public IEnumerable<DeployBuild> GetBuildList()
+		public DeployBuild GetBuild(string buildId)
 		{
-			return this._documentSession.Query<DeployBuild>();
+			if(string.IsNullOrEmpty(buildId))
+			{
+				throw new ArgumentNullException("Missing build ID");
+			}
+			return this._documentSession.Load<DeployBuild>(buildId);
+		}
+
+		public DeployBuild UpdateBuild(string buildId, string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
+		{
+			if (string.IsNullOrEmpty(buildId))
+			{
+				throw new ArgumentNullException("Missing build ID");
+			}
+			if (string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			if(string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing project name");
+			}
+			if (string.IsNullOrEmpty(projectComponentId))
+			{
+				throw new ArgumentNullException("Missing component ID");
+			}
+			if (string.IsNullOrEmpty(projectComponentName)) 
+			{
+				throw new ArgumentNullException("Missing component name");
+			}
+			if (string.IsNullOrEmpty(projectBranchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			if (string.IsNullOrEmpty(projectBranchName))
+			{
+				throw new ArgumentNullException("Missing branch name");
+			}
+			if (string.IsNullOrEmpty(fileId))
+			{
+				throw new ArgumentNullException("Missing file ID");
+			}
+			if (string.IsNullOrEmpty(version))
+			{
+				throw new ArgumentNullException("Missing version");
+			}
+			var build = this.GetBuild(buildId);
+			build.ProjectId = projectId;
+			build.ProjectComponentId = projectComponentId;
+			build.ProjectComponentName = projectComponentName;
+			build.ProjectBranchId = projectBranchId;
+			build.ProjectBranchName = projectBranchName;
+			build.FileId = fileId;
+			build.Version = version;
+			this._documentSession.SaveChanges();
+			return build;
+		}
+
+		public void DeleteBuild(string buildId)
+		{
+			var build = GetBuild(buildId);
+			this._documentSession.Delete(build);
+			this._documentSession.SaveChanges();
+
 		}
 	}
 }
