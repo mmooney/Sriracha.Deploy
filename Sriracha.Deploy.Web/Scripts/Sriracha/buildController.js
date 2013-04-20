@@ -1,7 +1,13 @@
 ﻿ngSriracha.controller("BuildController", function ($scope, $routeParams, SrirachaResource) {
-	$scope.projectList = SrirachaResource.project.query({});
-	$scope.uploadMessage = "Please upload the deploy package file first";
-	$scope.build = new SrirachaResource.build({});
+	if ($routeParams.buildId) {
+		$scope.build = SrirachaResource.build.get({id: $routeParams.buildId});
+	}
+	else {
+		$scope.buildList = SrirachaResource.build.query({});
+		$scope.projectList = SrirachaResource.project.query({});
+		$scope.uploadMessage = "Please upload the deploy package file first";
+		$scope.build = new SrirachaResource.build({});
+	}
 
 	$scope.reportError = function (error) {
 		alert("ERROR: \r\n" + JSON.stringify(error));
@@ -35,5 +41,27 @@
 				$scope.reportError(error);
 			}
 		);
+	}
+
+	$scope.deleteBuild = function() {
+		$scope.build.$delete(
+			$scope.build,
+			function () {
+				Sriracha.Navigation.Build.List();
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
+
+	$scope.getSubmitBuildUrl = function () {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.SubmitUrl);
+	}
+	$scope.getBuildListUrl = function () {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ListUrl);
+	}
+	$scope.getDeleteBuildUrl = function (build) {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.DeleteUrl, { buildId: build.id });
 	}
 });

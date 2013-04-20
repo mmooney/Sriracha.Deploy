@@ -467,6 +467,7 @@
     <Content Include="Templates\branch-delete-template.html" />
     <Content Include="Templates\build-list-template.html" />
     <Content Include="Templates\build-submit-template.html" />
+    <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\environment-delete-template.html" />
     <Content Include="Templates\environment-edit-template.html" />
     <Content Include="Templates\deploymentstep-delete-template.html" />

@@ -6,6 +6,8 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "/templates/home-template.html",
 			controller: "HomeController"
 		})
+
+		//Projects
 		.when(Sriracha.Navigation.Project.CreateUrl, {
 			templateUrl: "templates/project-edit-template.html",
 			controller: "ProjectController"
@@ -22,6 +24,8 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/project-delete-template.html",
 			controller: "ProjectController"
 		})
+
+		//Components
 		.when(Sriracha.Navigation.Component.CreateUrl, {
 			templateUrl: "templates/component-edit-template.html",
 			controller: "ProjectController"
@@ -38,6 +42,8 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/component-delete-template.html",
 			controller: "ProjectController"
 		})
+
+		//Deployment Steps
 		.when(Sriracha.Navigation.DeploymentStep.CreateUrl, {
 			templateUrl: "templates/deploymentstep-edit-template.html",
 			controller: "ProjectController"
@@ -50,6 +56,8 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/deploymentstep-delete-template.html",
 			controller: "ProjectController"
 		})
+
+		//Branches
 		.when(Sriracha.Navigation.Branch.CreateUrl, {
 			templateUrl: "templates/branch-edit-template.html",
 			controller: "ProjectController"
@@ -62,6 +70,8 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/branch-delete-template.html",
 			controller: "ProjectController"
 		})
+
+		//Environments
 		.when(Sriracha.Navigation.Environment.CreateUrl, {
 			templateUrl: "templates/environment-edit-template.html",
 			controller: "ProjectController"
@@ -78,8 +88,18 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/environment-delete-template.html",
 			controller: "ProjectController"
 		})
+
+		//Builds
+		.when(Sriracha.Navigation.Build.ListUrl, {
+			templateUrl: "templates/build-list-template.html",
+			controller: "BuildController"
+		})
 		.when(Sriracha.Navigation.Build.SubmitUrl, { 
 			templateUrl: "templates/build-submit-template.html",
+			controller: "BuildController"
+		})
+		.when(Sriracha.Navigation.Build.DeleteUrl, {
+			templateUrl: "templates/build-delete-template.html",
 			controller: "BuildController"
 		})
 		.otherwise({
@@ -129,12 +149,8 @@ ngSriracha.controller("HomeController", function ($scope, $routeParams, Sriracha
 	$scope.getSubmitBuildUrl = function() {
 		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.SubmitUrl);
 	}
+	$scope.getBuildListUrl = function () {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ListUrl);
+	}
 });
-
-//ngSriracha.controller("ProjectListController", function ($scope, $routeParams, SrirachaResource) {
-//	$scope.projectList = SrirachaResource.project.query({});
-//	$scope.goToDeleteProject = function (project) {
-//		Sriracha.Navigation.Project.Delete(project.id);
-//	}
-//});
 

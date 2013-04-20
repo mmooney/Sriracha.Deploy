@@ -114,9 +114,21 @@ Sriracha.Navigation = {
 	},
 
 	Build: {
+		ListUrl: "/build",
+		List: function () {
+			Sriracha.Navigation.GoTo(this.ListUrl);
+		},
 		SubmitUrl: "/build/submit",
 		Submit: function () {
 			Sriracha.Navigation.GoTo(this.SubmitUrl);
+		},
+		ViewUrl: "/build/:buildId",
+		View: function(buildId) {
+			Sriracha.Navigation.GoTo(this.ViewUrl, { buildId: buildId });
+		},
+		DeleteUrl: "/build/delete/:buildId",
+		Delete: function (buildId) {
+			Sriracha.Navigation.GoTo(this.DeleteUrl, { buildId: buildId });
 		}
 	}
 

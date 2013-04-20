@@ -40,6 +40,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var item = new DeployBuild
 			{
+				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
 				ProjectName = projectName,
 				ProjectComponentId = projectComponentId,
