@@ -336,7 +336,7 @@ namespace Sriracha.Deploy.RavenDB
 			return project.EnvironmentList;
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -351,8 +351,10 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
-				EnvironmentName = environmentName
+				EnvironmentName = environmentName,
+				ComponentList = componentList.ToList()
 			};
+			UpdateComponentList(componentList, project, environment);
 			if(project.EnvironmentList == null)
 			{
 				project.EnvironmentList = new List<DeployEnvironment>();
@@ -360,6 +362,33 @@ namespace Sriracha.Deploy.RavenDB
 			project.EnvironmentList.Add(environment);
 			this._documentSession.SaveChanges();
 			return environment;
+		}
+
+		private static void UpdateComponentList(IEnumerable<DeployEnvironmentComponent> componentList, DeployProject project, DeployEnvironment environment)
+		{
+			foreach (var component in componentList)
+			{
+				if (string.IsNullOrEmpty(component.Id))
+				{
+					component.Id = Guid.NewGuid().ToString();
+				}
+				component.EnvironmentId = environment.Id;
+				component.ProjectId = project.Id;
+
+				if (component.ServerList != null)
+				{
+					foreach (var server in component.ServerList)
+					{
+						if (string.IsNullOrEmpty(server.Id))
+						{
+							server.Id = Guid.NewGuid().ToString();
+						}
+						server.ProjectId = project.Id;
+						server.EnvironmentComponentId = component.Id;
+						server.EnvironmentId = environment.Id;
+					}
+				}
+			}
 		}
 
 		public DeployEnvironment GetEnvironment(string environmentId)
@@ -377,7 +406,7 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -398,6 +427,8 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
 			environment.EnvironmentName = environmentName;
+			environment.ComponentList = componentList.ToList();
+			UpdateComponentList(componentList, project, environment);
 			this._documentSession.SaveChanges();
 			return environment;
 		}

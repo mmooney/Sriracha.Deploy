@@ -4,5 +4,32 @@
 	<b>Environment Name:</b>
 	<input type="text" ng-model="environment.environmentName" />
 </div>
+<div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Component</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="component in environment.componentList">
+				<td>
+					<span class="label">{{component.componentName}}</span>
+					<table class="table table-border">
+						<tr ng-repeat="server in component.serverList">
+							<td>
+								{{server.serverName}} 
+								<button class="btn" ng-click="editEnvironmentComponentServer(component, server)"><i class="icon-edit"></i></button>
+								<button class="btn btn-danger" ng-click="deleteEnvironmentServer(component, server)"><i class="icon-trash"></i></button>
+							</td>
+						</tr>
+					</table>
+					<button class="btn btn-primary" ng-click="addEnvironmentComponentServer(component)"><i class="icon-plus"></i> Add Server</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<hr />
 <button class="btn btn-action" ng-click="cancelEnvironment()">Cancel</button>
 <button class="btn btn-action" ng-click="saveEnvironment()">Save</button>

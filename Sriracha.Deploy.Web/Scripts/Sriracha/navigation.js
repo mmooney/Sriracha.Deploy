@@ -130,6 +130,13 @@ Sriracha.Navigation = {
 		Delete: function (buildId) {
 			Sriracha.Navigation.GoTo(this.DeleteUrl, { buildId: buildId });
 		}
+	},
+
+	Deployment: {
+		SubmitUrl: "/deploy/submit/:buildId/:environmentId",
+		Submit: function (buildId, environmentId) {
+			Sriracha.Navigation.GoTo(this.SubmitUrl, { buildId: buildId, environmentId: environmentId });
+		}
 	}
 
 };

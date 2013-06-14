@@ -98,13 +98,29 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/build-submit-template.html",
 			controller: "BuildController"
 		})
+		.when(Sriracha.Navigation.Build.ViewUrl, {
+			templateUrl: "templates/build-view-template.html",
+			controller: "BuildController"
+		})
 		.when(Sriracha.Navigation.Build.DeleteUrl, {
 			templateUrl: "templates/build-delete-template.html",
 			controller: "BuildController"
 		})
+
+		//Deployments
+		.when(Sriracha.Navigation.Deployment.SubmitUrl, {
+			templateUrl: "templates/deployment-submit-template.html",
+			controller: "DeployController"
+		})
+		.when(Sriracha.Navigation.Deployment.ViewUrl, {
+			templateUrl: "templates/deployment-view-template.html",
+			controller: "DeployController"
+		})
+
 		.otherwise({
 			template: "<h1>Not Found</h1>"
 		})
+
 	;
 });
 
@@ -115,6 +131,7 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 		branch: $resource("/api/project/:projectId/branch"),
 		environment: $resource("/api/project/:projectId/environment"),
 		deploymentStep: $resource("/api/project/:projectId/component/:componentId/step", { projectId: "@projectId", componentId: "@componentId" }),
+		deployHistory: $resource("/api/deploy/history"),
 		taskMetadata: $resource("/api/taskmetadata"),
 		build: $resource("/api/build/:buildId")
 	}
@@ -151,6 +168,9 @@ ngSriracha.controller("HomeController", function ($scope, $routeParams, Sriracha
 	}
 	$scope.getBuildListUrl = function () {
 		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ListUrl);
+	}
+	$scope.getViewBuildUrl = function (build) {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ViewUrl, { buildId: build.id });
 	}
 });
 

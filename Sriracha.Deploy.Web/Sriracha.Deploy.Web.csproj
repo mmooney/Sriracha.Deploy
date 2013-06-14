@@ -176,6 +176,7 @@
     <Compile Include="Services\BranchService.cs" />
     <Compile Include="Services\BuildService.cs" />
     <Compile Include="Services\ComponentService.cs" />
+    <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
@@ -441,6 +442,7 @@
     <Content Include="Scripts\angular\ng-upload.js" />
     <Content Include="Scripts\angular\ng-upload.min.js" />
     <Content Include="Scripts\sriracha\buildController.js" />
+    <Content Include="Scripts\sriracha\deployController.js" />
     <Content Include="Scripts\sriracha\navigation.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
@@ -457,6 +459,7 @@
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\sriracha\navigationFactory.js" />
     <Content Include="Scripts\sriracha\ngSriracha.js" />
     <Content Include="Scripts\sriracha\projectController.js" />
     <Content Include="Scripts\sriracha\shared.js" />
@@ -468,6 +471,8 @@
     <Content Include="Templates\build-list-template.html" />
     <Content Include="Templates\build-submit-template.html" />
     <Content Include="Templates\build-delete-template.html" />
+    <Content Include="Templates\build-view-template.html" />
+    <Content Include="Templates\deployment-submit-template.html" />
     <Content Include="Templates\environment-delete-template.html" />
     <Content Include="Templates\environment-edit-template.html" />
     <Content Include="Templates\deploymentstep-delete-template.html" />

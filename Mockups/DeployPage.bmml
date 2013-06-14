@@ -1,0 +1,102 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1475" measuredH="906" mockupW="1148" mockupH="846">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="327" y="60" w="1148" h="846" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Welcome%20to%20the%20Application%21%0Ahttp%3A//deployApp.com/%23/project/XYX-123</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Title" x="398" y="164" w="-1" h="-1" measuredW="715" measuredH="43" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>%3CApplication%20Name%3E%20-%20Sample%20Project%201</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::SubTitle" x="398" y="362" w="-1" h="-1" measuredW="135" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Build%20Details</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::BreadCrumbs" x="398" y="322" w="-1" h="-1" measuredW="607" measuredH="24" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Home%20%3E%20Sample%20Project%201%20%3E%20Dev%20Cycle%201%20-%20User%20Website%20%3E%20v4.3.5.5820%20%3E%20Submit%20Deployment%20%28QA%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="16" controlTypeID="com.balsamiq.mockups::SubTitle" x="398" y="446" w="-1" h="-1" measuredW="145" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Configuration</text>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Title" x="398" y="214" w="-1" h="-1" measuredW="757" measuredH="43" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Dev%20Cycle%201%20-%20User%20Website%20-%20v4.3.5.5820</text>
+      </controlProperties>
+    </control>
+    <control controlID="30" controlTypeID="com.balsamiq.mockups::Label" x="430" y="398" w="-1" h="-1" measuredW="61" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Some%20text</text>
+      </controlProperties>
+    </control>
+    <control controlID="32" controlTypeID="com.balsamiq.mockups::Label" x="430" y="480" w="-1" h="-1" measuredW="78" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Static%20Values</text>
+      </controlProperties>
+    </control>
+    <control controlID="33" controlTypeID="com.balsamiq.mockups::DataGrid" x="448" y="501" w="372" h="111" measuredW="226" measuredH="111" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hasHeader>true</hasHeader>
+        <hLines>false</hLines>
+        <text>Setting%20Name%2C%20Setting%20Value%0AWidget%20Name%2C%20Customer%20Widget%0ADeploy%20Mode%2C%20Replace%0ASchema%20Version%2C%20REL1627</text>
+      </controlProperties>
+    </control>
+    <control controlID="34" controlTypeID="com.balsamiq.mockups::Label" x="430" y="620" w="-1" h="-1" measuredW="149" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Environment%20Values%20%28QA%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="35" controlTypeID="com.balsamiq.mockups::DataGrid" x="448" y="641" w="428" h="112" measuredW="417" measuredH="113" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hasHeader>true</hasHeader>
+        <hLines>false</hLines>
+        <text>Setting%20Name%2C%20Setting%20Value%0AConnection%20String%2C%20Data%20Source%3DQAServer%3B%20Initial%20Catalog%3DQADB%3B%20%5CrUser%20Name%3DGoEagles%3B%20Password%3DBooGiants%0ATarget%20Directory%2C%20D%3A%5CMyApplication%5CUserWebsite%5Cv4.3.5%0AIIS%20Application%20Pool%2C%20QaSiteAppPool</text>
+      </controlProperties>
+    </control>
+    <control controlID="36" controlTypeID="com.balsamiq.mockups::Title" x="430" y="264" w="-1" h="-1" measuredW="243" measuredH="43" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Deploy%20to%20QA</text>
+      </controlProperties>
+    </control>
+    <control controlID="38" controlTypeID="com.balsamiq.mockups::Label" x="921" y="473" w="-1" h="-1" measuredW="84" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Server%20Values</text>
+      </controlProperties>
+    </control>
+    <control controlID="39" controlTypeID="com.balsamiq.mockups::CheckBox" x="954" y="497" w="-1" h="-1" measuredW="96" measuredH="22" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>QASERVER1</text>
+      </controlProperties>
+    </control>
+    <control controlID="40" controlTypeID="com.balsamiq.mockups::DataGrid" x="968" y="519" w="372" h="86" measuredW="295" measuredH="81" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hasHeader>true</hasHeader>
+        <hLines>false</hLines>
+        <text>Setting%20Name%2C%20Setting%20Value%0AMachine%20Name%2C%20qaserver1.mydomain.com%0AResources%20Directory%2C%20D%3A%5CResources</text>
+      </controlProperties>
+    </control>
+    <control controlID="41" controlTypeID="com.balsamiq.mockups::CheckBox" x="954" y="627" w="-1" h="-1" measuredW="99" measuredH="22" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>QASERVER2</text>
+      </controlProperties>
+    </control>
+    <control controlID="42" controlTypeID="com.balsamiq.mockups::DataGrid" x="968" y="649" w="372" h="86" measuredW="299" measuredH="81" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <hasHeader>true</hasHeader>
+        <hLines>false</hLines>
+        <text>Setting%20Name%2C%20Setting%20Value%0AMachine%20Name%2C%20qaserver2.mydomain.com%0AResources%20Directory%2C%20D%3A%5CData%5CResources_New</text>
+      </controlProperties>
+    </control>
+    <control controlID="43" controlTypeID="com.balsamiq.mockups::Button" x="855" y="792" w="-1" h="-1" measuredW="92" measuredH="27" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Deploy%20Now</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

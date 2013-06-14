@@ -23,6 +23,7 @@ namespace Sriracha.Deploy.Web.Helpers
 			Bind<IBuildRepository>().To<RavenBuildRepository>();
 			Bind<IProjectRepository>().To<RavenProjectRepository>();
 			Bind<IFileRepository>().To<RavenFileRepository>();
+			Bind<IDeployHistoryRepository>().To<RavenDeployHistoryRepository>();
 		}
 	}
 }

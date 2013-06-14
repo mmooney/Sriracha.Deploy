@@ -205,9 +205,9 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.GetEnvironmentList(projectId);
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
 		{
-			return this._projectRepository.CreateEnvironment(projectId, environmentName);
+			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList);
 		}
 
 		public DeployEnvironment GetEnvironment(string environmentId)
@@ -215,9 +215,9 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.GetEnvironment(environmentId);
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
 		{
-			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName);
+			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList);
 		}
 
 		public void DeleteEnvironment(string environmentId)

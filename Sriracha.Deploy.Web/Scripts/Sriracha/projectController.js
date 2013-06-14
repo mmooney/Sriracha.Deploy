@@ -38,6 +38,23 @@
 				var environment = _.find($scope.project.environmentList, function (e) { return e.id == $routeParams.environmentId });
 				if (environment) {
 					$scope.environment = new SrirachaResource.environment(environment);
+					if (!$scope.environment.componentList) {
+						$scope.enviornment.componentList = [];
+					}
+					var oldEnvironmentComponentList = $scope.environment.componentList;
+					console.log($scope.environment.componentList);
+					$scope.environment.componentList = [];
+					_.each($scope.project.componentList, function (component) {
+						var environmentComponentItem = _.findWhere(oldEnvironmentComponentList, { componentId: component.id });
+						if (!environmentComponentItem) {
+							console.log("not found");
+							environmentComponentItem = {
+								componentId: component.id,
+								componentName: component.componentName
+							};
+						}
+						$scope.environment.componentList.push(environmentComponentItem);
+					});
 				}
 			}
 			if (!$scope.environment) {
@@ -254,8 +271,12 @@
 		Sriracha.Navigation.Project.View($routeParams.projectId);
 	}
 	$scope.saveEnvironment = function () {
+		var saveParams = {
+			id: $routeParams.environmentId,
+			projectId: $routeParams.projectId
+		};
 		$scope.environment.$save(
-			$scope.environment,
+			saveParams,
 			function () {
 				Sriracha.Navigation.Project.View($routeParams.projectId);
 			},
@@ -264,6 +285,7 @@
 			}
 		);
 	}
+
 	$scope.deleteEnvironment = function () {
 		$scope.environment.$delete(
 			$scope.environment,
@@ -274,6 +296,46 @@
 				$scope.reportError(error);
 			}
 		);
+	}
+
+	$scope.editEnvironmentComponentServer = function (environmentComponent, server) {
+		var existingServerName = server.serverName;
+		var newServerName = prompt("Please enter server name", existingServerName);
+		if (newServerName != existingServerName) {
+			var duplicate = _.find(environmentComponent.serverList, function (s) { return s.serverName == newServerName });
+			if (duplicate) {
+				alert(newServerName + " already exists");
+				return;
+			}
+			server.serverName = newServerName;
+		}
+	}
+
+	$scope.deleteEnvironmentServer = function (environmentComponent, server) {
+		var index = environmentComponent.serverList.indexOf(server);
+		if (index >= 0) {
+			environmentComponent.serverList.splice(index, 1);
+		}
+	}
+
+	$scope.addEnvironmentComponentServer = function (environmentComponent) {
+		var serverName = prompt("Please enter server name");
+		if (serverName) {
+			if (environmentComponent.serverList) {
+				var duplicate = _.find($scope.environment.serverList, function (s) { return s.serverName == serverName });
+				if (duplicate) {
+					alert(serverName + " already exists");
+					return;
+				}
+			}
+			else {
+				environmentComponent.serverList = [];
+			}
+			var newServer = {
+				serverName: serverName
+			};
+			environmentComponent.serverList.push(newServer);
+		}
 	}
 	//End Environments
 });
