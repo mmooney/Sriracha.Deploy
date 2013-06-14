@@ -15,11 +15,11 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 		}
 		public List<XPathValueItem> XPathValueList { get; set; }
 		public string XmlTemplate { get; set; }
+		public string TargetFileName { get; set; }
 
 		public XmlConfigFileTaskOptions()
 		{
 			this.XPathValueList = new List<XPathValueItem>();
 		}
-
 	}
 }

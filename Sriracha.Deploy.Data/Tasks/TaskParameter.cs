@@ -18,5 +18,6 @@ namespace Sriracha.Deploy.Data.Tasks
 	{
 		public string FieldName { get; set; }
 		public EnumTaskParameterType FieldType { get; set; }
+		public bool Sensitive { get; set; }
 	}
 }

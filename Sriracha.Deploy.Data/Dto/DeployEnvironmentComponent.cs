@@ -11,11 +11,14 @@ namespace Sriracha.Deploy.Data.Dto
 		public string ProjectId { get; set; }
 		public string EnvironmentId { get; set; }
 		public string ComponentId { get; set; }
-		public List<DeployServer> ServerList { get; set; }
+		public List<DeployMachine> MachineList { get; set; }
+		public Dictionary<string, string> ConfigurationValueList { get; set; }
 
 		public DeployEnvironmentComponent()
 		{
-			this.ServerList = new List<DeployServer>();
+			this.MachineList = new List<DeployMachine>();
+			this.ConfigurationValueList = new Dictionary<string,string>();
 		}
+
 	}
 }

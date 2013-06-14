@@ -375,17 +375,17 @@ namespace Sriracha.Deploy.RavenDB
 				component.EnvironmentId = environment.Id;
 				component.ProjectId = project.Id;
 
-				if (component.ServerList != null)
+				if (component.MachineList != null)
 				{
-					foreach (var server in component.ServerList)
+					foreach (var machine in component.MachineList)
 					{
-						if (string.IsNullOrEmpty(server.Id))
+						if (string.IsNullOrEmpty(machine.Id))
 						{
-							server.Id = Guid.NewGuid().ToString();
+							machine.Id = Guid.NewGuid().ToString();
 						}
-						server.ProjectId = project.Id;
-						server.EnvironmentComponentId = component.Id;
-						server.EnvironmentId = environment.Id;
+						machine.ProjectId = project.Id;
+						machine.EnvironmentComponentId = component.Id;
+						machine.EnvironmentId = environment.Id;
 					}
 				}
 			}

@@ -7,30 +7,34 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 {
 	public class XmlConfigFileTask : BaseDeployTask<XmlConfigFileTaskOptions>
 	{
-		public string XmlTemplate { get; set; }
-
 		public override IList<TaskParameter> GetStaticTaskParameterList()
 		{
-			throw new NotImplementedException();
+			return this.GetTaskParameterList(EnumConfigLevel.Static);
 		}
 
 		public override IList<TaskParameter> GetEnvironmentTaskParameterList()
 		{
-			return 
-			(
-				from i in this.Options.XPathValueList
-				where i.ConfigLevel == EnumConfigLevel.Environment
-				select new TaskParameter
-				{
-					FieldName = i.ValueName,
-					FieldType = EnumTaskParameterType.String 
-				}
-			).ToList();
+			return this.GetTaskParameterList(EnumConfigLevel.Environment);
 		}
 
 		public override IList<TaskParameter> GetMachineTaskParameterList()
 		{
-			throw new NotImplementedException();
+			return this.GetTaskParameterList(EnumConfigLevel.Machine);
+		}
+
+
+		private IList<TaskParameter> GetTaskParameterList(EnumConfigLevel enumConfigLevel)
+		{
+			return
+			(
+				from i in this.Options.XPathValueList
+				where i.ConfigLevel == enumConfigLevel
+				select new TaskParameter
+				{
+					FieldName = i.ValueName,
+					FieldType = EnumTaskParameterType.String
+				}
+			).ToList();
 		}
 	}
 }

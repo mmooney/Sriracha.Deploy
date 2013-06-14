@@ -310,43 +310,43 @@
 		);
 	}
 
-	$scope.editEnvironmentComponentServer = function (environmentComponent, server) {
-		var existingServerName = server.serverName;
-		var newServerName = prompt("Please enter server name", existingServerName);
-		if (newServerName != existingServerName) {
-			var duplicate = _.find(environmentComponent.serverList, function (s) { return s.serverName == newServerName });
+	$scope.editEnvironmentComponentMachine = function (environmentComponent, machine) {
+		var existingMachineName = machine.machineName;
+		var newMachineName = prompt("Please enter machine name", existingMachineName);
+		if (newMachineName != existingMachineName) {
+			var duplicate = _.find(environmentComponent.machineList, function (s) { return s.machineName == newMachineName });
 			if (duplicate) {
-				alert(newServerName + " already exists");
+				alert(newMachineName + " already exists");
 				return;
 			}
-			server.serverName = newServerName;
+			machine.machineName = newMachineName;
 		}
 	}
 
-	$scope.deleteEnvironmentServer = function (environmentComponent, server) {
-		var index = environmentComponent.serverList.indexOf(server);
+	$scope.deleteEnvironmentMachine = function (environmentComponent, machine) {
+		var index = environmentComponent.machineList.indexOf(machine);
 		if (index >= 0) {
-			environmentComponent.serverList.splice(index, 1);
+			environmentComponent.machineList.splice(index, 1);
 		}
 	}
 
-	$scope.addEnvironmentComponentServer = function (environmentComponent) {
-		var serverName = prompt("Please enter server name");
-		if (serverName) {
-			if (environmentComponent.serverList) {
-				var duplicate = _.find($scope.environment.serverList, function (s) { return s.serverName == serverName });
+	$scope.addEnvironmentComponentMachine = function (environmentComponent) {
+		var machineName = prompt("Please enter machine name");
+		if (machineName) {
+			if (environmentComponent.machineList) {
+				var duplicate = _.find($scope.environment.machineList, function (s) { return s.machineName == machineName });
 				if (duplicate) {
-					alert(serverName + " already exists");
+					alert(machineName + " already exists");
 					return;
 				}
 			}
 			else {
-				environmentComponent.serverList = [];
+				environmentComponent.machineList = [];
 			}
-			var newServer = {
-				serverName: serverName
+			var newMachine = {
+				machineName: machineName
 			};
-			environmentComponent.serverList.push(newServer);
+			environmentComponent.machineList.push(newMachine);
 		}
 	}
 	//End Environments

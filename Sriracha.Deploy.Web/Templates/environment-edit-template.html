@@ -16,15 +16,15 @@
 				<td>
 					<span class="label">{{component.componentName}}</span>
 					<table class="table table-border">
-						<tr ng-repeat="server in component.serverList">
+						<tr ng-repeat="machine in component.machineList">
 							<td>
-								{{server.serverName}} 
-								<button class="btn" ng-click="editEnvironmentComponentServer(component, server)"><i class="icon-edit"></i></button>
-								<button class="btn btn-danger" ng-click="deleteEnvironmentServer(component, server)"><i class="icon-trash"></i></button>
+								{{machine.machineName}} 
+								<button class="btn" ng-click="editEnvironmentComponentMachine(component, machine)"><i class="icon-edit"></i></button>
+								<button class="btn btn-danger" ng-click="deleteEnvironmentMachine(component, machine)"><i class="icon-trash"></i></button>
 							</td>
 						</tr>
 					</table>
-					<button class="btn btn-primary" ng-click="addEnvironmentComponentServer(component)"><i class="icon-plus"></i> Add Server</button>
+					<button class="btn btn-primary" ng-click="addEnvironmentComponentMachine(component)"><i class="icon-plus"></i> Add Machine</button>
 				</td>
 			</tr>
 		</tbody>

@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
-    <Compile Include="Dto\DeployServer.cs" />
+    <Compile Include="Dto\DeployMachine.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IDeployHistoryManager.cs" />
     <Compile Include="Dto\DeployHistory.cs" />
@@ -80,6 +80,7 @@
     <Compile Include="Tasks\RoundhousE\RoundhousEEnvironmentConfiguration.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
+    <Compile Include="Tasks\RuntimeValidationResult.cs" />
     <Compile Include="Tasks\TaskMetadata.cs" />
     <Compile Include="Tasks\TaskParameter.cs" />
     <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTask.cs" />
