@@ -11,13 +11,35 @@ namespace Sriracha.Deploy.Data.Tests
 {
 	public class TaskManagerTests
 	{
-		public class GetAvailableTaskList
+		public abstract class GetAvailableTaskList
 		{
-			private class TestDeployTask1 : IDeployTask { }
-			private class TestDeployTask2 : IDeployTask { }
-			private class TestDeployTask3 : IDeployTask { }
+			private class TestBaseTask : IDeployTask
+			{
+				public IList<TaskParameter> GetStaticTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetEnvironmentTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetMachineTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+			}
+			private class TestDeployTask1 : TestBaseTask { }
+			private class TestDeployTask2 : TestBaseTask { }
+			private class TestDeployTask3 : TestBaseTask { }
 			private interface ITestInterface : IDeployTask { }
-			private abstract class TestAbstractClass : IDeployTask { }
+			private abstract class TestAbstractClass : IDeployTask
+			{
+				public abstract IList<TaskParameter> GetStaticTaskParameterList();
+				public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
+				public abstract IList<TaskParameter> GetMachineTaskParameterList();
+			}
 
 			[Test]
 			public void CallsIModuleInspector()

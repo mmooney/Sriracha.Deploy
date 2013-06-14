@@ -7,5 +7,8 @@ namespace Sriracha.Deploy.Data.Tasks
 {
 	public interface IDeployTask
 	{
+		IList<TaskParameter> GetStaticTaskParameterList();
+		IList<TaskParameter> GetEnvironmentTaskParameterList();
+		IList<TaskParameter> GetMachineTaskParameterList();
 	}
 }

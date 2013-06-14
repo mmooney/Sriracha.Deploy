@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Tasks.RoundhousE
+namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 {
-	public class RoundhousETask : BaseDeployTask<RoundhousETaskOptions>
+	public class XmlConfigFileTask : BaseDeployTask<XmlConfigFileTaskOptions>
 	{
+		public string XmlTemplate { get; set; }
+
 		public override IList<TaskParameter> GetStaticTaskParameterList()
 		{
 			throw new NotImplementedException();
@@ -14,7 +16,16 @@ namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 
 		public override IList<TaskParameter> GetEnvironmentTaskParameterList()
 		{
-			throw new NotImplementedException();
+			return 
+			(
+				from i in this.Options.XPathValueList
+				where i.ConfigLevel == EnumConfigLevel.Environment
+				select new TaskParameter
+				{
+					FieldName = i.ValueName,
+					FieldType = EnumTaskParameterType.String 
+				}
+			).ToList();
 		}
 
 		public override IList<TaskParameter> GetMachineTaskParameterList()

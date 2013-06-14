@@ -15,7 +15,7 @@ namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 		Other
 	}
 
-	public class RoundhousETaskOptions : DeployTaskOptions
+	public class RoundhousETaskOptions
 	{
 		public EnumRoundhousEDBType DBType { get; set; }
 		public string DBTypeOtherValue { get; set; }

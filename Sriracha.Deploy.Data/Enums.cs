@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Tasks
+namespace Sriracha.Deploy.Data
 {
-	public class DeployTaskEnvironmentConfiguration
+	public enum EnumConfigLevel
 	{
+		Static,
+		Environment,
+		Machine
 	}
 }

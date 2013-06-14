@@ -6,17 +6,18 @@ using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
-	public abstract class BaseDeployTask<TaskOptions, EnvironmentConfiguration> : IDeployTask
-		where TaskOptions : DeployTaskOptions, new()
-		where EnvironmentConfiguration : DeployTaskEnvironmentConfiguration, new()
+	public abstract class BaseDeployTask<TaskOptions> : IDeployTask
+		where TaskOptions : new()
 	{
-		public TaskOptions Options { get; private set; }
-		public EnvironmentConfiguration Configuration { get; private set; }
+		public TaskOptions Options { get; set; }
 		
 		public BaseDeployTask()
 		{
 			this.Options = new TaskOptions();
-			this.Configuration = new EnvironmentConfiguration();
 		}
+
+		public abstract IList<TaskParameter> GetStaticTaskParameterList();
+		public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
+		public abstract IList<TaskParameter> GetMachineTaskParameterList();
 	}
 }

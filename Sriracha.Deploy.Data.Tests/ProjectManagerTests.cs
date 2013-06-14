@@ -210,6 +210,20 @@ namespace Sriracha.Deploy.Data.Tests
 		{
 			private class TestTaskType : IDeployTask 
 			{
+				public IList<TaskParameter> GetStaticTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetEnvironmentTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetMachineTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
 			}
 
 			[Test]
@@ -319,6 +333,20 @@ namespace Sriracha.Deploy.Data.Tests
 		{
 			private class TestTaskType : IDeployTask
 			{
+				public IList<TaskParameter> GetStaticTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetEnvironmentTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public IList<TaskParameter> GetMachineTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
 			}
 
 			[Test]

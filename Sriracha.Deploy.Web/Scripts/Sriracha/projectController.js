@@ -92,8 +92,11 @@
 	};
 
 	$scope.saveProject = function () {
+		var saveParams = {
+			projectId: $routeParams.projectId
+		};
 		$scope.project.$save(
-			$scope.project,
+			saveParams,
 			function (item) {
 				Sriracha.Navigation.Project.View(item.id);
 			},
@@ -161,9 +164,14 @@
 	}
 
 	$scope.saveDeploymentStep = function () {
+		var saveParams = {
+			projectId: $routeParams.projectId, 
+			componentId: $routeParams.componentId,
+			deploymentStepId: $routeParams.deploymentStepId
+		};		
 		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);
 		$scope.deploymentStep.$save(
-			$scope.deploymentStep,
+			saveParams,
 			function () {
 				Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
 			},
@@ -223,8 +231,12 @@
 		Sriracha.Navigation.Project.View($routeParams.projectId);
 	}
 	$scope.saveBranch = function () {
+		var saveParams = {
+			projectId: $routeParams.projectId,
+			branchId: $routeParams.branchId
+		};		
 		$scope.branch.$save(
-			$scope.branch,
+			saveParams,
 			function () {
 				Sriracha.Navigation.Project.View($routeParams.projectId);
 			},

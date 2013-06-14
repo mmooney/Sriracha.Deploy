@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 {
-	public class RoundhousEEnvironmentConfiguration : DeployTaskEnvironmentConfiguration
+	public class RoundhousEEnvironmentConfiguration 
 	{
 		public string ServerName { get; set; }
 		public string DatabaseName { get; set; }

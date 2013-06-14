@@ -163,6 +163,9 @@ ngSriracha.directive("buildList", function () {
 ngSriracha.controller("HomeController", function ($scope, $routeParams, SrirachaResource) {
 	$scope.projectList = SrirachaResource.project.query({});
 	$scope.buildList = SrirachaResource.build.query({});
+	$scope.getCreateProjectUrl = function () {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Project.CreateUrl);
+	}
 	$scope.getSubmitBuildUrl = function() {
 		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.SubmitUrl);
 	}

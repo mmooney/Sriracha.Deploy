@@ -32,11 +32,13 @@
 	}
 
 	$scope.saveBuild = function () {
-		$scope.build.projectId = $scope.project.id;
-		$scope.build.projectComponentId = $scope.component.id;
-		$scope.build.projectBranchId = $scope.branch.id;
+		var saveParams = {
+			projectId: $scope.project.id,
+			projectComponentId: $scope.component.id,
+			projectBranchId: $scope.branch.id
+		};
 		$scope.build.$save(
-			$scope.build,
+			saveParams,
 			function () {
 				Sriracha.Navigation.Build.List();
 			},
