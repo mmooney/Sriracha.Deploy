@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data.Tasks
 {
 	public interface IDeployTaskExecutor
 	{
-		void Execute(IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);		
+		DeployTaskExecutionResult Execute(IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);		
 	}
 }

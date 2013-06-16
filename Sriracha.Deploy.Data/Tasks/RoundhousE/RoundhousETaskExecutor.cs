@@ -7,7 +7,7 @@ namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 {
 	public class RoundhousETaskExecutor : BaseDeployTaskExecutor<RoundhousETask>
 	{
-		protected override void InternalExecute(RoundhousETask definition, Dto.DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, RoundhousETask definition, Dto.DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			throw new NotImplementedException();
 		}

@@ -19,8 +19,10 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			_fileWriter = DIHelper.VerifyParameter(fileWriter);
 		}
 
-		protected override void InternalExecute(XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
+			statusManager.Info(string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
+			var result = new DeployTaskExecutionResult();
 			var validationResult = definition.ValidateRuntimeValues(environmentComponent);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
 			{
@@ -28,12 +30,15 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			}
 			foreach (var machine in environmentComponent.MachineList)
 			{
-				this.ExecuteMachine(definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
+				this.ExecuteMachine(statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
 			}
+			statusManager.Info(string.Format("Done XmlConfigTask for {0} ", definition.Options.TargetFileName));
+			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, RuntimeValidationResult validationResult)
+		private void ExecuteMachine(IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, RuntimeValidationResult validationResult)
 		{
+			statusManager.Info(string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.MachineName];
 			var xmlDoc = new XmlDocument();
 			xmlDoc.LoadXml(definition.Options.XmlTemplate);
@@ -56,6 +61,8 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			string outputDirectory = runtimeSystemSettings.GetLocalMachineDirectory(machine.MachineName);
 			string outputFilePath = Path.Combine(outputDirectory, definition.Options.TargetFileName);
 			_fileWriter.WriteText(outputFilePath, xmlDoc.OuterXml, false);
+			statusManager.Info(string.Format("Writing XML {0} for machine {1}: {2}", definition.Options.TargetFileName, machine.MachineName, xmlDoc.OuterXml));
+			statusManager.Info(string.Format("Done configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 		}
 
 		private void UpdateXmlNode(XmlDocument xmlDoc, string xpath, string value)

@@ -39,6 +39,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -81,9 +84,14 @@
     <Compile Include="Repository\IProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\BaseDeployTaskExecutor.cs" />
+    <Compile Include="Tasks\DeployTaskExecutionResult.cs" />
     <Compile Include="Tasks\IDeployTaskDefinition.cs" />
     <Compile Include="Tasks\IDeployTaskExecutor.cs" />
     <Compile Include="ITaskFactory.cs" />
+    <Compile Include="Tasks\IDeployTaskStatusManager.cs" />
+    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
+    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
+    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskOptions.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEEnvironmentConfiguration.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETaskExecutor.cs" />

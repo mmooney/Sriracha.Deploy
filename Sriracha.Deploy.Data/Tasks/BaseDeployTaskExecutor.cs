@@ -6,9 +6,10 @@ using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
-	public abstract class BaseDeployTaskExecutor<TaskDefinition> : IDeployTaskExecutor where TaskDefinition: IDeployTaskDefinition
+	public abstract class BaseDeployTaskExecutor<TaskDefinition> : IDeployTaskExecutor 
+		where TaskDefinition: IDeployTaskDefinition
 	{
-		public void Execute(IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		public DeployTaskExecutionResult Execute(IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			if(definition == null)
 			{
@@ -19,9 +20,9 @@ namespace Sriracha.Deploy.Data.Tasks
 				throw new ArgumentException(string.Format("Task definition must be {0}, found {1}", typeof(TaskDefinition).FullName, definition.GetType().FullName));
 			}
 			var typedDefinition = (TaskDefinition)definition;
-			this.InternalExecute(typedDefinition, environmentComponent, runtimeSystemSettings);
+			return this.InternalExecute(statusManager, typedDefinition, environmentComponent, runtimeSystemSettings);
 		}
 
-		protected abstract void InternalExecute(TaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);
+		protected abstract DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);
 	}
 }
