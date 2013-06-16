@@ -13,5 +13,5 @@ namespace Sriracha.Deploy.Data.Tasks
 		void Info(string message);
 		void Error(string message);
 		void Error(Exception err);
-}
+	}
 }

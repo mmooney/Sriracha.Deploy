@@ -7,5 +7,6 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 {
 	public class LocalCommandLineTaskOptions
 	{
+		public string ExecutablePath { get; set; }
 	}
 }
