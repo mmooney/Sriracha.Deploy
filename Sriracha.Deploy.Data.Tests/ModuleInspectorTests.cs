@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Data.Tests
 	{
 		public class FindTypesImplementingInterfaces
 		{
-			[Test]
+			[Test, Explicit]
 			public void CanFindTypesImplementingInterfaces()
 			{
 				IModuleInspector sut = new ModuleInspector();

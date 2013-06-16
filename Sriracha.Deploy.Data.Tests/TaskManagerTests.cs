@@ -13,7 +13,7 @@ namespace Sriracha.Deploy.Data.Tests
 	{
 		public abstract class GetAvailableTaskList
 		{
-			private class TestBaseTask : IDeployTask
+			private class TestBaseTask : IDeployTaskDefinition
 			{
 				public IList<TaskParameter> GetStaticTaskParameterList()
 				{
@@ -29,16 +29,28 @@ namespace Sriracha.Deploy.Data.Tests
 				{
 					throw new NotImplementedException();
 				}
+
+				public void Execute(Dto.DeployEnvironmentComponent deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+				{
+					throw new NotImplementedException();
+				}
+
+
+				public Type GetTaskExecutorType()
+				{
+					throw new NotImplementedException();
+				}
 			}
 			private class TestDeployTask1 : TestBaseTask { }
 			private class TestDeployTask2 : TestBaseTask { }
 			private class TestDeployTask3 : TestBaseTask { }
-			private interface ITestInterface : IDeployTask { }
-			private abstract class TestAbstractClass : IDeployTask
+			private interface ITestInterface : IDeployTaskDefinition { }
+			private abstract class TestAbstractClass : IDeployTaskDefinition
 			{
 				public abstract IList<TaskParameter> GetStaticTaskParameterList();
 				public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
 				public abstract IList<TaskParameter> GetMachineTaskParameterList();
+				public abstract Type GetTaskExecutorType();
 			}
 
 			[Test]
@@ -52,11 +64,11 @@ namespace Sriracha.Deploy.Data.Tests
 					typeof(TestDeployTask2),
 					typeof(TestDeployTask3)
 				};
-				moduleInspector.Setup(i=>i.FindTypesImplementingInterfaces(typeof(IDeployTask))).Returns(data);
+				moduleInspector.Setup(i=>i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition))).Returns(data);
 
 				var result = sut.GetAvailableTaskList();
 
-				moduleInspector.Verify(i=>i.FindTypesImplementingInterfaces(typeof(IDeployTask)), Times.Once());
+				moduleInspector.Verify(i=>i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition)), Times.Once());
 				Assert.AreEqual(data.Count, result.Count);
 				foreach(var metadata in result)
 				{
@@ -74,11 +86,11 @@ namespace Sriracha.Deploy.Data.Tests
 					typeof(TestDeployTask1),
 					typeof(TestAbstractClass)
 				};
-				moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask))).Returns(data);
+				moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition))).Returns(data);
 
 				var result = sut.GetAvailableTaskList();
 
-				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask)), Times.Once());
+				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition)), Times.Once());
 				Assert.AreEqual(1, result.Count);
 				Assert.AreEqual(typeof(TestDeployTask1).FullName, result[0].TaskTypeName);
 			}
@@ -93,11 +105,11 @@ namespace Sriracha.Deploy.Data.Tests
 					typeof(TestDeployTask1),
 					typeof(ITestInterface)
 				};
-				moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask))).Returns(data);
+				moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition))).Returns(data);
 
 				var result = sut.GetAvailableTaskList();
 
-				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTask)), Times.Once());
+				moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition)), Times.Once());
 				Assert.AreEqual(1, result.Count);
 				Assert.AreEqual(typeof(TestDeployTask1).FullName, result[0].TaskTypeName);
 			}

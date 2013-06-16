@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Tasks
 	{
 		public string TaskTypeName { get; set; }
 
-		public IDeployTask CreateTask()
+		public IDeployTaskDefinition CreateTask()
 		{
 			throw new NotImplementedException();
 		}

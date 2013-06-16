@@ -17,7 +17,7 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public List<TaskMetadata> GetAvailableTaskList()
 		{
-			var typeList = this._moduleInspector.FindTypesImplementingInterfaces(typeof(IDeployTask));
+			var typeList = this._moduleInspector.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition));
 			List<TaskMetadata> returnList = new List<TaskMetadata>();
 			foreach(var type in typeList)
 			{

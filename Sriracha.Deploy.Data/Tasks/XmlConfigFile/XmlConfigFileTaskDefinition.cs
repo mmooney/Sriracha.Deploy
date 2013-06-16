@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using MMDB.Shared;
+using Newtonsoft.Json;
+using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 {
-	public class XmlConfigFileTask : BaseDeployTask<XmlConfigFileTaskOptions>
+	public class XmlConfigFileTaskDefinition : BaseDeployTaskDefinition<XmlConfigFileTaskOptions, XmlConfigFileTaskExecutor>
 	{
 		public override IList<TaskParameter> GetStaticTaskParameterList()
 		{

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 {
-	public class RoundhousETask : BaseDeployTask<RoundhousETaskOptions>
+	public class RoundhousETask : BaseDeployTaskDefinition<RoundhousETaskOptions, RoundhousETaskExecutor>
 	{
 		public override IList<TaskParameter> GetStaticTaskParameterList()
 		{

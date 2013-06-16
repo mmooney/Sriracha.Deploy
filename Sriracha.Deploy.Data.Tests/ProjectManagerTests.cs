@@ -208,7 +208,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 		public class CreateDeploymentStep
 		{
-			private class TestTaskType : IDeployTask 
+			private class TestTaskType : IDeployTaskDefinition 
 			{
 				public IList<TaskParameter> GetStaticTaskParameterList()
 				{
@@ -221,6 +221,17 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				public IList<TaskParameter> GetMachineTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public void Execute(DeployEnvironmentComponent deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+				{
+					throw new NotImplementedException();
+				}
+
+
+				public Type GetTaskExecutorType()
 				{
 					throw new NotImplementedException();
 				}
@@ -331,7 +342,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 		public class UpdateDeploymentStep
 		{
-			private class TestTaskType : IDeployTask
+			private class TestTaskType : IDeployTaskDefinition
 			{
 				public IList<TaskParameter> GetStaticTaskParameterList()
 				{
@@ -344,6 +355,11 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				public IList<TaskParameter> GetMachineTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+				public Type GetTaskExecutorType()
 				{
 					throw new NotImplementedException();
 				}

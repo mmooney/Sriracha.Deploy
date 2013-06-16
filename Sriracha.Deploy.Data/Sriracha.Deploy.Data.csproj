@@ -36,6 +36,9 @@
     <Reference Include="MMDB.Shared">
       <HintPath>..\packages\MMDB.Shared.2.0.0.18\lib\net35\MMDB.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,12 +54,13 @@
     <Compile Include="IDeployHistoryManager.cs" />
     <Compile Include="Dto\DeployHistory.cs" />
     <Compile Include="IFileManager.cs" />
+    <Compile Include="IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
     <Compile Include="Impl\DeployHistoryManager.cs" />
     <Compile Include="Impl\FileManager.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
-    <Compile Include="Tasks\BaseDeployTask.cs" />
+    <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />
     <Compile Include="Dto\DeployComponentDeploymentStep.cs" />
@@ -76,14 +80,20 @@
     <Compile Include="Repository\IFileRepository.cs" />
     <Compile Include="Repository\IProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\IDeployTask.cs" />
+    <Compile Include="Tasks\BaseDeployTaskExecutor.cs" />
+    <Compile Include="Tasks\IDeployTaskDefinition.cs" />
+    <Compile Include="Tasks\IDeployTaskExecutor.cs" />
+    <Compile Include="ITaskFactory.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEEnvironmentConfiguration.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETaskExecutor.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
+    <Compile Include="Tasks\RuntimeSystemSettings.cs" />
     <Compile Include="Tasks\RuntimeValidationResult.cs" />
     <Compile Include="Tasks\TaskMetadata.cs" />
     <Compile Include="Tasks\TaskParameter.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTask.cs" />
+    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskDefinition.cs" />
+    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskExecutor.cs" />
     <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskOptions.cs" />
     <Compile Include="TempStreamHelper.cs" />
   </ItemGroup>

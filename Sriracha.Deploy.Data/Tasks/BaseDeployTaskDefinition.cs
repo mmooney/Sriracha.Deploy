@@ -7,12 +7,14 @@ using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
-	public abstract class BaseDeployTask<TaskOptions> : IDeployTask
+	public abstract class BaseDeployTaskDefinition<TaskOptions, TaskExecutor> : IDeployTaskDefinition
+		where TaskExecutor : IDeployTaskExecutor  
 		where TaskOptions : new()
+				
 	{
 		public TaskOptions Options { get; set; }
-		
-		public BaseDeployTask()
+
+		public BaseDeployTaskDefinition()
 		{
 			this.Options = new TaskOptions();
 		}
@@ -20,6 +22,11 @@ namespace Sriracha.Deploy.Data.Tasks
 		public abstract IList<TaskParameter> GetStaticTaskParameterList();
 		public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
 		public abstract IList<TaskParameter> GetMachineTaskParameterList();
+
+		public Type GetTaskExecutorType()
+		{
+			return typeof(TaskExecutor);
+		}
 
 		public RuntimeValidationResult ValidateRuntimeValues(DeployEnvironmentComponent environmentComponent)
 		{
@@ -66,5 +73,6 @@ namespace Sriracha.Deploy.Data.Tasks
 			}
 			return item;
 		}
+
 	}
 }
