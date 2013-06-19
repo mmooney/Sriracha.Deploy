@@ -66,10 +66,10 @@ namespace Sriracha.Deploy.Data.Tasks
 			else
 			{
 				item.Present = true;
-				if (!item.Sensitive)
-				{
+				//if (!item.Sensitive)
+				//{
 					item.FieldValue = valueDictionary[parameter.FieldName];
-				}
+				//}
 			}
 			return item;
 		}

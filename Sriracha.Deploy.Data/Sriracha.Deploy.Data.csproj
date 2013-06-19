@@ -64,6 +64,7 @@
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Impl\ParameterParser.cs" />
     <Compile Include="IParameterParser.cs" />
+    <Compile Include="IProcessRunner.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
