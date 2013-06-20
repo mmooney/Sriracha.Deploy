@@ -14,6 +14,7 @@ namespace Sriracha.Deploy.Web.App_Start
 	using ServiceStack.ContainerAdapter.Ninject;
 	using Sriracha.Deploy.Data;
 	using Sriracha.Deploy.Data.Impl;
+	using Sriracha.Deploy.NinjectModules;
 	using Sriracha.Deploy.Web.Helpers;
 
     public static class NinjectWebCommon 
@@ -68,13 +69,7 @@ namespace Sriracha.Deploy.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-			kernel.Bind<IProjectManager>().To<ProjectManager>();
-			kernel.Bind<IBuildManager>().To<BuildManager>();
-			kernel.Bind<IFileManager>().To<FileManager>();
-			kernel.Bind<ITaskManager>().To<TaskManager>();
-			kernel.Bind<IDeployHistoryManager>().To<DeployHistoryManager>();
-			kernel.Bind<IModuleInspector>().To<ModuleInspector>();
-			kernel.Load(new RavenDBNinjectModule());
+			kernel.Load(new SrirachaNinjectorator());
         }        
     }
 }

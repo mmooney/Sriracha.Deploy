@@ -505,6 +505,10 @@
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sriracha.Deploy.NinjectModules\Sriracha.Deploy.NinjectModules.csproj">
+      <Project>{226340e8-e7e9-4ff7-9050-c0b5d1e7b201}</Project>
+      <Name>Sriracha.Deploy.NinjectModules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.RavenDB\Sriracha.Deploy.RavenDB.csproj">
       <Project>{29f6b5f6-9d29-434f-93f5-8b989dd350dc}</Project>
       <Name>Sriracha.Deploy.RavenDB</Name>
