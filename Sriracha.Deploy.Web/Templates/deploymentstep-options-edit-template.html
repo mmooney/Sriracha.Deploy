@@ -60,4 +60,17 @@
 		</tr>
 	</table>
 </div>
+<div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.LocalCommandLine.LocalCommandLineTaskDefinition'">
+	<h4>Local Command Line</h4>
+	<table class="table table-striped">
+		<tr>
+			<th>Executable Path:</th>
+			<td><input type="text" ng-model="deploymentStep.taskOptions.ExecutablePath"/></td>
+		</tr>
+		<tr>
+			<th>Executable Arguments:</th>
+			<td><input type="text" ng-model="deploymentStep.taskOptions.ExecutableArguments" /></td>
+		</tr>
+	</table>
+</div>
 <div>...{{deploymentStep.taskTypeName}}...</div>
