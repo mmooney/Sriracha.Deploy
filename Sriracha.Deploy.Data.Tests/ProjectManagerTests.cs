@@ -235,6 +235,11 @@ namespace Sriracha.Deploy.Data.Tests
 				{
 					throw new NotImplementedException();
 				}
+
+				public string TaskDefintionName
+				{
+					get { throw new NotImplementedException(); }
+				}
 			}
 
 			[Test]
@@ -362,6 +367,11 @@ namespace Sriracha.Deploy.Data.Tests
 				public Type GetTaskExecutorType()
 				{
 					throw new NotImplementedException();
+				}
+
+				public string TaskDefintionName
+				{
+					get { throw new NotImplementedException(); }
 				}
 			}
 

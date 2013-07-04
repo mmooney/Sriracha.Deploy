@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeployComponentRunnerTests.cs" />
     <Compile Include="ModuleInspectorTests.cs" />
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />

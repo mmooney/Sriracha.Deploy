@@ -41,5 +41,10 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 				}
 			).ToList();
 		}
+
+		public override string TaskDefintionName
+		{
+			get { return "XmlConfigFile"; }
+		}
 	}
 }

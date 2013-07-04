@@ -54,11 +54,14 @@
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
     <Compile Include="Dto\DeployMachine.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="IDeployComponentRunner.cs" />
     <Compile Include="IDeployHistoryManager.cs" />
     <Compile Include="Dto\DeployHistory.cs" />
+    <Compile Include="IDeployRunner.cs" />
     <Compile Include="IFileManager.cs" />
     <Compile Include="IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
+    <Compile Include="Impl\DeployComponentRunner.cs" />
     <Compile Include="Impl\DeployHistoryManager.cs" />
     <Compile Include="Impl\FileManager.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Tasks\IDeployTaskDefinition.cs" />
     <Compile Include="Tasks\IDeployTaskExecutor.cs" />
     <Compile Include="ITaskFactory.cs" />
+    <Compile Include="Tasks\IDeployTaskFactory.cs" />
     <Compile Include="Tasks\IDeployTaskStatusManager.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
@@ -108,6 +112,7 @@
     <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskExecutor.cs" />
     <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskOptions.cs" />
     <Compile Include="TempStreamHelper.cs" />
+    <Compile Include="TupleList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -44,5 +44,10 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 						Sensitive = i.StartsWith("SENSITIVE:", StringComparison.CurrentCultureIgnoreCase)
 					}).ToList();
 		}
+
+		public override string TaskDefintionName
+		{
+			get { return "LocalCommandLine"; }
+		}
 	}
 }

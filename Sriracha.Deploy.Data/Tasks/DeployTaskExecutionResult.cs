@@ -5,7 +5,16 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
+	public enum EnumDeployTaskExecutionResultStatus
+	{
+		Unknown,
+		Success,
+		Warning,
+		Error
+	}
+
 	public class DeployTaskExecutionResult
 	{
+		public EnumDeployTaskExecutionResultStatus Status { get; set; }
 	}
 }
