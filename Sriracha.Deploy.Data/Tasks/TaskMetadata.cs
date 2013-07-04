@@ -13,5 +13,7 @@ namespace Sriracha.Deploy.Data.Tasks
 		{
 			throw new NotImplementedException();
 		}
+
+		public string TaskDisplayName { get; set; }
 	}
 }

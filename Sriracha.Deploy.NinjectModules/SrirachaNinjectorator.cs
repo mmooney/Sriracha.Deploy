@@ -7,20 +7,35 @@ using Ninject.Modules;
 using Ninject.Planning.Bindings;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Tasks.TaskImpl;
 
 namespace Sriracha.Deploy.NinjectModules
 {
     public class SrirachaNinjectorator : NinjectModule
     {
+		private static NLog.Logger _logger;
+
 		public override void Load()
 		{
+			this.SetupLogging();
 			this.Bind<IProjectManager>().To<ProjectManager>();
 			this.Bind<IBuildManager>().To<BuildManager>();
 			this.Bind<IFileManager>().To<FileManager>();
 			this.Bind<ITaskManager>().To<TaskManager>();
 			this.Bind<IDeployHistoryManager>().To<DeployHistoryManager>();
 			this.Bind<IModuleInspector>().To<ModuleInspector>();
+			this.Bind<IDeployRunner>().To<DeployRunner>();
+			this.Bind<IDeployTaskStatusManager>().To<DeployTaskStatusManager>();
+			this.Bind<IDeployComponentRunner>().To<DeployComponentRunner>();
+			this.Bind<IDeployTaskFactory>().To<DeployTaskFactory>();
 			this.Kernel.Load(new RavenDBNinjectModule());
+		}
+
+		private void SetupLogging()
+		{
+			_logger = NLog.LogManager.GetCurrentClassLogger();
+			this.Bind<NLog.Logger>().ToMethod(ctx=>_logger);	 
 		}
 	}
 }

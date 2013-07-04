@@ -42,12 +42,10 @@
 						$scope.enviornment.componentList = [];
 					}
 					var oldEnvironmentComponentList = $scope.environment.componentList;
-					console.log($scope.environment.componentList);
 					$scope.environment.componentList = [];
 					_.each($scope.project.componentList, function (component) {
 						var environmentComponentItem = _.findWhere(oldEnvironmentComponentList, { componentId: component.id });
 						if (!environmentComponentItem) {
-							console.log("not found");
 							environmentComponentItem = {
 								componentId: component.id,
 								componentName: component.componentName
@@ -164,12 +162,15 @@
 	}
 
 	$scope.saveDeploymentStep = function () {
+		console.log($scope.deploymentStep.taskOptions);
+		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);
 		var saveParams = {
 			projectId: $routeParams.projectId, 
-			componentId: $routeParams.componentId,
-			deploymentStepId: $routeParams.deploymentStepId
-		};		
-		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);
+			componentId: $routeParams.componentId
+		};
+		if ($routeParams.deploymentStepId) {
+			saveParams.deploymentStepId = $routeParams.deploymentStepId;
+		}
 		$scope.deploymentStep.$save(
 			saveParams,
 			function () {
@@ -284,9 +285,11 @@
 	}
 	$scope.saveEnvironment = function () {
 		var saveParams = {
-			id: $routeParams.environmentId,
 			projectId: $routeParams.projectId
 		};
+		if ($routeParams.environmentId) {
+			saveParams.id = $routeParams.environmentId;
+		}
 		$scope.environment.$save(
 			saveParams,
 			function () {

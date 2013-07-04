@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
     <Compile Include="Dto\DeployMachine.cs" />
+    <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
     <Compile Include="IDeployHistoryManager.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="IModuleInspector.cs" />
     <Compile Include="Impl\DeployComponentRunner.cs" />
     <Compile Include="Impl\DeployHistoryManager.cs" />
+    <Compile Include="Impl\DeployRunner.cs" />
     <Compile Include="Impl\FileManager.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Impl\ParameterParser.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="IParameterParser.cs" />
     <Compile Include="IProcessRunner.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
+    <Compile Include="Repository\IDeployRequestRepository.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />
@@ -94,7 +97,6 @@
     <Compile Include="Tasks\DeployTaskExecutionResult.cs" />
     <Compile Include="Tasks\IDeployTaskDefinition.cs" />
     <Compile Include="Tasks\IDeployTaskExecutor.cs" />
-    <Compile Include="ITaskFactory.cs" />
     <Compile Include="Tasks\IDeployTaskFactory.cs" />
     <Compile Include="Tasks\IDeployTaskStatusManager.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
@@ -106,6 +108,8 @@
     <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
     <Compile Include="Tasks\RuntimeSystemSettings.cs" />
     <Compile Include="Tasks\RuntimeValidationResult.cs" />
+    <Compile Include="Tasks\TaskImpl\DeployTaskFactory.cs" />
+    <Compile Include="Tasks\TaskImpl\DeployTaskStatusManager.cs" />
     <Compile Include="Tasks\TaskMetadata.cs" />
     <Compile Include="Tasks\TaskParameter.cs" />
     <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskDefinition.cs" />

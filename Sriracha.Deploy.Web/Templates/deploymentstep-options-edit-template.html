@@ -18,3 +18,46 @@
 		</tr>
 	</table>
 </div>
+<div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.XmlConfigFile.XmlConfigFileTaskDefinition'">
+	<h4>XML Config File </h4>
+	<table class="table table-striped">
+		<tr>
+			<th>XML Template:</th>
+			<td>
+				<textarea ng-model="deploymentStep.taskOptions.XmlTemplate"/>
+			</td>
+		</tr>
+		<tr>
+			<th>Target File Name:</th>
+			<td><input type="text" ng-model="deploymentStep.taskOptions.TargetFileName" /></td>
+		</tr>
+		<tr>
+			<th>XPath Value List:</th>
+			<td>
+				<table class="table table-striped">
+					<tr>
+						<th>XPath</th>
+						<th>Config Level</th>
+						<th>Value Name</th>
+					</tr>
+					<tr ng-repeat="item in deploymentStep.taskOptions.XPathValueList">
+						<td><input type="text" ng-model="item.xPath" /></td>
+						<td>
+							<select ng-model="item.configLevel">
+								<option value="Static">Static</option>
+								<option value="Environment">Environment</option>
+								<option value="Machine">Machine</option>
+							</select>
+						</td>
+						<td><input type="text" ng-model="item.valueName" /></td>
+						<td><button class="btn btn-danger" ng-click="deleteXPathValueListItem(item)"><i class="icon-trash"></i></button></td>
+					</tr>
+					<tr>
+						<td colspan="3" style="text-align:center"><button style="btn btn-primary" ng-click="addXPathValueListItem()">Add</button></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
+<div>...{{deploymentStep.taskTypeName}}...</div>

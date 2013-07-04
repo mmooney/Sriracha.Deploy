@@ -25,7 +25,8 @@ namespace Sriracha.Deploy.Data.Impl
 				{
 					var item = new TaskMetadata
 					{
-						TaskTypeName = type.FullName
+						TaskTypeName = type.FullName,
+						TaskDisplayName = type.Name
 					};
 					returnList.Add(item);
 				}

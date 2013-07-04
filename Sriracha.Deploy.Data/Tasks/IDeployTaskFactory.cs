@@ -8,5 +8,7 @@ namespace Sriracha.Deploy.Data.Tasks
 	public interface IDeployTaskFactory
 	{
 		IDeployTaskExecutor CreateTaskExecutor(Type type);
+
+		IDeployTaskDefinition CreateTaskDefinition(string taskTypeName, string taskOptionJson);
 	}
 }

@@ -8,13 +8,14 @@
 	<tr>
 		<th>Step Type:</th>
 		<td>
-			<select ng-model="deploymentStep.taskTypeName" ng-options="item.taskTypeName as item.taskTypeName for item in taskMetadataList"></select>
+			<select ng-model="deploymentStep.taskTypeName" ng-options="item.taskTypeName as item.taskDisplayName for item in taskMetadataList"></select>
 		</td>
 	</tr>
 	<tr>
 		<th>Task Configuration:</th>
-		<th><div task-config taskTypeName="{{deploymentStep.taskTypeName}}"></div>
+		<td><div task-config taskTypeName="{{deploymentStep.taskTypeName}}"></div></td>
 	</tr>
 </table>
+--{{deploymentStep.taskTypeName}}--
 <button class="btn" ng-click="cancelDeploymentStep()">Cancel</button>
 <button class="btn" ng-click="saveDeploymentStep()">Save</button>
