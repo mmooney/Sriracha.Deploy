@@ -14,11 +14,11 @@ namespace Sriracha.Deploy.Data.Impl
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeploymentValidator _validator;
 
-		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator _validator)
+		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator validator)
 		{
 			_buildRepository = buildRepository;
 			_projectRepository = projectRepository;
-			_validator = _validator;
+			_validator = validator;
 		}
 		public DeployRequestTemplate InitializeDeployRequest(string buildId, string environmentId)
 		{

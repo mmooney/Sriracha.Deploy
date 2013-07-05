@@ -45,6 +45,18 @@ namespace Sriracha.Deploy.Data.Tests
 				{
 					get { throw new NotImplementedException(); }
 				}
+
+
+				public Type GetTaskOptionType()
+				{
+					throw new NotImplementedException();
+				}
+
+				public object DeployTaskOptions
+				{
+					get { throw new NotImplementedException(); }
+					set { throw new NotImplementedException(); }
+				}
 			}
 			private class TestDeployTask1 : TestBaseTask { }
 			private class TestDeployTask2 : TestBaseTask { }
@@ -57,6 +69,8 @@ namespace Sriracha.Deploy.Data.Tests
 				public abstract IList<TaskParameter> GetMachineTaskParameterList();
 				public abstract Type GetTaskExecutorType();
 				public abstract string TaskDefintionName { get; }
+				public abstract Type GetTaskOptionType();
+				public abstract object DeployTaskOptions { get; set; }
 			}
 
 			[Test]

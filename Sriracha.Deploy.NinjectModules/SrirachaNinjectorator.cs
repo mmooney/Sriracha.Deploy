@@ -28,7 +28,11 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IDeployRunner>().To<DeployRunner>();
 			this.Bind<IDeployTaskStatusManager>().To<DeployTaskStatusManager>();
 			this.Bind<IDeployComponentRunner>().To<DeployComponentRunner>();
-			this.Bind<IDeployTaskFactory>().To<DeployTaskFactory>();
+			this.Bind<IDeployTaskFactory>().To<DeployTaskFactory>().InSingletonScope();
+			this.Bind<IDeployRequestManager>().To<DeployRequestManager>();
+			this.Bind<IDeploymentValidator>().To<DeploymentValidator>().InSingletonScope();
+			this.Bind<IDIFactory>().To<NinjectDIFactory>().InSingletonScope();
+			this.Bind<IParameterParser>().To<ParameterParser>().InSingletonScope();
 			this.Kernel.Load(new RavenDBNinjectModule());
 		}
 

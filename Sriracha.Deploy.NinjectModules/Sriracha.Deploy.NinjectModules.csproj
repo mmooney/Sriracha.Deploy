@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NinjectDIFactory.cs" />
     <Compile Include="SrirachaNinjectorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RavenDBNinjectModule.cs" />

@@ -64,6 +64,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployBuild>("/build/{id*}")
 				.Add<DeployHistory>("/deploy/history")
 				.Add<DeployHistory>("/deploy/history{id*}")
+				.Add<DeployRequest>("/deployrequest")
+				.Add<DeployRequest>("/deployrequest/{id}")
 				.Add<DeployProject>("/project")
 				.Add<DeployProject>("/project/{id*}")
 				.Add<TaskMetadata>("/taskMetadata");

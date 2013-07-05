@@ -19,6 +19,34 @@ namespace Sriracha.Deploy.Data.Tasks
 			this.Options = new TaskOptions();
 		}
 
+		public Type GetTaskOptionType()
+		{
+			return typeof(TaskOptions);
+		}
+
+		public object DeployTaskOptions
+		{
+			get
+			{
+				return this.Options;
+			}
+			set
+			{
+				if(value == null)
+				{
+					this.Options = default(TaskOptions);
+				}
+				else 
+				{
+					if(!typeof(TaskOptions).IsInstanceOfType(value))
+					{
+						throw new Exception(string.Format("DeployTaskOptions must be of type {0}, was {1}", typeof(TaskOptions).FullName, value.GetType().FullName));
+					}
+					this.Options = (TaskOptions)value;
+				}
+			}
+		}
+
 		public abstract IList<TaskParameter> GetStaticTaskParameterList();
 		public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
 		public abstract IList<TaskParameter> GetMachineTaskParameterList();
@@ -74,6 +102,5 @@ namespace Sriracha.Deploy.Data.Tasks
 		//	}
 		//	return item;
 		//}
-
 	}
 }
