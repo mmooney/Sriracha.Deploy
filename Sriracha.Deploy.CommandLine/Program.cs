@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Tasks;
 using System.Reflection;
 using System.IO;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.CommandLine
 {
@@ -15,18 +16,31 @@ namespace Sriracha.Deploy.CommandLine
 	{
 		Unknown,
 		Something,
-		Deploy
+		Deploy,
+		Configure
 	}
 	public class CommandLineOptions
 	{
 		[CommandLineParser.Option('a',"action", Required=true)]
 		public ActionType Action { get; set; }
 
-		[CommandLineParser.Option('e',"environment")]
-		public string EnvironmentID { get; set; }
+		[CommandLineParser.Option('e', "environment")]
+		public string EnvironmentId { get; set; }
+
+		[CommandLineParser.Option('c', "component")]
+		public string ComponentId { get; set; }
+
+		[CommandLineParser.Option('m', "machine")]
+		public string MachineId { get; set; }
 
 		[CommandLineParser.Option('b', "build")]
-		public string BuildID { get; set; }
+		public string BuildId { get; set; }
+
+		[CommandLineParser.Option("configName")]
+		public string ConfigName { get; set; }
+		
+		[CommandLineParser.Option("configValue")]
+		public string ConfigValue { get; set; }
 
 		[CommandLineParser.ParserState]
 		public CommandLineParser.IParserState LastParserState { get; set; }
@@ -60,16 +74,44 @@ namespace Sriracha.Deploy.CommandLine
 				switch(options.Action)
 				{
 					case ActionType.Deploy:
-						if(string.IsNullOrWhiteSpace(options.EnvironmentID))
+						if(string.IsNullOrWhiteSpace(options.EnvironmentId))
 						{
-							throw new Exception("EnvironmentID (--environment|-e) required");
+							throw new Exception("EnvironmentID (--environment|-e) required for Deploy");
 						}
-						if(string.IsNullOrWhiteSpace(options.BuildID))
+						if(string.IsNullOrWhiteSpace(options.BuildId))
 						{
 							throw new Exception("BuildID (--build|-b) required");
 						}
-						Deploy(options.EnvironmentID, options.BuildID);
+						Deploy(options.EnvironmentId, options.BuildId);
 						break;
+					case ActionType.Configure:
+						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.MachineId))
+						{
+							throw new Exception("EnvironmentID (--environment|-e) and Machine ID (--machine|-m) cannot be used at the same time for Configure");
+						}
+						if(string.IsNullOrWhiteSpace(options.ConfigName))
+						{
+							throw new Exception("ConfigName (--configName) required for Configure");
+						}
+						//if(string.IsNullOrWhiteSpace(options.ConfigValue))
+						//{
+						//	throw new Exception("ConfigValue (--configValue) required for Configure");
+						//}
+						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.ComponentId))
+						{
+							ConfigureEnvironment(options.EnvironmentId, options.ComponentId, options.ConfigName, options.ConfigValue);
+						}
+						else if (!string.IsNullOrWhiteSpace(options.MachineId))
+						{
+							ConfigureMachine(options.MachineId, options.ConfigName, options.ConfigValue);
+						}
+						else 
+						{
+							throw new Exception("EnvironmentID (--environment|-e) or combination of Machine ID (--machine|-m) and Component ID (--component|-c) required for Configure");
+						}
+						break;
+					default:
+						throw new UnknownEnumValueException(options.Action);
 				}
 				if(args == null || args.Length == 0 || string.IsNullOrWhiteSpace(args[0]))
 				{
@@ -82,6 +124,18 @@ namespace Sriracha.Deploy.CommandLine
 			}
 			Console.WriteLine("Please any key to continue");
 			Console.ReadKey();
+		}
+
+		private static void ConfigureMachine(string machineId, string configName, string configValue)
+		{
+			var pm = Program.Kernel.Get<IProjectManager>();
+			pm.UpdateMachineConfig(machineId, configName, configValue);
+		}
+
+		private static void ConfigureEnvironment(string environmentId, string componentId, string configName, string configValue)
+		{
+			var pm = Program.Kernel.Get<IProjectManager>();
+			pm.UpdateEnvironmentComponentConfig(environmentId, componentId, configName, configValue);
 		}
 
 		private static void Deploy(string environmentID, string buildID)

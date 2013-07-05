@@ -38,5 +38,8 @@ namespace Sriracha.Deploy.Data
 		DeployEnvironment GetEnvironment(string environmentId);
 		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList);
 		void DeleteEnvironment(string environmentId);
+
+		void UpdateMachineConfig(string machineId, string configName, string configValue);
+		void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue);
 	}
 }

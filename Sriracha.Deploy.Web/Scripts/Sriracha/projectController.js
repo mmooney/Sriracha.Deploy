@@ -47,10 +47,10 @@
 						var environmentComponentItem = _.findWhere(oldEnvironmentComponentList, { componentId: component.id });
 						if (!environmentComponentItem) {
 							environmentComponentItem = {
-								componentId: component.id,
-								componentName: component.componentName
+								componentId: component.id
 							};
 						}
+						environmentComponentItem.componentName = component.componentName;
 						$scope.environment.componentList.push(environmentComponentItem);
 					});
 				}
@@ -293,7 +293,9 @@
 		$scope.environment.$save(
 			saveParams,
 			function () {
-				Sriracha.Navigation.Project.View($routeParams.projectId);
+				if (saveParams.id) {
+					Sriracha.Navigation.Project.View($routeParams.projectId);
+				}
 			},
 			function (error) {
 				$scope.reportError(error);

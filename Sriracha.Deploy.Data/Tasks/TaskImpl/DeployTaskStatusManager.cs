@@ -7,29 +7,48 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 {
 	public class DeployTaskStatusManager : IDeployTaskStatusManager
 	{
+		private List<string> DebugList { get; set; }
+		private List<string> InfoList { get; set; }
+		private List<string> ErrorList { get; set; }
+
+		public DeployTaskStatusManager()
+		{
+			this.InfoList = new List<string>();
+			this.DebugList = new List<string>();
+			this.ErrorList = new List<string>();
+		}
 		public DeployTaskExecutionResult BuildResult()
 		{
-			throw new NotImplementedException();
+			var returnValue = new DeployTaskExecutionResult();
+			if(this.ErrorList.Any())
+			{
+				returnValue.Status = EnumDeployTaskExecutionResultStatus.Error;
+			}
+			else 
+			{
+				returnValue.Status = EnumDeployTaskExecutionResultStatus.Success;
+			}
+			return returnValue;
 		}
 
 		public void Debug(string message)
 		{
-			throw new NotImplementedException();
+			this.DebugList.Add(message);
 		}
 
 		public void Info(string message)
 		{
-			throw new NotImplementedException();
+			this.InfoList.Add(message);
 		}
 
 		public void Error(string message)
 		{
-			throw new NotImplementedException();
+			this.ErrorList.Add(message);
 		}
 
 		public void Error(Exception err)
 		{
-			throw new NotImplementedException();
+			this.ErrorList.Add(err.ToString());
 		}
 	}
 }

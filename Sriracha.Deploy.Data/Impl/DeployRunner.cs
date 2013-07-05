@@ -13,14 +13,15 @@ namespace Sriracha.Deploy.Data.Impl
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeployTaskStatusManager _statusManager;
 		private readonly IDeployComponentRunner _componentRunner;
-		private readonly IDeployTaskFactory _deployTaskFactory;
+		private readonly IDeployTaskFactory _taskFactory;
 
-		public DeployRunner(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployTaskStatusManager statusManager, IDeployComponentRunner componentRunner)
+		public DeployRunner(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployTaskStatusManager statusManager, IDeployComponentRunner componentRunner, IDeployTaskFactory taskFactory)
 		{
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_statusManager = DIHelper.VerifyParameter(statusManager);
 			_componentRunner = DIHelper.VerifyParameter(componentRunner);
+			_taskFactory = DIHelper.VerifyParameter(taskFactory);
 		}
 
 		public void Deploy(string environmentId, string buildId, RuntimeSystemSettings systemSettings)
@@ -33,7 +34,7 @@ namespace Sriracha.Deploy.Data.Impl
 			var taskDefinitionList = new List<IDeployTaskDefinition>();
 			foreach(var step in component.DeploymentStepList)
 			{
-				var taskDefinition = _deployTaskFactory.CreateTaskDefinition(step.TaskTypeName, step.TaskOptionsJson);
+				var taskDefinition = _taskFactory.CreateTaskDefinition(step.TaskTypeName, step.TaskOptionsJson);
 				taskDefinitionList.Add(taskDefinition);
 			}
 

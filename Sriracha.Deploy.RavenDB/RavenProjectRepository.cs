@@ -448,5 +448,30 @@ namespace Sriracha.Deploy.RavenDB
 			project.EnvironmentList.Remove(environment);
 			this._documentSession.SaveChanges();
 		}
+
+
+		public DeployMachine GetMachine(string machineId)
+		{
+			if (string.IsNullOrEmpty(machineId))
+			{
+				throw new ArgumentNullException("Missing machine ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.ComponentList.Any(k=>k.MachineList.Any(l=>l.Id == machineId))));
+			if (project == null)
+			{
+				throw new ArgumentException("Unable to find project for machine ID " + machineId);
+			}
+			return project.GetMachine(machineId);
+		}
+
+		public DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configValueList)
+		{
+			var project = GetProject(projectId);
+			var item = project.GetMachine(machineId);
+			item.MachineName = machineId;
+			item.ConfigurationValueList = configValueList;
+			this._documentSession.SaveChanges();
+			return item;
+		}
 	}
 }

@@ -224,5 +224,51 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			this._projectRepository.DeleteEnvironment(environmentId);
 		}
+
+
+		public void UpdateMachineConfig(string machineId, string configName, string configValue)
+		{
+			var machine = this._projectRepository.GetMachine(machineId);
+			if(machine.ConfigurationValueList == null)
+			{
+				machine.ConfigurationValueList = new Dictionary<string,string>();
+			}
+			this.UpdateConfig(machine.ConfigurationValueList, configName, configValue);
+			this._projectRepository.UpdateMachine(machine.Id, machine.ProjectId, machine.EnvironmentId, machine.EnvironmentComponentId, machine.MachineName, machine.ConfigurationValueList);
+		}
+
+		private void UpdateConfig(Dictionary<string, string> configList, string configName, string configValue)
+		{
+			if (configList.ContainsKey(configName))
+			{
+				if (string.IsNullOrWhiteSpace(configValue))
+				{
+					configList.Remove(configName);
+				}
+				else
+				{
+					configList[configName] = configValue;
+				}
+			}
+			else
+			{
+				if (!string.IsNullOrWhiteSpace(configValue))
+				{
+					configList.Add(configName, configValue);
+				}
+			}
+		}
+
+		public void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue)
+		{
+			var environment = this._projectRepository.GetEnvironment(environmentId);
+			var component = environment.GetEnvironmentComponent(componentId);
+			if (component.ConfigurationValueList == null)
+			{
+				component.ConfigurationValueList = new Dictionary<string, string>();
+			}
+			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
+			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList);
+		}
 	}
 }

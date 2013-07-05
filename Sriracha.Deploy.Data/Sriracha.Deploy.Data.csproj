@@ -73,6 +73,7 @@
     <Compile Include="Impl\DeployRequestManager.cs" />
     <Compile Include="Impl\DeployRunner.cs" />
     <Compile Include="Impl\FileManager.cs" />
+    <Compile Include="Impl\FileWriter.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Impl\ParameterParser.cs" />
     <Compile Include="Impl\ProcessRunner.cs" />
