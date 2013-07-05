@@ -9,6 +9,7 @@ using XmlUnit;
 
 namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 {
+	[Ignore]
 	public class XmlConfigFileTaskExecutorTests
 	{
 		[Test]

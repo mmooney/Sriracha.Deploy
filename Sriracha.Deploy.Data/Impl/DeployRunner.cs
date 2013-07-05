@@ -28,7 +28,7 @@ namespace Sriracha.Deploy.Data.Impl
 			var build = _buildRepository.GetBuild(buildId);
 			var environment = _projectRepository.GetEnvironment(environmentId);
 			var component = _projectRepository.GetComponent(build.ProjectComponentId);
-			var environmentComponent = environment.ComponentList.Single(i=>i.ComponentId == component.Id);
+			var environmentComponent = environment.GetEnvironmentComponent(component.Id);
 
 			var taskDefinitionList = new List<IDeployTaskDefinition>();
 			foreach(var step in component.DeploymentStepList)

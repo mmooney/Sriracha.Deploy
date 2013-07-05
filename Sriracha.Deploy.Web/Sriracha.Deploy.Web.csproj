@@ -178,6 +178,7 @@
     <Compile Include="Services\ComponentService.cs" />
     <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
+    <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\ProjectService.cs" />
@@ -262,6 +263,13 @@
     <Content Include="Content\Site.css" />
     <None Include="Scripts\jquery\jquery-1.9.1.intellisense.js" />
     <Content Include="ng-upload-sample.html" />
+    <Content Include="Scripts\ace\ace.js" />
+    <Content Include="Scripts\ace\mode-javascript.js" />
+    <Content Include="Scripts\ace\mode-json.js" />
+    <Content Include="Scripts\ace\mode-xml.js" />
+    <Content Include="Scripts\ace\ui-ace.js" />
+    <Content Include="Scripts\ace\worker-javascript.js" />
+    <Content Include="Scripts\ace\worker-json.js" />
     <Content Include="Scripts\angular\angular-bootstrap-prettify.js" />
     <Content Include="Scripts\angular\angular-bootstrap-prettify.min.js" />
     <Content Include="Scripts\angular\angular-bootstrap.js" />

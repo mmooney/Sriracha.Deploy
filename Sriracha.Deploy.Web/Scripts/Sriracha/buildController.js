@@ -80,6 +80,10 @@
 		return null;
 	}
 
+	$scope.getViewBuildUrl = function (build) {
+		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ViewUrl, { buildId: build.id });
+	}
+
 	$scope.getDeployHistoryStatus = function (build, environment) {
 		var item = $scope.getDeployHistory(build, environment);
 		if(item) {

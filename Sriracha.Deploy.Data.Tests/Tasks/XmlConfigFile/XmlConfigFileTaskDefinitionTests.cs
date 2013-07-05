@@ -71,33 +71,33 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		//	Assert.AreEqual(EnumTaskParameterType.String, environmentSettings[0].FieldType);
 		//}
 
-		[Test]
-		public void CompleteConfig_PassesValidation()
-		{
-			var testData = XmlConfigFileTaskTestData.Create();
-			var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
-			Assert.AreEqual(EnumRuntimeValidationStatus.Success, result.Status);
-			Assert.IsNotNull(result);
-		}
+		//[Test]
+		//public void CompleteConfig_PassesValidation()
+		//{
+		//	var testData = XmlConfigFileTaskTestData.Create();
+		//	var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
+		//	Assert.AreEqual(EnumRuntimeValidationStatus.Success, result.Status);
+		//	Assert.IsNotNull(result);
+		//}
 
-		[Test]
-		public void MissingEnvironmentConfig_FailsValidation()
-		{
-			var testData = XmlConfigFileTaskTestData.Create();
-			testData.EnvironmentComponent.ConfigurationValueList.Remove(testData.EnvironmentComponent.ConfigurationValueList.Keys.First());
-			var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
-			Assert.AreEqual(EnumRuntimeValidationStatus.Incomplete, result.Status);
-			Assert.IsNotNull(result);
-		}
+		//[Test]
+		//public void MissingEnvironmentConfig_FailsValidation()
+		//{
+		//	var testData = XmlConfigFileTaskTestData.Create();
+		//	testData.EnvironmentComponent.ConfigurationValueList.Remove(testData.EnvironmentComponent.ConfigurationValueList.Keys.First());
+		//	var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
+		//	Assert.AreEqual(EnumRuntimeValidationStatus.Incomplete, result.Status);
+		//	Assert.IsNotNull(result);
+		//}
 
-		[Test]
-		public void MissingMachinConfig_FailsValidation()
-		{
-			var testData = XmlConfigFileTaskTestData.Create();
-			testData.EnvironmentComponent.MachineList[0].ConfigurationValueList.Remove(testData.EnvironmentComponent.MachineList[0].ConfigurationValueList.Keys.First());
-			var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
-			Assert.AreEqual(EnumRuntimeValidationStatus.Incomplete, result.Status);
-			Assert.IsNotNull(result);
-		}
+		//[Test]
+		//public void MissingMachinConfig_FailsValidation()
+		//{
+		//	var testData = XmlConfigFileTaskTestData.Create();
+		//	testData.EnvironmentComponent.MachineList[0].ConfigurationValueList.Remove(testData.EnvironmentComponent.MachineList[0].ConfigurationValueList.Keys.First());
+		//	var result = testData.TaskDefinition.ValidateRuntimeValues(testData.EnvironmentComponent);
+		//	Assert.AreEqual(EnumRuntimeValidationStatus.Incomplete, result.Status);
+		//	Assert.IsNotNull(result);
+		//}
 	}
 }

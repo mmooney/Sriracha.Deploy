@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 {
+	[Ignore]
 	public class LocalCommandLineTaskExecutorTests
 	{
 		[Test]

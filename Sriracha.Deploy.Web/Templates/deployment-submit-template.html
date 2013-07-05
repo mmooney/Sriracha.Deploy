@@ -2,24 +2,28 @@
 
 <hr />
 <div ng-hide="environmentComponent" class="alert alert-error">
-	No projects components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
+	No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
 </div>
-<table class="table table-border table-striped" ng-show="project.componentList.length">
-	<thead>
-		<tr>
-			<th>Environment</th>
-			<th>Deploy History Status</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="environment in project.environmentList">
-			<td>{{environment.environmentName}}</td>
-			<td>
-				{{getDeployHistoryStatus(build, environment)}}
-				<div ng-show="!anyDeployment(build, environment)">
-					<a class="btn btn-primary" ng-href="{{getDeploymentSubmitUrl(build, environment)}}">Deploy Now</a>
-				</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<fieldset>
+	<legend>Build Details</legend>
+	TBD...
+</fieldset>
+<fieldset style="width:500px">
+	<legend>Configuration</legend>
+	<div style="float:left">
+		<h4>Static Values</h4>
+		config goes here
+		<h4>Environment Values</h4>
+		config goes here
+	</div>
+	<div style="float:right">
+		<h4>Server Values</h4>
+		<div>
+			<input type="checkbox" /> QASERVER1
+		</div>
+		<div>
+			<input type="checkbox" /> QASERVER1
+		</div>
+	</div>
+</fieldset>
+

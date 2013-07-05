@@ -17,6 +17,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public Mock<IParameterParser> ParameterParser { get; set; }
 		public Mock<IProcessRunner> ProcessRunner { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
+		public Mock<IDeploymentValidator> Validator { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public List<string> MachineParameters { get; set; }
 		public List<string> EnvironmentParameters { get; set; }
@@ -33,6 +34,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
 				RuntimeSystemSettings = new RuntimeSystemSettings(),
 				ProcessRunner = new Mock<IProcessRunner>(),
+				Validator = new Mock<IDeploymentValidator>(),
 				EnvironmentComponent = new DeployEnvironmentComponent
 				{
 					ConfigurationValueList = new Dictionary<string,string>
@@ -54,7 +56,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 					}
 				}
 			};
-			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object);
+			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object, returnValue.Validator.Object);
 			returnValue.TaskDefinition = new LocalCommandLineTaskDefinition(returnValue.ParameterParser.Object)
 			{
 				Options = new LocalCommandLineTaskOptions

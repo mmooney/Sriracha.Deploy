@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Tasks
+namespace Sriracha.Deploy.Data.Dto
 {
 	public enum EnumRuntimeValidationStatus
 	{
@@ -11,10 +11,9 @@ namespace Sriracha.Deploy.Data.Tasks
 		Incomplete
 	}
 
-	public class RuntimeValidationResult
+	public class TaskDefinitionValidationResult
 	{
-
-		public class RuntimeValidationResultItem
+		public class TaskDefinitionValidationResultItem
 		{
 			public string FieldName { get; set; }
 			public string FieldValue { get; set; }
@@ -22,13 +21,13 @@ namespace Sriracha.Deploy.Data.Tasks
 			public bool Sensitive { get; set; }
 		}
 
-		public List<RuntimeValidationResultItem> EnvironmentResultList { get; set; }
-		public Dictionary<string, List<RuntimeValidationResultItem>> MachineResultList { get; set; }
+		public List<TaskDefinitionValidationResultItem> EnvironmentResultList { get; set; }
+		public Dictionary<string, List<TaskDefinitionValidationResultItem>> MachineResultList { get; set; }
 
-		public RuntimeValidationResult()
+		public TaskDefinitionValidationResult()
 		{
-			this.EnvironmentResultList = new List<RuntimeValidationResultItem>();
-			this.MachineResultList = new Dictionary<string,List<RuntimeValidationResultItem>>();
+			this.EnvironmentResultList = new List<TaskDefinitionValidationResultItem>();
+			this.MachineResultList = new Dictionary<string,List<TaskDefinitionValidationResultItem>>();
 		}
 
 		public EnumRuntimeValidationStatus Status

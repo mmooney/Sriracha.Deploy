@@ -12,17 +12,19 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 	{
 		private const string ValueMask = "*****";
 		private readonly IProcessRunner _processRunner;
+		private readonly IDeploymentValidator _validator;
 
-		public LocalCommandLineTaskExecutor(IProcessRunner processRunner)
+		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator)
 		{
-			this._processRunner = processRunner;
+			this._processRunner = DIHelper.VerifyParameter(processRunner);
+			this._validator = DIHelper.VerifyParameter(validator);
 		}
 
 		protected override DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			var result = new DeployTaskExecutionResult();
-			var validationResult = definition.ValidateRuntimeValues(environmentComponent);
+			var validationResult = _validator.ValidateTaskDefinition(definition, environmentComponent);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
@@ -35,7 +37,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, RuntimeValidationResult validationResult)
+		private void ExecuteMachine(IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
 			var machineResult = validationResult.MachineResultList[machine.MachineName];
@@ -61,7 +63,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			statusManager.Info(string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 		}
 
-		private string ReplaceParameters(string format, List<RuntimeValidationResult.RuntimeValidationResultItem> environmentValues, List<RuntimeValidationResult.RuntimeValidationResultItem> machineValues, bool masked)
+		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, bool masked)
 		{
 			string returnValue = format;
 			foreach(var item in environmentValues)

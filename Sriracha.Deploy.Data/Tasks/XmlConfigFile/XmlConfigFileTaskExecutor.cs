@@ -13,17 +13,19 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 	public class XmlConfigFileTaskExecutor : BaseDeployTaskExecutor<XmlConfigFileTaskDefinition>
 	{
 		private readonly IFileWriter _fileWriter;
+		private readonly IDeploymentValidator _validator;
 
-		public XmlConfigFileTaskExecutor(IFileWriter fileWriter)
+		public XmlConfigFileTaskExecutor(IFileWriter fileWriter, IDeploymentValidator validator)
 		{
 			_fileWriter = DIHelper.VerifyParameter(fileWriter);
+			_validator = DIHelper.VerifyParameter(validator);
 		}
 
 		protected override DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			var result = new DeployTaskExecutionResult();
-			var validationResult = definition.ValidateRuntimeValues(environmentComponent);
+			var validationResult = _validator.ValidateTaskDefinition(definition, environmentComponent);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
@@ -36,7 +38,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, RuntimeValidationResult validationResult)
+		private void ExecuteMachine(IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.MachineName];
