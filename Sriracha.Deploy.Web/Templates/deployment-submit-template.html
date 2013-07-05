@@ -12,6 +12,9 @@
 	<legend>Configuration</legend>
 	<div style="float:left">
 		<h4>Environment Values</h4>
+		<div ng-show="environmentResultsIncomplete">
+			<a ng-href="{{getEditEnvironmentUrl(environment)}}">Missing configuration values, click here to edit</a>
+		</div>
 		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>

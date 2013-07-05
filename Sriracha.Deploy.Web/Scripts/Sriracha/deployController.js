@@ -8,9 +8,16 @@
 		});
 		$scope.deployRequestTemplate = SrirachaResource.deployRequest.get({ buildId: $routeParams.buildId, environmentId: $routeParams.environmentId }, function () {
 			$scope.environmentResults = $scope.getEnvironmentResults($scope.deployRequestTemplate);
+			$scope.environmentResultsIncomplete = _.any($scope.environmentResults, function (x) { return !x.present; });
+			console.log($scope.environmentResultsIncomplete);
 		});
 	});
 
+	$scope.getEditEnvironmentUrl = function (environment) {
+		if (environment) {
+			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
+		}
+	}
 	$scope.getEnvironmentResults = function (deployRequestTemplate) {
 		var returnValue = [];
 		if (deployRequestTemplate && deployRequestTemplate.validationResult) {
