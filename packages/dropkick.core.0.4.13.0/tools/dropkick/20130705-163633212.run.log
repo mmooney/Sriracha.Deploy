@@ -1,0 +1,10 @@
+****************************************************
+DropkicK v0.4.13.0
+****************************************************
+
+System.InvalidOperationException: Sequence contains more than one element
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at dropkick.Engine.DeploymentCommandLineParser.ExtractCommandToRun(IEnumerable`1 commandLineElements) in c:\Solutions\dk-fc\product\dropkick\Engine\DeploymentCommandLineParser.cs:line 52
+   at dropkick.Engine.DeploymentCommandLineParser.Set(DeploymentArguments arguments, IEnumerable`1 commandLineElements) in c:\Solutions\dk-fc\product\dropkick\Engine\DeploymentCommandLineParser.cs:line 31
+   at dropkick.Engine.DeploymentCommandLineParser.Parse(String commandline) in c:\Solutions\dk-fc\product\dropkick\Engine\DeploymentCommandLineParser.cs:line 25
+   at dropkick.Engine.Runner.Deploy(String commandLine) in c:\Solutions\dk-fc\product\dropkick\Engine\Runner.cs:line 45

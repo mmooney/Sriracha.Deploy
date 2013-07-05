@@ -1,0 +1,68 @@
+****************************************************
+DropkicK v0.4.13.0
+****************************************************
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Command:     Execute
+Environment: LOCAL
+Role:        ALL
+Server Maps:   '..\..\settings\LOCAL.servermaps' - Looks Good!
+Settings Path: '..\..\settings\LOCAL.js' - Looks Good!
+Looking for deployment dll 'Sriracha.Deploy.SelfDeploy.dll' at 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\Sriracha.Deploy.SelfDeploy.dll'
+Deployment Method: 'Specific Assembly Specified'
+Deployment Found:  'TheDeployment'
+Server Mappings
+  'Db'
+    '(local)'
+  'Web'
+    '127.0.0.1'
+  'VirtualDirectory'
+    '127.0.0.1'
+  'Host'
+    '127.0.0.1'
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Please review the settings above and when you are ready,
+  Press 'ctrl+c' to cancel.
+  Press enter to kick it out there
+Going to copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\dropkick.dll' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+Going to copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\dropkick.pdb' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+Going to copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\Sriracha.Deploy.SelfDeploy.dll' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+Going to copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\Sriracha.Deploy.SelfDeploy.pdb' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+Going to copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\test.log' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+[copy] 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\dropkick.dll' -> '\\127.0.0.1\C$\test\SrirachaDeployTest\dropkick.dll'
+\\127.0.0.1\C$\test\SrirachaDeployTest\dropkick.dll
+[copy] 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\dropkick.pdb' -> '\\127.0.0.1\C$\test\SrirachaDeployTest\dropkick.pdb'
+\\127.0.0.1\C$\test\SrirachaDeployTest\dropkick.pdb
+[copy] 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\Sriracha.Deploy.SelfDeploy.dll' -> '\\127.0.0.1\C$\test\SrirachaDeployTest\Sriracha.Deploy.SelfDeploy.dll'
+\\127.0.0.1\C$\test\SrirachaDeployTest\Sriracha.Deploy.SelfDeploy.dll
+[copy] 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\Sriracha.Deploy.SelfDeploy.pdb' -> '\\127.0.0.1\C$\test\SrirachaDeployTest\Sriracha.Deploy.SelfDeploy.pdb'
+\\127.0.0.1\C$\test\SrirachaDeployTest\Sriracha.Deploy.SelfDeploy.pdb
+[copy] 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug\test.log' -> '\\127.0.0.1\C$\test\SrirachaDeployTest\test.log'
+\\127.0.0.1\C$\test\SrirachaDeployTest\test.log
+[Good ] '\\127.0.0.1\C$\test\SrirachaDeployTest' was successfully deleted
+[Good ] Copy 'C:\Projects\Sriracha.Deploy\Sriracha.Deploy.SelfDeploy\bin\Debug' to '\\127.0.0.1\C$\test\SrirachaDeployTest'
+[security][acl] Granted READ/EXECUTE to 'NT AUTHORITY\NETWORK SERVICE' on '\\127.0.0.1\C$\test\SrirachaDeployTest'
+[Good ] Permissions set for 'NT AUTHORITY\NETWORK SERVICE' on folder '\\127.0.0.1\C$\test\SrirachaDeployTest'
+[Good ] Grant Read permissions to 'NT AUTHORITY\NETWORK SERVICE' for path '\\127.0.0.1\C$\test\SrirachaDeployTest'
+[security][acl] Granted MODIFY to 'NT AUTHORITY\NETWORK SERVICE' on '\\127.0.0.1\C$\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files'
+[Good ] Permissions set for 'NT AUTHORITY\NETWORK SERVICE' on folder '\\127.0.0.1\C$\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files'
+App pool 'SrirachaAppPool' does not exist, creating.
+[iis7] Using managed runtime version 'v4.0'
+System.ArgumentNullException: Value cannot be null.
+Parameter name: path
+   at System.IO.Directory.CreateDirectory(String path)
+   at dropkick.FileSystem.DotNetPath.CreateDirectory(String path) in c:\Solutions\dk-fc\product\dropkick\FileSystem\DotNetPath.cs:line 148
+   at dropkick.Tasks.Iis.Iis7Task.CreateWebSite(ServerManager iisManager, String websiteName, DeploymentResult result) in c:\Solutions\dk-fc\product\dropkick\Tasks\Iis\Iis7Task.cs:line 112
+   at dropkick.Tasks.Iis.Iis7Task.Execute() in c:\Solutions\dk-fc\product\dropkick\Tasks\Iis\Iis7Task.cs:line 71
+   at dropkick.DeploymentModel.DeploymentDetail.Execute() in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentDetail.cs:line 32
+   at dropkick.DeploymentModel.DeploymentPlan.<>c__DisplayClass7.<Execute>b__6(DeploymentDetail d) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentPlan.cs:line 70
+   at dropkick.DeploymentModel.DeploymentPlan.<>c__DisplayClassc.<Ex>b__a(DeploymentDetail d) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentPlan.cs:line 93
+   at dropkick.DeploymentModel.DeploymentServer.ForEachDetail(Action`1 detailAction) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentServer.cs:line 82
+   at dropkick.DeploymentModel.DeploymentPlan.<>c__DisplayClassc.<Ex>b__9(DeploymentServer s) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentPlan.cs:line 90
+   at dropkick.DeploymentModel.DeploymentRole.ForEachServerMapped(Action`1 detailAction) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentRole.cs:line 42
+   at dropkick.DeploymentModel.DeploymentPlan.Ex(Action`1 action) in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentPlan.cs:line 87
+   at dropkick.DeploymentModel.DeploymentPlan.Execute() in c:\Solutions\dk-fc\product\dropkick\DeploymentModel\DeploymentPlan.cs:line 60
+   at dropkick.Engine.DeploymentPlanDispatcher.<.cctor>b__0(DeploymentPlan d) in c:\Solutions\dk-fc\product\dropkick\Engine\DeploymentPlanDispatcher.cs:line 30
+   at dropkick.Engine.DeploymentPlanDispatcher.KickItOutThereAlready(Deployment deployment, DeploymentArguments args) in c:\Solutions\dk-fc\product\dropkick\Engine\DeploymentPlanDispatcher.cs:line 45
+   at dropkick.Engine.Runner.Deploy(String commandLine) in c:\Solutions\dk-fc\product\dropkick\Engine\Runner.cs:line 131
