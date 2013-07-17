@@ -12,10 +12,12 @@ namespace Sriracha.Deploy.RavenDB
 	public class RavenFileRepository : IFileRepository
 	{
 		private readonly IDocumentSession _documentSession;
+		private readonly IFileStorage _fileStorage;
 
-		public RavenFileRepository(IDocumentSession documentSession)
+		public RavenFileRepository(IDocumentSession documentSession, IFileStorage fileStorage)
 		{
 			this._documentSession = DIHelper.VerifyParameter(documentSession);
+			this._fileStorage = DIHelper.VerifyParameter(fileStorage);
 		}
 
 		public IEnumerable<DeployFile> GetFileList()
@@ -33,11 +35,12 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing file data");
 			}
+			string fileId = _fileStorage.StoreFile(fileData);
 			var file = new DeployFile
 			{
 				Id = Guid.NewGuid().ToString(),
 				FileName = fileName,
-				FileData = fileData
+				FileStorageId = fileId
 			};
 			this._documentSession.Store(file);
 			this._documentSession.SaveChanges();
@@ -65,8 +68,10 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var file = this.GetFile(fileId);
 			file.FileName = fileName;
-			file.FileData = fileData;
+			//file.FileData = fileData;
 			this._documentSession.SaveChanges();
+
+			_fileStorage.UpdateFile(file.FileStorageId, fileData);
 			return file;
 		}
 

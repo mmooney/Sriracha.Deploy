@@ -65,6 +65,7 @@
     <Compile Include="IDeployRunner.cs" />
     <Compile Include="IDIFactory.cs" />
     <Compile Include="IFileManager.cs" />
+    <Compile Include="IFileStorage.cs" />
     <Compile Include="IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
     <Compile Include="Impl\DeployComponentRunner.cs" />

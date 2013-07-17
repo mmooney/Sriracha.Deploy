@@ -9,6 +9,6 @@ namespace Sriracha.Deploy.Data.Dto
 	{
 		public string Id { get; set; }
 		public string FileName { get; set; }
-		public byte[] FileData { get; set; }
+		public string FileStorageId { get; set; }
 	}
 }
