@@ -9,7 +9,15 @@
 		$scope.deployRequestTemplate = SrirachaResource.deployRequest.get({ buildId: $routeParams.buildId, environmentId: $routeParams.environmentId }, function () {
 			$scope.environmentResults = $scope.getEnvironmentResults($scope.deployRequestTemplate);
 			$scope.environmentResultsIncomplete = _.any($scope.environmentResults, function (x) { return !x.present; });
-			console.log($scope.environmentResultsIncomplete);
+
+			$scope.machineResults = {};
+			$scope.machineResultsIncomplete = {};
+			_.each($scope.environmentComponent.machineList, function (machine) {
+				$scope.machineResults[machine.id] = $scope.getMachineResults($scope.deployRequestTemplate, machine.id);
+				$scope.machineResultsIncomplete[machine.id] = _.any($scope.machineResults[machine.id], function (x) { return !x.present; });
+			});
+			console.log($scope.machineResults);
+			console.log($scope.machineResultsIncomplete);
 		});
 	});
 
@@ -18,13 +26,46 @@
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
 		}
 	}
+
+	$scope.getMachineResults = function (deployRequestTemplate, machineId) {
+		var returnValue = [];
+		if (deployRequestTemplate && deployRequestTemplate.validationResult) {
+			for (var i = 0; i < deployRequestTemplate.validationResult.resultList.length; i++) {
+				var resultItem = deployRequestTemplate.validationResult.resultList[i];
+				var machineResultList = resultItem.taskValidationResult.machineResultList[machineId];
+				if (machineResultList && machineResultList.length) {
+					for (var j = 0; j < machineResultList.length; j++) {
+						var machineResultItem = machineResultList[j];
+						var item = {
+							taskName: resultItem.deploymentStep.stepName,
+							settingName: machineResultItem.fieldName,
+							present: machineResultItem.present
+						};
+						if (machineResultItem.present) {
+							if (machineResultItem.sensitive) {
+								item.settingValue = "*******************";
+							}
+							else {
+								item.settingValue = machineResultItem.fieldValue;
+							}
+						}
+						else {
+							item.settingValue = "N/A";
+						}
+						returnValue.push(item);
+					}
+				}
+			}
+		}
+		return returnValue;
+	}
+
 	$scope.getEnvironmentResults = function (deployRequestTemplate) {
 		var returnValue = [];
 		if (deployRequestTemplate && deployRequestTemplate.validationResult) {
 			for (var i = 0; i < deployRequestTemplate.validationResult.resultList.length; i++) {
 				var resultItem = deployRequestTemplate.validationResult.resultList[i];
 				if (resultItem.taskValidationResult.environmentResultList.length) {
-					console.log(resultItem.taskValidationResult.environmentResultList.length);
 					for (var j = 0; j < resultItem.taskValidationResult.environmentResultList.length; j++) {
 						var environmentResultItem = resultItem.taskValidationResult.environmentResultList[j];
 						var item = {
@@ -48,7 +89,6 @@
 				}
 			}
 		}
-		console.log(returnValue);
 		return returnValue;
 	}
 });
