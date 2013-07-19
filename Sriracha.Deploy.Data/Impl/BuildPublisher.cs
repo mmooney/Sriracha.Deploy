@@ -57,7 +57,7 @@ namespace Sriracha.Deploy.Data.Impl
 				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, response.Id, response.FileStorageId);
 			}
 
-			throw NotImplementedException("Still need to create build object...");
+			throw new NotImplementedException("Still need to create build object...");
 
 			_logger.Info("Done publishing directory {0} to URL {1}", directoryPath, apiUrl);
 		}
