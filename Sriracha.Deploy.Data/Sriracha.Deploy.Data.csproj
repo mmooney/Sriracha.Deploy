@@ -33,6 +33,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="MMDB.Shared">
       <HintPath>..\packages\MMDB.Shared.2.0.0.18\lib\net35\MMDB.Shared.dll</HintPath>
     </Reference>
@@ -41,6 +44,15 @@
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.3.9.55\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,11 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
+    <Compile Include="Dto\DeployFileDto.cs" />
     <Compile Include="Dto\DeployMachine.cs" />
     <Compile Include="Dto\DeploymentValidationResult.cs" />
     <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Dto\DeployRequestTemplate.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
     <Compile Include="IDeployHistoryManager.cs" />
     <Compile Include="Dto\DeployHistory.cs" />
@@ -68,6 +82,7 @@
     <Compile Include="IFileStorage.cs" />
     <Compile Include="IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
+    <Compile Include="Impl\BuildPublisher.cs" />
     <Compile Include="Impl\DeployComponentRunner.cs" />
     <Compile Include="Impl\DeployHistoryManager.cs" />
     <Compile Include="Impl\DeploymentValidator.cs" />
@@ -78,8 +93,10 @@
     <Compile Include="Impl\ModuleInspector.cs" />
     <Compile Include="Impl\ParameterParser.cs" />
     <Compile Include="Impl\ProcessRunner.cs" />
+    <Compile Include="Impl\Zipper.cs" />
     <Compile Include="IParameterParser.cs" />
     <Compile Include="IProcessRunner.cs" />
+    <Compile Include="IZipper.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRequestRepository.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />

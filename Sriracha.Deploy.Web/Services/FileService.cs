@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Web.Services
 			this._fileManager = DIHelper.VerifyParameter(fileManager);
 		}
 
-		public object Get(DeployFile request)
+		public object Get(DeployFileDto request)
 		{
 			if (!string.IsNullOrEmpty(request.Id))
 			{
@@ -31,7 +31,17 @@ namespace Sriracha.Deploy.Web.Services
 			}
 		}
 
-		public object Post(DeployFile file)
+		public object Post(DeployFileDto file)
+		{
+			return this.PutPost(file);
+		}
+
+		public object Put(DeployFileDto file)
+		{
+			return this.PutPost(file);
+		}
+
+		private object PutPost(DeployFileDto file)
 		{
 			if (this.RequestContext.Files.Length == 0)
 			{
@@ -43,7 +53,7 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			var fileData = TempStreamHelper.ReadAllBytes(this.RequestContext.Files[0].InputStream);
 			string fileName = this.RequestContext.Files[0].FileName;
-			if (string.IsNullOrEmpty(file.Id) || file.Id.Equals("upload",StringComparison.CurrentCultureIgnoreCase))
+			if (string.IsNullOrEmpty(file.Id) || file.Id.Equals("upload", StringComparison.CurrentCultureIgnoreCase))
 			{
 				return this._fileManager.CreateFile(fileName, fileData);
 			}

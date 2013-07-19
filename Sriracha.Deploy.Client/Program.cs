@@ -9,6 +9,7 @@ namespace Sriracha.Deploy.Client
 	{
 		static void Main(string[] args)
 		{
+			
 		}
 	}
 }

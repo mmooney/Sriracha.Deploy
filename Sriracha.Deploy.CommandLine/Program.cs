@@ -17,7 +17,8 @@ namespace Sriracha.Deploy.CommandLine
 		Unknown,
 		Something,
 		Deploy,
-		Configure
+		Configure,
+		Publish
 	}
 	public class CommandLineOptions
 	{
@@ -41,6 +42,15 @@ namespace Sriracha.Deploy.CommandLine
 		
 		[CommandLineParser.Option("configValue")]
 		public string ConfigValue { get; set; }
+
+		[CommandLineParser.Option('u',"apiurl")]
+		public string ApiUrl { get; set; }
+
+		[CommandLineParser.Option('d',"directory")]
+		public string Directory { get; set; }
+
+		[CommandLineParser.Option('f',"file")]
+		public string File { get; set; }
 
 		[CommandLineParser.ParserState]
 		public CommandLineParser.IParserState LastParserState { get; set; }
@@ -80,7 +90,7 @@ namespace Sriracha.Deploy.CommandLine
 						}
 						if(string.IsNullOrWhiteSpace(options.BuildId))
 						{
-							throw new Exception("BuildID (--build|-b) required");
+							throw new Exception("BuildID (--build|-b) required for Deploy");
 						}
 						Deploy(options.EnvironmentId, options.BuildId);
 						break;
@@ -110,6 +120,28 @@ namespace Sriracha.Deploy.CommandLine
 							throw new Exception("EnvironmentID (--environment|-e) or combination of Machine ID (--machine|-m) and Component ID (--component|-c) required for Configure");
 						}
 						break;
+					case ActionType.Publish:
+						if(string.IsNullOrWhiteSpace(options.ApiUrl))
+						{
+							throw new Exception("ApiUrl (--apiurl|-u) is required for Publish");
+						}
+						if(!string.IsNullOrWhiteSpace(options.File))
+						{
+							if (!string.IsNullOrWhiteSpace(options.Directory))
+							{
+								throw new Exception("File (--file|-f) Directory (--directory|-f) cannot be both be used together for Publish");
+							}
+							PublishFile(options.File, options.ApiUrl);
+						}
+						else if (!string.IsNullOrWhiteSpace(options.Directory))
+						{
+							PublishDirectory(options.Directory, options.ApiUrl);
+						}
+						else 
+						{
+							throw new Exception("Either File (--file|-f) Directory (--directory|-f) required for Publish");
+						}
+						break;
 					default:
 						throw new UnknownEnumValueException(options.Action);
 				}
@@ -124,6 +156,17 @@ namespace Sriracha.Deploy.CommandLine
 			}
 			Console.WriteLine("Please any key to continue");
 			Console.ReadKey();
+		}
+
+		private static void PublishFile(string filePath, string apiUrl)
+		{
+			throw new NotImplementedException();
+		}
+
+		private static void PublishDirectory(string directoryPath, string apiUrl)
+		{
+			var publisher = Program.Kernel.Get<IBuildPublisher>();
+			publisher.PublishDirectory(directoryPath, apiUrl);
 		}
 
 		private static void ConfigureMachine(string machineId, string configName, string configValue)
