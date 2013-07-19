@@ -37,6 +37,15 @@ namespace Sriracha.Deploy.CommandLine
 		[CommandLineParser.Option('b', "build")]
 		public string BuildId { get; set; }
 
+		[CommandLineParser.Option("branch")]
+		public string BranchId { get; set; }
+
+		[CommandLineParser.Option('p', "project")]
+		public string ProjectId { get; set; }
+
+		[CommandLineParser.Option('v', "version")]
+		public string Version { get; set; }
+
 		[CommandLineParser.Option("configName")]
 		public string ConfigName { get; set; }
 		
@@ -51,6 +60,9 @@ namespace Sriracha.Deploy.CommandLine
 
 		[CommandLineParser.Option('f',"file")]
 		public string File { get; set; }
+
+		[CommandLineParser.Option("pause")]
+		public bool Pause { get; set; }
 
 		[CommandLineParser.ParserState]
 		public CommandLineParser.IParserState LastParserState { get; set; }
@@ -73,6 +85,7 @@ namespace Sriracha.Deploy.CommandLine
 		{
 			Program.Kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
 			SetupColorConsoleLogging();
+			bool pause = false;
 			Program.Logger = Program.Kernel.Get<NLog.Logger>();
 			try 
 			{
@@ -81,6 +94,7 @@ namespace Sriracha.Deploy.CommandLine
 				{
 					throw new Exception(options.GetUsage());
 				}
+				pause = options.Pause;
 				switch(options.Action)
 				{
 					case ActionType.Deploy:
@@ -103,10 +117,6 @@ namespace Sriracha.Deploy.CommandLine
 						{
 							throw new Exception("ConfigName (--configName) required for Configure");
 						}
-						//if(string.IsNullOrWhiteSpace(options.ConfigValue))
-						//{
-						//	throw new Exception("ConfigValue (--configValue) required for Configure");
-						//}
 						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.ComponentId))
 						{
 							ConfigureEnvironment(options.EnvironmentId, options.ComponentId, options.ConfigName, options.ConfigValue);
@@ -121,21 +131,22 @@ namespace Sriracha.Deploy.CommandLine
 						}
 						break;
 					case ActionType.Publish:
-						if(string.IsNullOrWhiteSpace(options.ApiUrl))
-						{
-							throw new Exception("ApiUrl (--apiurl|-u) is required for Publish");
-						}
+						VerifyParameter(options.ApiUrl,"Publish", "ApiUrl", "apiurl", 'a');
+						VerifyParameter(options.ProjectId,"Publish", "ProjectId", "project", 'p');
+						VerifyParameter(options.BranchId,"Publish", "BranchId", "branch");
+						VerifyParameter(options.ComponentId,"Publish", "ComponentId", "component", 'c');
+						VerifyParameter(options.Version,"Publish", "Version", "version", 'v');
 						if(!string.IsNullOrWhiteSpace(options.File))
 						{
 							if (!string.IsNullOrWhiteSpace(options.Directory))
 							{
 								throw new Exception("File (--file|-f) Directory (--directory|-f) cannot be both be used together for Publish");
 							}
-							PublishFile(options.File, options.ApiUrl);
+							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version);
 						}
 						else if (!string.IsNullOrWhiteSpace(options.Directory))
 						{
-							PublishDirectory(options.Directory, options.ApiUrl);
+							PublishDirectory(options.Directory, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version);
 						}
 						else 
 						{
@@ -154,19 +165,40 @@ namespace Sriracha.Deploy.CommandLine
 			{
 				Program.Logger.ErrorException("Error", err);
 			}
-			Console.WriteLine("Please any key to continue");
-			Console.ReadKey();
+			if(pause)
+			{
+				Console.WriteLine("Please any key to continue");
+				Console.ReadKey();
+			}
 		}
 
-		private static void PublishFile(string filePath, string apiUrl)
+		private static void VerifyParameter(string value, string actionName, string parameterName, string longName, char? shortName=null)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrWhiteSpace(value))
+			{
+				string message;
+				if(shortName.HasValue)
+				{
+					message = string.Format("{0} (--{1}|-{2}) required for {3}", parameterName, longName, shortName, actionName);
+				}
+				else 
+				{
+					message = string.Format("{0} (--{1}) required for {2}", parameterName, longName, actionName);
+				}
+				throw new ArgumentException(message);
+			}
 		}
 
-		private static void PublishDirectory(string directoryPath, string apiUrl)
+		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version)
 		{
 			var publisher = Program.Kernel.Get<IBuildPublisher>();
-			publisher.PublishDirectory(directoryPath, apiUrl);
+			publisher.PublishFile(filePath, apiUrl, projectId, componentId, branchId, version);
+		}
+
+		private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)
+		{
+			var publisher = Program.Kernel.Get<IBuildPublisher>();
+			publisher.PublishDirectory(directoryPath, apiUrl, projectId, componentId, branchId, version);
 		}
 
 		private static void ConfigureMachine(string machineId, string configName, string configValue)

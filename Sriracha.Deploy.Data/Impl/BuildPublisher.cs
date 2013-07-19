@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Data.Impl
 			_logger = DIHelper.VerifyParameter(logger);
 		}
 
-		public void PublishDirectory(string directoryPath, string apiUrl)
+		public void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)
 		{
 			_logger.Info("Start publishing directory {0} to URL {1}", directoryPath, apiUrl);
 			string zipPath = Path.ChangeExtension(Path.GetTempFileName(), ".zip");
@@ -31,35 +31,68 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			_zipper.ZipDirectory(directoryPath, zipPath);
 
+			PublishZip(apiUrl, projectId, componentId, branchId, version, zipPath);
+
+			_logger.Info("Done publishing directory {0} to URL {1}", directoryPath, apiUrl);
+		}
+
+		public void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version)
+		{
+			_logger.Info("Start publishing file {0} to URL {1}", filePath, apiUrl);
+			string zipPath = Path.ChangeExtension(Path.GetTempFileName(), ".zip");
+			if (!File.Exists(filePath))
+			{
+				throw new DirectoryNotFoundException(string.Format("File directory \"{0}\" not found", filePath));
+			}
+			_zipper.ZipFile(filePath, zipPath);
+
+			PublishZip(apiUrl, projectId, componentId, branchId, version, zipPath);
+
+			_logger.Info("Done publishing file {0} to URL {1}", filePath, apiUrl);
+		}
+
+		private void PublishZip(string apiUrl, string projectId, string componentId, string branchId, string version, string zipPath)
+		{
 			string url = apiUrl;
-			if(!url.EndsWith("/"))
+			if (!url.EndsWith("/"))
 			{
 				url += "/";
 			}
-			if(!url.EndsWith("/api/", StringComparison.CurrentCultureIgnoreCase))
+			if (!url.EndsWith("/api/", StringComparison.CurrentCultureIgnoreCase))
 			{
 				url += "api/";
 			}
-			url += "file";
 			var deployFile = new DeployFileDto
 			{
 				FileData = File.ReadAllBytes(zipPath),
 				FileName = Path.GetFileName(zipPath)
 			};
 			string fileId;
-			using(var client = new JsonServiceClient(url))
+			using (var client = new JsonServiceClient(url))
 			{
 				_logger.Debug("Posting file {0} to URL {1}", zipPath, url);
 				//var x = client.Send<DeployFileDto>(deployFile);
 				var fileToUpload = new FileInfo(zipPath);
-				var response = client.PostFile<DeployFileDto>(url,
-					fileToUpload, MimeTypes.GetMimeType(fileToUpload.Name));
-				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, response.Id, response.FileStorageId);
+				string fileUrl = url + "file";
+				var fileResponse = client.PostFile<DeployFileDto>(fileUrl, fileToUpload, MimeTypes.GetMimeType(fileToUpload.Name));
+				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, fileResponse.Id, fileResponse.FileStorageId);
+
+				DeployBuild build = new DeployBuild
+				{
+					FileId = fileResponse.Id,
+					ProjectId = projectId,
+					ProjectBranchId = branchId,
+					ProjectComponentId = componentId,
+					Version = version
+				};
+				_logger.Debug("Posting DeployBuild object to URL {0}, sending{1}", url, build.ToJson());
+				string buildUrl = url + "build";
+				var buildResponse = client.Post<DeployBuild>(buildUrl, build);
+				_logger.Debug("Posting DeployBuild object to URL {0}, returned {1}", url, build.ToJson());
 			}
 
-			throw new NotImplementedException("Still need to create build object...");
-
-			_logger.Info("Done publishing directory {0} to URL {1}", directoryPath, apiUrl);
 		}
+
+
 	}
 }

@@ -26,5 +26,17 @@ namespace Sriracha.Deploy.Data.Impl
 				_logger.Debug("Done zipping directory {0} to into file {1}, {2} entries, {3} bytes", directoryPath, zipPath, zipFile.Count, new FileInfo(zipPath).Length);
 			}
 		}
+
+
+		public void ZipFile(string filePath, string zipPath)
+		{
+			using (var zipFile = new ZipFile())
+			{
+				_logger.Debug("Zipping file {0} to into file {1}", filePath, zipPath);
+				zipFile.AddFile(filePath);
+				zipFile.Save(zipPath);
+				_logger.Debug("Done zipping fule {0} to into file {1}, {2} entries, {3} bytes", filePath, zipPath, zipFile.Count, new FileInfo(zipPath).Length);
+			}
+		}
 	}
 }

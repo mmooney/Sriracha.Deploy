@@ -97,6 +97,7 @@
     <Compile Include="IParameterParser.cs" />
     <Compile Include="IProcessRunner.cs" />
     <Compile Include="IZipper.cs" />
+    <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRequestRepository.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
