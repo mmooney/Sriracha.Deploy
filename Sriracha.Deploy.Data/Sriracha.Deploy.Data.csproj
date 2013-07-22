@@ -33,6 +33,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
@@ -44,6 +47,9 @@
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.0.1.2\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Common">
       <HintPath>..\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.dll</HintPath>
@@ -85,6 +91,7 @@
     <Compile Include="IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
     <Compile Include="Impl\BuildPublisher.cs" />
+    <Compile Include="Impl\DefaultSystemSettings.cs" />
     <Compile Include="Impl\DeployComponentRunner.cs" />
     <Compile Include="Impl\DeployHistoryManager.cs" />
     <Compile Include="Impl\DeploymentValidator.cs" />
@@ -99,10 +106,16 @@
     <Compile Include="Impl\Zipper.cs" />
     <Compile Include="IParameterParser.cs" />
     <Compile Include="IProcessRunner.cs" />
+    <Compile Include="ISystemSettings.cs" />
     <Compile Include="IZipper.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
+    <Compile Include="ServiceJobs\IJobScheduler.cs" />
+    <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\JobScheduler.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\RunDeploymentJob.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />

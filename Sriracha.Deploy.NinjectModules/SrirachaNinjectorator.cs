@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ninject;
+using Ninject.Activation;
 using Ninject.Modules;
 using Ninject.Planning.Bindings;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.ServiceJobs;
+using Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Tasks.TaskImpl;
 
@@ -36,7 +42,15 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IFileWriter>().To<FileWriter>().InSingletonScope();
 			this.Bind<IBuildPublisher>().To<BuildPublisher>();
 			this.Bind<IDeployStateManager>().To<DeployStateManager>();
+			this.Bind<IJobScheduler>().To<JobScheduler>();
 			this.Bind<IZipper>().To<Zipper>();
+			this.Bind<ISystemSettings>().To<DefaultSystemSettings>();
+
+			this.Bind<IRunDeploymentJob>().To<RunDeploymentJob>();
+			this.Bind<IJobFactory>().To<JobFactory>();
+			this.Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
+			this.Bind<IScheduler>().ToMethod(CreateScheduler).InSingletonScope();
+
 			this.Kernel.Load(new RavenDBNinjectModule());
 		}
 
@@ -44,6 +58,14 @@ namespace Sriracha.Deploy.NinjectModules
 		{
 			_logger = NLog.LogManager.GetCurrentClassLogger();
 			this.Bind<NLog.Logger>().ToMethod(ctx=>_logger);	 
+		}
+
+		public static IScheduler CreateScheduler(IContext context)
+		{
+			var schedulerFactory = context.Kernel.Get<ISchedulerFactory>();
+			var scheduler = schedulerFactory.GetScheduler();
+			scheduler.JobFactory = context.Kernel.Get<IJobFactory>();
+			return scheduler;
 		}
 	}
 }

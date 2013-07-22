@@ -1,6 +1,6 @@
 ﻿namespace Sriracha.Deploy.Server
 {
-	partial class Service1
+	partial class WinService
 	{
 		/// <summary> 
 		/// Required designer variable.
