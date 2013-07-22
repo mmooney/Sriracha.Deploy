@@ -179,6 +179,7 @@
     <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
     <Compile Include="Services\DeployRequestService.cs" />
+    <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\ProjectService.cs" />
@@ -481,6 +482,7 @@
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
     <Content Include="Templates\deployment-submit-template.html" />
+    <Content Include="Templates\deployment-view-template.html" />
     <Content Include="Templates\environment-delete-template.html" />
     <Content Include="Templates\environment-edit-template.html" />
     <Content Include="Templates\deploymentstep-delete-template.html" />

@@ -23,18 +23,34 @@ namespace Sriracha.Deploy.Web.Services
 			{
 				throw new ArgumentNullException();
 			}
-			if(!string.IsNullOrEmpty(request.Id))
-			{
-				throw new NotImplementedException();
-			}
+			//if(!string.IsNullOrEmpty(request.Id))
+			//{
+			//	throw new NotImplementedException();
+			//}
 			else 
 			{
-				if(string.IsNullOrWhiteSpace(request.BuildId) && string.IsNullOrWhiteSpace(request.EnvironmentId))
+				if(string.IsNullOrWhiteSpace(request.BuildId) || string.IsNullOrWhiteSpace(request.EnvironmentId))
 				{
 					throw new ArgumentNullException();
 				}
 				return _deployRequestManager.InitializeDeployRequest(request.BuildId, request.EnvironmentId);
 			}
+		}
+		public object Put(DeployRequest request)
+		{
+			return this.PutPost(request);
+		}
+
+		public object Post(DeployRequest request)
+		{
+			return this.PutPost(request);
+		}
+
+		private DeployRequest PutPost(DeployRequest request)
+		{
+			var state = _deployRequestManager.SubmitDeployRequest(request.ProjectId, request.BuildId, request.EnvironmentId, request.MachineIdList);
+			request.DeployStateId = state.Id;
+			return request;
 		}
 	}
 }

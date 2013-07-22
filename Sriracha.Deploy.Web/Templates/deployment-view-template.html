@@ -1,7 +1,18 @@
-﻿<h2>Deploy Build {{build.projectName}} - {{build.projectBranchName}} - {{build.projectComponentName}} - {{build.version}}  to environment {{environment.environmentName}}</h2>
+﻿<h2>View Deployment</h2>
+<h2>{{project.projectName}} - {{deployState.build.projectBranchName}} - {{deployState.build.projectComponentName}} - {{deployState.build.version}}  to environment {{deployState.environment.environmentName}}</h2>
 
 <hr />
-<div ng-hide="environmentComponent" class="alert alert-error">
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>Submitted Date (UTC)</th>
+		<td>{{deployState.submittedDateTimeUtc | date:'medium'}}</td>
+	</tr>
+	<tr>
+		<th>Status</th>
+		<td>{{deployState.statusDisplayValue}}</td>
+	</tr>
+</table>
+<!--<div ng-hide="environmentComponent" class="alert alert-error">
 	No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
 </div>
 <fieldset>
@@ -74,3 +85,5 @@
 	</div>
 </fieldset>
 
+
+-->

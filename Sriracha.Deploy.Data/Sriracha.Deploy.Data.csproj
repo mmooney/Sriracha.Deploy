@@ -69,6 +69,7 @@
     <Compile Include="Dto\DeploymentValidationResult.cs" />
     <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Dto\DeployRequestTemplate.cs" />
+    <Compile Include="Dto\DeployState.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="IDeploymentValidator.cs" />
     <Compile Include="IDeployRequestManager.cs" />
     <Compile Include="IDeployRunner.cs" />
+    <Compile Include="IDeployStateManager.cs" />
     <Compile Include="IDIFactory.cs" />
     <Compile Include="IFileManager.cs" />
     <Compile Include="IFileStorage.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Impl\DeploymentValidator.cs" />
     <Compile Include="Impl\DeployRequestManager.cs" />
     <Compile Include="Impl\DeployRunner.cs" />
+    <Compile Include="Impl\DeployStateManager.cs" />
     <Compile Include="Impl\FileManager.cs" />
     <Compile Include="Impl\FileWriter.cs" />
     <Compile Include="Impl\ModuleInspector.cs" />
@@ -99,7 +102,7 @@
     <Compile Include="IZipper.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
-    <Compile Include="Repository\IDeployRequestRepository.cs" />
+    <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />

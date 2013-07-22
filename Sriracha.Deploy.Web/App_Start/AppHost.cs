@@ -47,7 +47,8 @@ namespace Sriracha.Deploy.Web.App_Start
 		{
 			//Set JSON web services to return idiomatic JSON camelCase properties
 			ServiceStack.Text.JsConfig.EmitCamelCaseNames = true;
-		
+			ServiceStack.Text.JsConfig.DateHandler = ServiceStack.Text.JsonDateHandler.ISO8601; 		
+
 			//Configure User Defined REST Paths
 			Routes
 				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step")
@@ -66,6 +67,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployHistory>("/deploy/history{id*}")
 				.Add<DeployRequest>("/deployrequest")
 				.Add<DeployRequest>("/deployrequest/{id}")
+				.Add<DeployState>("/deployState")
+				.Add<DeployState>("/deployState/{id}")
 				.Add<DeployProject>("/project")
 				.Add<DeployProject>("/project/{id*}")
 				.Add<TaskMetadata>("/taskMetadata");

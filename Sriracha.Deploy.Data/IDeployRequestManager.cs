@@ -8,6 +8,7 @@ namespace Sriracha.Deploy.Data
 {
 	public interface IDeployRequestManager
 	{
-		DeployRequestTemplate InitializeDeployRequest(string p1, string p2);
+		DeployRequestTemplate InitializeDeployRequest(string buildId, string environmentId);
+		DeployState SubmitDeployRequest(string projectId, string buildId, string environmentId, IEnumerable<string> machineIdList);
 	}
 }

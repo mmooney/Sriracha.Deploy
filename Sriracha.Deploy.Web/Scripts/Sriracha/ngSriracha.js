@@ -134,7 +134,8 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 		deployHistory: $resource("/api/deploy/history"),
 		taskMetadata: $resource("/api/taskmetadata"),
 		build: $resource("/api/build/:buildId"),
-		deployRequest: $resource("/api/deployRequest/:deployRequestId")
+		deployRequest: $resource("/api/deployRequest/:deployRequestId"),
+		deployState: $resource("/api/deployState/:deployState")
 	}
 });
 

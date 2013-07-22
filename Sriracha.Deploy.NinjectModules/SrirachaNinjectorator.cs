@@ -35,6 +35,7 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IParameterParser>().To<ParameterParser>().InSingletonScope();
 			this.Bind<IFileWriter>().To<FileWriter>().InSingletonScope();
 			this.Bind<IBuildPublisher>().To<BuildPublisher>();
+			this.Bind<IDeployStateManager>().To<DeployStateManager>();
 			this.Bind<IZipper>().To<Zipper>();
 			this.Kernel.Load(new RavenDBNinjectModule());
 		}

@@ -136,6 +136,10 @@ Sriracha.Navigation = {
 		SubmitUrl: "/deploy/submit/:buildId/:environmentId",
 		Submit: function (buildId, environmentId) {
 			Sriracha.Navigation.GoTo(this.SubmitUrl, { buildId: buildId, environmentId: environmentId });
+		},
+		ViewUrl: "/deploy/:deployStateId",
+		View: function (deployStateId) {
+			Sriracha.Navigation.GoTo(this.ViewUrl, { deployStateId: deployStateId });
 		}
 	}
 

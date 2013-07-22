@@ -27,6 +27,7 @@ namespace Sriracha.Deploy.NinjectModules
 			Bind<IFileStorage>().To<RavenFileStorage_Attachment>();
 			Bind<IRavenAttachmentManager>().To<RavenAttachmentManager>();
 			Bind<IDeployHistoryRepository>().To<RavenDeployHistoryRepository>();
+			Bind<IDeployRepository>().To<RavenDeployRepository>();
 		}
 	}
 }
