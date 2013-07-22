@@ -40,5 +40,12 @@ namespace Sriracha.Deploy.RavenDB
 			item.FileData = fileData;
 			_documentSession.SaveChanges();
 		}
+
+
+		public byte[] GetFile(string fileStorageId)
+		{
+			var item = _documentSession.Load<FileStorageDto>(fileStorageId);
+			return item.FileData;
+		}
 	}
 }

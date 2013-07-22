@@ -27,5 +27,11 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public byte[] GetFile(string fileStorageId)
+		{
+			return _ravenAttachmentManager.GetAttachment(fileStorageId);
+		}
 	}
 }

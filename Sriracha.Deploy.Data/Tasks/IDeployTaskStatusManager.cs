@@ -9,9 +9,9 @@ namespace Sriracha.Deploy.Data.Tasks
 	public interface IDeployTaskStatusManager
 	{
 		DeployTaskExecutionResult BuildResult();
-		void Debug(string message);
-		void Info(string message);
-		void Error(string message);
-		void Error(Exception err);
+		void Debug(string deployStateId, string message);
+		void Info(string deployStateId, string message);
+		void Error(string deployStateId, string message);
+		void Error(string deployStateId, Exception err);
 	}
 }

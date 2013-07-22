@@ -20,9 +20,9 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			this._validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
-			statusManager.Info(string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
+			statusManager.Info(deployStateId, string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			var result = new DeployTaskExecutionResult();
 			var validationResult = _validator.ValidateTaskDefinition(definition, environmentComponent);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
@@ -31,20 +31,20 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			}
 			foreach (var machine in environmentComponent.MachineList)
 			{
-				this.ExecuteMachine(statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
+				this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
 			}
-			statusManager.Info(string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
+			statusManager.Info(deployStateId, string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
-			statusManager.Info(string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
+			statusManager.Info(deployStateId, string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
 			var machineResult = validationResult.MachineResultList[machine.MachineName];
 			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, false);
 			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, true);
 
-			statusManager.Info(string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
+			statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 			using (var standardOutputWriter = new StringWriter())
 			using(var errorOutputWriter = new StringWriter())
 			{
@@ -53,14 +53,14 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
 				if(!string.IsNullOrEmpty(standardOutput))
 				{
-					statusManager.Info(standardOutput);
+					statusManager.Info(deployStateId, standardOutput);
 				}
 				if(!string.IsNullOrEmpty(errorOutput))
 				{
-					statusManager.Error(errorOutput);
+					statusManager.Error(deployStateId, errorOutput);
 				}
 			}
-			statusManager.Info(string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
+			statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 		}
 
 		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, bool masked)

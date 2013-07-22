@@ -31,22 +31,22 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 			return returnValue;
 		}
 
-		public void Debug(string message)
+		public void Debug(string deployStateId, string message)
 		{
 			this.DebugList.Add(message);
 		}
 
-		public void Info(string message)
+		public void Info(string deployStateId, string message)
 		{
 			this.InfoList.Add(message);
 		}
 
-		public void Error(string message)
+		public void Error(string deployStateId, string message)
 		{
 			this.ErrorList.Add(message);
 		}
 
-		public void Error(Exception err)
+		public void Error(string deployStateId, Exception err)
 		{
 			this.ErrorList.Add(err.ToString());
 		}

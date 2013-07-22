@@ -8,5 +8,6 @@ namespace Sriracha.Deploy.Data
 	public interface IFileWriter
 	{
 		void WriteText(string fileName, string text, bool append);
+		void WriteBytes(string fileName, byte[] data);
 	}
 }

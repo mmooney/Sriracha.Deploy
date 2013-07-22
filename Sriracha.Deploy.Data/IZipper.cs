@@ -10,5 +10,7 @@ namespace Sriracha.Deploy.Data
 		void ZipDirectory(string directoryPath, string zipPath);
 
 		void ZipFile(string filePath, string zipPath);
+
+		void ExtractFile(string zipPath, string targetDirectory);
 	}
 }

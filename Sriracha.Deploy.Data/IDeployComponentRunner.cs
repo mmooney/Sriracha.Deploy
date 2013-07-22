@@ -9,6 +9,6 @@ namespace Sriracha.Deploy.Data
 {
 	public interface IDeployComponentRunner
 	{
-		void Run(IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);
+		void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);
 	}
 }

@@ -8,5 +8,6 @@ namespace Sriracha.Deploy.Data
 	public interface ISystemSettings
 	{
 		int RunDeploymentPollingIntervalSeconds { get; }
+		string DeployWorkingDirectory { get; }
 	}
 }

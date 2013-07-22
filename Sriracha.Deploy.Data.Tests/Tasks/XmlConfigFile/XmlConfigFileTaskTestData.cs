@@ -20,6 +20,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		public Mock<IDeploymentValidator> Validator { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
 		public Dictionary<string, string> ExpectedResult { get; set; }
+		public string DeployStateId { get; set; }
 
 		public static XmlConfigFileTaskTestData Create()
 		{
@@ -27,6 +28,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 			XmlConfigFileTaskTestData returnValue = new XmlConfigFileTaskTestData()
 			{
 				FileWriter = new Mock<IFileWriter>(),
+				DeployStateId = fixture.Create<string>(),
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
 				RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 				Validator = new Mock<IDeploymentValidator>(),

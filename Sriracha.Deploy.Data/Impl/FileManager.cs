@@ -10,10 +10,12 @@ namespace Sriracha.Deploy.Data.Impl
 	public class FileManager : IFileManager
 	{
 		private readonly IFileRepository _fileRepository;
+		private readonly IFileWriter _fileWriter;
 
-		public FileManager(IFileRepository fileRepository)
+		public FileManager(IFileRepository fileRepository, IFileWriter fileWriter)
 		{
 			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
+			this._fileWriter = DIHelper.VerifyParameter(fileWriter);
 		}
 
 		public IEnumerable<DeployFile> GetFileList()
@@ -39,6 +41,13 @@ namespace Sriracha.Deploy.Data.Impl
 		public void DeleteFile(string fileId)
 		{
 			_fileRepository.DeleteFile(fileId);
+		}
+
+		public void ExportFile(string fileId, string targetFilePath)
+		{
+			var file = this.GetFile(fileId);
+			var data = _fileRepository.GetFileData(fileId);
+			_fileWriter.WriteBytes(targetFilePath, data);
 		}
 	}
 }

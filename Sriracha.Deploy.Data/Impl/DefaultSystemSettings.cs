@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Sriracha.Deploy.Data.Impl
@@ -13,6 +15,12 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				return 60;
 			}
+		}
+
+
+		public string DeployWorkingDirectory
+		{
+			get { return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WorkingDirectory"); }
 		}
 	}
 }

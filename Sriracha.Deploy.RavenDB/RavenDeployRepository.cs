@@ -64,7 +64,7 @@ namespace Sriracha.Deploy.RavenDB
 				bool done = false;
 				this._logger.Trace("Checking for next deployment");
 				var tempItem = this._documentSession.Query<DeployState>()
-										.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite(TimeSpan.FromSeconds(30)))
+										.Customize(i=>i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
 										.OrderBy(i=>i.SubmittedDateTimeUtc)
 										.Where(i=>i.Status == EnumDeployStatus.NotStarted)
 										.FirstOrDefault();

@@ -21,6 +21,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public List<string> MachineParameters { get; set; }
 		public List<string> EnvironmentParameters { get; set; }
+		public string DeployStateId { get; set; }
 		public DeployEnvironmentComponent EnvironmentComponent { get; set; }
 
 		public static LocalCommandLineTestData Create()
@@ -28,6 +29,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 			var fixture = new Fixture();
 			var returnValue = new LocalCommandLineTestData
 			{
+				DeployStateId = fixture.Create<string>(),
 				MachineParameters = new List<string>() {"MachineParameter1", "MachineParameter2"},
 				EnvironmentParameters = new List<string>(){"EnvironmentParameter1", "EnvironmentParameter2"},
 				ParameterParser = new Mock<IParameterParser>(),

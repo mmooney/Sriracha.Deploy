@@ -13,5 +13,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployFile GetFile(string fileId);
 		DeployFile UpdateFile(string fileId, string fileName, byte[] fileData);
 		void DeleteFile(string fileId);
+
+		byte[] GetFileData(string fileId);
 	}
 }

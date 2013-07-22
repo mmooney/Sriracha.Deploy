@@ -35,7 +35,18 @@ namespace Sriracha.Deploy.Data.Impl
 				_logger.Debug("Zipping file {0} to into file {1}", filePath, zipPath);
 				zipFile.AddFile(filePath);
 				zipFile.Save(zipPath);
-				_logger.Debug("Done zipping fule {0} to into file {1}, {2} entries, {3} bytes", filePath, zipPath, zipFile.Count, new FileInfo(zipPath).Length);
+				_logger.Debug("Done zipping file {0} to into file {1}, {2} entries, {3} bytes", filePath, zipPath, zipFile.Count, new FileInfo(zipPath).Length);
+			}
+		}
+
+
+		public void ExtractFile(string zipPath, string targetDirectory)
+		{
+			using(var zipFile = new ZipFile(zipPath))
+			{
+				_logger.Debug("Extracting file {0} to directory {1}", zipPath, targetDirectory);
+				zipFile.ExtractAll(targetDirectory);
+				_logger.Debug("Done extracting file {0} to to directory {1}", zipPath, targetDirectory);
 			}
 		}
 	}

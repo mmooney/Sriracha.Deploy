@@ -17,26 +17,26 @@ namespace Sriracha.Deploy.Data.Impl
 			this._deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
 		}
 
-		public void Run(IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			int stepCounter = 0;
 			foreach(var taskDefinition in taskDefinitionList)
 			{
 				stepCounter++;
-				statusManager.Info(string.Format("Step {0}: Starting {1}", stepCounter, taskDefinition.TaskDefintionName));
+				statusManager.Info(deployStateId, string.Format("Step {0}: Starting {1}", stepCounter, taskDefinition.TaskDefintionName));
 				var executor = _deployTaskFactory.CreateTaskExecutor(taskDefinition.GetTaskExecutorType());
-				var result = executor.Execute(statusManager, taskDefinition, environmentComponent, runtimeSystemSettings);
+				var result = executor.Execute(deployStateId, statusManager, taskDefinition, environmentComponent, runtimeSystemSettings);
 				switch(result.Status)
 				{
 					case EnumDeployTaskExecutionResultStatus.Success:
-						statusManager.Info(string.Format("Step {0}: End {1}, completed successfully", stepCounter, taskDefinition.TaskDefintionName));
+						statusManager.Info(deployStateId, string.Format("Step {0}: End {1}, completed successfully", stepCounter, taskDefinition.TaskDefintionName));
 						break;
 					case EnumDeployTaskExecutionResultStatus.Error:
-						statusManager.Info(string.Format("Step {0}: End {1}, failed", stepCounter, taskDefinition.TaskDefintionName));
+						statusManager.Info(deployStateId, string.Format("Step {0}: End {1}, failed", stepCounter, taskDefinition.TaskDefintionName));
 						return;
 						break;
 					case EnumDeployTaskExecutionResultStatus.Warning:
-						statusManager.Info(string.Format("Step {0}: End {1}, completed with warnings", stepCounter, taskDefinition.TaskDefintionName));
+						statusManager.Info(deployStateId, string.Format("Step {0}: End {1}, completed with warnings", stepCounter, taskDefinition.TaskDefintionName));
 						break;
 					default:
 						throw new UnknownEnumValueException(result.Status);

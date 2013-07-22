@@ -81,5 +81,12 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.Delete(file);
 			this._documentSession.SaveChanges();
 		}
+
+
+		public byte[] GetFileData(string fileId)
+		{
+			var file = this.GetFile(fileId);
+			return _fileStorage.GetFile(file.FileStorageId);
+		}
 	}
 }

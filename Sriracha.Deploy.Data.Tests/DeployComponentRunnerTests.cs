@@ -22,6 +22,7 @@ namespace Sriracha.Deploy.Data.Tests
 			public DeployEnvironmentComponent EnvironmentComponent { get; set; }
 			public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 			public DeployComponentRunner Sut { get; set; }
+			public string DeployStateId { get; set; }
 
 			public List<IDeployTaskDefinition> GetTaskDefinitionList()
 			{
@@ -47,7 +48,8 @@ namespace Sriracha.Deploy.Data.Tests
 					StatusManager = new Mock<IDeployTaskStatusManager>(),
 					EnvironmentComponent = fixture.Create<DeployEnvironmentComponent>(),
 					RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
-					TaskDefinitionExecutorList = new TupleList<Mock<IDeployTaskDefinition>,Mock<IDeployTaskExecutor>,Type>()
+					TaskDefinitionExecutorList = new TupleList<Mock<IDeployTaskDefinition>,Mock<IDeployTaskExecutor>,Type>(),
+					DeployStateId = fixture.Create<string>()
 				};
 				returnValue.Sut = new DeployComponentRunner(returnValue.TaskFactory.Object);
 
@@ -63,7 +65,7 @@ namespace Sriracha.Deploy.Data.Tests
 					{
 						Status = EnumDeployTaskExecutionResultStatus.Success
 					};
-					taskExecutor.Setup(i=>i.Execute(returnValue.StatusManager.Object, taskDefinition.Object, returnValue.EnvironmentComponent, returnValue.RuntimeSystemSettings)).Returns(successResult);
+					taskExecutor.Setup(i => i.Execute(returnValue.DeployStateId, returnValue.StatusManager.Object, taskDefinition.Object, returnValue.EnvironmentComponent, returnValue.RuntimeSystemSettings)).Returns(successResult);
 				}
 				return returnValue;
 			}
@@ -73,7 +75,7 @@ namespace Sriracha.Deploy.Data.Tests
 		public void RunsExecutorForEachTask()
 		{
 			var testData = TestData.Create(2);
-			testData.Sut.Run(testData.StatusManager.Object, testData.GetTaskDefinitionList(), testData.EnvironmentComponent, testData.RuntimeSystemSettings);
+			testData.Sut.Run(testData.DeployStateId, testData.StatusManager.Object, testData.GetTaskDefinitionList(), testData.EnvironmentComponent, testData.RuntimeSystemSettings);
 			
 			foreach(var pair in testData.TaskDefinitionExecutorList)
 			{
@@ -82,7 +84,7 @@ namespace Sriracha.Deploy.Data.Tests
 				var exectutorType = pair.Item3;
 				taskDefinition.Verify(i=>i.GetTaskExecutorType(), Times.Once());
 				testData.TaskFactory.Verify(i => i.CreateTaskExecutor(exectutorType), Times.Once());
-				taskExecutor.Verify(i=>i.Execute(testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Once());
+				taskExecutor.Verify(i => i.Execute(testData.DeployStateId, testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Once());
 			}
 		}
 
@@ -94,9 +96,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Status = EnumDeployTaskExecutionResultStatus.Error
 			};
-			testData.TaskDefinitionExecutorList[0].Item2.Setup(i => i.Execute(testData.StatusManager.Object, testData.TaskDefinitionExecutorList[0].Item1.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings)).Returns(failureResult);
+			testData.TaskDefinitionExecutorList[0].Item2.Setup(i => i.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinitionExecutorList[0].Item1.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings)).Returns(failureResult);
 
-			testData.Sut.Run(testData.StatusManager.Object, testData.GetTaskDefinitionList(), testData.EnvironmentComponent, testData.RuntimeSystemSettings);
+			testData.Sut.Run(testData.DeployStateId, testData.StatusManager.Object, testData.GetTaskDefinitionList(), testData.EnvironmentComponent, testData.RuntimeSystemSettings);
 
 			{
 				var pair = testData.TaskDefinitionExecutorList[0];
@@ -105,7 +107,7 @@ namespace Sriracha.Deploy.Data.Tests
 				var exectutorType = pair.Item3;
 				taskDefinition.Verify(i => i.GetTaskExecutorType(), Times.Once());
 				testData.TaskFactory.Verify(i => i.CreateTaskExecutor(exectutorType), Times.Once());
-				taskExecutor.Verify(i => i.Execute(testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Once());
+				taskExecutor.Verify(i => i.Execute(testData.DeployStateId, testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Once());
 			}
 			{
 				var pair = testData.TaskDefinitionExecutorList[1];
@@ -114,7 +116,7 @@ namespace Sriracha.Deploy.Data.Tests
 				var exectutorType = pair.Item3;
 				taskDefinition.Verify(i => i.GetTaskExecutorType(), Times.Never());
 				testData.TaskFactory.Verify(i => i.CreateTaskExecutor(exectutorType), Times.Never());
-				taskExecutor.Verify(i => i.Execute(testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Never());
+				taskExecutor.Verify(i => i.Execute(testData.DeployStateId, testData.StatusManager.Object, taskDefinition.Object, testData.EnvironmentComponent, testData.RuntimeSystemSettings), Times.Never());
 			}
 		}
 	}

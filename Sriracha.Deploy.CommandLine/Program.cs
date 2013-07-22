@@ -225,7 +225,7 @@ namespace Sriracha.Deploy.CommandLine
 			Directory.CreateDirectory(runtimeSystemSettings.LocalDeployDirectory);
 			Program.Logger.Info("\tUsing path: " + runtimeSystemSettings.LocalDeployDirectory);
 
-			deploymentRunner.Deploy(environmentID, buildID, runtimeSystemSettings);
+			deploymentRunner.Deploy(null, environmentID, buildID, runtimeSystemSettings);
 
 			Program.Logger.Info("Done executing deployment request for build " + buildID + " to environment " + environmentID);
 		}

@@ -8,7 +8,7 @@ namespace Sriracha.Deploy.Data
 	public interface IFileStorage
 	{
 		string StoreFile(byte[] fileData);
-
 		void UpdateFile(string fileStorageId, byte[] fileData);
+		byte[] GetFile(string fileStorageId);
 	}
 }
