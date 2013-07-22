@@ -21,6 +21,14 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 		public void Execute(IJobExecutionContext context)
 		{
 			this._logger.Trace("Starting RunDeploymentJob.Execute");
+			try 
+			{
+				var nextDeployment = this._deployStateManager.PopNextDeployment();
+			}
+			catch(Exception err)
+			{
+				this._logger.ErrorException("RunDeploymentJob failed: " + err.ToString(), err);
+			}
 			this._logger.Trace("Done RunDeploymentJob.Execute");
 		}
 	}

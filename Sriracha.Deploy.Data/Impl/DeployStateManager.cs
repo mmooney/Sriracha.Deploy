@@ -20,5 +20,10 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			return _deployRepository.GetDeployState(deployStateId);
 		}
+
+		public DeployState PopNextDeployment()
+		{
+			return _deployRepository.PopNextDeployment();
+		}
 	}
 }

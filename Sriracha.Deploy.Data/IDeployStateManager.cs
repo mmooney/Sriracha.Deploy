@@ -9,5 +9,6 @@ namespace Sriracha.Deploy.Data
 	public interface IDeployStateManager
 	{
 		DeployState GetDeployState(string deployStateId);
+		DeployState PopNextDeployment();
 	}
 }
