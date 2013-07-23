@@ -54,7 +54,7 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="environment in project.environmentList">
-			<td><a ng-href="{{getViewEnvironmentUrl(environment)}}">{{environment.environmentName}}</a></td>
+			<td><a ng-href="{{getEditEnvironmentUrl(environment)}}">{{environment.environmentName}}</a></td>
 			<td><a class="btn btn-primary" ng-href="{{getEditEnvironmentUrl(environment)}}">Edit</a></td>
 			<td><a class="btn btn-danger" ng-href="{{getDeleteEnvironmentUrl(environment)}}">Delete</a></td>
 		</tr>

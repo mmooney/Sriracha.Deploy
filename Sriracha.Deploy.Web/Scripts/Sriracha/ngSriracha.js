@@ -76,10 +76,6 @@ ngSriracha.config(function ($routeProvider) {
 			templateUrl: "templates/environment-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Environment.ViewUrl, {
-			templateUrl: "templates/environment-view-template.html",
-			controller: "ProjectController"
-		})
 		.when(Sriracha.Navigation.Environment.EditUrl, {
 			templateUrl: "templates/environment-edit-template.html",
 			controller: "ProjectController"
@@ -128,6 +124,7 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 	return {
 		project: $resource("/api/project"),
 		component: $resource("/api/project/:projectId/component"),
+		componentConfiguration: $resource("api/project/:projectId/component/:componentId/configuration"),
 		branch: $resource("/api/project/:projectId/branch"),
 		environment: $resource("/api/project/:projectId/environment"),
 		deploymentStep: $resource("/api/project/:projectId/component/:componentId/step", { projectId: "@projectId", componentId: "@componentId" }),

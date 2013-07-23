@@ -75,5 +75,22 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return item;
 		}
+
+
+		public ComponentConfigurationDefinition GetComponentConfigurationDefinition(DeployComponent component)
+		{
+			var returnValue = new ComponentConfigurationDefinition();
+			foreach (var deploymentStep in component.DeploymentStepList)
+			{
+				var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
+				
+				var environmentList = taskDefinition.GetEnvironmentTaskParameterList();
+				returnValue.EnvironmentTaskParameterList.AddRange(environmentList);
+
+				var machineList = taskDefinition.GetMachineTaskParameterList();
+				returnValue.MachineTaskParameterList.AddRange(machineList);
+			}
+			return returnValue;
+		}
 	}
 }

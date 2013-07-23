@@ -4,60 +4,27 @@
 	<b>Environment Name:</b>
 	<input type="text" ng-model="environment.environmentName" />
 </div>
-<div>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Component</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="component in environment.componentList">
-				<td>
-					<th>{{component.componentName}}</th>
-					<table class="table table-striped table-bordered ">
-						<tr>
-							<th>Environment Configuration</th>
-							<td>
-								<table class="table table-striped table-bordered">
-									<thead>
-										<tr>
-											<th>Task Name</th>
-											<th>Setting Name</th>
-											<th>Setting Value</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-hide="environmentResults.length">
-											<td colspan="3">None</td>
-										</tr>
-										<tr ng-show="environmentResults.length" ng-repeat="item in environmentResults">
-											<td>{{item.taskName}}</td>
-											<td>{{item.settingName}}</td>
-											<td>
-												<div ng-show="item.present">{{item.settingValue}}</div>
-												<div ng-hide="item.present" style="color:red">N/A</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</table>
-					<table class="table table-bordered">
-						<tr ng-repeat="machine in component.machineList">
-							<td>
-								{{machine.machineName}} 
-								<button class="btn" ng-click="editEnvironmentComponentMachine(component, machine)"><i class="icon-edit"></i></button>
-								<button class="btn btn-danger" ng-click="deleteEnvironmentMachine(component, machine)"><i class="icon-trash"></i></button>
-							</td>
-						</tr>
-					</table>
-					<button class="btn btn-primary" ng-click="addEnvironmentComponentMachine(component)"><i class="icon-plus"></i> Add Machine</button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+<div ng-show="environment.id">
+	<div ng-repeat="component in environment.componentList">
+		<h3>{{component.componentName}}</h3>
+		<strong>Environment Values</strong>
+		<table class="table table-striped table-bordered ">
+			<thead>
+				<tr>
+					<th>Setting Name:</th>
+					<th>Setting Value:</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="configItem in configDefinitionList[component.componentId].environmentTaskParameterList">
+					<td>{{configItem.fieldName}}</td>
+					<td>{{component.configurationValueList[configItem.fieldName]}}</td>
+					<td><button style="btn" ng-click="editConfigurationItem(configItem, component.configurationValueList)">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 <div>
 

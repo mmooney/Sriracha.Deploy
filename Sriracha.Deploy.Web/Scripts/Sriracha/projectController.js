@@ -53,6 +53,27 @@
 						environmentComponentItem.componentName = component.componentName;
 						$scope.environment.componentList.push(environmentComponentItem);
 					});
+
+					_.each($scope.project.componentList, function (component) {
+						var configDefinition = SrirachaResource.componentConfiguration.get({ projectId: $routeParams.projectId, componentId: component.id }, function () {
+							$scope.configDefinitionList = $scope.configDefinitionList || {};
+							$scope.configDefinitionList[component.id] = configDefinition;
+
+							var oldConfigurationValueList = component.configurationValueList || {};
+							component.configurationValueList = {};
+
+							_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
+								var existingItem = oldConfigurationValueList[taskParameter.fieldName];
+								if (existingItem) {
+									component.configurationValueList[taskParameter.fieldName] = existingItem;
+								}
+								else {
+									component.configurationValueList[taskParameter.fieldName] = null;
+								}
+							});
+						});
+						//_.each(environment.)
+					});
 				}
 			}
 			if (!$scope.environment) {
@@ -62,6 +83,13 @@
 	}
 	else {
 		$scope.project = new SrirachaResource.project({});
+	}
+
+	$scope.editConfigurationItem = function (configItemDefinition, configurationValueList) {
+		var newValue = prompt("Edit Value for " + configItemDefinition.fieldName, configurationValueList[configItemDefinition.fieldName]);
+		if (newValue !== null) {
+			configurationValueList[configItemDefinition.fieldName] = newValue;
+		}
 	}
 
 	$scope.reportError = function (error) {
@@ -265,11 +293,6 @@
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.CreateUrl, { projectId: project.id });
 		}
 	}
-	$scope.getViewEnvironmentUrl = function (environment) {
-		if (environment) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.ViewUrl, { projectId: environment.projectId, environmentId: environment.id });
-		}
-	}
 	$scope.getEditEnvironmentUrl = function (environment) {
 		if (environment) {
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
@@ -296,6 +319,10 @@
 				if (saveParams.id) {
 					Sriracha.Navigation.Project.View($routeParams.projectId);
 				}
+				else {
+					Sriracha.Navigation.Environment.Edit($routeParams.projectId, $scope.environment.id)
+				}
+				
 			},
 			function (error) {
 				$scope.reportError(error);

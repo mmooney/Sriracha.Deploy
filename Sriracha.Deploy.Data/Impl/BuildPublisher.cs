@@ -33,6 +33,14 @@ namespace Sriracha.Deploy.Data.Impl
 
 			PublishZip(apiUrl, projectId, componentId, branchId, version, zipPath);
 
+			try 
+			{
+				File.Delete(zipPath);
+			}
+			catch(Exception err)
+			{
+				_logger.ErrorException(string.Format("Failed to delete ZIP file {0}: {1}",  zipPath, err.ToString()), err);
+			}
 			_logger.Info("Done publishing directory {0} to URL {1}", directoryPath, apiUrl);
 		}
 
@@ -47,6 +55,15 @@ namespace Sriracha.Deploy.Data.Impl
 			_zipper.ZipFile(filePath, zipPath);
 
 			PublishZip(apiUrl, projectId, componentId, branchId, version, zipPath);
+
+			try
+			{
+				File.Delete(zipPath);
+			}
+			catch (Exception err)
+			{
+				_logger.ErrorException(string.Format("Failed to delete ZIP file {0}: {1}", zipPath, err.ToString()), err);
+			}
 
 			_logger.Info("Done publishing file {0} to URL {1}", filePath, apiUrl);
 		}

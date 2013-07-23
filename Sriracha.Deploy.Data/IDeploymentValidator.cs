@@ -10,7 +10,8 @@ namespace Sriracha.Deploy.Data
 	public interface IDeploymentValidator
 	{
 		TaskDefinitionValidationResult ValidateTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentComponent environmentComponent);
-
 		DeploymentValidationResult ValidateDeployment(DeployComponent component, DeployEnvironment environment);
+
+		ComponentConfigurationDefinition GetComponentConfigurationDefinition(DeployComponent component);
 	}
 }

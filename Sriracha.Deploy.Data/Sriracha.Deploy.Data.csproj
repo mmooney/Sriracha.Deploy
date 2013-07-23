@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\ComponentConfigurationDefinition.cs" />
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
     <Compile Include="Dto\DeployFileDto.cs" />
     <Compile Include="Dto\DeployMachine.cs" />
