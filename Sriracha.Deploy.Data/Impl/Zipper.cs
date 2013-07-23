@@ -33,7 +33,7 @@ namespace Sriracha.Deploy.Data.Impl
 			using (var zipFile = new ZipFile())
 			{
 				_logger.Debug("Zipping file {0} to into file {1}", filePath, zipPath);
-				zipFile.AddFile(filePath);
+				zipFile.AddFile(filePath, string.Empty);
 				zipFile.Save(zipPath);
 				_logger.Debug("Done zipping file {0} to into file {1}, {2} entries, {3} bytes", filePath, zipPath, zipFile.Count, new FileInfo(zipPath).Length);
 			}

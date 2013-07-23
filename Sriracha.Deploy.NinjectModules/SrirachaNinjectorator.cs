@@ -37,6 +37,7 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IDeployTaskFactory>().To<DeployTaskFactory>().InSingletonScope();
 			this.Bind<IDeployRequestManager>().To<DeployRequestManager>();
 			this.Bind<IDeploymentValidator>().To<DeploymentValidator>().InSingletonScope();
+			this.Bind<IProcessRunner>().To<ProcessRunner>().InSingletonScope();
 			this.Bind<IDIFactory>().To<NinjectDIFactory>().InSingletonScope();
 			this.Bind<IParameterParser>().To<ParameterParser>().InSingletonScope();
 			this.Bind<IFileWriter>().To<FileWriter>().InSingletonScope();

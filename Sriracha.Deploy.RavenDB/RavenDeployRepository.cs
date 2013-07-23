@@ -89,5 +89,21 @@ namespace Sriracha.Deploy.RavenDB
 				return reloadedItem;
 			}
 		}
+
+
+		public 	DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+		{
+			var deployStateMessage = new DeployStateMessage
+			{
+				Id = Guid.NewGuid().ToString(),
+				DeployStateId = deployStateId,
+				Message = message,
+				DateTimeUtc = DateTime.UtcNow
+			};
+			var state = GetDeployState(deployStateId);
+			state.MessageList.Add(deployStateMessage);
+			this._documentSession.SaveChanges();
+			return deployStateMessage;
+		}
 	}
 }

@@ -10,5 +10,7 @@ namespace Sriracha.Deploy.Data
 	{
 		DeployState GetDeployState(string deployStateId);
 		DeployState PopNextDeployment();
+
+		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 	}
 }

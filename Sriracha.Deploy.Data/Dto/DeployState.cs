@@ -25,6 +25,11 @@ namespace Sriracha.Deploy.Data.Dto
 		}
 
 		public DateTime SubmittedDateTimeUtc { get; set; }
+		public List<DeployStateMessage> MessageList { get; set; }
 
+		public DeployState()
+		{
+			this.MessageList = new List<DeployStateMessage>();
+		}
 	}
 }

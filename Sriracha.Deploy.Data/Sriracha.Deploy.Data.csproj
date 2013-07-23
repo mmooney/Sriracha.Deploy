@@ -76,6 +76,7 @@
     <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Dto\DeployRequestTemplate.cs" />
     <Compile Include="Dto\DeployState.cs" />
+    <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IDeployComponentRunner.cs" />

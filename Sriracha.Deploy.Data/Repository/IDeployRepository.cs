@@ -11,5 +11,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList);
 		DeployState GetDeployState(string deployStateId);
 		DeployState PopNextDeployment();
+
+		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 	}
 }

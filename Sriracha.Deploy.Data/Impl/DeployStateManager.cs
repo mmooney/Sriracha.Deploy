@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 
@@ -24,6 +25,12 @@ namespace Sriracha.Deploy.Data.Impl
 		public DeployState PopNextDeployment()
 		{
 			return _deployRepository.PopNextDeployment();
+		}
+
+
+		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+		{
+			return _deployRepository.AddDeploymentMessage(deployStateId, message);
 		}
 	}
 }
