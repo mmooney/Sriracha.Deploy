@@ -161,3 +161,9 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+#####
+## Sriracha Stuff
+#####
+#Dropkick Logs
+packages/**/*.log
