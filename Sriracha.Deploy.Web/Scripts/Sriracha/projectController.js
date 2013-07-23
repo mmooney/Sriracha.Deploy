@@ -55,24 +55,38 @@
 					});
 
 					_.each($scope.project.componentList, function (component) {
+						var environmentComponent = _.findWhere($scope.environment.componentList, { componentId: component.id });
 						var configDefinition = SrirachaResource.componentConfiguration.get({ projectId: $routeParams.projectId, componentId: component.id }, function () {
 							$scope.configDefinitionList = $scope.configDefinitionList || {};
 							$scope.configDefinitionList[component.id] = configDefinition;
 
-							var oldConfigurationValueList = component.configurationValueList || {};
-							component.configurationValueList = {};
+							var oldConfigurationValueList = environmentComponent.configurationValueList || {};
+							environmentComponent.configurationValueList = {};
 
 							_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
 								var existingItem = oldConfigurationValueList[taskParameter.fieldName];
 								if (existingItem) {
-									component.configurationValueList[taskParameter.fieldName] = existingItem;
+									environmentComponent.configurationValueList[taskParameter.fieldName] = existingItem;
 								}
 								else {
-									component.configurationValueList[taskParameter.fieldName] = null;
+									environmentComponent.configurationValueList[taskParameter.fieldName] = null;
 								}
 							});
+
+							_.each(environmentComponent.machineList, function (machine) {
+								var oldMachineConfigurationValueList = machine.configurationValueList;
+								machine.configurationValueList = {};
+								_.each(configDefinition.machineTaskParameterList, function (taskParameter) {
+									var existingItem = oldMachineConfigurationValueList[taskParameter.fieldName];
+									if (existingItem) {
+										machine.configurationValueList[taskParameter.fieldName] = existingItem;
+									}
+									else {
+										machine.configurationValueList[taskParameter.fieldName] = null;
+									}
+								});
+							});
 						});
-						//_.each(environment.)
 					});
 				}
 			}
@@ -85,10 +99,36 @@
 		$scope.project = new SrirachaResource.project({});
 	}
 
+	$scope.editMachine = function (machine) {
+		var newValue = prompt("Enter machine name:", machine.machineName);
+		if (newValue !== null) {
+			machine.machineName = newValue;
+		}
+	}
+
+	$scope.deleteMachine = function (environmentComponent, machine) {
+		if (confirm("Are you SURE you want to delete this machine (" + machine.machineName + ")?")) {
+			environmentComponent.machineList = _.reject(environmentComponent.machineList, function (x) { return x.id == machine.id; });
+		}
+		console.log(environmentComponent.machineList);
+	}
+
 	$scope.editConfigurationItem = function (configItemDefinition, configurationValueList) {
 		var newValue = prompt("Edit Value for " + configItemDefinition.fieldName, configurationValueList[configItemDefinition.fieldName]);
 		if (newValue !== null) {
 			configurationValueList[configItemDefinition.fieldName] = newValue;
+		}
+	}
+
+	$scope.addMachine = function (component) {
+		var newMachineName = prompt("Please enter machine name:");
+		if (newMachineName) {
+			var machine = {
+				machineName: newMachineName,
+				componentId: component.componentId,
+				configurationValueList: {}
+			};
+			component.machineList.push(machine);
 		}
 	}
 
