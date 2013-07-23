@@ -15,6 +15,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public DeployEnvironment Environment { get; set; }
 		public DeployComponent Component { get; set; }
 		public List<DeployMachine> MachineList { get; set; }
+
 		public EnumDeployStatus Status { get; set; }
 		public string StatusDisplayValue 
 		{
@@ -25,6 +26,9 @@ namespace Sriracha.Deploy.Data.Dto
 		}
 
 		public DateTime SubmittedDateTimeUtc { get; set; }
+		public DateTime DeploymentStartedDateTimeUtc { get; set; }
+		public DateTime DeploymentCompleteDateTimeUtc { get; set; }
+		public string ErrorDetails { get; set; }
 		public List<DeployStateMessage> MessageList { get; set; }
 
 		public DeployState()

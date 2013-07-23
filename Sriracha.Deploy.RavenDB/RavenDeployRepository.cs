@@ -82,6 +82,7 @@ namespace Sriracha.Deploy.RavenDB
 				}
 
 				reloadedItem.Status = EnumDeployStatus.InProcess;
+				reloadedItem.DeploymentStartedDateTimeUtc = DateTime.UtcNow;
 				this._documentSession.SaveChanges();
 
 				transaction.Complete();
@@ -91,7 +92,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public 	DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
 		{
 			var deployStateMessage = new DeployStateMessage
 			{
@@ -104,6 +105,26 @@ namespace Sriracha.Deploy.RavenDB
 			state.MessageList.Add(deployStateMessage);
 			this._documentSession.SaveChanges();
 			return deployStateMessage;
+		}
+
+
+		public DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus status, Exception err = null)
+		{
+			var state = GetDeployState(deployStateId);
+			state.Status = status;
+			switch(status)
+			{
+				case EnumDeployStatus.Success:
+				case EnumDeployStatus.Error:
+					state.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
+					break;
+			}
+			if(err != null)
+			{
+				state.ErrorDetails = err.ToString();
+			}
+			this._documentSession.SaveChanges();
+			return state;
 		}
 	}
 }

@@ -32,5 +32,16 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			return _deployRepository.AddDeploymentMessage(deployStateId, message);
 		}
+
+
+		public void MarkDeploymentSuccess(string deployStateId)
+		{
+			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Success);
+		}
+
+		public void MarkDeploymentFailed(string deployStateId, Exception err)
+		{
+			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
+		}
 	}
 }

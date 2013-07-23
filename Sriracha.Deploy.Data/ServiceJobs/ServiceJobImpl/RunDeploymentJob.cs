@@ -37,17 +37,27 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 				}
 				else 
 				{
-					this._logger.Info("Found pending deployment: " + nextDeployment.Id);
-
-					string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, nextDeployment.Id + "_" + Guid.NewGuid().ToString());
-					var runtimeSettings = new RuntimeSystemSettings
+					try 
 					{
-						LocalDeployDirectory = deployDirectory
-					};
-					Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-					_deployRunner.Deploy(nextDeployment.Id, nextDeployment.Environment.Id, nextDeployment.Build.Id, runtimeSettings);
+						this._logger.Info("Found pending deployment: " + nextDeployment.Id);
 
-					this._logger.Info("Deployment complete: " + nextDeployment.Id);
+						string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, nextDeployment.Id + "_" + Guid.NewGuid().ToString());
+						var runtimeSettings = new RuntimeSystemSettings
+						{
+							LocalDeployDirectory = deployDirectory
+						};
+						Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
+						_deployRunner.Deploy(nextDeployment.Id, nextDeployment.Environment.Id, nextDeployment.Build.Id, runtimeSettings);
+
+						_deployStateManager.MarkDeploymentSuccess(nextDeployment.Id);
+
+						this._logger.Info("Deployment complete: " + nextDeployment.Id);
+					}
+					catch(Exception err)
+					{
+						_deployStateManager.MarkDeploymentFailed(nextDeployment.Id, err);
+						throw;
+					}
 				}
 			}
 			catch(Exception err)
