@@ -1,9 +1,17 @@
 ﻿{
 	SourceWebsitePath: ".",
-	TargetWebsitePath: "C:\\test\\SrirachaDeployTest",
+	TargetWebsitePath: "C:\\test\\SrirachaDeployTest\\Website",
 	WebUserName: "NT AUTHORITY\\NETWORK SERVICE",
 	VirtualDirectorySite: "Sriracha",
 	VirtualDirectoryName: "",
 	RavenDBConnectionString: "Url=http://localhost:8080;Database=SrirachaDeployTest",
-	ApplicationPoolName: "SrirachaAppPool"
+	ApplicationPoolName: "SrirachaAppPool",
+
+	ServiceStartMode: "Automatic",
+	ServiceUserName: "NT AUTHORITY\\NETWORK SERVICE",
+	SourceServicePath: ".",
+	TargetServicePath: "C:\\Test\\SrirachaDeploy\\Service",
+	ServiceName: "Sriracha Deployment System",
+	AutoStartService: true,
+	ServiceExeName: "Sriracha.Deploy.Server.exe"
 }

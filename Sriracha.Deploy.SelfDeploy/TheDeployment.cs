@@ -92,38 +92,49 @@ namespace Sriracha.Deploy.SelfDeploy
                                                         }).SetPathTo(@"{{TargetWebsitePath}}");
                                    });
 
-				//DeploymentStepsFor(Host,
-				//				   s =>
-				//				   {
-				//					   var serviceName = "__REPLACE_ME__.{{Environment}}";
-				//					   s.WinService(serviceName).Stop();
+				DeploymentStepsFor(Host,
+								   s =>
+								   {
+									   var serviceName = settings.ServiceName;
+									   if(!string.IsNullOrEmpty(serviceName))
+									   {
+											serviceName = "Sriracha Deployment Service";
+									   }
+									   s.WinService(serviceName).Stop();
 
-				//					   s.CopyDirectory(@"..\_PublishedApplications\__REPLACE_ME__").To(@"{{HostServicePath}}").DeleteDestinationBeforeDeploying();
+									   s.CopyDirectory(settings.SourceServicePath).To(@"{{TargetServicePath}}").DeleteDestinationBeforeDeploying();
 
-				//					   s.CopyFile(@"..\environment.files\{{Environment}}\{{Environment}}.__REPLACE_ME__.exe.config").ToDirectory(@"{{HostServicePath}}").RenameTo(@"__REPLACE_ME__.exe.config");
+									   if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
+									   {
+										   s.XmlPoke(@"{{TargetServicePath}}\{{ServiceExeName}}.config")
+														.Set("/configuration/connectionStrings/add[key='RavenDB']/connectionString", settings.RavenDBConnectionString);
+									   }
 
-				//					   s.Security(o =>
-				//					   {
-				//						   o.LocalPolicy(lp =>
-				//						   {
-				//							   lp.LogOnAsService(settings.ServiceUserName);
-				//							   lp.LogOnAsBatch(settings.ServiceUserName);
-				//						   });
+									   s.Security(o =>
+									   {
+										   o.LocalPolicy(lp =>
+										   {
+											   lp.LogOnAsService(settings.ServiceUserName);
+											   lp.LogOnAsBatch(settings.ServiceUserName);
+										   });
 
-				//						   o.ForPath(settings.HostServicePath, fs => fs.GrantRead(settings.ServiceUserName));
-				//						   o.ForPath(Path.Combine(settings.HostServicePath,"logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
-				//					   });
-				//					   s.WinService(serviceName).Delete();
-				//					   s.WinService(serviceName).Create().WithCredentials(settings.ServiceUserName, settings.ServiceUserPassword).WithDisplayName("__REPLACE_ME__ ({{Environment}})").WithServicePath(@"{{HostServicePath}}\__REPLACE_ME__.exe").
-				//						   WithStartMode(settings.ServiceStartMode)
-				//						   //.AddDependency("MSMQ")
-				//						   ;
+										   o.ForPath(settings.TargetServicePath, fs => fs.GrantRead(settings.ServiceUserName));
+										   //o.ForPath(Path.Combine(settings.HostServicePath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
+									   });
+									   s.WinService(serviceName).Delete();
+									   s.WinService(serviceName).Create()
+											.WithCredentials(settings.ServiceUserName, settings.ServiceUserPassword)
+											//.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
+											.WithServicePath(@"{{TargetServicePath}}\{{ServiceExeName}}").
+										   WithStartMode(settings.ServiceStartMode)
+										   //.AddDependency("MSMQ")
+										   ;
 
-				//					   if (settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
-				//					   {
-				//						   s.WinService(serviceName).Start();
-				//					   }
-				//				   });
+									   if (settings.AutoStartService && settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
+									   {
+										   s.WinService(serviceName).Start();
+									   }
+								   });
             });
         }
 
@@ -135,7 +146,7 @@ namespace Sriracha.Deploy.SelfDeploy
 		//public static Role Db { get; set; }
         public static Role Web { get; set; }
         public static Role VirtualDirectory { get; set; }
-		//public static Role Host { get; set; }
+		public static Role Host { get; set; }
 
         #endregion
     }
