@@ -42,8 +42,8 @@ namespace Sriracha.Deploy.SelfDeploy
 		public ServiceStartMode ServiceStartMode { get; set; }
 		public string ServiceUserName { get; set; }
 		public string ServiceUserPassword { get; set; }
-		public string SourceServicePath { get; set; }
-		public string TargetServicePath { get; set; }
+		public string ServiceSourcePath { get; set; }
+		public string ServiceTargetPath { get; set; }
 		public string ServiceName { get; set; }
 		public bool AutoStartService { get; set; }
 		public string ServiceExeName { get; set; }

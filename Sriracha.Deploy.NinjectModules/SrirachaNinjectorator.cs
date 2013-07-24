@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 using Ninject;
 using Ninject.Activation;
 using Ninject.Modules;
@@ -24,7 +25,6 @@ namespace Sriracha.Deploy.NinjectModules
 
 		public override void Load()
 		{
-			this.SetupLogging();
 			this.Bind<IProjectManager>().To<ProjectManager>();
 			this.Bind<IBuildManager>().To<BuildManager>();
 			this.Bind<IFileManager>().To<FileManager>();
@@ -51,12 +51,34 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IJobFactory>().To<JobFactory>();
 			this.Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
 			this.Bind<IScheduler>().ToMethod(CreateScheduler).InSingletonScope();
+			if (HttpContext.Current != null)
+			{
+				this.Bind<IUserIdentity>().To<WebUserIdentity>();
+			}
+			else
+			{
+				this.Bind<IUserIdentity>().To<ConsoleUserIdentity>();
+			}
 
 			this.Kernel.Load(new RavenDBNinjectModule());
+
+			this.SetupLogging();
 		}
 
 		private void SetupLogging()
 		{
+			var dbTarget = this.Kernel.Get<NLogDBLogTarget>();
+			dbTarget.Layout = "${message} ${exception:format=message,stacktrace:separator=\r\n}";
+			var loggingConfig = NLog.LogManager.Configuration;
+			if (loggingConfig == null)
+			{
+				loggingConfig = new NLog.Config.LoggingConfiguration();
+			}
+			loggingConfig.AddTarget("dbTarget", dbTarget);
+			var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+			loggingConfig.LoggingRules.Add(rule);
+			NLog.LogManager.Configuration = loggingConfig;
+
 			_logger = NLog.LogManager.GetCurrentClassLogger();
 			this.Bind<NLog.Logger>().ToMethod(ctx=>_logger);	 
 		}

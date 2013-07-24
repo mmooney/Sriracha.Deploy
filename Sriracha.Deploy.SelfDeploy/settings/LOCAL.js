@@ -9,8 +9,9 @@
 
 	ServiceStartMode: "Automatic",
 	ServiceUserName: "NT AUTHORITY\\NETWORK SERVICE",
-	SourceServicePath: ".",
-	TargetServicePath: "C:\\Test\\SrirachaDeploy\\Service",
+	ServiceUserPassword: "",
+	ServiceSourcePath: ".",
+	ServiceTargetPath: "C:\\Test\\SrirachaDeploy\\Service",
 	ServiceName: "Sriracha Deployment System",
 	AutoStartService: true,
 	ServiceExeName: "Sriracha.Deploy.Server.exe"

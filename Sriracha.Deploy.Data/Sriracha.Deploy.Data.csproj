@@ -78,8 +78,11 @@
     <Compile Include="Dto\DeployRequestTemplate.cs" />
     <Compile Include="Dto\DeployState.cs" />
     <Compile Include="Dto\DeployStateMessage.cs" />
+    <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />
+    <Compile Include="IUserIdentity.cs" />
+    <Compile Include="NLogDBLogTarget.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
     <Compile Include="IDeployHistoryManager.cs" />
     <Compile Include="Dto\DeployHistory.cs" />
@@ -113,6 +116,7 @@
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
+    <Compile Include="Repository\ISystemLogRepository.cs" />
     <Compile Include="ServiceJobs\IJobScheduler.cs" />
     <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />

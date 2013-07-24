@@ -96,19 +96,11 @@ namespace Sriracha.Deploy.SelfDeploy
 								   s =>
 								   {
 									   var serviceName = settings.ServiceName;
-									   if(!string.IsNullOrEmpty(serviceName))
-									   {
-											serviceName = "Sriracha Deployment Service";
-									   }
 									   s.WinService(serviceName).Stop();
 
-									   s.CopyDirectory(settings.SourceServicePath).To(@"{{TargetServicePath}}").DeleteDestinationBeforeDeploying();
+									   s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
 
-									   if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
-									   {
-										   s.XmlPoke(@"{{TargetServicePath}}\{{ServiceExeName}}.config")
-														.Set("/configuration/connectionStrings/add[key='RavenDB']/connectionString", settings.RavenDBConnectionString);
-									   }
+									   ////s.CopyFile(@"..\environment.files\{{Environment}}\{{Environment}}.__REPLACE_ME__.exe.config").ToDirectory(@"{{HostServicePath}}").RenameTo(@"__REPLACE_ME__.exe.config");
 
 									   s.Security(o =>
 									   {
@@ -118,24 +110,32 @@ namespace Sriracha.Deploy.SelfDeploy
 											   lp.LogOnAsBatch(settings.ServiceUserName);
 										   });
 
-										   o.ForPath(settings.TargetServicePath, fs => fs.GrantRead(settings.ServiceUserName));
-										   //o.ForPath(Path.Combine(settings.HostServicePath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
+										   o.ForPath(settings.ServiceTargetPath, fs => fs.GrantRead(settings.ServiceUserName));
+										   //o.ForPath(Path.Combine(settings.ServiceTargetPath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
 									   });
+
+									   s.XmlPoke(@"{{ServiceTargetPath}}\{{ServiceExeName}}.config")
+														.Set("/configuration/connectionStrings/add[key='RavenDB']/connectionString", settings.RavenDBConnectionString);
+
 									   s.WinService(serviceName).Delete();
 									   s.WinService(serviceName).Create()
 											.WithCredentials(settings.ServiceUserName, settings.ServiceUserPassword)
-											//.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
-											.WithServicePath(@"{{TargetServicePath}}\{{ServiceExeName}}").
-										   WithStartMode(settings.ServiceStartMode)
+										   //.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
+											.WithServicePath(@"{{ServiceTargetPath}}\{{ServiceExeName}}")
+											.WithDisplayName(serviceName)
+											.WithStartMode(settings.ServiceStartMode)
 										   //.AddDependency("MSMQ")
 										   ;
 
-									   if (settings.AutoStartService && settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
+									   if (settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
 									   {
-										   s.WinService(serviceName).Start();
+										   if (settings.AutoStartService)
+										   {
+											   s.WinService(serviceName).Start();
+										   }
 									   }
 								   });
-            });
+			});
         }
 
         #endregion
