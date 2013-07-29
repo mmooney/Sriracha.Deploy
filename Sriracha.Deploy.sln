@@ -23,6 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.CommandLine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.SelfDeploy", "Sriracha.Deploy.SelfDeploy\Sriracha.Deploy.SelfDeploy.csproj", "{05F6450F-082A-46D5-94AC-A76C8DC249DA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{1637E7E2-24AB-46EA-A539-E6EAFC631A1C}"
+	ProjectSection(SolutionItems) = preProject
+		Sriracha.Deploy.build = Sriracha.Deploy.build
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<project name="Sriracha" default="BuildSolution" xmlns="http://nant.sf.net/release/0.86-beta1/nant.xsd">
+  <description />
+  <property name="BuildDirectory" value="${directory::get-current-directory()}" />
+  <!--<property name="MSBuildPath" value="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"/>-->
+	<!--<property name="ReleaseDirectory" value="C:\Users\admin\Dropbox\MMDBDataService\DataService"/>-->
+  <!--<property name="BuildLabel" value="${environment::get-variable('BUILD_NUMBER')}"/>-->
+
+	<target name="BuildSolution" description="Build Solution">
+		<msbuild project="Srircha.Deploy.sln" target="Release">
+		</msbuild>
+	</target>
+	<!--<target name="PrepareSolution" description="Prepare Solution">
+		<echo message="Updating Version Numbers"/>
+		<asminfo output="MMDB.DataService.Data\Properties\VersionInfo.cs" language="CSharp">
+			<imports>
+				<import namespace="System.Reflection" />
+			</imports>
+			<attributes>
+				<attribute type="AssemblyVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+				<attribute type="AssemblyFileVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+			</attributes>
+		</asminfo>
+		<asminfo output="MMDB.DataService.Web\Properties\VersionInfo.cs" language="CSharp">
+			<imports>
+				<import namespace="System.Reflection" />
+			</imports>
+			<attributes>
+				<attribute type="AssemblyVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+				<attribute type="AssemblyFileVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+			</attributes>
+		</asminfo>
+		<asminfo output="MMDB.DataService.WindowsService\Properties\VersionInfo.cs" language="CSharp">
+			<imports>
+				<import namespace="System.Reflection" />
+			</imports>
+			<attributes>
+				<attribute type="AssemblyVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+				<attribute type="AssemblyFileVersion" value="&quot;${BuildLabel}&quot;" asis="true"/>
+			</attributes>
+		</asminfo>
+
+	</target>-->
+<!--
+	<target name="PublishSolution" description="PublishSolution">
+		<echo message="Publish DropkicK"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\DropkicK">
+			<fileset basedir="${BuildDirectory}\packages\dropkick.core.0.4.13.0\tools\dropkick">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Publish Database Scripts"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\Database">
+			<fileset basedir="${BuildDirectory}\Database">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Publish Deployment Project"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\Deployment">
+			<fileset basedir="${BuildDirectory}\MMDB.DataService.Deployment\bin\Release">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Publish Deployment Scripts"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}">
+			<fileset basedir="${BuildDirectory}\DeployScripts">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Public Environment Configs"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\Configs">
+			<fileset basedir="${BuildDirectory}\Configs">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Publishing Windows Service Files"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\WindowsService">
+			<fileset basedir="${BuildDirectory}\MMDB.DataService.WindowsService\bin\Release">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+
+		<echo message="Publish Website"/>
+		<copy todir="${ReleaseDirectory}\${BuildLabel}\Website">
+			<fileset basedir="${BuildDirectory}\MMDB.DataService.Web\bin\Release">
+				<include name="**/*.config"/>
+				<include name="**/*.asax"/>
+				<include name="**/*.cshtml"/>
+				<include name="**/*.js"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.png"/>
+				<include name="**/*.jpg"/>
+				<include name="**/*.bin"/>
+			</fileset>
+		</copy>
+	</target>
+-->
+
+</project>
+
+
