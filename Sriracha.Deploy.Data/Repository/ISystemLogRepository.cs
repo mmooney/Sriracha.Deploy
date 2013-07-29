@@ -9,5 +9,7 @@ namespace Sriracha.Deploy.Data.Repository
 	public interface ISystemLogRepository
 	{
 		SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message, string loggerName);
+
+		void PurgeLogMessages(DateTime utcNow, EnumSystemLogType systemLogType, int? ageMinutes);
 	}
 }

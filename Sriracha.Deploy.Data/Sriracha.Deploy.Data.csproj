@@ -118,9 +118,11 @@
     <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
     <Compile Include="ServiceJobs\IJobScheduler.cs" />
+    <Compile Include="ServiceJobs\IPurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobScheduler.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\PurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunDeploymentJob.cs" />
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />

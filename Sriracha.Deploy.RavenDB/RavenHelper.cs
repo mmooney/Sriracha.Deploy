@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Raven.Client;
 using Raven.Client.Document;
+using Raven.Client.Indexes;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -19,6 +20,7 @@ namespace Sriracha.Deploy.RavenDB
 					DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites
 				}
 			};
+			IndexCreation.CreateIndexes(typeof(RavenHelper).Assembly, documentStore);
 			return documentStore.Initialize();
 		}
 	}

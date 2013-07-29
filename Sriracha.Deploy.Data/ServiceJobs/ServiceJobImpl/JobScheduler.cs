@@ -21,18 +21,23 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			this._logger = DIHelper.VerifyParameter(logger);
 			this._systemSettings = DIHelper.VerifyParameter(systemSettings);
 
-			var jobDetail = new JobDetailImpl("Run Deployments", typeof(IRunDeploymentJob));
 		}
 		public void StartJobs()
 		{
 			this._logger.Info("Starting jobs");
 			this._logger.Info("Done starting jobs");
 
-			var jobDetail = new JobDetailImpl("RunDeployment", typeof(IRunDeploymentJob));
-			var trigger = new SimpleTriggerImpl("RunDeploymentTrigger", SimpleTriggerImpl.RepeatIndefinitely, TimeSpan.FromSeconds(_systemSettings.RunDeploymentPollingIntervalSeconds));
-			this._quartzScheduler.ScheduleJob(jobDetail, trigger);
+			this.ScheduleJob("RunDeployment", typeof(IRunDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
+			this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
 
 			this._quartzScheduler.Start();
+		}
+
+		private void ScheduleJob(string jobName, Type jobType, int intervalSeconds)
+		{
+			var jobDetail = new JobDetailImpl(jobName, jobType);
+			var trigger = new SimpleTriggerImpl(jobName + "Trigger", SimpleTriggerImpl.RepeatIndefinitely, TimeSpan.FromSeconds(intervalSeconds));
+			this._quartzScheduler.ScheduleJob(jobDetail, trigger);
 		}
 	}
 }

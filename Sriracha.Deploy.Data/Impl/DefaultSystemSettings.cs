@@ -22,5 +22,41 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			get { return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WorkingDirectory"); }
 		}
+
+
+		public int LogPurgeJobIntervalSeconds
+		{
+			get { return 60*60; }
+		}
+
+		public int? LogPurgeTraceAgeMinutes
+		{
+			get { return 60; }
+		}
+
+		public int? LogPurgeDebugAgeMinutes
+		{
+			get { return 60; }
+		}
+
+		public int? LogPurgeInfoAgeMinutes
+		{
+			get { return 60*24; }
+		}
+
+		public int? LogPurgeWarnAgeMinutes
+		{
+			get { return 60*24*7; }
+		}
+
+		public int? LogPurgeErrorAgeMinutes
+		{
+			get { return 60*24*30; }
+		}
+
+		public int? LogPurgeFatalAgeMinutes
+		{
+			get { return 60*24*30; }
+		}
 	}
 }

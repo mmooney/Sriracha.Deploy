@@ -9,5 +9,14 @@ namespace Sriracha.Deploy.Data
 	{
 		int RunDeploymentPollingIntervalSeconds { get; }
 		string DeployWorkingDirectory { get; }
+
+		int LogPurgeJobIntervalSeconds { get; }
+		int? LogPurgeTraceAgeMinutes { get; }
+		int? LogPurgeDebugAgeMinutes { get; }
+		int? LogPurgeInfoAgeMinutes { get; }
+		int? LogPurgeWarnAgeMinutes { get; }
+		int? LogPurgeErrorAgeMinutes { get; }
+		int? LogPurgeFatalAgeMinutes { get; }
+
 	}
 }
