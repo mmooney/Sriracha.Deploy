@@ -8,5 +8,6 @@ namespace Sriracha.Deploy.Data
 	public interface IDIFactory
 	{
 		object CreateInjectedObject(Type t);
+		T CreateInjectedObject<T>();
 	}
 }

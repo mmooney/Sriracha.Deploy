@@ -20,5 +20,11 @@ namespace Sriracha.Deploy.NinjectModules
 		{
 			return _kernel.Get(t);
 		}
+
+
+		public T CreateInjectedObject<T>()
+		{
+			return _kernel.Get<T>();
+		}
 	}
 }

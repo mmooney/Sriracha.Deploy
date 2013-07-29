@@ -51,9 +51,68 @@ namespace Sriracha.Deploy.Data.Impl
 			_statusManager.Info(deployStateId, string.Format("Deployment extracted package {0} to {1}", fileData.Id, compressedFilePath));
 
 			string extractedDirectory = systemSettings.GetLocalExtractedDirectory();
+			_statusManager.Info(deployStateId, string.Format("Decompressing deployment package {0} to directory {1}", compressedFilePath, extractedDirectory));
 			_zipper.ExtractFile(compressedFilePath, extractedDirectory);
+			_statusManager.Info(deployStateId, string.Format("Done decompressing deployment package {0} to directory {1}", compressedFilePath, extractedDirectory));
 
+			foreach(var machine in environmentComponent.MachineList)
+			{
+				string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
+				if(!Directory.Exists(machineDirectory))
+				{
+					Directory.CreateDirectory(machineDirectory);
+				}
+				CopyAllFiles(extractedDirectory, machineDirectory);
+				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
+
+				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
+			}
 			_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentComponent, systemSettings);
 		}
+
+		private void CopyAllFiles(string sourcePath, string targetPath)
+		{
+			DirectoryInfo sourceDirectory = new DirectoryInfo(sourcePath);
+			DirectoryInfo targetDirectory = new DirectoryInfo(targetPath);
+			CopyAllFiles(sourceDirectory, targetDirectory);
+		}
+
+		private void CopyAllFiles(DirectoryInfo sourceDirectory, DirectoryInfo targetDirectory)
+		{
+			// Check if the target directory exists, if not, create it.
+			if (!targetDirectory.Exists)
+			{
+				targetDirectory.Create();
+			}
+			// Copy each file into it’s new directory.
+			if (targetDirectory.Attributes > 0 && (targetDirectory.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+			{
+				targetDirectory.Attributes &= ~FileAttributes.ReadOnly;
+			}
+			foreach (FileInfo sourceFile in sourceDirectory.GetFiles())
+			{
+				string targetFilePath = Path.Combine(targetDirectory.FullName, sourceFile.Name);
+				if (File.Exists(targetFilePath))
+				{
+					var targetFileInfo = new FileInfo(targetFilePath);
+					if (targetFileInfo.Attributes > 0 && (targetFileInfo.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+					{
+						targetFileInfo.Attributes &= ~FileAttributes.ReadOnly;
+					}
+				}
+				sourceFile.CopyTo(targetFilePath, true);
+			}
+
+			// Copy each subdirectory using recursion.
+			foreach (DirectoryInfo sourceSubDirectory in sourceDirectory.GetDirectories())
+			{
+				if (!sourceSubDirectory.FullName.StartsWith(targetDirectory.FullName))
+				{
+					DirectoryInfo targetSubDirectory = targetDirectory.CreateSubdirectory(sourceSubDirectory.Name);
+					CopyAllFiles(sourceSubDirectory, targetSubDirectory);
+				}
+			}
+		}
+
 	}
 }

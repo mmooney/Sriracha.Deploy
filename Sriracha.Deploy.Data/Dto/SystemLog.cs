@@ -23,5 +23,6 @@ namespace Sriracha.Deploy.Data.Dto
 		public EnumSystemLogType EnumSystemLogTypeID { get; set; }
 		public string UserName { get; set; }
 		public DateTime MessageDateTimeUtc { get; set; }
+		public string LoggerName { get; set; }
 	}
 }

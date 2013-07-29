@@ -10,18 +10,18 @@ namespace Sriracha.Deploy.Data
 {
 	public class NLogDBLogTarget : TargetWithLayout
 	{
-		private readonly ISystemLogRepository _systemLogRepository;
 		private readonly IUserIdentity _userIdentity;
+		private readonly IDIFactory _diFactory;
 
-		public NLogDBLogTarget(ISystemLogRepository systemLogRepository, IUserIdentity userIdentity)
+		public NLogDBLogTarget(IDIFactory diFactory, IUserIdentity userIdentity)
 		{
-			_systemLogRepository = DIHelper.VerifyParameter(systemLogRepository);		
+			_diFactory = DIHelper.VerifyParameter(diFactory);		
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
 		protected override void Write(NLog.LogEventInfo logEvent)
 		{
-			if(logEvent.LoggerName == "Raven.Client.Document.InMemoryDocumentSessionOperations")
+			if(!string.IsNullOrEmpty(logEvent.LoggerName) && logEvent.LoggerName.StartsWith("Raven.Client", StringComparison.CurrentCultureIgnoreCase))
 			{
 				//Don't cause SystemLogRepository messages to backfeed into themselves
 				return;
@@ -56,7 +56,11 @@ namespace Sriracha.Deploy.Data
 					logType = EnumSystemLogType.Trace;
 					break;
 			}
-			_systemLogRepository.LogMessage(logType, _userIdentity.UserName, logEvent.TimeStamp, message);
+			//This object is created once and used over and over as a singleton, 
+			//	so we don't want to hold an instance to the repository.  
+			//	So use the IDIFactory interface to create the repository each time.
+			var repository = _diFactory.CreateInjectedObject<ISystemLogRepository>();
+			repository.LogMessage(logType, _userIdentity.UserName, logEvent.TimeStamp, message, logEvent.LoggerName);
 			base.Write(logEvent);
 		}
 

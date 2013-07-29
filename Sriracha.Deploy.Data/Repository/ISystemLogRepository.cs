@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface ISystemLogRepository
 	{
-		SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message);
+		SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message, string loggerName);
 	}
 }

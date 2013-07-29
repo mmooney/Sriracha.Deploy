@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MMDB.Shared;
 using Newtonsoft.Json;
 using Sriracha.Deploy.Data.Dto;
 
@@ -44,20 +45,32 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, false);
 			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, true);
 
+			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineDirectory(machine.MachineName);
+
 			statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 			using (var standardOutputWriter = new StringWriter())
 			using(var errorOutputWriter = new StringWriter())
 			{
-				_processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
+				int result = _processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
 				string standardOutput = standardOutputWriter.GetStringBuilder().ToString();
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
-				if(!string.IsNullOrEmpty(standardOutput))
+				if(result == 0)
 				{
-					statusManager.Info(deployStateId, standardOutput);
+					if(!string.IsNullOrEmpty(standardOutput))
+					{
+						statusManager.Info(deployStateId, standardOutput);
+					}
+					if(!string.IsNullOrEmpty(errorOutput))
+					{
+						statusManager.Error(deployStateId, errorOutput);
+						throw new Exception("LocalCommandLine Task Failed: " + errorOutput); 
+					}
 				}
-				if(!string.IsNullOrEmpty(errorOutput))
+				else 
 				{
-					statusManager.Error(deployStateId, errorOutput);
+					string errorText = StringHelper.IsNullOrEmpty(errorOutput, standardOutput, "Error Code " + result.ToString());
+					statusManager.Error(deployStateId, errorText);
+					throw new Exception("LocalCommandLine Task Failed: " + errorText);
 				}
 			}
 			statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));

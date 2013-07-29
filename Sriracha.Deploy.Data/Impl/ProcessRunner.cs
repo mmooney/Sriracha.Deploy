@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class ProcessRunner : IProcessRunner
 	{
-		public void Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter)
+		public int Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter)
 		{
 			var psi = new ProcessStartInfo(executablePath, executableParameters);
 			psi.RedirectStandardError = true;
@@ -19,13 +19,14 @@ namespace Sriracha.Deploy.Data.Impl
 			string line;
 			while ((line = p.StandardOutput.ReadLine()) != null)
 			{
-				standardOutputWriter.Write(line);
+				standardOutputWriter.WriteLine(line);
 			}
 			while ((line = p.StandardError.ReadLine()) != null)
 			{
-				standardOutputWriter.Write(line);
+				errorOutputWriter.WriteLine(line);
 			}
 			p.WaitForExit();
+			return p.ExitCode;
 		}
 	}
 }

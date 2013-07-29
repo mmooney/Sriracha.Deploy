@@ -18,7 +18,7 @@ namespace Sriracha.Deploy.RavenDB
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message)
+		public SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message, string loggerName)
 		{
 			var systemLog = new SystemLog
 			{
@@ -26,7 +26,8 @@ namespace Sriracha.Deploy.RavenDB
 				EnumSystemLogTypeID = logType,
 				UserName = userName,
 				MessageDateTimeUtc = messageDateTime.ToUniversalTime(),
-				MessageText = message
+				MessageText = message,
+				LoggerName = loggerName
 			};
 			this._documentSession.Store(systemLog);
 			this._documentSession.SaveChanges();

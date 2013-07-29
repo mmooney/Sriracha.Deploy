@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data
 {
 	public interface IProcessRunner
 	{
-		void Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter);
+		int Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter);
 	}
 }
