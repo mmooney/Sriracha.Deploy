@@ -7,7 +7,7 @@
   <!--<property name="BuildLabel" value="${environment::get-variable('BUILD_NUMBER')}"/>-->
 
 	<target name="BuildSolution" description="Build Solution">
-		<msbuild project="Srircha.Deploy.sln" target="Release">
+		<msbuild project="Sriracha.Deploy.sln" target="Release">
 		</msbuild>
 	</target>
 	<!--<target name="PrepareSolution" description="Prepare Solution">
