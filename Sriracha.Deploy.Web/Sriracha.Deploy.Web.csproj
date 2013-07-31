@@ -315,6 +315,7 @@
     <Content Include="Scripts\sriracha\navigationFactory.js" />
     <Content Include="Scripts\sriracha\ngSriracha.js" />
     <Content Include="Scripts\sriracha\projectController.js" />
+    <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />

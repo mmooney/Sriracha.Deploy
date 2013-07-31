@@ -16,6 +16,12 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 	}
 });
 
+ngSriracha.service("SrirachaErrorReporter", function () {
+	this.reportError = function(errorMessage) {
+		alert("Error: " + errorMessage);
+	}
+});
+
 ngSriracha.directive("taskConfig", function () {
 	return {
 		templateUrl: "templates/deploymentstep-options-edit-template.html",

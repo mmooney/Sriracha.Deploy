@@ -20,8 +20,9 @@ namespace Sriracha.Deploy.RavenDB
 					DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites
 				}
 			};
+			documentStore.Initialize();
 			IndexCreation.CreateIndexes(typeof(RavenHelper).Assembly, documentStore);
-			return documentStore.Initialize();
+			return documentStore;
 		}
 	}
 }
