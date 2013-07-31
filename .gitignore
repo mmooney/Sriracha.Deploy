@@ -167,3 +167,5 @@ pip-log.txt
 #####
 #Dropkick Logs
 packages/**/*.log
+Publish/**/*
+PublishTemp/**/*
