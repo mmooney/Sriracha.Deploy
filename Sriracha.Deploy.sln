@@ -25,6 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.SelfDeploy"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{1637E7E2-24AB-46EA-A539-E6EAFC631A1C}"
 	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
 		Sriracha.Deploy.build = Sriracha.Deploy.build
 	EndProjectSection
 EndProject

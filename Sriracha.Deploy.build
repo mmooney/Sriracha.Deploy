@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Sriracha" default="BuildSolution" xmlns="http://nant.sf.net/release/0.86-beta1/nant.xsd">
+<project name="Sriracha" xmlns="http://nant.sf.net/release/0.86-beta1/nant.xsd">
   <description />
   <property name="BuildDirectory" value="${directory::get-current-directory()}" />
   <!--<property name="MSBuildPath" value="C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"/>-->
@@ -7,8 +7,40 @@
   <!--<property name="BuildLabel" value="${environment::get-variable('BUILD_NUMBER')}"/>-->
 
 	<target name="BuildSolution" description="Build Solution">
-		<msbuild project="Sriracha.Deploy.sln" target="Release">
+		<msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
+			<property name="Configuration" value="Release"/>
 		</msbuild>
+	</target>
+	<target name="PackageSolution" description="Package Solution">
+		<delete dir=".\Publish">
+			<!--<fileset basedir=".\Publish">
+				<include name="**/*"/>
+			</fileset>-->
+		</delete>
+		<delete dir=".\PublishTemp"/>
+		<copy todir=".\Publish\WindowsService">
+			<fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
+				<include name="*.config"/>
+				<include name="*.dll"/>
+				<include name="*.exe"/>
+			</fileset>
+		</copy>
+		<copy todir=".\Publish\CommandLine">
+			<fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
+				<include name="*.config"/>
+				<include name="*.dll"/>
+				<include name="*.exe"/>
+			</fileset>
+		</copy>
+		<msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
+			<property name="Configuration" value="Release"/>
+			<property name="OutDir" value="${BuildDirectory}\PublishTemp\Website"/>
+		</msbuild>
+		<copy todir=".\Publish\Website">
+			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
 	</target>
 	<!--<target name="PrepareSolution" description="Prepare Solution">
 		<echo message="Updating Version Numbers"/>
