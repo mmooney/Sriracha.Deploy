@@ -137,6 +137,13 @@ Sriracha.Navigation = {
 		View: function (deployStateId) {
 			Sriracha.Navigation.GoTo(this.ViewUrl, { deployStateId: deployStateId });
 		}
+	},
+
+	SystemLog: {
+		ListUrl: "/systemlog",
+		List: function () {
+			Sriracha.nav.GoTo(this.ListUrl);
+		}
 	}
 
 };
