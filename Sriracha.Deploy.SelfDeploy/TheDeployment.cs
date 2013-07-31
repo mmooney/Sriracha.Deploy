@@ -135,6 +135,14 @@ namespace Sriracha.Deploy.SelfDeploy
 										   }
 									   }
 								   });
+				DeploymentStepsFor(CommandLine,
+								   s =>
+								   {
+									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").DeleteDestinationBeforeDeploying();
+
+									   s.XmlPoke(@"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config")
+														.Set("/configuration/connectionStrings/add[key='RavenDB']/connectionString", settings.RavenDBConnectionString);
+								   });
 			});
         }
 
@@ -147,6 +155,7 @@ namespace Sriracha.Deploy.SelfDeploy
         public static Role Web { get; set; }
         public static Role VirtualDirectory { get; set; }
 		public static Role Host { get; set; }
+		public static Role CommandLine { get; set; }
 
         #endregion
     }

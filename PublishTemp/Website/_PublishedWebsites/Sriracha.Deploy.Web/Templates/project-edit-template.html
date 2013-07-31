@@ -1,0 +1,10 @@
+﻿<h2 ng-show="id">Create a project</h2>
+<h2 ng-hide="id">Edit project : {{project.projectName}}</h2>
+<table class="table table-bordered">
+	<tr>
+		<th>Project Name:</th>
+		<td><input type="text" required ng-model="project.projectName" /></td>
+	</tr>
+</table>
+<button class="btn" ng-click="cancelProject()">Cancel</button>
+<button class="btn" ng-click="saveProject()">Save</button>

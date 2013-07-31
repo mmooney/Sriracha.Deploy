@@ -1,0 +1,18 @@
+﻿<div class="alert alert-error">
+	Are you sure you want to delete this deployment step?  This cannot be undone!
+</div>
+<div>
+	<b>Project Name:</b>
+	{{project.projectName}}
+</div>
+<div>
+	<b>Component Name:</b>
+	{{component.componentName}}
+</div>
+<div>
+	<b>Step Name:</b>
+	{{deploymentStep.stepName}}
+</div>
+
+<button class="btn" ng-click="cancelDeploymentStep()">Cancel</button>
+<button class="btn btn-danger" ng-click="deleteDeploymentStep()">Delete</button>

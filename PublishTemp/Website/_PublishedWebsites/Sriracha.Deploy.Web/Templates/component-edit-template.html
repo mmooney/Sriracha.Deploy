@@ -1,0 +1,9 @@
+﻿<h2 ng-show="id">Create a component in project {{project.projectName}}</h2>
+<h2 ng-hide="id">Edit Component: {{component.componentName}} in project {{project.projectName}}</h2>
+<h2>Project {{project.ProjectName}} - Component</h2>
+<div>
+	<b>Component Name:</b>
+	<input type="text" ng-model="component.componentName" />
+</div>
+<button class="btn btn-action" ng-click="cancelComponent()">Cancel</button>
+<button class="btn btn-action" ng-click="saveComponent()">Save</button>

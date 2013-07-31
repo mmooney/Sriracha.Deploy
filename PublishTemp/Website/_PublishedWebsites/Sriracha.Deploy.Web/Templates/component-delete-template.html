@@ -1,0 +1,14 @@
+﻿<div class="alert alert-error">
+	Are you sure you want to delete this component?  This cannot be undone!
+</div>
+<div>
+	<b>Project Name:</b>
+	{{project.projectName}}
+</div>
+<div>
+	<b>Component Name:</b>
+	{{component.componentName}}
+</div>
+
+<button class="btn" ng-click="cancelComponent()">Cancel</button>
+<button class="btn btn-danger" ng-click="deleteComponent()">Delete</button>

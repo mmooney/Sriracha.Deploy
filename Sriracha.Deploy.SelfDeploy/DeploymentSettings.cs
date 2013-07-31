@@ -34,10 +34,6 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string ApplicationPoolName { get; set; }
 		//#region Properties
 
-		////directories
-		//public string WebsitePath { get; set; }
-		//public string HostServicePath { get; set; }
-
 		////service info
 		public ServiceStartMode ServiceStartMode { get; set; }
 		public string ServiceUserName { get; set; }
@@ -47,6 +43,11 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string ServiceName { get; set; }
 		public bool AutoStartService { get; set; }
 		public string ServiceExeName { get; set; }
+
+		//Command Line Stuff
+		public string SourceCommandLinePath { get; set; }
+		public string TargetCommandLinePath { get; set; }
+		public string CommandLineExeName { get; set; }
 		//public string WebUserName { get; set; }
 		//public string WebUserPassword { get; set; }
 		//public string VirtualDirectorySite { get; set; }
