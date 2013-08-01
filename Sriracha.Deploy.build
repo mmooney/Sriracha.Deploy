@@ -30,7 +30,7 @@
 			<property name="BuildingProject" value="true"/>
 		</msbuild>
 		<copy todir=".\Publish\Website">
-			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web">
+			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
