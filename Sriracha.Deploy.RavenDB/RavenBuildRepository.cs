@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public IEnumerable<DeployBuild> GetBuildList()
 		{
-			return this._documentSession.Query<DeployBuild>();
+			return this._documentSession.Query<DeployBuild>().ToList();
 		}
 
 		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
