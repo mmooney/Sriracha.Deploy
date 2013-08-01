@@ -111,6 +111,12 @@
 			controller: "DeployController"
 		})
 
+		//System Log
+		.when(Sriracha.Navigation.SystemLog.ListUrl, {
+			templateUrl: "templates/systemlog-list-template.html",
+			controller: "SystemLogController"
+		})
+
 		.otherwise({
 			template: "<h1>Not Found</h1>"
 		})

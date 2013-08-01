@@ -16,10 +16,17 @@ namespace Sriracha.Deploy.Data.Dto
 		Off = 6
 	}
 
+	public enum EnumSystemLogSortField
+	{
+		MessageDate,
+		UserName,
+		LogType
+	}
+
 	public class SystemLog
 	{
-		public string MessageText;
 		public string Id { get; set; }
+		public string MessageText { get; set; }
 		public EnumSystemLogType EnumSystemLogTypeID { get; set; }
 		public string UserName { get; set; }
 		public DateTime MessageDateTimeUtc { get; set; }

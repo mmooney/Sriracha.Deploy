@@ -15,6 +15,7 @@ using ServiceStack.WebHost.Endpoints;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Web.Services;
+using Sriracha.Deploy.Web.Services.SystemLog;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
 
@@ -72,7 +73,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployState>("/deployState/{id}")
 				.Add<DeployProject>("/project")
 				.Add<DeployProject>("/project/{id*}")
-				.Add<TaskMetadata>("/taskMetadata");
+				.Add<TaskMetadata>("/taskMetadata")
+				.Add<SystemLogRequest>("/systemlog");
 
 			container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
 			

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MMDB.Shared;
 using NLog;
+using PagedList;
 using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Indexes;
@@ -71,6 +73,57 @@ namespace Sriracha.Deploy.RavenDB
 				this._documentSession.SaveChanges();
 			}
 
+		}
+
+
+		public IPagedList<SystemLog> GetList(int pageSize, int pageNumber, EnumSystemLogSortField sortField, bool sortAscending)
+		{
+			int skip = (pageNumber - 1) * pageSize;
+			RavenQueryStatistics stats;
+			var query = this._documentSession.Query<SystemLog>().Statistics(out stats).AsQueryable();
+			query = AppySort(query, sortField, sortAscending);
+			var items = query.ToList();
+			return new PagedList.StaticPagedList<SystemLog>(items, pageNumber, pageSize, stats.TotalResults);
+		}
+
+		private static IQueryable<SystemLog> AppySort(IQueryable<SystemLog> query, EnumSystemLogSortField sortField, bool sortAscending)
+		{
+			switch (sortField)
+			{
+				case EnumSystemLogSortField.LogType:
+					if (sortAscending)
+					{
+						query = query.OrderBy(i => i.EnumSystemLogTypeID);
+					}
+					else
+					{
+						query = query.OrderByDescending(i => i.EnumSystemLogTypeID);
+					}
+					break;
+				case EnumSystemLogSortField.MessageDate:
+					if (sortAscending)
+					{
+						query = query.OrderBy(i => i.MessageDateTimeUtc);
+					}
+					else
+					{
+						query = query.OrderByDescending(i => i.MessageDateTimeUtc);
+					}
+					break;
+				case EnumSystemLogSortField.UserName:
+					if (sortAscending)
+					{
+						query = query.OrderBy(i => i.UserName);
+					}
+					else
+					{
+						query = query.OrderByDescending(i => i.UserName);
+					}
+					break;
+				default:
+					throw new UnknownEnumValueException(sortField);
+			}
+			return query;
 		}
 	}
 }

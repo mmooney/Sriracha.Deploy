@@ -56,6 +56,9 @@
     <Reference Include="Ninject.Web.Mvc">
       <HintPath>..\packages\Ninject.MVC3.3.0.0.6\lib\net40-full\Ninject.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.16.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>..\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.dll</HintPath>
     </Reference>
@@ -183,7 +186,10 @@
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\JsonPagedList.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
+    <Compile Include="Services\SystemLog\SystemLogService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -317,6 +323,7 @@
     <Content Include="Scripts\sriracha\projectController.js" />
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
+    <Content Include="Scripts\sriracha\systemLogController.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
@@ -326,6 +333,7 @@
     <Content Include="Templates\build-submit-template.html" />
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
+    <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment-submit-template.html" />
     <Content Include="Templates\deployment-view-template.html" />
     <Content Include="Templates\environment-delete-template.html" />

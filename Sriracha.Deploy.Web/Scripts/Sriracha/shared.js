@@ -25,3 +25,12 @@
     		});
     	};
     })
+	.service("ErrorReporter", function () {
+		this.reportError = function (errorMessage) {
+			alert("Error: " + errorMessage);
+		};
+		this.handleResourceError = function (response) {
+			alert("Error: " + JSON.stringify(response.data.responseStatus.message));
+		}
+	});
+

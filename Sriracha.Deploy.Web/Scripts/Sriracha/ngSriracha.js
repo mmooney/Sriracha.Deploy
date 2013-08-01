@@ -12,13 +12,8 @@ ngSriracha.factory("SrirachaResource", function ($resource) {
 		taskMetadata: $resource("/api/taskmetadata"),
 		build: $resource("/api/build/:buildId"),
 		deployRequest: $resource("/api/deployRequest/:deployRequestId"),
-		deployState: $resource("/api/deployState/:deployState")
-	}
-});
-
-ngSriracha.service("SrirachaErrorReporter", function () {
-	this.reportError = function(errorMessage) {
-		alert("Error: " + errorMessage);
+		deployState: $resource("/api/deployState/:deployState"),
+		systemLog: $resource("/api/systemLog")
 	}
 });
 
@@ -52,6 +47,13 @@ ngSriracha.directive("buildList", function () {
 	return {
 		restrict: "E",
 		templateUrl: "templates/build-list-template.html"
+	}
+});
+
+ngSriracha.directive("systemLogList", function () {
+	return {
+		restrict: "E",
+		templateUrl: "templates/systemlog-list-template.html"
 	}
 });
 

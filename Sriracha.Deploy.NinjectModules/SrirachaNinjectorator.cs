@@ -20,6 +20,18 @@ namespace Sriracha.Deploy.NinjectModules
 
 		public override void Load()
 		{
+			this.Bind<IDIFactory>().To<NinjectDIFactory>().InSingletonScope();
+			if (HttpContext.Current != null)
+			{
+				this.Bind<IUserIdentity>().To<WebUserIdentity>();
+			}
+			else
+			{
+				this.Bind<IUserIdentity>().To<ConsoleUserIdentity>();
+			}
+			this.SetupLogging();
+			_logger.Info("Binding Ninject References");
+
 			this.Bind<IProjectManager>().To<ProjectManager>();
 			this.Bind<IBuildManager>().To<BuildManager>();
 			this.Bind<IFileManager>().To<FileManager>();
@@ -33,7 +45,6 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IDeployRequestManager>().To<DeployRequestManager>();
 			this.Bind<IDeploymentValidator>().To<DeploymentValidator>().InSingletonScope();
 			this.Bind<IProcessRunner>().To<ProcessRunner>().InSingletonScope();
-			this.Bind<IDIFactory>().To<NinjectDIFactory>().InSingletonScope();
 			this.Bind<IParameterParser>().To<ParameterParser>().InSingletonScope();
 			this.Bind<IFileWriter>().To<FileWriter>().InSingletonScope();
 			this.Bind<IBuildPublisher>().To<BuildPublisher>();
@@ -46,18 +57,9 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IJobFactory>().To<JobFactory>();
 			this.Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
 			this.Bind<IScheduler>().ToMethod(CreateScheduler).InSingletonScope();
-			if (HttpContext.Current != null)
-			{
-				this.Bind<IUserIdentity>().To<WebUserIdentity>();
-			}
-			else
-			{
-				this.Bind<IUserIdentity>().To<ConsoleUserIdentity>();
-			}
 
 			this.Kernel.Load(new RavenDBNinjectModule());
-
-			this.SetupLogging();
+			_logger.Info("Binding Ninject References Complete");
 		}
 
 		private void SetupLogging()
