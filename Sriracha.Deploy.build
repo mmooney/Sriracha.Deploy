@@ -26,11 +26,23 @@
 		</copy>
 		<msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
 			<property name="Configuration" value="Release"/>
-			<property name="OutDir" value="${BuildDirectory}\PublishTemp\Website\"/>
+			<property name="OutDir" value="&quot;${BuildDirectory}\PublishTemp\Website\\&quot;"/>
 			<property name="BuildingProject" value="true"/>
 		</msbuild>
-		<copy todir=".\Publish\Website">
+
+		<!-- 
+			Why this if/unless(directory:exists) foolishness?  Is msbuild's ongoing attempts to drive me insane, on my local machine it creates 
+				published directory as Sriracha.Deploy.Web, but on our build server it's Sriracha.Deploy.Web.csproj.
+				And don't forget the double trailing slash, or it will seemingly-randomly fail on certain machines for stupid reasons.
+				Cheers!
+		-->
+		<copy todir=".\Publish\Website" if="${directory::exists('${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj')}">
 			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+		<copy todir=".\Publish\Website" unless="${directory::exists('${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj')}">
+			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
