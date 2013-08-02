@@ -1,0 +1,344 @@
+NAnt 0.92 (Build 0.92.4543.0; release; 6/9/2012)
+Copyright (C) 2001-2012 Gerry Shaw
+http://nant.sourceforge.net
+
+Buildfile: file:///c:/Projects/MMDB/Sriracha.Deploy/Sriracha.Deploy.build
+Target framework: Microsoft .NET Framework 4.0
+Target(s) specified: PackageSolution 
+
+
+PackageSolution:
+
+   [delete] Deleting directory 'c:\Projects\MMDB\Sriracha.Deploy\Publish'.
+   [delete] Deleting directory 'c:\Projects\MMDB\Sriracha.Deploy\PublishTemp'.
+     [copy] Copying 18 files to 'c:\Projects\MMDB\Sriracha.Deploy\Publish\WindowsService'.
+     [copy] Copying 19 files to 'c:\Projects\MMDB\Sriracha.Deploy\Publish\CommandLine'.
+  [msbuild] Build started 8/2/2013 1:41:01 PM.
+  [msbuild] Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" on node 1 (ResolveReferences;_CopyWebApplication target(s)).
+  [msbuild] Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" (1) is building "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj" (2) on node 1 (default targets).
+  [msbuild] PrepareForBuild:
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\".
+  [msbuild] GenerateTargetFrameworkMonikerAttribute:
+  [msbuild] Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+  [msbuild] CoreCompile:
+  [msbuild] Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+  [msbuild] _CopyFilesMarkedCopyLocal:
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\AutoMapper.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Common.Logging.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ionic.Zip.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\MMDB.Shared.2.0.0.18\lib\net35\MMDB.Shared.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\MMDB.Shared.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Newtonsoft.Json.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\NLog.2.0.1.2\lib\net40\NLog.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\NLog.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\PagedList.1.16.0.0\lib\net40\PagedList.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\PagedList.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Quartz.2.1.2\lib\net40\Quartz.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Quartz.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Common.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Interfaces.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Interfaces.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Text.3.9.55\lib\net35\ServiceStack.Text.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Text.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\AutoMapper.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Common.Logging.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ionic.Zip.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Newtonsoft.Json.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\NLog.2.0.1.2\lib\net40\NLog.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\NLog.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\PagedList.1.16.0.0\lib\net40\PagedList.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\PagedList.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Quartz.2.1.2\lib\net40\Quartz.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Quartz.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Common.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Interfaces.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Interfaces.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Text.3.9.55\lib\net35\ServiceStack.Text.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\ServiceStack.Text.xml".
+  [msbuild] CopyFilesToOutputDirectory:
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.Data.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.Data.dll".
+  [msbuild]   Sriracha.Deploy.Data -> c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.Data.dll
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.Data.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.Data.pdb".
+  [msbuild] Done Building Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj" (default targets).
+  [msbuild] Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" (1) is building "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.NinjectModules\Sriracha.Deploy.NinjectModules.csproj" (3) on node 1 (default targets).
+  [msbuild] Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.NinjectModules\Sriracha.Deploy.NinjectModules.csproj" (3) is building "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.RavenDB\Sriracha.Deploy.RavenDB.csproj" (4) on node 1 (default targets).
+  [msbuild] GenerateTargetFrameworkMonikerAttribute:
+  [msbuild] Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+  [msbuild] CoreCompile:
+  [msbuild] Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+  [msbuild] _CopyFilesMarkedCopyLocal:
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Abstractions.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Client.Lightweight.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Abstractions.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Abstractions.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Client.Lightweight.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Raven.Client.Lightweight.xml".
+  [msbuild] CopyFilesToOutputDirectory:
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.RavenDB.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.RavenDB.dll".
+  [msbuild]   Sriracha.Deploy.RavenDB -> c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.RavenDB.dll
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.RavenDB.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.RavenDB.pdb".
+  [msbuild] Done Building Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.RavenDB\Sriracha.Deploy.RavenDB.csproj" (default targets).
+  [msbuild] GenerateTargetFrameworkMonikerAttribute:
+  [msbuild] Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+  [msbuild] CoreCompile:
+  [msbuild] Skipping target "CoreCompile" because all output files are up-to-date with respect to the input files.
+  [msbuild] _CopyFilesMarkedCopyLocal:
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ninject.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.3.0.1.10\lib\net40\Ninject.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ninject.xml".
+  [msbuild] CopyFilesToOutputDirectory:
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.NinjectModules.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.NinjectModules.dll".
+  [msbuild]   Sriracha.Deploy.NinjectModules -> c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.NinjectModules.dll
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.NinjectModules.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.NinjectModules.pdb".
+  [msbuild] Done Building Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.NinjectModules\Sriracha.Deploy.NinjectModules.csproj" (default targets).
+  [msbuild] _CopyWebApplicationLegacy:
+  [msbuild]   Copying Web Application Project Files for Sriracha.Deploy.Web
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin".
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.Web.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.Web.dll".
+  [msbuild]   Copying file from "obj\Release\Sriracha.Deploy.Web.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.Web.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Antlr3.Runtime.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Microsoft.Web.Infrastructure.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\MMDB.Shared.2.0.0.18\lib\net35\MMDB.Shared.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\MMDB.Shared.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.Web.Common.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.MVC3.3.0.0.6\lib\net40-full\Ninject.Web.Mvc.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.Web.Mvc.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\PagedList.1.16.0.0\lib\net40\PagedList.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\PagedList.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Abstractions.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Client.Lightweight.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Common.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.ContainerAdapter.Ninject.1.0.4526.38581\lib\net40\ServiceStack.ContainerAdapter.Ninject.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.ContainerAdapter.Ninject.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.3.9.43\lib\net35\ServiceStack.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Mvc.3.9.43\lib\net40\ServiceStack.FluentValidation.Mvc3.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.FluentValidation.Mvc3.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Interfaces.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Interfaces.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.OrmLite.SqlServer.3.9.43\lib\ServiceStack.OrmLite.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.OrmLite.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.OrmLite.SqlServer.3.9.43\lib\ServiceStack.OrmLite.SqlServer.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.OrmLite.SqlServer.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Redis.3.9.43\lib\net35\ServiceStack.Redis.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Redis.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.3.9.43\lib\net35\ServiceStack.ServiceInterface.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.ServiceInterface.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Text.3.9.43\lib\net35\ServiceStack.Text.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Text.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.Data.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.Data.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.NinjectModules.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.NinjectModules.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.RavenDB.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.RavenDB.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Net.Http.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Net.Http.WebRequest.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Mvc.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Optimization.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Providers.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Razor.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.Deployment.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.Razor.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\WebActivator.1.5.3\lib\net40\WebActivator.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\WebActivator.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\WebActivatorEx.2.0.1\lib\net40\WebActivatorEx.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\WebActivatorEx.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\WebGrease.1.3.0\lib\WebGrease.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\WebGrease.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\NLog.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\NLog.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Quartz.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Quartz.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ionic.Zip.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ionic.Zip.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Newtonsoft.Json.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Newtonsoft.Json.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Common.Logging.dll" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Common.Logging.dll".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.Data.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.Data.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.NinjectModules.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.NinjectModules.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Sriracha.Deploy.RavenDB.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Sriracha.Deploy.RavenDB.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.3.0.1.10\lib\net40\Ninject.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.Web.Common.3.0.0.7\lib\net40-full\Ninject.Web.Common.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.Web.Common.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Ninject.MVC3.3.0.0.6\lib\net40-full\Ninject.Web.Mvc.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ninject.Web.Mvc.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\PagedList.1.16.0.0\lib\net40\PagedList.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\PagedList.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Abstractions.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Abstractions.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.pdb" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Client.Lightweight.pdb".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Raven.Client.Lightweight.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.3.9.43\lib\net35\ServiceStack.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Common.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Common.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.ContainerAdapter.Ninject.1.0.4526.38581\lib\net40\ServiceStack.ContainerAdapter.Ninject.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.ContainerAdapter.Ninject.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Common.3.9.43\lib\net35\ServiceStack.Interfaces.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Interfaces.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Redis.3.9.43\lib\net35\ServiceStack.Redis.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Redis.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\ServiceStack.Text.3.9.43\lib\net35\ServiceStack.Text.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\ServiceStack.Text.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Net.Http.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Net.Http.WebRequest.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Razor.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.Mvc.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.Deployment.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\System.Web.WebPages.Razor.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\NLog.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\NLog.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Quartz.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Quartz.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Ionic.Zip.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Ionic.Zip.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Newtonsoft.Json.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Newtonsoft.Json.xml".
+  [msbuild]   Copying file from "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\Common.Logging.xml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Common.Logging.xml".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content".
+  [msbuild]   Copying file from "Content\bootstrap-responsive.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\bootstrap-responsive.css".
+  [msbuild]   Copying file from "Content\bootstrap-responsive.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\bootstrap-responsive.min.css".
+  [msbuild]   Copying file from "Content\bootstrap.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\bootstrap.css".
+  [msbuild]   Copying file from "Content\bootstrap.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\bootstrap.min.css".
+  [msbuild]   Copying file from "Content\Site.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\Site.css".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\css".
+  [msbuild]   Copying file from "Content\css\bootstrap.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\css\bootstrap.min.css".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\css\images".
+  [msbuild]   Copying file from "Content\css\images\glyphicons-halflings-white.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\css\images\glyphicons-halflings-white.png".
+  [msbuild]   Copying file from "Content\css\images\glyphicons-halflings.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\css\images\glyphicons-halflings.png".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\images".
+  [msbuild]   Copying file from "Content\images\pepper.jpg" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\images\pepper.jpg".
+  [msbuild]   Copying file from "Content\images\glyphicons-halflings-white.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\images\glyphicons-halflings-white.png".
+  [msbuild]   Copying file from "Content\images\glyphicons-halflings.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\images\glyphicons-halflings.png".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\js".
+  [msbuild]   Copying file from "Content\js\ss-validation.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\js\ss-validation.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images".
+  [msbuild]   Copying file from "Content\themes\base\images\animated-overlay.gif" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\animated-overlay.gif".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-icons_222222_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-icons_222222_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-icons_2e83ff_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-icons_2e83ff_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-icons_454545_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-icons_454545_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-icons_888888_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-icons_888888_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\images\ui-icons_cd0a0a_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\images\ui-icons_cd0a0a_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\jquery-ui.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery-ui.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.accordion.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.accordion.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.all.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.all.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.autocomplete.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.autocomplete.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.base.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.base.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.button.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.button.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.core.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.core.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.datepicker.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.datepicker.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.dialog.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.dialog.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.menu.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.menu.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.progressbar.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.progressbar.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.resizable.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.resizable.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.selectable.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.selectable.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.slider.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.slider.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.spinner.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.spinner.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.tabs.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.tabs.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.theme.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.theme.css".
+  [msbuild]   Copying file from "Content\themes\base\jquery.ui.tooltip.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\jquery.ui.tooltip.css".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\animated-overlay.gif" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\animated-overlay.gif".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-icons_222222_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-icons_222222_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-icons_454545_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-icons_454545_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-icons_888888_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-icons_888888_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery-ui.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery-ui.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.accordion.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.accordion.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.autocomplete.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.autocomplete.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.button.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.button.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.core.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.core.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.datepicker.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.datepicker.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.dialog.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.dialog.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.menu.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.menu.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.progressbar.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.progressbar.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.resizable.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.resizable.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.selectable.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.selectable.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.slider.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.slider.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.spinner.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.spinner.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.tabs.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.tabs.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.theme.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.theme.min.css".
+  [msbuild]   Copying file from "Content\themes\base\minified\jquery.ui.tooltip.min.css" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Content\themes\base\minified\jquery.ui.tooltip.min.css".
+  [msbuild]   Copying file from "default.htm" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\default.htm".
+  [msbuild]   Copying file from "Global.asax" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Global.asax".
+  [msbuild]   Copying file from "ng-upload-sample.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\ng-upload-sample.html".
+  [msbuild]   Copying file from "Web.config" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Web.config".
+  [msbuild]   Copying file from "packages.config" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\packages.config".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace".
+  [msbuild]   Copying file from "Scripts\ace\ace.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\ace.js".
+  [msbuild]   Copying file from "Scripts\ace\mode-javascript.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\mode-javascript.js".
+  [msbuild]   Copying file from "Scripts\ace\mode-json.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\mode-json.js".
+  [msbuild]   Copying file from "Scripts\ace\mode-xml.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\mode-xml.js".
+  [msbuild]   Copying file from "Scripts\ace\ui-ace.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\ui-ace.js".
+  [msbuild]   Copying file from "Scripts\ace\worker-javascript.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\worker-javascript.js".
+  [msbuild]   Copying file from "Scripts\ace\worker-json.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\ace\worker-json.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular".
+  [msbuild]   Copying file from "Scripts\angular\angular-bootstrap-prettify.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-bootstrap-prettify.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-bootstrap-prettify.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-bootstrap-prettify.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-bootstrap.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-bootstrap.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-bootstrap.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-bootstrap.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-cookies.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-cookies.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-cookies.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-cookies.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-loader.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-loader.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-loader.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-loader.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-mocks.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-mocks.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-resource.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-resource.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-resource.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-resource.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-sanitize.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-sanitize.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-sanitize.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-sanitize.min.js".
+  [msbuild]   Copying file from "Scripts\angular\angular-scenario.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular-scenario.js".
+  [msbuild]   Copying file from "Scripts\angular\angular.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular.js".
+  [msbuild]   Copying file from "Scripts\angular\angular.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\angular.min.js".
+  [msbuild]   Copying file from "Scripts\angular\jstd-scenario-adapter-config.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\jstd-scenario-adapter-config.js".
+  [msbuild]   Copying file from "Scripts\angular\jstd-scenario-adapter.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\jstd-scenario-adapter.js".
+  [msbuild]   Copying file from "Scripts\angular\ng-upload.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\ng-upload.js".
+  [msbuild]   Copying file from "Scripts\angular\ng-upload.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\ng-upload.min.js".
+  [msbuild]   Copying file from "Scripts\angular\_references.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\angular\_references.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.blockUI.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.blockUI.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.blockUI.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.blockUI.min.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery-1.9.1.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery-1.9.1.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery-1.9.1.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery-1.9.1.min.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery-1.9.1.min.map" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery-1.9.1.min.map".
+  [msbuild]   Copying file from "Scripts\jquery\jquery-ui-1.10.1.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery-ui-1.10.1.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery-ui-1.10.1.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery-ui-1.10.1.min.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.unobtrusive-ajax.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.unobtrusive-ajax.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.unobtrusive-ajax.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.unobtrusive-ajax.min.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.validate.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.validate.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.validate.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.validate.min.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.validate.unobtrusive.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.validate.unobtrusive.js".
+  [msbuild]   Copying file from "Scripts\jquery\jquery.validate.unobtrusive.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\jquery\jquery.validate.unobtrusive.min.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha".
+  [msbuild]   Copying file from "Scripts\sriracha\buildController.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\buildController.js".
+  [msbuild]   Copying file from "Scripts\sriracha\deployController.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\deployController.js".
+  [msbuild]   Copying file from "Scripts\sriracha\navigation.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\navigation.js".
+  [msbuild]   Copying file from "Scripts\sriracha\navigationFactory.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\navigationFactory.js".
+  [msbuild]   Copying file from "Scripts\sriracha\ngSriracha.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\ngSriracha.js".
+  [msbuild]   Copying file from "Scripts\sriracha\projectController.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\projectController.js".
+  [msbuild]   Copying file from "Scripts\sriracha\router.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\router.js".
+  [msbuild]   Copying file from "Scripts\sriracha\shared.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\shared.js".
+  [msbuild]   Copying file from "Scripts\sriracha\systemLogController.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\sriracha\systemLogController.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\bootstrap".
+  [msbuild]   Copying file from "Scripts\bootstrap\bootstrap.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\bootstrap\bootstrap.js".
+  [msbuild]   Copying file from "Scripts\bootstrap\bootstrap.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\bootstrap\bootstrap.min.js".
+  [msbuild]   Copying file from "Scripts\modernizr-2.6.2.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\modernizr-2.6.2.js".
+  [msbuild]   Copying file from "Scripts\underscore.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\underscore.js".
+  [msbuild]   Copying file from "Scripts\underscore.min.js" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Scripts\underscore.min.js".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates".
+  [msbuild]   Copying file from "Templates\branch-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\branch-edit-template.html".
+  [msbuild]   Copying file from "Templates\branch-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\branch-delete-template.html".
+  [msbuild]   Copying file from "Templates\build-list-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\build-list-template.html".
+  [msbuild]   Copying file from "Templates\build-submit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\build-submit-template.html".
+  [msbuild]   Copying file from "Templates\build-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\build-delete-template.html".
+  [msbuild]   Copying file from "Templates\build-view-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\build-view-template.html".
+  [msbuild]   Copying file from "Templates\systemlog-list-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\systemlog-list-template.html".
+  [msbuild]   Copying file from "Templates\deployment-submit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\deployment-submit-template.html".
+  [msbuild]   Copying file from "Templates\deployment-view-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\deployment-view-template.html".
+  [msbuild]   Copying file from "Templates\environment-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\environment-delete-template.html".
+  [msbuild]   Copying file from "Templates\environment-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\environment-edit-template.html".
+  [msbuild]   Copying file from "Templates\deploymentstep-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\deploymentstep-delete-template.html".
+  [msbuild]   Copying file from "Templates\component-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\component-delete-template.html".
+  [msbuild]   Copying file from "Templates\deploymentstep-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\deploymentstep-edit-template.html".
+  [msbuild]   Copying file from "Templates\deploymentstep-options-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\deploymentstep-options-edit-template.html".
+  [msbuild]   Copying file from "Templates\component-view-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\component-view-template.html".
+  [msbuild]   Copying file from "Templates\home-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\home-template.html".
+  [msbuild]   Copying file from "Templates\project-delete-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\project-delete-template.html".
+  [msbuild]   Copying file from "Templates\component-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\component-edit-template.html".
+  [msbuild]   Copying file from "Templates\project-edit-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\project-edit-template.html".
+  [msbuild]   Copying file from "Templates\project-list-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\project-list-template.html".
+  [msbuild]   Copying file from "Templates\project-view-template.html" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Templates\project-view-template.html".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views".
+  [msbuild]   Copying file from "Views\Web.config" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Web.config".
+  [msbuild]   Copying file from "Views\_ViewStart.cshtml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\_ViewStart.cshtml".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Shared".
+  [msbuild]   Copying file from "Views\Shared\Error.cshtml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Shared\Error.cshtml".
+  [msbuild]   Copying file from "Views\Shared\_Layout.cshtml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Shared\_Layout.cshtml".
+  [msbuild]   Creating directory "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Home".
+  [msbuild]   Copying file from "Views\Home\Index.cshtml" to "c:\Projects\MMDB\Sriracha.Deploy\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\Views\Home\Index.cshtml".
+  [msbuild] Done Building Project "c:\Projects\MMDB\Sriracha.Deploy\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" (ResolveReferences;_CopyWebApplication target(s)).
+  [msbuild] 
+  [msbuild] Build succeeded.
+  [msbuild]     0 Warning(s)
+  [msbuild]     0 Error(s)
+  [msbuild] 
+  [msbuild] Time Elapsed 00:00:01.80
+     [copy] Copying 1 directory to 'c:\Projects\MMDB\Sriracha.Deploy\Publish\Website'.
+
+BUILD SUCCEEDED
+
+Total time: 4.5 seconds.
+

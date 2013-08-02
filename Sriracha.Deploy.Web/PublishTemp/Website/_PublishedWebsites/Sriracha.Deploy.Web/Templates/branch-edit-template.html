@@ -1,0 +1,8 @@
+﻿<h2 ng-hide="branch.id">Create a branch in project {{project.projectName}}</h2>
+<h2 ng-show="branch.id">Edit Branch: {{branch.branchName}} in project {{project.projectName}}</h2>
+<div>
+	<b>Branch Name:</b>
+	<input type="text" ng-model="branch.branchName" />
+</div>
+<button class="btn btn-action" ng-click="cancelBranch()">Cancel</button>
+<button class="btn btn-action" ng-click="saveBranch()">Save</button>

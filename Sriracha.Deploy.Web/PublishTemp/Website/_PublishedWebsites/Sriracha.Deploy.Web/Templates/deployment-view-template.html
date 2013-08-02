@@ -1,0 +1,106 @@
+﻿<h2>View Deployment</h2>
+<h2>{{project.projectName}} - {{deployState.build.projectBranchName}} - {{deployState.build.projectComponentName}} - {{deployState.build.version}}  to environment {{deployState.environment.environmentName}}</h2>
+
+<hr />
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>Submitted Date (UTC)</th>
+		<td>{{deployState.submittedDateTimeUtc | date:'medium'}}</td>
+	</tr>
+	<tr>
+		<th>Status</th>
+		<td>{{deployState.statusDisplayValue}}</td>
+	</tr>
+</table>
+<div ngshow="deployState.errorDetails" class="error">
+	<h3>Error Details: </h3> 
+	<pre>{{deployState.errorDetails}}</pre>
+</div>
+<h3>Deployment Log</h3>
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Date/Time (UTC)</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tr ng-repeat="item in deployState.messageList | orderBy:'-dateTimeUtc'">
+		<td>{{item.dateTimeUtc}}</td>
+		<td>{{item.message}}</td>
+	</tr>
+</table>
+<!--<div ng-hide="environmentComponent" class="alert alert-error">
+	No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
+</div>
+<fieldset>
+	<legend>Build Details</legend>
+	TBD...
+</fieldset>
+<fieldset style="width:500px">
+	<legend>Configuration</legend>
+	<div>
+		<h4>Environment Values</h4>
+		<div ng-show="environmentResultsIncomplete">
+			<a ng-href="{{getEditEnvironmentUrl(environment)}}">Missing configuration values, click here to edit</a>
+		</div>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Task Name</th>
+					<th>Setting Name</th>
+					<th>Setting Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-hide="environmentResults.length">
+					<td colspan="3">None</td>
+				</tr>
+				<tr ng-show="environmentResults.length" ng-repeat="item in environmentResults">
+					<td>{{item.taskName}}</td>
+					<td>{{item.settingName}}</td>
+					<td>
+						<div ng-show="item.present">{{item.settingValue}}</div>
+						<div ng-hide="item.present" style="color:red">N/A</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<h4>Target Machines</h4>
+		<div ng-repeat="machine in environmentComponent.machineList">
+			<input type="checkbox" ng-model="machine.selected" ng-disabled="machineResultsIncomplete[machine.id]"/> {{machine.machineName}}
+			<div ng-show="machineResultsIncomplete[machine.id]">
+				<a ng-href="{{getEditEnvironmentUrl(environment)}}">Missing configuration values, click here to edit</a>
+			</div>
+			<table class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Task Name</th>
+						<th>Setting Name</th>
+						<th>Setting Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-hide="machineResults[machine.id].length">
+						<td colspan="3">None</td>
+					</tr>
+					<tr ng-show="machineResults[machine.id].length" ng-repeat="item in machineResults[machine.id]">
+						<td>{{item.taskName}}</td>
+						<td>{{item.settingName}}</td>
+						<td>
+							<div ng-show="item.present">{{item.settingValue}}</div>
+							<div ng-hide="item.present" style="color:red">N/A</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div>
+		<button id="submitButton" class="btn btn-primary" ng-model="button" ng-disabled="!canSubmitDeployment()" ng-click="submitDeployment()">Submit Deployment</button>
+	</div>
+</fieldset>
+
+
+-->

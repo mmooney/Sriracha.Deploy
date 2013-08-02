@@ -1,0 +1,18 @@
+﻿<h2>Project List</h2>
+<table class="table table-striped" ng-show="projectList.length">
+	<thead>
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="project in projectList">
+			<td><a href="#/project/{{project.id}}">{{project.projectName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="getDeleteProjectUrl(project)">Delete</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="projectList.length">
+	No projects yet
+</div>
+<a ng-href="{{getCreateProjectUrl()}}">Create Project</a>

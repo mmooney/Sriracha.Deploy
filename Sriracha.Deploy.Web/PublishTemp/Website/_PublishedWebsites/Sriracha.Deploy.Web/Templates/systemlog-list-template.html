@@ -1,0 +1,25 @@
+﻿<h2><a ng-href="{{getBuildListUrl()}}">System Log</a></h2>
+<table class="table table-striped" ng-show="systemLog.items">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Type</th>
+			<th>Date/Timc (UTC)</th>
+			<th>User Name</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="item in systemLog.items">
+			<td>{{item.id}}</td>
+			<td>{{item.enumSystemLogTypeID}}</td>
+			<td>{{item.messageDateTimeUtc}}</td>
+			<td>{{item.userName}}</td>
+			<td>{{item.messageText}}</td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="systemLog.items">
+	No logs available
+</div>
+
