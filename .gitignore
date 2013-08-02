@@ -166,6 +166,6 @@ pip-log.txt
 ## Sriracha Stuff
 #####
 #Dropkick Logs
-packages/**/*.log
+packages/dropkick.core.0.4.13.0/tools/dropkick/**/*.log
 Publish/**/*
 PublishTemp/**/*
