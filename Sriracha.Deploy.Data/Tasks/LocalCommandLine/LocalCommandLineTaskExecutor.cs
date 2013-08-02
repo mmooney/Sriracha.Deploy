@@ -56,11 +56,11 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
 				if(result == 0)
 				{
-					if(!string.IsNullOrEmpty(standardOutput))
+					if(!string.IsNullOrWhiteSpace(standardOutput))
 					{
 						statusManager.Info(deployStateId, standardOutput);
 					}
-					if(!string.IsNullOrEmpty(errorOutput))
+					if(!string.IsNullOrWhiteSpace(errorOutput))
 					{
 						statusManager.Error(deployStateId, errorOutput);
 						throw new Exception("LocalCommandLine Task Failed: " + errorOutput); 

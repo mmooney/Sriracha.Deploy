@@ -17,10 +17,13 @@ namespace Sriracha.Deploy.RavenDB
 				ConnectionStringName = "RavenDB",
 				Conventions = new DocumentConvention
 				{
-					DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites
+					DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites,
+					ShouldCacheRequest = url => false 
 				}
 			};
 			documentStore.Initialize();
+			documentStore.DisableAggressiveCaching();
+			documentStore.DatabaseCommands.DisableAllCaching();
 			IndexCreation.CreateIndexes(typeof(RavenHelper).Assembly, documentStore);
 			return documentStore;
 		}

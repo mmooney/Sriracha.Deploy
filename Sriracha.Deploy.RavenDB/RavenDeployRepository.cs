@@ -111,6 +111,11 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus status, Exception err = null)
 		{
 			var state = GetDeployState(deployStateId);
+			if(state.MessageList == null || state.MessageList.Count == 0)
+			{
+				_documentSession.Advanced.Evict(state);
+				state = GetDeployState(deployStateId);
+			}
 			state.Status = status;
 			switch(status)
 			{

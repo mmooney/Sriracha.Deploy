@@ -26,7 +26,7 @@
 	</thead>
 	<tr ng-repeat="item in deployState.messageList | orderBy:'-dateTimeUtc'">
 		<td>{{item.dateTimeUtc}}</td>
-		<td>{{item.message}}</td>
+		<td><pre>{{item.message}}</pre></td>
 	</tr>
 </table>
 <!--<div ng-hide="environmentComponent" class="alert alert-error">
