@@ -13,7 +13,6 @@ namespace Sriracha.Deploy.NinjectModules
 		public override void Load()
 		{
 			var logger = this.Kernel.Get<Logger>();
-			logger.Info("Binding RavenDB Ninject References");
 			Bind<IDocumentStore>()
 			   .ToMethod(context =>
 			   {

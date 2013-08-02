@@ -163,7 +163,7 @@ namespace Sriracha.Deploy.CommandLine
 			}
 			catch(Exception err)
 			{
-				Program.Logger.ErrorException("Error", err);
+				Program.Logger.ErrorException("Error: " + err.ToString(), err);
 			}
 			if(pause)
 			{

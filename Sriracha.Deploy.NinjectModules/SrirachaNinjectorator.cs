@@ -30,7 +30,6 @@ namespace Sriracha.Deploy.NinjectModules
 				this.Bind<IUserIdentity>().To<ConsoleUserIdentity>();
 			}
 			this.SetupLogging();
-			_logger.Info("Binding Ninject References");
 
 			this.Bind<IProjectManager>().To<ProjectManager>();
 			this.Bind<IBuildManager>().To<BuildManager>();

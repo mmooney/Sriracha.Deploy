@@ -27,7 +27,11 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, string version)
 		{
-			var project = _projectRepository.GetProject(projectId);
+			var project = _projectRepository.TryGetProject(projectId);
+			if(project == null)
+			{
+				project = _projectRepository.GetProjectByName(projectId);
+			}
 			var branch = _projectRepository.GetBranch(project, branchId);
 			var component = _projectRepository.GetComponent(project, componentId);
 			var file = this._fileRepository.CreateFile(fileName, fileData);
@@ -41,10 +45,34 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileId, string version)
 		{
-			var project = _projectRepository.GetProject(projectId);
-			var branch = _projectRepository.GetBranch(project, branchId);
-			var component = _projectRepository.GetComponent(project, componentId);
-			return this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, fileId, version);
+			var project = _projectRepository.TryGetProject(projectId);
+			if (project == null)
+			{
+				project = _projectRepository.TryGetProjectByName(projectId);
+			}
+			if(project == null)
+			{
+				project = _projectRepository.CreateProject(projectId);
+			}
+			var branch = _projectRepository.TryGetBranch(project, branchId);
+			if(branch == null)
+			{
+				branch = _projectRepository.TryGetBranchByName(project, branchId);
+			}
+			if(branch == null)
+			{
+				branch = _projectRepository.CreateBranch(project.Id, branchId);
+			}
+			var component = _projectRepository.TryGetComponent(project, componentId);
+			if(component == null)
+			{
+				component = _projectRepository.TryGetComponentByName(project, componentId);
+			}
+			if(component == null)
+			{
+				component = _projectRepository.CreateComponent(project.Id, componentId);
+			}
+			return this._buildRepository.CreateBuild(projectId, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
 		}
 
 		public DeployBuild UpdateBuild(string buildId, string projectId, string componentId, string branchId, string fileId, string version)

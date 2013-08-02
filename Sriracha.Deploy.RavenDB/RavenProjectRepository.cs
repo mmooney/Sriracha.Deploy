@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MMDB.Shared;
 using Raven.Client;
 using Raven.Imports.Newtonsoft.Json;
 using Sriracha.Deploy.Data;
@@ -53,10 +54,56 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing Project ID");
 			}
-			var item = _documentSession.Load<DeployProject>(projectId);
+			var item = TryGetProject(projectId);
 			if(item == null)
 			{
-				throw new KeyNotFoundException("Project not found: " + projectId);
+				throw new RecordNotFoundException(typeof(DeployProject), "Id", projectId);
+			}
+			return item;
+		}
+
+		public DeployProject TryGetProject(string projectId)
+		{
+			if (string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			return _documentSession.Load<DeployProject>(projectId);
+		}
+
+		public DeployProject TryGetProjectByName(string projectName)
+		{
+			if (string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
+			var list = _documentSession.Query<DeployProject>()
+											.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
+											.Where(i=>i.ProjectName == projectName).ToList();
+			if(list.Count == 0)
+			{
+				return null;
+			}
+			else if (list.Count == 1)
+			{
+				return list[0];
+			}
+			else 
+			{
+				throw new Exception("Multiple projects found with name " + projectName);
+			}
+		}
+
+		public DeployProject GetProjectByName(string projectName)
+		{
+			if (string.IsNullOrEmpty(projectName))
+			{
+				throw new ArgumentNullException("Missing Project Name");
+			}
+			var item = this.TryGetProjectByName(projectName);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployProject), "ProjectName", projectName);
 			}
 			return item;
 		}
@@ -108,12 +155,57 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing Component ID");
 			}
-			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
+			var item = this.TryGetComponent(componentId);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+			}
+			return item;
+		}
+
+		public DeployComponent TryGetComponent(string componentId)
+		{
+			var project = _documentSession.Query<DeployProject>().FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
 			if(project == null)
 			{
-				throw new KeyNotFoundException("No project found for component ID " + componentId);
+				return null;
 			}
-			return project.ComponentList.First(i=>i.Id == componentId);
+			else 
+			{
+				return project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
+			}
+		}
+
+		public DeployComponent TryGetComponent(DeployProject project, string componentId)
+		{
+			if (string.IsNullOrEmpty(componentId))
+			{
+				throw new ArgumentNullException("Missing Component ID");
+			}
+			return project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
+		}
+
+		public DeployComponent GetComponentByName(DeployProject project, string componentName)
+		{
+			if(project == null)
+			{
+				throw new ArgumentNullException("Missing project");
+			}
+			if(string.IsNullOrWhiteSpace(componentName))
+			{
+				throw new ArgumentNullException("Missing component name");
+			}
+			var item = this.TryGetComponentByName(project, componentName);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployComponent), "ComponentName", componentName);
+			}
+			return item;
+		}
+
+		public DeployComponent TryGetComponentByName(DeployProject project, string componentName)
+		{
+			return project.ComponentList.FirstOrDefault(i=>i.ComponentName == componentName);
 		}
 
 		public DeployComponent GetComponent(DeployProject project, string componentId)
@@ -262,30 +354,102 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i=>i.BranchList.Any(j=>j.Id == branchId));
-			if(project == null)
+			var branch = this.TryGetBranch(branchId);
+			if(branch == null)
 			{
-				throw new ArgumentException("Unable to find project for branch ID " + branchId);
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
 			}
-			return project.BranchList.First(i=>i.Id == branchId);
+			return branch;
+		}
+
+		public DeployProjectBranch TryGetBranch(string branchId)
+		{
+			if (string.IsNullOrEmpty(branchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
+			if (project != null)
+			{
+				return project.BranchList.First(i => i.Id == branchId);
+			}
+			else 
+			{
+				return null;
+			}
 		}
 
 		public DeployProjectBranch GetBranch(DeployProject project, string branchId)
 		{
-			if(string.IsNullOrEmpty(branchId))
+			if (string.IsNullOrEmpty(branchId))
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			if(project == null)
+			if (project == null)
 			{
 				throw new ArgumentNullException("Project is null");
 			}
-			var branch = project.BranchList.FirstOrDefault(i => i.Id == branchId);
-			if (branchId == null)
+			var branch = this.TryGetBranch(project, branchId);
+			if (branch == null)
 			{
-				throw new ArgumentException("Unable to find branch " + branchId + " in project " + project.Id);
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
 			}
-			return branch;	
+			return branch;
+		}
+		
+		public DeployProjectBranch TryGetBranch(DeployProject project, string branchId)
+		{
+			if (string.IsNullOrEmpty(branchId))
+			{
+				throw new ArgumentNullException("Missing branch ID");
+			}
+			if (project == null)
+			{
+				throw new ArgumentNullException("Project is null");
+			}
+			return project.BranchList.FirstOrDefault(i => i.Id == branchId);
+		}
+
+		public DeployProjectBranch GetBranchByName(string projectId, string branchName)
+		{
+			if(string.IsNullOrWhiteSpace(projectId))
+			{
+				throw new ArgumentNullException("Missing Project ID");
+			}
+			if(string.IsNullOrWhiteSpace(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
+			var item = this.TryGetBranchByName(projectId, branchName);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "ProjectId/BranchName", projectId + "/" + branchName);
+			}
+			return item;
+		}
+
+		public DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
+		{
+			var project = this.GetProject(projectId);
+			return this.GetBranchByName(project, branchName);
+		}
+
+		public DeployProjectBranch GetBranchByName(DeployProject project, string branchName)
+		{
+			if (project == null)
+			{
+				throw new ArgumentNullException("Missing Project");
+			}
+			if (string.IsNullOrWhiteSpace(branchName))
+			{
+				throw new ArgumentNullException("Missing Branch Name");
+			}
+			return project.BranchList.FirstOrDefault(i => i.BranchName == branchName);
+		}
+
+		public DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName)
+		{
+			return project.BranchList.FirstOrDefault(i=>i.BranchName == branchName);
 		}
 
 		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
@@ -473,5 +637,7 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 			return item;
 		}
+
+
 	}
 }
