@@ -12,6 +12,23 @@
 		<td>{{deployState.statusDisplayValue}}</td>
 	</tr>
 </table>
+<div ngshow="deployState.errorDetails" class="error">
+	<h3>Error Details: </h3> 
+	<pre>{{deployState.errorDetails}}</pre>
+</div>
+<h3>Deployment Log</h3>
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Date/Time (UTC)</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tr ng-repeat="item in deployState.messageList | orderBy:'-dateTimeUtc'">
+		<td>{{item.dateTimeUtc}}</td>
+		<td>{{item.message}}</td>
+	</tr>
+</table>
 <!--<div ng-hide="environmentComponent" class="alert alert-error">
 	No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
 </div>

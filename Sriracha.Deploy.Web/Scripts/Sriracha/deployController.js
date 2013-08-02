@@ -23,6 +23,7 @@
 	if ($routeParams.deployStateId) {
 		$scope.deployState = SrirachaResource.deployState.get({ id: $routeParams.deployStateId }, 
 			function () {
+				console.log($scope.deployState);
 				$scope.project = SrirachaResource.project.get({ id: $scope.deployState.projectId });
 			},
 			function(error) {
