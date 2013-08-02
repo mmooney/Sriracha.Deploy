@@ -36,12 +36,14 @@
 				And don't forget the double trailing slash, or it will seemingly-randomly fail on certain machines for stupid reasons.
 				Cheers!
 		-->
-		<copy todir=".\Publish\Website" if="${directory::exists('${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj')}">
-			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj">
+		<property name="PublishTempWebDirectory" value="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj"/>
+		<echo message="Directory exists '${PublishTempWebDirectory}'?: ${directory::exists(PublishTempWebDirectory)}"/>
+		<copy todir=".\Publish\Website" if="${directory::exists(PublishTempWebDirectory)}">
+			<fileset basedir="${PublishTempWebDirectory}">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir=".\Publish\Website" unless="${directory::exists('${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj')}">
+		<copy todir=".\Publish\Website" unless="${directory::exists(PublishTempWebDirectory)}">
 			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web">
 				<include name="**/*"/>
 			</fileset>
