@@ -29,11 +29,11 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 		}
 
-		[Test]
+		[Test, Ignore]
 		public void Error()
 		{
-			string path = "C:\\windows\\system32\\xcopy.exe";
-			string parameters = "lksjdfsdf";
+			string path = "xyz";
+			string parameters = "pdq";
 			var sut = new ProcessRunner();
 			using (StringWriter standardOutputWriter = new StringWriter())
 			using (StringWriter errorOutputWriter = new StringWriter())
@@ -41,10 +41,10 @@ namespace Sriracha.Deploy.Data.Tests
 				sut.Run(path, parameters, standardOutputWriter, errorOutputWriter);
 
 				string standardOutput = standardOutputWriter.GetStringBuilder().ToString();
-				Assert.IsNotNullOrEmpty(standardOutput);
+				Assert.IsNullOrEmpty(standardOutput);
 
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
-				Assert.IsNullOrEmpty(errorOutput);
+				Assert.IsNotNullOrEmpty(errorOutput);
 			}
 		}
 	}
