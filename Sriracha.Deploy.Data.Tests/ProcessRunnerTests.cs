@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Data.Tests
 				Assert.IsNotNullOrEmpty(standardOutput);
 
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
-				Assert.IsNullOrEmpty(errorOutput);
+				Assert.IsNullOrEmpty(errorOutput.Trim());
 			}
 		}
 

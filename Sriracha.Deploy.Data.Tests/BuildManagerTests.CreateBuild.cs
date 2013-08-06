@@ -20,7 +20,7 @@ namespace Sriracha.Deploy.Data.Tests
 				public Mock<IFileRepository> FileRepository { get; set; }
 				public Mock<IBuildRepository> BuildRepository { get; set; }
 				public Mock<IProjectRepository> ProjectRepository { get; set; }
-				public IBuildManager Sut { get; set; }
+				public BuildManager Sut { get; set; }
 				public byte[] FileData { get; set; }
 				public DeployProject DeployProject { get; set; }
 				public DeployFile DeployFile { get; set; }
@@ -81,9 +81,12 @@ namespace Sriracha.Deploy.Data.Tests
 
 					testData.BuildRepository.Setup(i => i.CreateBuild(testData.DeployBuild.ProjectId, testData.DeployBuild.ProjectName, testData.DeployBuild.ProjectComponentId, testData.DeployBuild.ProjectComponentName, testData.DeployBuild.ProjectBranchId, testData.DeployBuild.ProjectBranchName, testData.DeployBuild.FileId, testData.DeployBuild.Version)).Returns(testData.DeployBuild);
 
-					testData.ProjectRepository.Setup(i=>i.GetProject(testData.DeployBuild.ProjectId)).Returns(testData.DeployProject);
-					testData.ProjectRepository.Setup(i=>i.GetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
-					testData.ProjectRepository.Setup(i=>i.GetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
+					testData.ProjectRepository.Setup(i => i.GetProject(testData.DeployBuild.ProjectId)).Returns(testData.DeployProject);
+					testData.ProjectRepository.Setup(i => i.TryGetProject(testData.DeployBuild.ProjectId)).Returns(testData.DeployProject);
+					testData.ProjectRepository.Setup(i => i.GetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
+					testData.ProjectRepository.Setup(i => i.TryGetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
+					testData.ProjectRepository.Setup(i => i.GetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
+					testData.ProjectRepository.Setup(i => i.TryGetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
 
 					testData.Sut = new BuildManager(testData.BuildRepository.Object, testData.FileRepository.Object, testData.ProjectRepository.Object);
 

@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using System.Linq;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
@@ -96,7 +97,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<KeyNotFoundException>(() => sut.GetProject(projectId));
+				Assert.Throws<RecordNotFoundException>(() => sut.GetProject(projectId));
 			}
 		}
 
@@ -153,7 +154,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				string projectId = Guid.NewGuid().ToString();
 				string branchName = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<KeyNotFoundException>(() => sut.CreateBranch(projectId, branchName));
+				Assert.Throws<RecordNotFoundException>(() => sut.CreateBranch(projectId, branchName));
 			}
 		}
 
@@ -190,7 +191,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<KeyNotFoundException>(() => sut.DeleteProject(projectId));
+				Assert.Throws<RecordNotFoundException>(() => sut.DeleteProject(projectId));
 			}
 		}
 
