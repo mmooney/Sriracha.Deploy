@@ -15,6 +15,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 		private readonly IDeployStateManager _deployStateManager;
 		private readonly IDeployRunner _deployRunner;
 		private readonly ISystemSettings _systemSettings;
+		private static volatile bool _isRunning = false;
 
 		public RunDeploymentJob(Logger logger, IDeployStateManager deployStateManager, IDeployRunner deployRunner, ISystemSettings systemSettings)
 		{
@@ -27,6 +28,18 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 		public void Execute(IJobExecutionContext context)
 		{
 			this._logger.Trace("Starting RunDeploymentJob.Execute");
+			lock(typeof(RunDeploymentJob))
+			{
+				if(_isRunning)
+				{
+					this._logger.Info("RunDeploymentJob already running");
+					return;
+				}
+				else 
+				{
+					_isRunning = true;
+				}
+			}
 			try 
 			{
 				var nextDeployment = this._deployStateManager.PopNextDeployment();
@@ -63,6 +76,10 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			catch(Exception err)
 			{
 				this._logger.ErrorException("RunDeploymentJob failed: " + err.ToString(), err);
+			}
+			finally
+			{
+				_isRunning = false;
 			}
 			this._logger.Trace("Done RunDeploymentJob.Execute");
 		}

@@ -50,6 +50,7 @@ namespace Sriracha.Deploy.NinjectModules
 			this.Bind<IDeployStateManager>().To<DeployStateManager>();
 			this.Bind<IJobScheduler>().To<JobScheduler>();
 			this.Bind<IZipper>().To<Zipper>();
+			this.Bind<IDataGenerator>().To<DataGenerator>();
 			this.Bind<ISystemSettings>().To<DefaultSystemSettings>();
 
 			this.Bind<IRunDeploymentJob>().To<RunDeploymentJob>();

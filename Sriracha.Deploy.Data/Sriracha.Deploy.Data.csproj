@@ -84,6 +84,8 @@
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />
+    <Compile Include="IDataGenerator.cs" />
+    <Compile Include="Impl\DataGenerator.cs" />
     <Compile Include="IUserIdentity.cs" />
     <Compile Include="NLogDBLogTarget.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
