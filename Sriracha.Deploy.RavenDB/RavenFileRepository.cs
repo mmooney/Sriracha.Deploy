@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MMDB.Shared;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -53,7 +54,12 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing file ID");
 			}
-			return this._documentSession.Load<DeployFile>(fileId);
+			var file = this._documentSession.Load<DeployFile>(fileId);
+			if(file == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployFile), "Id", fileId);
+			}
+			return file;
 		}
 
 		public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData)
