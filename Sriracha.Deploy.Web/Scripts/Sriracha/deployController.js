@@ -23,13 +23,32 @@
 	if ($routeParams.deployStateId) {
 		$scope.deployState = SrirachaResource.deployState.get({ id: $routeParams.deployStateId }, 
 			function () {
-				console.log($scope.deployState);
-				$scope.project = SrirachaResource.project.get({ id: $scope.deployState.projectId });
+				$scope.project = SrirachaResource.project.get({ id: $scope.deployState.projectId },
+					function () {
+						$scope.refreshStatus();
+					},
+					function (error) {
+						$scope.reportError(error);
+					});
 			},
 			function(error) {
 				$scope.reportError(error);
 			}
 		);
+	}
+
+	$scope.refreshStatus = function () {
+		console.log("hi");
+		$scope.deployState = SrirachaResource.deployState.get({ id: $routeParams.deployStateId },
+			function () {
+				console.log("hi2:" + $scope.deployState.status);
+				if ($scope.deployState.status == "NotStarted" || $scope.deployState.status == "InProcess") {
+					setTimeout($scope.refreshStatus, 10000);
+				}
+			},
+			function (error) {
+				$scope.reportError(error);
+			});
 	}
 
 	$scope.getEditEnvironmentUrl = function (environment) {
@@ -58,7 +77,6 @@
 			buildId: $scope.build.id,
 			machineIdList: _.pluck(selectedMachines, 'id')
 		};
-		console.log(saveParams);
 		$scope.deployRequestTemplate.$save(
 			saveParams,
 			function (result) {
