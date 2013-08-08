@@ -53,8 +53,9 @@
       <HintPath>..\packages\Autofac.Mvc3.2.6.3.862\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MMDB.Shared">
-      <HintPath>..\packages\MMDB.Shared.2.0.0.18\lib\net35\MMDB.Shared.dll</HintPath>
+    <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>

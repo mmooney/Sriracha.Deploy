@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using Autofac;
 using CommandLine;
 using CommandLine.Text;
+using MMDB.Shared;
 using Ninject;
 using NLog;
+using Sriracha.Deploy.AutofacModules;
+using Sriracha.Deploy.Data;
 
 namespace Sriracha.Deploy.Server
 {
@@ -32,14 +36,35 @@ namespace Sriracha.Deploy.Server
 			}
 		}
 
-		private static IKernel _kernel { get; set; }
+		//private static IKernel _kernel { get; set; }
+		private static IDIFactory _diFactory;
 		private static Logger _logger { get; set; }
 
 		static void Main(string[] args)
 		{
-			_kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+			switch(AppConfigOptions.DIContainer)
+			{
+				case DIContainer.Ninject:
+					{
+						var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+						_logger = kernel.Get<NLog.Logger>();
+						_diFactory = kernel.Get<IDIFactory>();
+					}
+					break;
+				case DIContainer.Autofac:
+					{
+						var builder = new ContainerBuilder();
+						builder.RegisterModule(new SrirachaAutofacorator());
+						builder.RegisterType<WinService>().AsSelf();
+						var container = builder.Build();
+						_logger = container.Resolve<NLog.Logger>();
+						_diFactory = container.Resolve<IDIFactory>();
+					}
+					break;
+				default:
+					throw new UnknownEnumValueException(AppConfigOptions.DIContainer);
+			}
 			SetupColorConsoleLogging();
-			_logger = _kernel.Get<NLog.Logger>();
 
 			var options = new CommandLineOptions();
 			if(!Parser.Default.ParseArguments(args, options))
@@ -52,7 +77,7 @@ namespace Sriracha.Deploy.Server
 				Console.WriteLine("\t-Starting in debug mode...");
 				try 
 				{
-					var service = _kernel.Get<WinService>();
+					var service = _diFactory.CreateInjectedObject<WinService>();
 					service.DebugStart();
 				}
 				catch(Exception err)
@@ -68,7 +93,7 @@ namespace Sriracha.Deploy.Server
 
 			else 
 			{
-				var service = _kernel.Get<WinService>();
+				var service = _diFactory.CreateInjectedObject<WinService>();
 				ServiceBase.Run(service);
 			}
 		}

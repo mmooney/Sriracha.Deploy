@@ -63,6 +63,8 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.Register(CreateScheduler).As<IScheduler>().SingleInstance();
 
 			builder.RegisterModule(new RavenDBAutofacModule());
+
+			this.SetupLogging(builder);
 		}
 
 		public static IScheduler CreateScheduler(IComponentContext context)
@@ -73,22 +75,29 @@ namespace Sriracha.Deploy.AutofacModules
 			return scheduler;
 		}
 
-		//private void SetupLogging(ContainerBuilder builder, IUserIdentity identity)
-		//{
-		//	var dbTarget = new NLogDBLogTarget(new AutofacDIFactory(), identity), 
-		//	dbTarget.Layout = "${message} ${exception:format=message,stacktrace:separator=\r\n}";
-		//	var loggingConfig = NLog.LogManager.Configuration;
-		//	if (loggingConfig == null)
-		//	{
-		//		loggingConfig = new NLog.Config.LoggingConfiguration();
-		//	}
-		//	loggingConfig.AddTarget("dbTarget", dbTarget);
-		//	var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
-		//	loggingConfig.LoggingRules.Add(rule);
-		//	NLog.LogManager.Configuration = loggingConfig;
+		private void SetupLogging(ContainerBuilder builder)
+		{
+			builder.Register(context =>
+					{
+						var identity = context.Resolve<IUserIdentity>();
+						var dbTarget = new NLogDBLogTarget(new AutofacDIFactory(context), identity);
+						dbTarget.Layout = "${message} ${exception:format=message,stacktrace:separator=\r\n}";
+						var loggingConfig = NLog.LogManager.Configuration;
+						if (loggingConfig == null)
+						{
+							loggingConfig = new NLog.Config.LoggingConfiguration();
+						}
+						loggingConfig.AddTarget("dbTarget", dbTarget);
+						var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+						loggingConfig.LoggingRules.Add(rule);
+						NLog.LogManager.Configuration = loggingConfig;
 
-		//	_logger = NLog.LogManager.GetCurrentClassLogger();
-		//	this.Bind<NLog.Logger>().ToMethod(ctx => _logger);
-		//}
+						var logger = NLog.LogManager.GetCurrentClassLogger();
+
+						return logger;
+					})
+					.As<NLog.Logger>()
+					.SingleInstance();
+		}
 	}
 }

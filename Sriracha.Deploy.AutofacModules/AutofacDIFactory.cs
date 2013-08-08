@@ -9,9 +9,9 @@ namespace Sriracha.Deploy.AutofacModules
 {
 	public class AutofacDIFactory : IDIFactory
 	{
-		private IContainer _container;
+		private IComponentContext _container;
 
-		public AutofacDIFactory(IContainer container)
+		public AutofacDIFactory(IComponentContext container)
 		{
 			_container = DIHelper.VerifyParameter(container);
 		}

@@ -9,6 +9,8 @@ using Sriracha.Deploy.Data.Tasks;
 using System.Reflection;
 using System.IO;
 using MMDB.Shared;
+using Autofac;
+using Sriracha.Deploy.AutofacModules;
 
 namespace Sriracha.Deploy.CommandLine
 {
@@ -78,15 +80,34 @@ namespace Sriracha.Deploy.CommandLine
 
 	public class Program
 	{
-		private static IKernel Kernel { get; set; }
-		private static NLog.Logger Logger { get; set; }
+		private static IDIFactory _diFactory;
+		private static NLog.Logger _logger;
 
 		static void Main(string[] args)
 		{
-			Program.Kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+			switch(AppConfigOptions.DIContainer)
+			{
+				case DIContainer.Ninject:
+					{
+						var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+						_diFactory = kernel.Get<IDIFactory>();
+					}
+					break;
+				case DIContainer.Autofac:
+					{
+						var builder = new ContainerBuilder();
+						builder.RegisterModule(new SrirachaAutofacorator());
+						var container = builder.Build();
+						_logger = container.Resolve<NLog.Logger>();
+						_diFactory = container.Resolve<IDIFactory>();
+					}
+					break;
+				default:
+					throw new UnknownEnumValueException(AppConfigOptions.DIContainer);
+			}
 			SetupColorConsoleLogging();
 			bool pause = false;
-			Program.Logger = Program.Kernel.Get<NLog.Logger>();
+			Program._logger = _diFactory.CreateInjectedObject<NLog.Logger>();
 			try 
 			{
 				var options = new CommandLineOptions();
@@ -163,7 +184,7 @@ namespace Sriracha.Deploy.CommandLine
 			}
 			catch(Exception err)
 			{
-				Program.Logger.ErrorException("Error: " + err.ToString(), err);
+				Program._logger.ErrorException("Error: " + err.ToString(), err);
 			}
 			if(pause)
 			{
@@ -191,43 +212,43 @@ namespace Sriracha.Deploy.CommandLine
 
 		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version)
 		{
-			var publisher = Program.Kernel.Get<IBuildPublisher>();
+			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
 			publisher.PublishFile(filePath, apiUrl, projectId, componentId, branchId, version);
 		}
 
 		private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)
 		{
-			var publisher = Program.Kernel.Get<IBuildPublisher>();
+			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
 			publisher.PublishDirectory(directoryPath, apiUrl, projectId, componentId, branchId, version);
 		}
 
 		private static void ConfigureMachine(string machineId, string configName, string configValue)
 		{
-			var pm = Program.Kernel.Get<IProjectManager>();
+			var pm = _diFactory.CreateInjectedObject<IProjectManager>();
 			pm.UpdateMachineConfig(machineId, configName, configValue);
 		}
 
 		private static void ConfigureEnvironment(string environmentId, string componentId, string configName, string configValue)
 		{
-			var pm = Program.Kernel.Get<IProjectManager>();
+			var pm = _diFactory.CreateInjectedObject<IProjectManager>();
 			pm.UpdateEnvironmentComponentConfig(environmentId, componentId, configName, configValue);
 		}
 
 		private static void Deploy(string environmentID, string buildID)
 		{
-			Program.Logger.Info("Executing deployment request for build " + buildID + " to environment " + environmentID);
+			Program._logger.Info("Executing deployment request for build " + buildID + " to environment " + environmentID);
 
-			var deploymentRunner = Program.Kernel.Get<IDeployRunner>();
+			var deploymentRunner = _diFactory.CreateInjectedObject<IDeployRunner>();
 			var runtimeSystemSettings = new RuntimeSystemSettings
 			{
 				LocalDeployDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Guid.NewGuid().ToString())
 			};
 			Directory.CreateDirectory(runtimeSystemSettings.LocalDeployDirectory);
-			Program.Logger.Info("\tUsing path: " + runtimeSystemSettings.LocalDeployDirectory);
+			Program._logger.Info("\tUsing path: " + runtimeSystemSettings.LocalDeployDirectory);
 
 			deploymentRunner.Deploy(null, environmentID, buildID, runtimeSystemSettings);
 
-			Program.Logger.Info("Done executing deployment request for build " + buildID + " to environment " + environmentID);
+			Program._logger.Info("Done executing deployment request for build " + buildID + " to environment " + environmentID);
 		}
 
 		private static void SetupColorConsoleLogging()

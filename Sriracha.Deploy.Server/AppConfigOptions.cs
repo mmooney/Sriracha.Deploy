@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
 
-namespace Sriracha.Deploy.Web
+namespace Sriracha.Deploy.Server
 {
 	public enum DIContainer
 	{
@@ -11,14 +11,11 @@ namespace Sriracha.Deploy.Web
 		Autofac
 	}
 
-	public static class WebConfigOptions
+	public static class AppConfigOptions
 	{
 		public static DIContainer DIContainer
 		{
-			get 
-			{
-				return Web.DIContainer.Autofac;
-			}
+			get { return Server.DIContainer.Autofac; }
 		}
 	}
 }
