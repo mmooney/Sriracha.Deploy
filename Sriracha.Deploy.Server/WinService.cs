@@ -29,6 +29,7 @@ namespace Sriracha.Deploy.Server
 
 		protected override void OnStop()
 		{
+			this._jobScheduler.StopJobs();
 		}
 
 		public void DebugStart()

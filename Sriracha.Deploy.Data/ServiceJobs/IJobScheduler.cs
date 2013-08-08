@@ -8,5 +8,6 @@ namespace Sriracha.Deploy.Data.ServiceJobs
 	public interface IJobScheduler
 	{
 		void StartJobs();
+		void StopJobs();
 	}
 }

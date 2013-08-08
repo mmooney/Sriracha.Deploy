@@ -25,14 +25,23 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 		public void StartJobs()
 		{
 			this._logger.Info("Starting jobs");
-			this._logger.Info("Done starting jobs");
 
 			this.ScheduleJob("RunDeployment", typeof(IRunDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
 			this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
 
 			this._quartzScheduler.Start();
+
+			this._logger.Info("Done starting jobs");
 		}
 
+		public void StopJobs()
+		{
+			this._logger.Info("Stopping jobs");
+
+			_quartzScheduler.Shutdown(true);
+
+			this._logger.Info("Done stopping jobs");
+		}
 		private void ScheduleJob(string jobName, Type jobType, int intervalSeconds)
 		{
 			var jobDetail = new JobDetailImpl(jobName, jobType);
