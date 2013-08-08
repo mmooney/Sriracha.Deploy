@@ -1,5 +1,5 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(Sriracha.Deploy.Web.App_Start.NinjectWebCommon), "Stop")]
+//[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.NinjectWebCommon), "Start")]
+//[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(Sriracha.Deploy.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace Sriracha.Deploy.Web.App_Start
 {
@@ -26,9 +26,12 @@ namespace Sriracha.Deploy.Web.App_Start
         /// </summary>
         public static void Start() 
         {
-            DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
-            DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            bootstrapper.Initialize(CreateKernel);
+			if(WebConfigOptions.DIContainer == DIContainer.Ninject)
+			{
+				DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
+				DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
+				bootstrapper.Initialize(CreateKernel);
+			}
         }
         
         /// <summary>
@@ -36,7 +39,10 @@ namespace Sriracha.Deploy.Web.App_Start
         /// </summary>
         public static void Stop()
         {
-            bootstrapper.ShutDown();
+			if(WebConfigOptions.DIContainer == DIContainer.Ninject)
+			{
+				bootstrapper.ShutDown();
+			}
         }
 
 		public static IContainerAdapter CreateServiceStackAdapter()

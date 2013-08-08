@@ -17,7 +17,7 @@ using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Web.Services;
 using Sriracha.Deploy.Web.Services.SystemLog;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
+//[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
 
 //IMPORTANT: Add the line below to MvcApplication.RegisterRoutes(RouteCollection) in the Global.asax:
 //routes.IgnoreRoute("api/{*pathInfo}"); 
@@ -42,7 +42,9 @@ namespace Sriracha.Deploy.Web.App_Start
 		: AppHostBase
 	{
 		public AppHost() //Tell ServiceStack the name and where to find your web services
-			: base("Sriracha REST API", typeof(ProjectService).Assembly) { }
+			: base("Sriracha REST API", typeof(ProjectService).Assembly) 
+			{ 
+			}
 
 		public override void Configure(Funq.Container container)
 		{
@@ -76,7 +78,7 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<TaskMetadata>("/taskMetadata")
 				.Add<SystemLogRequest>("/systemlog");
 
-			container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
+			//container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
 			
 			//Uncomment to change the default ServiceStack configuration
 			//SetConfig(new EndpointHostConfig {

@@ -1,4 +1,6 @@
-﻿ngSriracha.config(function ($routeProvider) {
+﻿ngSriracha.config(function ($routeProvider, SrirachaNavigatorProvider) {
+	var navigator = SrirachaNavigatorProvider.$get();
+	console.log(navigator.deployment.batchRequest.clientUrl());
 	$routeProvider
 		.when("/", {
 			templateUrl: "/templates/home-template.html",

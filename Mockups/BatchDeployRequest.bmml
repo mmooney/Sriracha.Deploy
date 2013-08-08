@@ -1,0 +1,99 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1471" measuredH="905" mockupW="1148" mockupH="846">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="323" y="59" w="1148" h="846" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Welcome%20to%20the%20Application%21%0Ahttp%3A//deployApp.com/%23/project/XYX-123</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Title" x="398" y="164" w="-1" h="-1" measuredW="493" measuredH="43" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Request%20Batch%20Deployment</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::BreadCrumbs" x="398" y="213" w="-1" h="-1" measuredW="607" measuredH="24" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Home%20%3E%20Sample%20Project%201%20%3E%20Dev%20Cycle%201%20-%20User%20Website%20%3E%20v4.3.5.5820%20%3E%20Submit%20Deployment%20%28QA%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="59" controlTypeID="com.balsamiq.mockups::Button" x="393" y="246" w="-1" h="-1" measuredW="149" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Copy%20my%20last%20request</text>
+      </controlProperties>
+    </control>
+    <control controlID="61" controlTypeID="com.balsamiq.mockups::FieldSet" x="383" y="565" w="471" h="209" measuredW="200" measuredH="170" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Add%20Components</text>
+      </controlProperties>
+    </control>
+    <control controlID="62" controlTypeID="com.balsamiq.mockups::ComboBox" x="464" y="591" w="-1" h="-1" measuredW="82" measuredH="24" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Project%201</text>
+      </controlProperties>
+    </control>
+    <control controlID="63" controlTypeID="com.balsamiq.mockups::Label" x="412" y="593" w="-1" h="-1" measuredW="46" measuredH="21" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Project%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="64" controlTypeID="com.balsamiq.mockups::Label" x="412" y="622" w="-1" h="-1" measuredW="40" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Branch</text>
+      </controlProperties>
+    </control>
+    <control controlID="65" controlTypeID="com.balsamiq.mockups::ComboBox" x="464" y="620" w="-1" h="-1" measuredW="64" measuredH="24" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Trunk</text>
+      </controlProperties>
+    </control>
+    <control controlID="66" controlTypeID="com.balsamiq.mockups::CheckBox" x="505" y="658" w="-1" h="-1" measuredW="97" measuredH="22" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Component%201</text>
+      </controlProperties>
+    </control>
+    <control controlID="67" controlTypeID="com.balsamiq.mockups::Label" x="412" y="659" w="-1" h="-1" measuredW="78" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Components%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="68" controlTypeID="com.balsamiq.mockups::ComboBox" x="617" y="657" w="-1" h="-1" measuredW="127" measuredH="24" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>v1.2.3.4%20%28Latest%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="69" controlTypeID="com.balsamiq.mockups::CheckBox" x="505" y="680" w="-1" h="-1" measuredW="100" measuredH="22" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Component%202</text>
+      </controlProperties>
+    </control>
+    <control controlID="70" controlTypeID="com.balsamiq.mockups::ComboBox" x="617" y="679" w="-1" h="-1" measuredW="127" measuredH="24" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>v1.2.3.4%20%28Latest%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="71" controlTypeID="com.balsamiq.mockups::CheckBox" x="505" y="702" w="-1" h="-1" measuredW="100" measuredH="22" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Component%203</text>
+      </controlProperties>
+    </control>
+    <control controlID="72" controlTypeID="com.balsamiq.mockups::ComboBox" x="617" y="701" w="-1" h="-1" measuredW="127" measuredH="24" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>v1.2.3.4%20%28Latest%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="73" controlTypeID="com.balsamiq.mockups::CheckBox" x="505" y="724" w="-1" h="-1" measuredW="101" measuredH="22" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Component%204</text>
+      </controlProperties>
+    </control>
+    <control controlID="74" controlTypeID="com.balsamiq.mockups::ComboBox" x="617" y="724" w="-1" h="-1" measuredW="127" measuredH="24" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>v1.2.3.4%20%28Latest%29</text>
+      </controlProperties>
+    </control>
+    <control controlID="75" controlTypeID="com.balsamiq.mockups::DataGrid" x="396" y="298" w="-1" h="-1" measuredW="380" measuredH="231" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Execution%20Order%2CProject%2CBranch%2CComponent%2CVersion%0A1%2C%20Project%201%2CTrunk%2CComponent%201%2C%20v1.2.3.4%0A1%2C%20Project%201%2CTrunk%2CComponent%202%2C%20v1.2.3.4%0A1%2C%20Project%201%2CTrunk%2CComponent%201%2C%20v1.2.3.4%0A1%2C%20Project%203%2CTrunk%2CComponent%201%2C%20v1.2.3.4%0A1%2C%20Project%203%2CTrunk%2CComponent%202%2C%20v1.2.3.4%0A1%2C%20Project%203%2CTrunk%2CComponent%203%2C%20v1.2.3.4%0A1%2C%20Project%205%2CTrunk%2CComponent%201%2C%20v1.2.3.4</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

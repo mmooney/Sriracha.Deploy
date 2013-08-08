@@ -129,6 +129,10 @@ Sriracha.Navigation = {
 	},
 
 	Deployment: {
+		BatchRequestUrl: "/deploy/batchRequest",
+		BatchRequest: function() {
+			Sriracha.Navigation.GoTo(this.BatchRequestUrl);
+		},
 		SubmitUrl: "/deploy/submit/:buildId/:environmentId",
 		Submit: function (buildId, environmentId) {
 			Sriracha.Navigation.GoTo(this.SubmitUrl, { buildId: buildId, environmentId: environmentId });

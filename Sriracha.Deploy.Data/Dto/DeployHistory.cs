@@ -9,6 +9,8 @@ namespace Sriracha.Deploy.Data.Dto
 	public enum EnumDeployStatus
 	{
 		Unkown,
+		[EnumDisplayValue("Requested")]
+		Requested,
 		[EnumDisplayValue("Not Started")]
 		NotStarted,
 		[EnumDisplayValue("In Process")]
