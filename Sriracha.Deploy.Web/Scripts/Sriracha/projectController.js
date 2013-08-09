@@ -110,7 +110,6 @@
 		if (confirm("Are you SURE you want to delete this machine (" + machine.machineName + ")?")) {
 			environmentComponent.machineList = _.reject(environmentComponent.machineList, function (x) { return x.id == machine.id; });
 		}
-		console.log(environmentComponent.machineList);
 	}
 
 	$scope.editConfigurationItem = function (configItemDefinition, configurationValueList) {

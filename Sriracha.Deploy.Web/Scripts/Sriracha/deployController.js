@@ -38,10 +38,8 @@
 	}
 
 	$scope.refreshStatus = function () {
-		console.log("hi");
 		$scope.deployState = SrirachaResource.deployState.get({ id: $routeParams.deployStateId },
 			function () {
-				console.log("hi2:" + $scope.deployState.status);
 				if ($scope.deployState.status == "NotStarted" || $scope.deployState.status == "InProcess") {
 					setTimeout($scope.refreshStatus, 10000);
 				}

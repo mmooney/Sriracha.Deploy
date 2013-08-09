@@ -59,6 +59,7 @@ ngSriracha.directive("systemLogList", function () {
 
 ngSriracha.controller("HomeController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
 	$scope.navigator = SrirachaNavigator;
+	console.log($scope.navigator.deployment.batchRequest.clientUrl());
 	$scope.projectList = SrirachaResource.project.query({});
 	$scope.buildList = SrirachaResource.build.query({});
 	$scope.getCreateProjectUrl = function () {
