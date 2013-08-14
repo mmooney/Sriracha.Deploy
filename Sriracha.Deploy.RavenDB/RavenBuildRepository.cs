@@ -19,9 +19,22 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession = DIHelper.VerifyParameter(documentSession);
 		}
 
-		public IEnumerable<DeployBuild> GetBuildList()
+		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
 		{
-			return this._documentSession.Query<DeployBuild>().ToList();
+			var query = this._documentSession.Query<DeployBuild>().AsQueryable();
+			if(!string.IsNullOrEmpty(projectId))
+			{
+				query = query.Where(i=>i.ProjectId == projectId);
+			}
+			if(!string.IsNullOrEmpty(branchId)) 
+			{
+				query = query.Where(i=>i.ProjectBranchId == branchId);
+			}
+			if(!string.IsNullOrEmpty(componentId))
+			{
+				query = query.Where(i=>i.ProjectComponentId == componentId);
+			}
+			return query.ToList();
 		}
 
 		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)

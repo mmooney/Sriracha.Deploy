@@ -229,7 +229,6 @@
 	}
 
 	$scope.saveDeploymentStep = function () {
-		console.log($scope.deploymentStep.taskOptions);
 		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);
 		var saveParams = {
 			projectId: $routeParams.projectId, 

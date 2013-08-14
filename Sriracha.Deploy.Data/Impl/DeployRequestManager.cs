@@ -50,5 +50,16 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList);
 		}
+
+
+		public List<DeployBatchRequest> GetBatchRequestList()
+		{
+			return _deployRepository.GetBatchRequestList();
+		}
+
+		public DeployBatchRequest GetBatchRequest(string id)
+		{
+			return _deployRepository.GetBatchRequest(id);
+		}
 	}
 }

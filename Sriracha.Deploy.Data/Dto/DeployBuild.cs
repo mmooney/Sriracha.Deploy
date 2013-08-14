@@ -16,5 +16,13 @@ namespace Sriracha.Deploy.Data.Dto
 		public string ProjectComponentName { get; set; }
 		public string FileId { get; set; }
 		public string Version { get; set; }
+
+		public string DisplayValue
+		{
+			get 
+			{
+				return string.Format("{0} - {1} - {2} - {3}", this.ProjectName, this.ProjectBranchName, this.ProjectComponentName, this.Version);
+			}
+		}
 	}
 }

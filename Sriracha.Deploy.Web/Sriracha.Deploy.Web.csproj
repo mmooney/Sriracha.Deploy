@@ -195,6 +195,7 @@
     <Compile Include="Services\ComponentConfigurationService.cs" />
     <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
+    <Compile Include="Services\Deployment\BatchRequestService.cs" />
     <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
@@ -316,6 +317,8 @@
     <Content Include="Scripts\angular\ng-upload.min.js" />
     <Content Include="Scripts\sriracha\buildController.js" />
     <Content Include="Scripts\sriracha\deployController.js" />
+    <Content Include="Scripts\sriracha\deployment\deployBatchRequestController.js" />
+    <Content Include="Scripts\sriracha\homeController.js" />
     <Content Include="Scripts\sriracha\navigation.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
@@ -332,9 +335,10 @@
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\sriracha\navigationFactory.js" />
+    <Content Include="Scripts\sriracha\navigator.js" />
     <Content Include="Scripts\sriracha\ngSriracha.js" />
     <Content Include="Scripts\sriracha\projectController.js" />
+    <Content Include="Scripts\sriracha\resources.js" />
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
     <Content Include="Scripts\sriracha\systemLogController.js" />
@@ -347,6 +351,7 @@
     <Content Include="Templates\build-submit-template.html" />
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
+    <Content Include="Templates\deployment-batchRequest-template.html" />
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment-submit-template.html" />
     <Content Include="Templates\deployment-view-template.html" />

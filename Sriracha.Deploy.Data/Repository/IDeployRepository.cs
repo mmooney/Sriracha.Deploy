@@ -15,5 +15,7 @@ namespace Sriracha.Deploy.Data.Repository
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
+		List<DeployBatchRequest> GetBatchRequestList();
+		DeployBatchRequest GetBatchRequest(string id);
 	}
 }

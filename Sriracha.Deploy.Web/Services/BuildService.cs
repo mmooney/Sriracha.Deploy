@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			else 
 			{
-				return _buildManager.GetBuildList();
+				return _buildManager.GetBuildList(request.ProjectId, request.ProjectBranchId, request.ProjectComponentId);
 			}
 		}
 

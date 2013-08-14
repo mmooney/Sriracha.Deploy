@@ -20,9 +20,9 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
-		public IEnumerable<DeployBuild> GetBuildList()
+		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
 		{
-			return this._buildRepository.GetBuildList();
+			return this._buildRepository.GetBuildList(projectId, branchId, componentId);
 		}
 
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, string version)

@@ -103,6 +103,10 @@
 		})
 
 		//Deployments
+		.when(navigator.deployment.batchRequest.url, {
+			templateUrl: "templates/deployment-batchRequest-template.html",
+			controller: "deployBatchRequestController"
+		})
 		.when(Sriracha.Navigation.Deployment.SubmitUrl, {
 			templateUrl: "templates/deployment-submit-template.html",
 			controller: "DeployController"

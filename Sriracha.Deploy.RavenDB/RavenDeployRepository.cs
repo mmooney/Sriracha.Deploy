@@ -131,5 +131,16 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 			return state;
 		}
+
+
+		public List<DeployBatchRequest> GetBatchRequestList()
+		{
+			return _documentSession.Query<DeployBatchRequest>().ToList();
+		}
+
+		public DeployBatchRequest GetBatchRequest(string id)
+		{
+			return _documentSession.Load<DeployBatchRequest>(id);
+		}
 	}
 }

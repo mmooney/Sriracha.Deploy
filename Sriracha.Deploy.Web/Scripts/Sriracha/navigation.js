@@ -1,5 +1,4 @@
-﻿
-var Sriracha = Sriracha || {};
+﻿var Sriracha = Sriracha || {};
 
 Sriracha.Navigation = {
 	HomeUrl: "/#",

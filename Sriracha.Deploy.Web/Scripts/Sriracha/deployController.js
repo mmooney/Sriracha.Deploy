@@ -1,4 +1,5 @@
 ﻿ngSriracha.controller("DeployController", function ($scope, $routeParams, SrirachaResource) {
+	console.log("hi1");
 	if ($routeParams.buildId) {
 		$scope.build = SrirachaResource.build.get({ buildId: $routeParams.buildId }, function () {
 			$scope.project = SrirachaResource.project.get({ id: $scope.build.projectId }, function () {
