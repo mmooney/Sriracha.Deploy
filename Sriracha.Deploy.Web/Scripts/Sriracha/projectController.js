@@ -1,4 +1,5 @@
-﻿ngSriracha.controller("ProjectController", function ($scope, $routeParams, SrirachaResource) {
+﻿ngSriracha.controller("ProjectController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.projectId) {
 		$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
 			if ($routeParams.componentId && $scope.project.componentList) {

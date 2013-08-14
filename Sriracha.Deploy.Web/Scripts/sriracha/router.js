@@ -7,37 +7,41 @@
 		})
 
 		//Projects
-		.when(Sriracha.Navigation.Project.CreateUrl, {
+		.when(navigator.project.list.url, {
+			templateUrl: "templates/project-list-template.html",
+			controller: "ProjectController",
+		})
+		.when(navigator.project.create.url, {
 			templateUrl: "templates/project-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Project.ViewUrl, {
+		.when(navigator.project.view.url, {
 			templateUrl: "templates/project-view-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Project.EditUrl, {
+		.when(navigator.project.edit.url, {
 			templateUrl: "templates/project-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Project.DeleteUrl, {
+		.when(navigator.project.delete.url, {
 			templateUrl: "templates/project-delete-template.html",
 			controller: "ProjectController"
 		})
 
 		//Components
-		.when(Sriracha.Navigation.Component.CreateUrl, {
+		.when(navigator.component.create.url, {
 			templateUrl: "templates/component-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Component.ViewUrl, {
+		.when(navigator.component.view.url, {
 			templateUrl: "templates/component-view-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Component.EditUrl, {
+		.when(navigator.component.edit.url, {
 			templateUrl: "templates/component-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Component.DeleteUrl, {
+		.when(navigator.component.delete.url, {
 			templateUrl: "templates/component-delete-template.html",
 			controller: "ProjectController"
 		})

@@ -1,4 +1,4 @@
-﻿<h2>Project {{project.projectName}} <a href="#/project/edit/{{project.id}}">(edit)</a></h2> 
+﻿<h2>Project {{project.projectName}} <a ng-href="{{navigator.project.edit.clientUrl(project.id)}}">(edit)</a></h2> 
 
 <hr />
 
@@ -11,16 +11,16 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="component in project.componentList">
-			<td><a ng-href="{{getViewComponentUrl(component)}}">{{component.componentName}}</a></td>
-			<td><a class="btn btn-primary" ng-href="{{getEditComponentUrl(component)}}">Edit</a></td>
-			<td><a class="btn btn-danger" ng-href="{{getDeleteComponentUrl(component)}}">Delete</a></td>
+			<td><a ng-href="{{navigator.component.view.clientUrl(component.projectId, component.id)}}">{{component.componentName}}</a></td>
+			<td><a class="btn btn-primary" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">Edit</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.component.delete.clientUrl(component.projectId, component.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.componentList">
 	<em>No Components</em>
 </div>
-<a class="btn btn-primary" ng-href="{{getCreateComponentUrl(project)}}">Create Component</a>
+<a class="btn btn-primary" ng-href="{{navigator.component.create.clientUrl(project.id)}}">Create Component</a>
 
 <hr />
 
