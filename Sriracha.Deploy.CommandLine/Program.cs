@@ -154,7 +154,7 @@ namespace Sriracha.Deploy.CommandLine
 					case ActionType.Publish:
 						VerifyParameter(options.ApiUrl,"Publish", "ApiUrl", "apiurl", 'a');
 						VerifyParameter(options.ProjectId,"Publish", "ProjectId", "project", 'p');
-						VerifyParameter(options.BranchId,"Publish", "BranchId", "branch");
+						//VerifyParameter(options.BranchId,"Publish", "BranchId", "branch");
 						VerifyParameter(options.ComponentId,"Publish", "ComponentId", "component", 'c');
 						VerifyParameter(options.Version,"Publish", "Version", "version", 'v');
 						if(!string.IsNullOrWhiteSpace(options.File))

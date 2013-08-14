@@ -84,6 +84,11 @@ namespace Sriracha.Deploy.Data.Impl
 				FileData = File.ReadAllBytes(zipPath),
 				FileName = Path.GetFileName(zipPath)
 			};
+			if(string.IsNullOrWhiteSpace(branchId) && !string.IsNullOrWhiteSpace(version))
+			{
+				branchId = version.Substring(0, version.LastIndexOf("."));
+				_logger.Info("No branch provided, defaulting to " + branchId);
+			}
 			string fileId;
 			using (var client = new JsonServiceClient(url))
 			{
