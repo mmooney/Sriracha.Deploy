@@ -16,6 +16,9 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Web.Services;
 using Sriracha.Deploy.Web.Services.SystemLog;
+using System.Web;
+using ServiceStack.ServiceHost;
+using Elmah;
 
 //[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
 
@@ -31,15 +34,7 @@ using Sriracha.Deploy.Web.Services.SystemLog;
 
 namespace Sriracha.Deploy.Web.App_Start
 {
-	//A customizeable typed UserSession that can be extended with your own properties
-	//To access ServiceStack's Session, Cache, etc from MVC Controllers inherit from ControllerBase<CustomUserSession>
-	public class CustomUserSession : AuthUserSession
-	{
-		public string CustomProperty { get; set; }
-	}
-
-	public class AppHost
-		: AppHostBase
+	public class AppHost : AppHostBase
 	{
 		public AppHost() //Tell ServiceStack the name and where to find your web services
 			: base("Sriracha REST API", typeof(ProjectService).Assembly) 
@@ -89,6 +84,15 @@ namespace Sriracha.Deploy.Web.App_Start
 
 			//Set MVC to use the same Funq IOC as ServiceStack
 			//ControllerBuilder.Current.SetControllerFactory(new FunqControllerFactory(container));
+			this.ServiceExceptionHandler = (request, exception) =>
+			{
+				//pass the exception over to Elmah
+				var context = HttpContext.Current;
+				Elmah.ErrorLog.GetDefault(context).Log(new Error(exception, context));
+
+				//call default exception handler or prepare your own custom response
+				return DtoUtils.HandleException(this, request, exception);
+			};
 		}
 
 		/* Uncomment to enable ServiceStack Authentication and CustomUserSession

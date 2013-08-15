@@ -1,0 +1,177 @@
+﻿<error errorId="c3d73736-dfe9-4f4f-b28e-4d428c927edc" application="/LM/W3SVC/9/ROOT" host="MOONEYLAPTOP8" type="System.Web.HttpException" message="The controller for path '/favicon.ico' was not found or does not implement IController." source="System.Web.Mvc" detail="System.Web.HttpException (0x80004005): The controller for path '/favicon.ico' was not found or does not implement IController.&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.GetControllerInstance(RequestContext requestContext, Type controllerType)&#xD;&#xA;   at System.Web.Mvc.DefaultControllerFactory.CreateController(RequestContext requestContext, String controllerName)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.ProcessRequestInit(HttpContextBase httpContext, IController&amp; controller, IControllerFactory&amp; factory)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContextBase httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.BeginProcessRequest(HttpContext httpContext, AsyncCallback callback, Object state)&#xD;&#xA;   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.BeginProcessRequest(HttpContext context, AsyncCallback cb, Object extraData)&#xD;&#xA;   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()&#xD;&#xA;   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean&amp; completedSynchronously)" user="tdfd9247b4-4a98-4584-a42c-59b42aeed2c8" time="2013-08-15T14:08:51.2344572Z" statusCode="404">
+  <serverVariables>
+    <item name="ALL_HTTP">
+      <value string="HTTP_CONNECTION:keep-alive&#xD;&#xA;HTTP_ACCEPT:*/*&#xD;&#xA;HTTP_ACCEPT_ENCODING:gzip,deflate,sdch&#xD;&#xA;HTTP_ACCEPT_LANGUAGE:en-US,en;q=0.8&#xD;&#xA;HTTP_COOKIE:__test=1; ASP.NET_SessionId=wyoxiy452yfko5553jsclrb2; ImpersonationRealUserName=admin; __ngDebug=true; .ASPXAUTH=9647EAE42320BA4643FCC7E2BD051AC06184295EB5EB21B1C0BBC2232A8117A1FA71EAD3D0FC75B5016823632BC77CFA3872E0828F6BD09651D1A2980CF82402D0876CE1F3314E3627B43A65A26E402A74A14F73C6F232926432CC20873F5F3BEBC255D18975749FF1F9CE091EB0EEE78A44FDC2971866BD80F55C3D50949364469A2BD839BA5AD71CD43F834ED4AAB50E6E2243AFF89FCFFE5FD30E09E43CBB91B0245D8CCD1B30ADE8CF04EE96F609C05E44EA3A017B0EA0ADE473C55A8CA9; JSESSIONID=3A0FF2E2BBA475ABD79C316529F7E44A; RememberMe=92668751^1#8946790299585921603&#xD;&#xA;HTTP_HOST:localhost:55052&#xD;&#xA;HTTP_USER_AGENT:Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36&#xD;&#xA;" />
+    </item>
+    <item name="ALL_RAW">
+      <value string="Connection: keep-alive&#xD;&#xA;Accept: */*&#xD;&#xA;Accept-Encoding: gzip,deflate,sdch&#xD;&#xA;Accept-Language: en-US,en;q=0.8&#xD;&#xA;Cookie: __test=1; ASP.NET_SessionId=wyoxiy452yfko5553jsclrb2; ImpersonationRealUserName=admin; __ngDebug=true; .ASPXAUTH=9647EAE42320BA4643FCC7E2BD051AC06184295EB5EB21B1C0BBC2232A8117A1FA71EAD3D0FC75B5016823632BC77CFA3872E0828F6BD09651D1A2980CF82402D0876CE1F3314E3627B43A65A26E402A74A14F73C6F232926432CC20873F5F3BEBC255D18975749FF1F9CE091EB0EEE78A44FDC2971866BD80F55C3D50949364469A2BD839BA5AD71CD43F834ED4AAB50E6E2243AFF89FCFFE5FD30E09E43CBB91B0245D8CCD1B30ADE8CF04EE96F609C05E44EA3A017B0EA0ADE473C55A8CA9; JSESSIONID=3A0FF2E2BBA475ABD79C316529F7E44A; RememberMe=92668751^1#8946790299585921603&#xD;&#xA;Host: localhost:55052&#xD;&#xA;User-Agent: Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36&#xD;&#xA;" />
+    </item>
+    <item name="APPL_MD_PATH">
+      <value string="/LM/W3SVC/9/ROOT" />
+    </item>
+    <item name="APPL_PHYSICAL_PATH">
+      <value string="C:\Projects\Sriracha.Deploy\Sriracha.Deploy.Web\" />
+    </item>
+    <item name="AUTH_TYPE">
+      <value string="Forms" />
+    </item>
+    <item name="AUTH_USER">
+      <value string="tdfd9247b4-4a98-4584-a42c-59b42aeed2c8" />
+    </item>
+    <item name="AUTH_PASSWORD">
+      <value string="*****" />
+    </item>
+    <item name="LOGON_USER">
+      <value string="tdfd9247b4-4a98-4584-a42c-59b42aeed2c8" />
+    </item>
+    <item name="REMOTE_USER">
+      <value string="tdfd9247b4-4a98-4584-a42c-59b42aeed2c8" />
+    </item>
+    <item name="CERT_COOKIE">
+      <value string="" />
+    </item>
+    <item name="CERT_FLAGS">
+      <value string="" />
+    </item>
+    <item name="CERT_ISSUER">
+      <value string="" />
+    </item>
+    <item name="CERT_KEYSIZE">
+      <value string="" />
+    </item>
+    <item name="CERT_SECRETKEYSIZE">
+      <value string="" />
+    </item>
+    <item name="CERT_SERIALNUMBER">
+      <value string="" />
+    </item>
+    <item name="CERT_SERVER_ISSUER">
+      <value string="" />
+    </item>
+    <item name="CERT_SERVER_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="CERT_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="CONTENT_LENGTH">
+      <value string="0" />
+    </item>
+    <item name="CONTENT_TYPE">
+      <value string="" />
+    </item>
+    <item name="GATEWAY_INTERFACE">
+      <value string="CGI/1.1" />
+    </item>
+    <item name="HTTPS">
+      <value string="off" />
+    </item>
+    <item name="HTTPS_KEYSIZE">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SECRETKEYSIZE">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SERVER_ISSUER">
+      <value string="" />
+    </item>
+    <item name="HTTPS_SERVER_SUBJECT">
+      <value string="" />
+    </item>
+    <item name="INSTANCE_ID">
+      <value string="9" />
+    </item>
+    <item name="INSTANCE_META_PATH">
+      <value string="/LM/W3SVC/9" />
+    </item>
+    <item name="LOCAL_ADDR">
+      <value string="::1" />
+    </item>
+    <item name="PATH_INFO">
+      <value string="/favicon.ico" />
+    </item>
+    <item name="PATH_TRANSLATED">
+      <value string="C:\Projects\Sriracha.Deploy\Sriracha.Deploy.Web\favicon.ico" />
+    </item>
+    <item name="QUERY_STRING">
+      <value string="" />
+    </item>
+    <item name="REMOTE_ADDR">
+      <value string="::1" />
+    </item>
+    <item name="REMOTE_HOST">
+      <value string="::1" />
+    </item>
+    <item name="REMOTE_PORT">
+      <value string="53465" />
+    </item>
+    <item name="REQUEST_METHOD">
+      <value string="GET" />
+    </item>
+    <item name="SCRIPT_NAME">
+      <value string="/favicon.ico" />
+    </item>
+    <item name="SERVER_NAME">
+      <value string="localhost" />
+    </item>
+    <item name="SERVER_PORT">
+      <value string="55052" />
+    </item>
+    <item name="SERVER_PORT_SECURE">
+      <value string="0" />
+    </item>
+    <item name="SERVER_PROTOCOL">
+      <value string="HTTP/1.1" />
+    </item>
+    <item name="SERVER_SOFTWARE">
+      <value string="Microsoft-IIS/8.0" />
+    </item>
+    <item name="URL">
+      <value string="/favicon.ico" />
+    </item>
+    <item name="HTTP_CONNECTION">
+      <value string="keep-alive" />
+    </item>
+    <item name="HTTP_ACCEPT">
+      <value string="*/*" />
+    </item>
+    <item name="HTTP_ACCEPT_ENCODING">
+      <value string="gzip,deflate,sdch" />
+    </item>
+    <item name="HTTP_ACCEPT_LANGUAGE">
+      <value string="en-US,en;q=0.8" />
+    </item>
+    <item name="HTTP_COOKIE">
+      <value string="__test=1; ASP.NET_SessionId=wyoxiy452yfko5553jsclrb2; ImpersonationRealUserName=admin; __ngDebug=true; .ASPXAUTH=9647EAE42320BA4643FCC7E2BD051AC06184295EB5EB21B1C0BBC2232A8117A1FA71EAD3D0FC75B5016823632BC77CFA3872E0828F6BD09651D1A2980CF82402D0876CE1F3314E3627B43A65A26E402A74A14F73C6F232926432CC20873F5F3BEBC255D18975749FF1F9CE091EB0EEE78A44FDC2971866BD80F55C3D50949364469A2BD839BA5AD71CD43F834ED4AAB50E6E2243AFF89FCFFE5FD30E09E43CBB91B0245D8CCD1B30ADE8CF04EE96F609C05E44EA3A017B0EA0ADE473C55A8CA9; JSESSIONID=3A0FF2E2BBA475ABD79C316529F7E44A; RememberMe=92668751^1#8946790299585921603" />
+    </item>
+    <item name="HTTP_HOST">
+      <value string="localhost:55052" />
+    </item>
+    <item name="HTTP_USER_AGENT">
+      <value string="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36" />
+    </item>
+  </serverVariables>
+  <cookies>
+    <item name="__test">
+      <value string="1" />
+    </item>
+    <item name="ASP.NET_SessionId">
+      <value string="wyoxiy452yfko5553jsclrb2" />
+    </item>
+    <item name="ImpersonationRealUserName">
+      <value string="admin" />
+    </item>
+    <item name="__ngDebug">
+      <value string="true" />
+    </item>
+    <item name=".ASPXAUTH">
+      <value string="9647EAE42320BA4643FCC7E2BD051AC06184295EB5EB21B1C0BBC2232A8117A1FA71EAD3D0FC75B5016823632BC77CFA3872E0828F6BD09651D1A2980CF82402D0876CE1F3314E3627B43A65A26E402A74A14F73C6F232926432CC20873F5F3BEBC255D18975749FF1F9CE091EB0EEE78A44FDC2971866BD80F55C3D50949364469A2BD839BA5AD71CD43F834ED4AAB50E6E2243AFF89FCFFE5FD30E09E43CBB91B0245D8CCD1B30ADE8CF04EE96F609C05E44EA3A017B0EA0ADE473C55A8CA9" />
+    </item>
+    <item name="JSESSIONID">
+      <value string="3A0FF2E2BBA475ABD79C316529F7E44A" />
+    </item>
+    <item name="RememberMe">
+      <value string="92668751^1#8946790299585921603" />
+    </item>
+  </cookies>
+</error>
