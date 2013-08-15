@@ -186,7 +186,7 @@ namespace Sriracha.Deploy.CommandLine
 			catch(Exception err)
 			{
 				Program._logger.ErrorException("Error: " + err.ToString(), err);
-				return -1;
+				return 2;
 			}
 			finally
 			{
