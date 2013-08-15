@@ -59,7 +59,7 @@ namespace Sriracha.Deploy.SelfDeploy
 									   if(!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
 									   {
 										   s.XmlPoke(@"{{TargetWebsitePath}}\web.config")
-														.Set("/configuration/connectionStrings/add[@name='RavenDB']/connectionString", settings.RavenDBConnectionString);
+														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 									   }
 
                                        s.Security(securityOptions =>
@@ -115,7 +115,7 @@ namespace Sriracha.Deploy.SelfDeploy
 									   });
 
 									   s.XmlPoke(@"{{ServiceTargetPath}}\{{ServiceExeName}}.config")
-														.Set("/configuration/connectionStrings/add[@name='RavenDB']/connectionString", settings.RavenDBConnectionString);
+														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 
 									   s.WinService(serviceName).Delete();
 									   s.WinService(serviceName).Create()
@@ -141,7 +141,7 @@ namespace Sriracha.Deploy.SelfDeploy
 									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").DeleteDestinationBeforeDeploying();
 
 									   s.XmlPoke(@"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config")
-														.Set("/configuration/connectionStrings/add[@name='RavenDB']/connectionString", settings.RavenDBConnectionString);
+														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 								   });
 			});
         }
