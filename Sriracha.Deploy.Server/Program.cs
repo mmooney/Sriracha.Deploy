@@ -54,7 +54,7 @@ namespace Sriracha.Deploy.Server
 				case DIContainer.Autofac:
 					{
 						var builder = new ContainerBuilder();
-						builder.RegisterModule(new SrirachaAutofacorator());
+						builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.Service));
 						builder.RegisterType<WinService>().AsSelf();
 						var container = builder.Build();
 						_logger = container.Resolve<NLog.Logger>();

@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Web.App_Start
 			{
 				var builder = new ContainerBuilder();
 				builder.RegisterControllers(typeof(MvcApplication).Assembly);
-				builder.RegisterModule(new SrirachaAutofacorator());
+				builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.Web));
 				_container = builder.Build();
 				DependencyResolver.SetResolver(new AutofacDependencyResolver(_container));
 			}

@@ -16,5 +16,10 @@ namespace Sriracha.Deploy.Web.Controllers
             return View();
         }
 
+		public Action TestError()
+		{
+			throw new Exception("Test Error");
+		}
+
     }
 }

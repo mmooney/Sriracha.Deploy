@@ -16,13 +16,26 @@ using Sriracha.Deploy.Data.Tasks.TaskImpl;
 
 namespace Sriracha.Deploy.AutofacModules
 {
+	public enum EnumDIMode
+	{
+		Web,
+		Service,
+		CommandLine
+	}
 	public class SrirachaAutofacorator : Autofac.Module
 	{
+		private readonly EnumDIMode _diMode;
+
+		public SrirachaAutofacorator(EnumDIMode diMode)
+		{
+			_diMode = diMode;
+		}
+
 		protected override void Load(ContainerBuilder builder)
 		{
 			base.Load(builder);
 
-			builder.RegisterType<AutofacDIFactory>().As<IDIFactory>().SingleInstance();
+			builder.RegisterType<AutofacDIFactory>().As<IDIFactory>();//.SingleInstance();
 
 			if (HttpContext.Current != null)
 			{
@@ -58,12 +71,18 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>();
 
 			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
-			builder.RegisterType<JobFactory>().As<IJobFactory>();
-			builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>();
-			builder.Register(CreateScheduler).As<IScheduler>().SingleInstance();
 
-			builder.RegisterModule(new RavenDBAutofacModule());
+			if(_diMode == EnumDIMode.Service)
+			{
+				builder.RegisterType<JobFactory>().As<IJobFactory>();
+				builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>();
+				builder.Register(CreateScheduler).As<IScheduler>().SingleInstance();
+			}
 
+			if(_diMode != EnumDIMode.CommandLine)
+			{
+				builder.RegisterModule(new RavenDBAutofacModule());
+			}
 			this.SetupLogging(builder);
 		}
 
@@ -79,19 +98,25 @@ namespace Sriracha.Deploy.AutofacModules
 		{
 			builder.Register(context =>
 					{
-						var identity = context.Resolve<IUserIdentity>();
-						var dbTarget = new NLogDBLogTarget(new AutofacDIFactory(context), identity);
-						dbTarget.Layout = "${message} ${exception:format=message,stacktrace:separator=\r\n}";
-						var loggingConfig = NLog.LogManager.Configuration;
-						if (loggingConfig == null)
+						if(_diMode != EnumDIMode.CommandLine)
 						{
-							loggingConfig = new NLog.Config.LoggingConfiguration();
+							//This resolve operation has already ended.  
+							//	When registering components using lambdas, the IComponentContext 'c' parameter to the lambda cannot be stored. 
+							//	Instead, either resolve IComponentContext again from 'c', or resolve a Func<> based factory to create subsequent components from.
+							var c = context.Resolve<IComponentContext>();
+							var identity = context.Resolve<IUserIdentity>();
+							var dbTarget = new NLogDBLogTarget(new AutofacDIFactory(c), identity);
+							dbTarget.Layout = "${message} ${exception:format=message,stacktrace:separator=\r\n}";
+							var loggingConfig = NLog.LogManager.Configuration;
+							if (loggingConfig == null)
+							{
+								loggingConfig = new NLog.Config.LoggingConfiguration();
+							}
+							loggingConfig.AddTarget("dbTarget", dbTarget);
+							var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+							loggingConfig.LoggingRules.Add(rule);
+							NLog.LogManager.Configuration = loggingConfig;
 						}
-						loggingConfig.AddTarget("dbTarget", dbTarget);
-						var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
-						loggingConfig.LoggingRules.Add(rule);
-						NLog.LogManager.Configuration = loggingConfig;
-
 						var logger = NLog.LogManager.GetCurrentClassLogger();
 
 						return logger;

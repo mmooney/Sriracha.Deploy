@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Autofac;
+using Elmah;
 using ServiceStack.Configuration;
 
 namespace Sriracha.Deploy.Web.Helpers
@@ -18,7 +19,16 @@ namespace Sriracha.Deploy.Web.Helpers
 
 		public T Resolve<T>()
 		{
-			return _container.Resolve<T>();
+			try 
+			{
+				return _container.Resolve<T>();
+			}
+			catch(Exception err)
+			{
+				var context = HttpContext.Current;
+				Elmah.ErrorLog.GetDefault(context).Log(new Error(err, context));				
+				throw;
+			}
 		}
 
 		public T TryResolve<T>()

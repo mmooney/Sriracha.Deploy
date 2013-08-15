@@ -96,7 +96,7 @@ namespace Sriracha.Deploy.CommandLine
 				case DIContainer.Autofac:
 					{
 						var builder = new ContainerBuilder();
-						builder.RegisterModule(new SrirachaAutofacorator());
+						builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.CommandLine));
 						var container = builder.Build();
 						_logger = container.Resolve<NLog.Logger>();
 						_diFactory = container.Resolve<IDIFactory>();
