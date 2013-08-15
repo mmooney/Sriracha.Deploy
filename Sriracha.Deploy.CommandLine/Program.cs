@@ -83,7 +83,7 @@ namespace Sriracha.Deploy.CommandLine
 		private static IDIFactory _diFactory;
 		private static NLog.Logger _logger;
 
-		static void Main(string[] args)
+		static int Main(string[] args)
 		{
 			switch(AppConfigOptions.DIContainer)
 			{
@@ -181,15 +181,20 @@ namespace Sriracha.Deploy.CommandLine
 				{
 					throw new Exception("All your sriracha are belong to us");
 				}
+				return 0;
 			}
 			catch(Exception err)
 			{
 				Program._logger.ErrorException("Error: " + err.ToString(), err);
+				return -1;
 			}
-			if(pause)
+			finally
 			{
-				Console.WriteLine("Please any key to continue");
-				Console.ReadKey();
+				if(pause)
+				{
+					Console.WriteLine("Please any key to continue");
+					Console.ReadKey();
+				}
 			}
 		}
 
