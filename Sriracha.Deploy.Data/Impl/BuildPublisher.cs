@@ -84,7 +84,7 @@ namespace Sriracha.Deploy.Data.Impl
 				FileData = File.ReadAllBytes(zipPath),
 				FileName = Path.GetFileName(zipPath)
 			};
-			branchId = FormatVersion(branchId, version);
+			branchId = FormatBranch(branchId, version);
 			string fileId;
 			using (var client = new JsonServiceClient(url))
 			{
@@ -118,7 +118,7 @@ namespace Sriracha.Deploy.Data.Impl
 				branchId = version.Substring(0, version.LastIndexOf("."));
 				_logger.Info("No branch provided, defaulting to " + branchId);
 			}
-			else if (branchId.Equals("[[DefaultVersionThreeDigits]]", StringComparison.CurrentCultureIgnoreCase)
+			else if (branchId.Equals("[[DefaultVersionThreeDigits]]", StringComparison.CurrentCultureIgnoreCase))
 			{
 				int index = version.IndexOf('.');
 				if(index >= 0)
@@ -135,7 +135,6 @@ namespace Sriracha.Deploy.Data.Impl
 					branchId = version;
 				}
 
-				branchId = version.Substring(0, version.LastIndexOf("."));
 				_logger.Info("Branch == [[DefaultVersionThreeDigits]], defaulting to " + branchId);
 			}
 			else if (branchId.Equals("[[DefaultVersionTwoDigits]]", StringComparison.CurrentCultureIgnoreCase))
@@ -154,7 +153,6 @@ namespace Sriracha.Deploy.Data.Impl
 					branchId = version;
 				}
 
-				branchId = version.Substring(0, version.LastIndexOf("."));
 				_logger.Info("Branch == [[DefaultVersionTwoDigits]], defaulting to " + branchId);
 			}
 			return branchId;
