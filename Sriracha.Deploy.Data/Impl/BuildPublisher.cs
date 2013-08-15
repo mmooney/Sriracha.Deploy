@@ -84,11 +84,7 @@ namespace Sriracha.Deploy.Data.Impl
 				FileData = File.ReadAllBytes(zipPath),
 				FileName = Path.GetFileName(zipPath)
 			};
-			if(string.IsNullOrWhiteSpace(branchId) && !string.IsNullOrWhiteSpace(version))
-			{
-				branchId = version.Substring(0, version.LastIndexOf("."));
-				_logger.Info("No branch provided, defaulting to " + branchId);
-			}
+			branchId = FormatVersion(branchId, version);
 			string fileId;
 			using (var client = new JsonServiceClient(url))
 			{
@@ -113,6 +109,55 @@ namespace Sriracha.Deploy.Data.Impl
 				_logger.Debug("Posting DeployBuild object to URL {0}, returned {1}", url, build.ToJson());
 			}
 
+		}
+
+		private string FormatBranch(string branchId, string version)
+		{
+			if (string.IsNullOrWhiteSpace(branchId) && !string.IsNullOrWhiteSpace(version))
+			{
+				branchId = version.Substring(0, version.LastIndexOf("."));
+				_logger.Info("No branch provided, defaulting to " + branchId);
+			}
+			else if (branchId.Equals("[[DefaultVersionThreeDigits]]", StringComparison.CurrentCultureIgnoreCase)
+			{
+				int index = version.IndexOf('.');
+				if(index >= 0)
+				{
+					index = version.IndexOf('.',index+1);
+					if(index >= 0)
+					{
+						index = version.IndexOf('.',index+1);
+					}
+					branchId = version.Substring(0, index);
+				}
+				else
+				{
+					branchId = version;
+				}
+
+				branchId = version.Substring(0, version.LastIndexOf("."));
+				_logger.Info("Branch == [[DefaultVersionThreeDigits]], defaulting to " + branchId);
+			}
+			else if (branchId.Equals("[[DefaultVersionTwoDigits]]", StringComparison.CurrentCultureIgnoreCase))
+			{
+				int index = version.IndexOf('.');
+				if(index >= 0)
+				{
+					index = version.IndexOf('.',index+1);
+					if(index >= 0)
+					{
+						branchId = version.Substring(0, index);
+					}
+				}
+				else
+				{
+					branchId = version;
+				}
+
+				branchId = version.Substring(0, version.LastIndexOf("."));
+				_logger.Info("Branch == [[DefaultVersionTwoDigits]], defaulting to " + branchId);
+			}
+			return branchId;
 		}
 
 
