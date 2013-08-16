@@ -62,7 +62,7 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			catch (Exception err)
 			{
-				_logger.ErrorException(string.Format("Failed to delete ZIP file {0}: {1}", zipPath, err.ToString()), err);
+				_logger.WarnException(string.Format("Failed to delete ZIP file {0}: {1}", zipPath, err.ToString()), err);
 			}
 
 			_logger.Info("Done publishing file {0} to URL {1}", filePath, apiUrl);
