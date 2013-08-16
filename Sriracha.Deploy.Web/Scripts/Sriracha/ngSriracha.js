@@ -19,6 +19,43 @@ ngSriracha.directive("taskConfig", function () {
 	}
 });
 
+ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, ErrorReporter) {
+	return {
+		restrict: "E",
+		templateUrl: "templates/directives/selectEnvironmentMachines.html",
+		scope: {
+			buildid: '@',
+			environmentid: '@'
+		},
+		link: function postLink(scope, element, attrs) {
+			scope.$watch("buildid + environmentid", function () {
+				if (!scope.buildid || !scope.environmentid) {
+					console.log("nothing");
+					scope.build = null;
+					scope.environment = null;
+				}
+				else {
+					console.log("something");
+					scope.build = SrirachaResource.build.get({ id: scope.buildid },
+						function () {
+							scope.environment = SrirachaResource.environment.get({ id: scope.environmentid, projectId: scope.build.projectId },
+								function () {
+									//console.log(scope.environment);
+								},
+								function (err) {
+									ErrorReporter.handleResourceError(error);
+								});
+						},
+						function(err) {
+							ErrorReporter.handleResourceError(err);
+						}
+					);
+				}
+			});
+		}
+	}
+});
+
 ngSriracha.directive("projectList", function () {
 	return {
 		restrict: "E",

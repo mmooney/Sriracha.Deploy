@@ -1,15 +1,4 @@
-﻿<h2>Deploy Build {{build.projectName}} - {{build.projectBranchName}} - {{build.projectComponentName}} - {{build.version}}  to environment {{environment.environmentName}}</h2>
-
-<hr />
-<div ng-hide="environmentComponent" class="alert alert-error">
-	No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
-</div>
-<fieldset>
-	<legend>Build Details</legend>
-	TBD...
-</fieldset>
-<fieldset style="width:500px">
-	<legend>Configuration</legend>
+﻿<div style="background-color:grey">
 	<div>
 		<h4>Environment Values</h4>
 		<div ng-show="environmentResultsIncomplete">
@@ -69,9 +58,4 @@
 			</table>
 		</div>
 	</div>
-	<select-environment-machines buildId="{{idValues.buildId}}" environmentId="{{idValues.environmentId}}">a</select-environment-machines>
-	<div>
-		<button id="submitButton" class="btn btn-primary" ng-model="button" ng-disabled="!canSubmitDeployment()" ng-click="submitDeployment()">Submit Deployment</button>
-	</div>
-</fieldset>
-
+</div>

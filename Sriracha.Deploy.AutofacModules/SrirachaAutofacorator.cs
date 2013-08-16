@@ -84,6 +84,8 @@ namespace Sriracha.Deploy.AutofacModules
 				builder.RegisterModule(new RavenDBAutofacModule());
 			}
 			this.SetupLogging(builder);
+
+			builder.RegisterSource(new Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource());
 		}
 
 		public static IScheduler CreateScheduler(IComponentContext context)

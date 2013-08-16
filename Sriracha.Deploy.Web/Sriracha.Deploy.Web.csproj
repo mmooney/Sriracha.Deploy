@@ -337,6 +337,7 @@
     <Content Include="Scripts\sriracha\deployController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchRequestController.js" />
     <Content Include="Scripts\sriracha\homeController.js" />
+    <Content Include="Scripts\sriracha\models\environmentSelector.js" />
     <Content Include="Scripts\sriracha\navigation.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
@@ -371,6 +372,7 @@
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
     <Content Include="Templates\deployment-batchRequest-template.html" />
+    <Content Include="Templates\directives\selectEnvironmentMachines.html" />
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment-submit-template.html" />
     <Content Include="Templates\deployment-view-template.html" />
