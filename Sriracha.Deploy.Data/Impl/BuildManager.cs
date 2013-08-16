@@ -72,7 +72,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				component = _projectRepository.CreateComponent(project.Id, componentId);
 			}
-			return this._buildRepository.CreateBuild(projectId, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
+			return this._buildRepository.CreateBuild(project.Id, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
 		}
 
 		public DeployBuild UpdateBuild(string buildId, string projectId, string componentId, string branchId, string fileId, string version)
