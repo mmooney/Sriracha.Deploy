@@ -64,6 +64,28 @@
 				go: function(projectId, componentId) { root.goto(this.url, { projectId: projectId, componentId: componentId}) }
 			}
 		}
+		root.build = {
+			list: {
+				url: "/build",
+				clientUrl: function() { return root.getUrl(this.url) },
+				go: function() { root.goTo(this.url) }
+			},
+			submit: {
+				url: "/build/submit",
+				clientUrl: function () { return root.getUrl(this.url) },
+				go: function () { root.goTo(this.url) }
+			},
+			view: {
+				url: "/build/:buildId",
+				clientUrl: function (buildId) { return root.getUrl(this.url, { buildId: buildId }); },
+				go: function (buildId) { root.goTo(this.url, { buildId: buildId }); }
+			},
+			"delete": {
+				url: "/build/delete/:buildId",
+				clientUrl: function (buildId) { return root.getUrl(this.url, { buildId: buildId }); },
+				go: function (buildId) { root.goTo(this.url, { buildId: buildId }); }
+			}
+		};
 		root.deployment = {
 			batchRequest: {
 				url: "/deploy/batchRequest",

@@ -1,4 +1,4 @@
-﻿<h2><a ng-href="{{getBuildListUrl()}}">Build List</a></h2>
+﻿<h2><a ng-href="{{navigator.build.list.clientUrl()}}">Build List</a></h2>
 <table class="table table-striped" ng-show="buildList.length">
 	<thead>
 		<tr>
@@ -9,13 +9,13 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="build in buildList">
-			<td><a ng-href="{{getViewBuildUrl(build)}}">{{build.projectName}} - {{build.version}}</a></td>
+			<td><a ng-href="{{navigator.build.view.clientUrl(build.id)}}">{{build.projectName}} - {{build.version}}</a></td>
 			<td>{{build.projectBranchName}}</td>
-			<td><a class="btn btn-danger" ng-href="{{getDeleteBuildUrl(build)}}">Delete</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.build.delete.clientUrl(build.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="buildList.length">
 	No builds yet
 </div>
-<a ng-href="{{getSubmitBuildUrl()}}">Submit Build</a>
+<a ng-href="{{navigator.build.submit.clientUrl()}}">Submit Build</a>
