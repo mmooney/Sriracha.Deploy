@@ -85,6 +85,8 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public void DeleteBuild(string buildId)
 		{
+			var build = this._buildRepository.GetBuild(buildId);
+			this._fileRepository.DeleteFile(build.FileId);
 			this._buildRepository.DeleteBuild(buildId);
 		}
 	}
