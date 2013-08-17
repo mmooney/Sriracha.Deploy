@@ -11,6 +11,7 @@
 		build: $resource("/api/build/:buildId"),
 		deployRequest: $resource("/api/deployRequest/:deployRequestId"),
 		deployState: $resource("/api/deployState/:deployState"),
+		validateEnvironment: $resource("/api/validateEnvironment"),
 		systemLog: $resource("/api/systemLog")
 	}
 });

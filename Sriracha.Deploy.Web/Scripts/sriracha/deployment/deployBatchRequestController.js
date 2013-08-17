@@ -1,9 +1,7 @@
 ﻿ngSriracha.controller("deployBatchRequestController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.name = "test";
-	console.log("hi!");
 	$scope.projectList = SrirachaResource.project.query({},
 		function () {
-			console.log($scope.projectList);
 		},
 		function (error) {
 			ErrorReporter.handleResourceError(error);

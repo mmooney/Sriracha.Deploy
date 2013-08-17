@@ -220,6 +220,9 @@
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
+    <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentRequest.cs" />
+    <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />
+    <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentService.cs" />
     <Compile Include="WebConfigOptions.cs" />
     <Compile Include="WebServiceExamples.cs" />
   </ItemGroup>
@@ -361,7 +364,6 @@
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
     <Content Include="Scripts\sriracha\systemLogController.js" />
-    <Content Include="Scripts\sriracha\test.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />

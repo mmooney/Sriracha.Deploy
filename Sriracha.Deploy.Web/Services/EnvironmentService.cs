@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Web.Services
 			{
 				throw new ArgumentNullException();
 			}
-			if (string.IsNullOrEmpty(request.Id))
+			if (!string.IsNullOrEmpty(request.Id))
 			{
 				return _projectManager.GetEnvironment(request.Id);
 			}

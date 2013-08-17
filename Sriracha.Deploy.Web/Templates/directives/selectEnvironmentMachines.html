@@ -1,8 +1,11 @@
-﻿<div style="background-color:grey">
+﻿<div>
+	<div ng-hide="environmentSelector.environmentComponent" class="alert alert-error">
+		No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
+	</div>
 	<div>
 		<h4>Environment Values</h4>
-		<div ng-show="environmentResultsIncomplete">
-			<a ng-href="{{getEditEnvironmentUrl(environment)}}">Missing configuration values, click here to edit</a>
+		<div ng-show="environmentSelector.environmentResultsIncomplete">
+			<a ng-href="{{navigator.environment.edit.clientUrl(environment.projectId, environment.id)}}">Missing configuration values, click here to edit</a>
 		</div>
 		<table class="table table-striped table-bordered">
 			<thead>
@@ -13,10 +16,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-hide="environmentResults.length">
+				<tr ng-hide="environmentSelector.environmentResults.length">
 					<td colspan="3">None</td>
 				</tr>
-				<tr ng-show="environmentResults.length" ng-repeat="item in environmentResults">
+				<tr ng-show="environmentSelector.environmentResults.length" ng-repeat="item in environmentSelector.environmentResults">
 					<td>{{item.taskName}}</td>
 					<td>{{item.settingName}}</td>
 					<td>
@@ -29,10 +32,12 @@
 	</div>
 	<div>
 		<h4>Target Machines</h4>
-		<div ng-repeat="machine in environmentComponent.machineList">
-			<input type="checkbox" ng-model="machine.selected" ng-disabled="machineResultsIncomplete[machine.id]"/> {{machine.machineName}}
-			<div ng-show="machineResultsIncomplete[machine.id]">
-				<a ng-href="{{getEditEnvironmentUrl(environment)}}">Missing configuration values, click here to edit</a>
+		<div ng-repeat="machine in environmentSelector.environmentComponent.machineList">
+			<label class="checkbox">
+				<input type="checkbox" ng-model="machine.selected" ng-disabled="environmentSelector.machineResultsIncomplete[machine.id]"/> {{machine.machineName}}
+			</label>
+			<div ng-show="environmentSelector.machineResultsIncomplete[machine.id]">
+				<a ng-href="{{navigator.environment.edit.clientUrl(environment.projectId, environment.id)}}">Missing configuration values, click here to edit</a>
 			</div>
 			<table class="table table-striped table-bordered">
 				<thead>
@@ -43,10 +48,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-hide="machineResults[machine.id].length">
+					<tr ng-hide="environmentSelector.machineResults[machine.id].length">
 						<td colspan="3">None</td>
 					</tr>
-					<tr ng-show="machineResults[machine.id].length" ng-repeat="item in machineResults[machine.id]">
+					<tr ng-show="environmentSelector.machineResults[machine.id].length" ng-repeat="item in environmentSelector.machineResults[machine.id]">
 						<td>{{item.taskName}}</td>
 						<td>{{item.settingName}}</td>
 						<td>

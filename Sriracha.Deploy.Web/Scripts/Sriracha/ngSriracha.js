@@ -25,22 +25,23 @@ ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, Er
 		templateUrl: "templates/directives/selectEnvironmentMachines.html",
 		scope: {
 			buildid: '@',
-			environmentid: '@'
+			environmentid: '@',
+			selection: '='
 		},
 		link: function postLink(scope, element, attrs) {
 			scope.$watch("buildid + environmentid", function () {
 				if (!scope.buildid || !scope.environmentid) {
-					console.log("nothing");
 					scope.build = null;
 					scope.environment = null;
 				}
 				else {
-					console.log("something");
 					scope.build = SrirachaResource.build.get({ id: scope.buildid },
 						function () {
-							scope.environment = SrirachaResource.environment.get({ id: scope.environmentid, projectId: scope.build.projectId },
+							scope.project = SrirachaResource.project.get({ id: scope.build.projectId },
 								function () {
-									//console.log(scope.environment);
+									scope.environmentSelector = new EnvironmentSelector(scope.build, scope.project, scope.environmentid, SrirachaResource, ErrorReporter);
+									scope.selection.machineList = scope.environmentSelector.environmentComponent.machineList;
+									console.log(scope);
 								},
 								function (err) {
 									ErrorReporter.handleResourceError(error);

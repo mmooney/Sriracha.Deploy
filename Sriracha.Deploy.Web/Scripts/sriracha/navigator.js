@@ -42,6 +42,23 @@
 				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
 			}
 		};
+		root.environment = {
+			create: {
+				url: "/project/:projectId/environment/create",
+				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
+				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
+			},
+			edit: {
+				url: "/project/:projectId/environment/edit/:environmentId",
+				clientUrl: function (projectId, environmentId) { return root.getUrl(this.url, { projectId: projectId, environmentId: environmentId }) },
+				go: function (projectId, environmentId) { root.goto(this.url, { projectId: projectId, environmentId: environmentId }) }
+			},
+			"delete": {
+				url: "/project/:projectId/environment/delete/:environmentId",
+				clientUrl: function (projectId, environmentId) { return root.getUrl(this.url, { projectId: projectId, environmentId: environmentId }) },
+				go: function (projectId, environmentId) { root.goto(this.url, { projectId: projectId, environmentId: environmentId }) }
+			},
+		};
 		root.component = {
 			create: {
 				url: "/project/:projectId/component/create",

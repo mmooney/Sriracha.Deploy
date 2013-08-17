@@ -12,12 +12,12 @@ namespace Sriracha.Deploy.Data.Dto
 		public string EnvironmentId { get; set; }
 		public List<string> MachineIdList { get; set; }
 		public string DeployStateId { get; set; }
+		public string BranchId { get; set; }
 
 		public DeployRequest()
 		{
 			this.MachineIdList = new List<string>();
 		}
 
-		public string BranchId { get; set; }
 	}
 }
