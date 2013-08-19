@@ -1,6 +1,6 @@
 ﻿<div>
-	<div ng-hide="environmentSelector.environmentComponent" class="alert alert-error">
-		No components have been configured for this environment.  <a ng-href="#">Go here</a> to configure that.
+	<div ng-show="environmentSelector.noData" class="alert alert-error">
+		No components have been configured for this environment.  <a ng-href="{{navigator.environment.edit.clientUrl(project.id, environmentid)}}">Go here</a> to configure that.
 	</div>
 	<div>
 		<h4>Environment Values</h4>

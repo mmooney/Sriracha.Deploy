@@ -44,12 +44,15 @@ namespace Sriracha.Deploy.Data.Impl
 		public DeploymentValidationResult ValidateDeployment(DeployComponent component, DeployEnvironment environment)
 		{
 			var returnValue = new DeploymentValidationResult();
-			var environmentComponent = environment.GetEnvironmentComponent(component.Id);
-			foreach(var deploymentStep in component.DeploymentStepList)
+			var environmentComponent = environment.TryGetEnvironmentComponent(component.Id);
+			if(environmentComponent != null)
 			{
-				var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
-				var validationItem = this.ValidateTaskDefinition(taskDefinition, environmentComponent);
-				returnValue.AddResult(deploymentStep, validationItem);
+				foreach(var deploymentStep in component.DeploymentStepList)
+				{
+					var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
+					var validationItem = this.ValidateTaskDefinition(taskDefinition, environmentComponent);
+					returnValue.AddResult(deploymentStep, validationItem);
+				}
 			}
 			return returnValue;
 		}

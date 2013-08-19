@@ -32,7 +32,7 @@ namespace Sriracha.Deploy.Data.Dto
 			return returnValue;
 		}
 
-		private DeployEnvironmentComponent TryGetEnvironmentComponent(string componentId)
+		public DeployEnvironmentComponent TryGetEnvironmentComponent(string componentId)
 		{
 			if(this.ComponentList != null)
 			{

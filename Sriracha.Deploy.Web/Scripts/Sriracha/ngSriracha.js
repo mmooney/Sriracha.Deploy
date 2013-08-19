@@ -19,7 +19,7 @@ ngSriracha.directive("taskConfig", function () {
 	}
 });
 
-ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, ErrorReporter) {
+ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, ErrorReporter, SrirachaNavigator) {
 	return {
 		restrict: "E",
 		templateUrl: "templates/directives/selectEnvironmentMachines.html",
@@ -29,6 +29,8 @@ ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, Er
 			selection: '='
 		},
 		link: function postLink(scope, element, attrs) {
+			scope.navigator = SrirachaNavigator;
+			scope.errorReporter = ErrorReporter;
 			scope.$watch("buildid + environmentid", function () {
 				if (!scope.buildid || !scope.environmentid) {
 					scope.build = null;
@@ -39,9 +41,18 @@ ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, Er
 						function () {
 							scope.project = SrirachaResource.project.get({ id: scope.build.projectId },
 								function () {
-									scope.environmentSelector = new EnvironmentSelector(scope.build, scope.project, scope.environmentid, SrirachaResource, ErrorReporter);
-									scope.selection.machineList = scope.environmentSelector.environmentComponent.machineList;
-									console.log(scope);
+									scope.environmentSelector = new EnvironmentSelector(scope.build, scope.project, scope.environmentid, SrirachaResource, ErrorReporter,
+										function () {
+											console.log("hello");
+											if (scope.environmentSelector.environmentComponent) {
+												scope.selection.machineList = scope.environmentSelector.environmentComponent.machineList;
+											}
+											if (!scope.selection.machineList || !scope.selection.machineList.length) {
+												scope.selection.machineList = [];
+											}
+											console.log("goodbye");
+										});
+									console.log("what?");
 								},
 								function (err) {
 									ErrorReporter.handleResourceError(error);

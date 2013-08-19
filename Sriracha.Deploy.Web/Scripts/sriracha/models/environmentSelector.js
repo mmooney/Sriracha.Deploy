@@ -1,9 +1,11 @@
-﻿function EnvironmentSelector(build, project, environmentId, srirachaResource, errorReporter) {
+﻿function EnvironmentSelector(build, project, environmentId, srirachaResource, errorReporter, dataLoadedCallback) {
 	if (!(this instanceof EnvironmentSelector)) {
-		return new EnvironmentSelector(build, project, environmentId)
+		return new EnvironmentSelector(build, project, environmentId, srirachaResource, errorReporter)
 	}
 
 	var self = this;
+	self.errorReporter = errorReporter;
+	self.navigator = navigator;
 	var getEnvironmentResults = function (validationResult) {
 		var returnValue = [];
 		if (validationResult && validationResult.validationResult) {
@@ -85,10 +87,22 @@
 
 			self.machineResults = {};
 			self.machineResultsIncomplete = {};
-			_.each(self.environmentComponent.machineList, function (machine) {
-				self.machineResults[machine.id] = getMachineResults(self.validationResult, machine.id);
-				self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
-			});
+			if (!self.environmentComponent || !self.environmentComponent.machineList || !self.environmentComponent.machineList.length) {
+				self.noData = true;
+			}
+			else {
+				_.each(self.environmentComponent.machineList, function (machine) {
+					self.machineResults[machine.id] = getMachineResults(self.validationResult, machine.id);
+					self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
+				});
+			}
+			if (dataLoadedCallback) {
+				console.log("calling back");
+				dataLoadedCallback();
+			}
+			else {
+				console.log("nobody home");
+			}
 		},
 		function (err) {
 			errorRepoter.handleResourceError(err);

@@ -165,7 +165,12 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployComponent TryGetComponent(string componentId)
 		{
-			var project = _documentSession.Query<DeployProject>().FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
+			var allProjects = _documentSession.Query<DeployProject>().ToList();
+			var x = allProjects.FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
+			var project = _documentSession.Query<DeployProject>()
+								.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
+								.ToList()
+								.FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
 			if(project == null)
 			{
 				return null;
