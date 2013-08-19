@@ -224,7 +224,6 @@
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentService.cs" />
     <Compile Include="WebConfigOptions.cs" />
-    <Compile Include="WebServiceExamples.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-responsive.css" />
@@ -300,13 +299,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="default.htm" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <None Include="Scripts\jquery\jquery-1.9.1.intellisense.js" />
-    <Content Include="jqunback-1.51.min.js" />
-    <Content Include="ng-upload-sample.html" />
-    <Content Include="README.txt" />
     <Content Include="Scripts\ace\ace.js" />
     <Content Include="Scripts\ace\mode-javascript.js" />
     <Content Include="Scripts\ace\mode-json.js" />
@@ -438,9 +433,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>55052</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:55052/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
