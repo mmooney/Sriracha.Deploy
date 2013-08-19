@@ -33,5 +33,11 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			return _ravenAttachmentManager.GetAttachment(fileStorageId);
 		}
+
+
+		public void DeleteFile(string fileStorageId)
+		{
+			_ravenAttachmentManager.RemoveAttachment(fileStorageId);
+		}
 	}
 }

@@ -47,5 +47,13 @@ namespace Sriracha.Deploy.RavenDB
 			var item = _documentSession.Load<FileStorageDto>(fileStorageId);
 			return item.FileData;
 		}
+
+
+		public void DeleteFile(string fileStorageId)
+		{
+			var item = _documentSession.Load<FileStorageDto>(fileStorageId);
+			_documentSession.Delete(item);
+			_documentSession.SaveChanges();
+		}
 	}
 }

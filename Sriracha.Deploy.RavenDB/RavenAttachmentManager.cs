@@ -75,5 +75,11 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			return this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachmentHeadersStartingWith("",0,int.MaxValue).ToList();
 		}
+
+
+		public void RemoveAttachment(string attachmentId)
+		{
+			this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.DeleteAttachment(attachmentId, null);
+		}
 	}
 }

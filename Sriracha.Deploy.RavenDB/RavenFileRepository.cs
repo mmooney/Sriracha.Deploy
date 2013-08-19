@@ -85,6 +85,7 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			var file = this.GetFile(fileId);
 			this._documentSession.Delete(file);
+			this._fileStorage.DeleteFile(file.FileStorageId);
 			this._documentSession.SaveChanges();
 		}
 
