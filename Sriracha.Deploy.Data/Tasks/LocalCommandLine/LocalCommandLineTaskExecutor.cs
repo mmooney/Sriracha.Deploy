@@ -98,6 +98,18 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				else 
 				{
 					value = item.FieldValue;
+					if(!string.IsNullOrEmpty(value))
+					{
+						//Because this is going into a DOS command line, need to escape certain characters
+						//	http://www.robvanderwoude.com/escapechars.php
+						value = value.Replace("%","%%")
+									.Replace("^","^^")
+									.Replace("&","^&")
+									.Replace("<","^<")
+									.Replace(">","^>")
+									.Replace("|","|^")
+									;	
+					}
 				}
 				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
 			}
