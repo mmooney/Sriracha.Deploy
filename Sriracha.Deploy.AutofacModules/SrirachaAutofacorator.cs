@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -86,6 +87,9 @@ namespace Sriracha.Deploy.AutofacModules
 			this.SetupLogging(builder);
 
 			builder.RegisterSource(new Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource());
+
+			//http://stackoverflow.com/questions/2385370/cant-resolve-namevaluecollection-with-autofac
+			builder.RegisterType<NameValueCollection>().UsingConstructor();
 		}
 
 		public static IScheduler CreateScheduler(IComponentContext context)

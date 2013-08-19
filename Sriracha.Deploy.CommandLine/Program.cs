@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CommandLineParser = CommandLine;
-using Ninject;
+//using Ninject;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Tasks;
 using System.Reflection;
@@ -89,8 +89,9 @@ namespace Sriracha.Deploy.CommandLine
 			{
 				case DIContainer.Ninject:
 					{
-						var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
-						_diFactory = kernel.Get<IDIFactory>();
+						throw new NotSupportedException("Ninject is no longer supported");
+						//var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+						//_diFactory = kernel.Get<IDIFactory>();
 					}
 					break;
 				case DIContainer.Autofac:

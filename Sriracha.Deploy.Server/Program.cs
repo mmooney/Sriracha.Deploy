@@ -7,7 +7,7 @@ using Autofac;
 using CommandLine;
 using CommandLine.Text;
 using MMDB.Shared;
-using Ninject;
+//using Ninject;
 using NLog;
 using Sriracha.Deploy.AutofacModules;
 using Sriracha.Deploy.Data;
@@ -46,9 +46,10 @@ namespace Sriracha.Deploy.Server
 			{
 				case DIContainer.Ninject:
 					{
-						var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
-						_logger = kernel.Get<NLog.Logger>();
-						_diFactory = kernel.Get<IDIFactory>();
+						throw new NotSupportedException("Ninject is no longer supported");
+						//var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
+						//_logger = kernel.Get<NLog.Logger>();
+						//_diFactory = kernel.Get<IDIFactory>();
 					}
 					break;
 				case DIContainer.Autofac:

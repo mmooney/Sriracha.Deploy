@@ -17,9 +17,10 @@ namespace Sriracha.Deploy.Web.App_Start
 			switch(WebConfigOptions.DIContainer)
 			{
 				case DIContainer.Ninject:
-					NinjectWebCommon.Start();
-					containerAdapter = NinjectWebCommon.CreateServiceStackAdapter();
-					break;
+					throw new NotSupportedException("Ninject is no longer supported");
+					//NinjectWebCommon.Start();
+					//containerAdapter = NinjectWebCommon.CreateServiceStackAdapter();
+					//break;
 				case DIContainer.Autofac:
 					AutofacWebCommon.Start();
 					containerAdapter = AutofacWebCommon.CreateServiceStackAdapter();
