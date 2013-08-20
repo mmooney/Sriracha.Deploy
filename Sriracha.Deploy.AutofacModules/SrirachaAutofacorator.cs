@@ -69,7 +69,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<JobScheduler>().As<IJobScheduler>();
 			builder.RegisterType<Zipper>().As<IZipper>();
 			builder.RegisterType<DataGenerator>().As<IDataGenerator>();
-			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>();
+			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>().SingleInstance();
 
 			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
 

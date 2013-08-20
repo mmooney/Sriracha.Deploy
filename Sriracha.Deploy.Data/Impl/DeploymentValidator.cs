@@ -35,7 +35,7 @@ namespace Sriracha.Deploy.Data.Impl
 					var item = this.GetValidationResultItem(p, machine.ConfigurationValueList);
 					machineResultList.Add(item);
 				}
-				result.MachineResultList.Add(machine.MachineName, machineResultList);
+				result.MachineResultList.Add(machine.Id, machineResultList);
 			}
 			return result;
 		}
@@ -64,7 +64,7 @@ namespace Sriracha.Deploy.Data.Impl
 				FieldName = parameter.FieldName,
 				Sensitive = parameter.Sensitive
 			};
-			if (!valueDictionary.ContainsKey(parameter.FieldName))
+			if (!valueDictionary.ContainsKey(parameter.FieldName) || string.IsNullOrEmpty(valueDictionary[parameter.FieldName]))
 			{
 				item.Present = false;
 			}

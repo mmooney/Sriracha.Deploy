@@ -41,7 +41,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
-			var machineResult = validationResult.MachineResultList[machine.MachineName];
+			var machineResult = validationResult.MachineResultList[machine.Id];
 			var xmlDoc = new XmlDocument();
 			xmlDoc.LoadXml(definition.Options.XmlTemplate);
 			foreach (var xpathItem in definition.Options.XPathValueList)

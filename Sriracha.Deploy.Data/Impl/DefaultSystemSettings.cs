@@ -9,54 +9,80 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class DefaultSystemSettings : ISystemSettings
 	{
+		private int? _runDeploymentPollingIntervalSeconds;
 		public int RunDeploymentPollingIntervalSeconds
 		{
-			get
+			get { return _runDeploymentPollingIntervalSeconds.GetValueOrDefault(60); }
+			set { _runDeploymentPollingIntervalSeconds = value; }
+		}
+
+		private string _deployWorkingDirectory;
+		public string DeployWorkingDirectory
+		{
+			get 
 			{
-				return 60;
+				if(!string.IsNullOrEmpty(_deployWorkingDirectory))
+				{
+					return _deployWorkingDirectory;
+				}
+				else 
+				{
+					return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WorkingDirectory"); 
+				}
+			}
+			set 
+			{
+				_deployWorkingDirectory = value;
 			}
 		}
 
-
-		public string DeployWorkingDirectory
-		{
-			get { return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WorkingDirectory"); }
-		}
-
-
+		private int? _logPurgeJobIntervalSeconds;
 		public int LogPurgeJobIntervalSeconds
 		{
-			get { return 60*60; }
+			get { return _logPurgeJobIntervalSeconds.GetValueOrDefault(60*60); }
+			set { _logPurgeJobIntervalSeconds = value; }
 		}
 
+		private int? _logPurgeTraceAgeMinutes;
 		public int? LogPurgeTraceAgeMinutes
 		{
-			get { return 60; }
+			get { return _logPurgeTraceAgeMinutes.GetValueOrDefault(60); }
+			set { _logPurgeTraceAgeMinutes = value; }
 		}
 
+		private int? _logPurgeDebugAgeMinutes;
 		public int? LogPurgeDebugAgeMinutes
 		{
-			get { return 60; }
+			get { return _logPurgeDebugAgeMinutes.GetValueOrDefault(60); }
+			set { _logPurgeDebugAgeMinutes = value; }
 		}
 
+		private int? _logPurgeInfoAgeMinutes;
 		public int? LogPurgeInfoAgeMinutes
 		{
-			get { return 60*24; }
+			get { return _logPurgeInfoAgeMinutes.GetValueOrDefault(60*24); }
+			set { _logPurgeInfoAgeMinutes = value; }
 		}
 
+		private int? _logPurgeWarnAgeMinutes;
 		public int? LogPurgeWarnAgeMinutes
 		{
-			get { return 60*24*7; }
+			get { return _logPurgeWarnAgeMinutes.GetValueOrDefault(60*24*7); }
+			set { _logPurgeWarnAgeMinutes = value; }
 		}
 
+		private int? _logPurgeErrorAgeMinutes;
 		public int? LogPurgeErrorAgeMinutes
 		{
-			get { return 60*24*30; }
+			get { return _logPurgeErrorAgeMinutes.GetValueOrDefault(60*24*30); }
+			set { _logPurgeErrorAgeMinutes = value; }
 		}
 
+		private int? _logPurgeFatalAgeMinutes;
 		public int? LogPurgeFatalAgeMinutes
 		{
-			get { return 60*24*30; }
+			get { return _logPurgeFatalAgeMinutes.GetValueOrDefault(60*24*30); }
+			set { _logPurgeFatalAgeMinutes = value; }
 		}
 	}
 }

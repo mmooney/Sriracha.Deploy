@@ -24,6 +24,10 @@ namespace Sriracha.Deploy.Server
 		{
 			[Option('d', "debug")]
 			public bool Debug { get; set; }
+
+			[Option("workingDirectory")]
+			public string WorkingDirectory { get; set; }
+
 			[ParserState]
 			public IParserState LastParserState { get; set; }
 
@@ -73,6 +77,11 @@ namespace Sriracha.Deploy.Server
 				throw new Exception(options.GetUsage());
 			}
 
+			if(!string.IsNullOrWhiteSpace(options.WorkingDirectory))
+			{
+				var settings = _diFactory.CreateInjectedObject<ISystemSettings>();
+				settings.DeployWorkingDirectory = options.WorkingDirectory;
+			}
 			if (options.Debug)
 			{
 				Console.WriteLine("\t-Starting in debug mode...");

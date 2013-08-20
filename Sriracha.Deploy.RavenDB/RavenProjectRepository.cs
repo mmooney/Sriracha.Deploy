@@ -591,7 +591,9 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing environment name");
 			}
-			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
+			var project = this._documentSession.Query<DeployProject>()
+								.ToList()
+								.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
 			if (project == null)
 			{
 				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
@@ -610,7 +612,9 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing environment ID");
 			}
-			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
+			var project = this._documentSession.Query<DeployProject>()
+									.ToList()
+									.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
 			if (project == null)
 			{
 				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
