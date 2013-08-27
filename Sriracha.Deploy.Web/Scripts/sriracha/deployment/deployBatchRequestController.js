@@ -105,10 +105,13 @@
 
 	$scope.moveItemDown = function (item) {
 		var index = $scope.selectedItems.indexOf(item);
-		console.log(item);
-		console.log(index);
-		console.log($scope.selectedItems[index + 1]);
-		console.log($scope.selectedItems[index]);
 		$scope.selectedItems.splice(index, 2, $scope.selectedItems[index+1], $scope.selectedItems[index]);
+	}
+
+	$scope.removeItem = function (item) {
+		if (confirm("Are you sure you want to remove this item (" + item.build.displayValue + ")?")) {
+			var index = $scope.selectedItems.indexOf(item);
+			$scope.selectedItems.splice(index, 1);
+		}
 	}
 });
