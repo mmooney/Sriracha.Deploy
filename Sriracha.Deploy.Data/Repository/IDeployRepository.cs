@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PagedList;
 using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data.Repository
@@ -18,8 +19,9 @@ namespace Sriracha.Deploy.Data.Repository
 		List<DeployBatchRequest> GetBatchRequestList();
 		DeployBatchRequest GetBatchRequest(string id);
 
-		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList);
+		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc);
 
+		IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
 	}
 }

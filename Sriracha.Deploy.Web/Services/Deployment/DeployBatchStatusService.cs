@@ -8,22 +8,29 @@ using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Web.Services.Deployment
 {
-	public class BatchDeployStatusService : Service
+	public class DeployBatchStatusService : Service
 	{
 		private readonly IDeployRequestManager _deployRequestManager;
 
-		public BatchDeployStatusService(IDeployRequestManager deployRequestManager)
+		public DeployBatchStatusService(IDeployRequestManager deployRequestManager)
 		{
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 		}
 
-		public object Get(DeployBatchStatus deployBatchStatus)
+		public object Get(DeployBatchStatusRequest request)
 		{
-			if(deployBatchStatus == null || string.IsNullOrEmpty(deployBatchStatus.DeployBatchRequestId))
+			if(request == null)
 			{
 				throw new ArgumentNullException();
 			}
-			return _deployRequestManager.GetBatchDeployStatus(deployBatchStatus.DeployBatchRequestId);
+			if(string.IsNullOrEmpty(request.Id))
+			{
+				return _deployRequestManager.GetDeployBatchStatusList(request.BuildListOptions());
+			}
+			else 
+			{
+				return _deployRequestManager.GetDeployBatchStatus(request.Id);
+			}
 		}
 	}
 }

@@ -89,6 +89,7 @@
     <Compile Include="Dto\DeployState.cs" />
     <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Dto\DeployStateSummary.cs" />
+    <Compile Include="Dto\ListOptions.cs" />
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />

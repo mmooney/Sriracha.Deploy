@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PagedList;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
@@ -52,24 +53,28 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public List<DeployBatchRequest> GetBatchRequestList()
+		public List<DeployBatchRequest> GetDeployBatchRequestList()
 		{
 			return _deployRepository.GetBatchRequestList();
 		}
 
-		public DeployBatchRequest GetBatchRequest(string id)
+		public DeployBatchRequest GetDeployBatchRequest(string id)
 		{
 			return _deployRepository.GetBatchRequest(id);
 		}
 
 
-		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList)
+		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList)
 		{
-			return _deployRepository.CreateBatchRequest(itemList);
+			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow);
 		}
 
+		public IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
+		{
+			return _deployRepository.GetDeployBatchStatusList(listOptions);
+		}
 
-		public DeployBatchStatus GetBatchDeployStatus(string deployBatchRequestId)
+		public DeployBatchStatus GetDeployBatchStatus(string deployBatchRequestId)
 		{
 			var status = new DeployBatchStatus
 			{

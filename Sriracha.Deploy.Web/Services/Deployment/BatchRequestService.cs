@@ -21,11 +21,11 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 		{
 			if(request == null || string.IsNullOrWhiteSpace(request.Id))
 			{
-				return _deployRequestManager.GetBatchRequestList();
+				return _deployRequestManager.GetDeployBatchRequestList();
 			}
 			else 
 			{
-				return _deployRequestManager.GetBatchRequest(request.Id);
+				return _deployRequestManager.GetDeployBatchRequest(request.Id);
 			}
 		}
 
@@ -43,7 +43,7 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 
 		private DeployBatchRequest Save(DeployBatchRequest request)
 		{
-			var item = _deployRequestManager.CreateBatchRequest(request.ItemList);
+			var item = _deployRequestManager.CreateDeployBatchRequest(request.ItemList);
 			return item;
 		}
 	}

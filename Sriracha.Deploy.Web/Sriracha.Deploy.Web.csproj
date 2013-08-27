@@ -197,7 +197,8 @@
     <Compile Include="Services\ComponentConfigurationService.cs" />
     <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
-    <Compile Include="Services\Deployment\BatchDeployStatusService.cs" />
+    <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />
+    <Compile Include="Services\Deployment\DeployBatchStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
     <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\JsonPagedList.cs" />
     <Compile Include="Services\ProjectService.cs" />
+    <Compile Include="Services\RequestBase.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />

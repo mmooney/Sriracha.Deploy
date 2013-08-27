@@ -6,6 +6,7 @@ using System.Transactions;
 using AutoMapper;
 using MMDB.Shared;
 using NLog;
+using PagedList;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -144,7 +145,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList)
+		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc)
 		{
 			foreach(var item in itemList)
 			{
@@ -153,6 +154,7 @@ namespace Sriracha.Deploy.RavenDB
 			var request = new DeployBatchRequest
 			{
 				Id = Guid.NewGuid().ToString(),
+				SubmittedDateTimeUtc = submittedDateTimeUtc,
 				ItemList = itemList
 			};
 			_documentSession.Store(request);
@@ -171,6 +173,30 @@ namespace Sriracha.Deploy.RavenDB
 				return null;
 			}
 			return Mapper.Map(dbItem, new DeployStateSummary());
+		}
+
+
+		public IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
+		{
+			var requestList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
+			var returnListItems = requestList.Select(i=>BuildDeployBatchStatus(i)).ToList();
+			return new StaticPagedList<DeployBatchStatus>(returnListItems, requestList.PageNumber, requestList.PageSize, requestList.TotalItemCount);
+		}
+
+		private DeployBatchStatus BuildDeployBatchStatus(DeployBatchRequest deployBatchRequest)
+		{
+			var status = new DeployBatchStatus
+			{
+				Request = deployBatchRequest,
+				DeployBatchRequestId = deployBatchRequest.Id,
+				DeployStateList = new List<DeployStateSummary>()
+			};
+			foreach (var requestItem in status.Request.ItemList)
+			{
+				var state = this.TryGetDeployStateSummaryByDeployBatchRequestItemId(requestItem.Id);
+				status.DeployStateList.Add(state);
+			}
+			return status;
 		}
 	}
 }

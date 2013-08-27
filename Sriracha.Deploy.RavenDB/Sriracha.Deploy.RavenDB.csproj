@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentSessionExtensions.cs" />
     <Compile Include="RavenDeployRepository.cs" />
     <Compile Include="FileStorageDto.cs" />
     <Compile Include="IRavenAttachmentManager.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="RavenFileStorage_Collection.cs" />
     <Compile Include="RavenHelper.cs" />
     <Compile Include="RavenProjectRepository.cs" />
+    <Compile Include="RavenQueryExtensions.cs" />
     <Compile Include="RavenSystemLogRepository.cs" />
   </ItemGroup>
   <ItemGroup>
