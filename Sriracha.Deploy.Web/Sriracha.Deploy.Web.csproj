@@ -197,6 +197,7 @@
     <Compile Include="Services\ComponentConfigurationService.cs" />
     <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
+    <Compile Include="Services\Deployment\BatchDeployStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
     <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
@@ -321,6 +322,7 @@
     <Content Include="Scripts\sriracha\buildController.js" />
     <Content Include="Scripts\sriracha\deployController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchRequestController.js" />
+    <Content Include="Scripts\sriracha\deployment\deployBatchStatusController.js" />
     <Content Include="Scripts\sriracha\homeController.js" />
     <Content Include="Scripts\sriracha\models\environmentSelector.js" />
     <Content Include="Scripts\sriracha\navigation.js" />
@@ -356,6 +358,7 @@
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
     <Content Include="Templates\deployment-batchRequest-template.html" />
+    <Content Include="Templates\deployment-batchStatus-template.html" />
     <Content Include="Templates\directives\selectEnvironmentMachines.html" />
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment-submit-template.html" />

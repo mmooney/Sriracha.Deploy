@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Transactions;
+using AutoMapper;
 using MMDB.Shared;
 using NLog;
 using Raven.Client;
@@ -61,7 +62,6 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
 			{
-				bool done = false;
 				this._logger.Trace("Checking for next deployment");
 				var tempItem = this._documentSession.Query<DeployState>()
 										.Customize(i=>i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
@@ -141,6 +141,36 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployBatchRequest GetBatchRequest(string id)
 		{
 			return _documentSession.Load<DeployBatchRequest>(id);
+		}
+
+
+		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList)
+		{
+			foreach(var item in itemList)
+			{
+				item.Id = Guid.NewGuid().ToString();
+			}
+			var request = new DeployBatchRequest
+			{
+				Id = Guid.NewGuid().ToString(),
+				ItemList = itemList
+			};
+			_documentSession.Store(request);
+			_documentSession.SaveChanges();
+			return request;
+		}
+
+
+		public DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId)
+		{
+			var dbItem = (from i in _documentSession.Query<DeployState>()
+							where i.DeployBatchRequestItemId == deployBatchRequestItemId
+							select i).FirstOrDefault();
+			if(dbItem == null)
+			{
+				return null;
+			}
+			return Mapper.Map(dbItem, new DeployStateSummary());
 		}
 	}
 }

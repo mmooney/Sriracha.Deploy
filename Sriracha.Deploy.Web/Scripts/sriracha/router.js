@@ -111,6 +111,10 @@
 			templateUrl: "templates/deployment-batchRequest-template.html",
 			controller: "deployBatchRequestController"
 		})
+		.when(navigator.deployment.batchStatus.url, {
+			templateUrl: "templates/deployment-batchStatus-template.html",
+			controller: "deployBatchStatusController"
+		})
 		.when(Sriracha.Navigation.Deployment.SubmitUrl, {
 			templateUrl: "templates/deployment-submit-template.html",
 			controller: "DeployController"

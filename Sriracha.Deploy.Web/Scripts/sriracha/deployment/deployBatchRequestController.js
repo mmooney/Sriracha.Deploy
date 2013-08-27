@@ -36,6 +36,9 @@
 		if ($scope.project && $scope.component) {
 			$scope.environmentList = _.filter($scope.project.environmentList,
 										function (env) {
+											if(!env || !env.componentList) {
+												return false;
+											}
 											var anyItems = _.any(env.componentList,
 												function (x) {
 													return x.componentId == $scope.component.id;
@@ -113,5 +116,17 @@
 			var index = $scope.selectedItems.indexOf(item);
 			$scope.selectedItems.splice(index, 1);
 		}
+	}
+
+	$scope.submitBuildRequest = function () {
+		var request = new SrirachaResource.deployBatchRequest();
+		request.itemList = $scope.selectedItems;
+		request.$save(null,
+			function () {
+				alert("success!")
+			},
+			function (err) {
+				ErrorReporter.handleResourceError(err);
+			});
 	}
 });

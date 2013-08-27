@@ -76,34 +76,34 @@
 	self.environment = _.findWhere(project.environmentList, { id: environmentId });
 	self.selectedMachines = {};
 
-	if (self.environment.componentList) {
-		self.environmentComponent = _.findWhere(self.environment.componentList, { componentId: self.build.projectComponentId });
+	if (self.environment) {
+		if (self.environment.componentList) {
+			self.environmentComponent = _.findWhere(self.environment.componentList, { componentId: self.build.projectComponentId });
+		}
+
+		self.validationResult = srirachaResource.validateEnvironment.get({ buildId: self.build.id, environmentId: self.environment.id },
+			function () {
+				self.environmentResults = getEnvironmentResults(self.validationResult);
+				self.environmentResultsIncomplete = _.any(self.environmentResults, function (x) { return !x.present; });
+
+				self.machineResults = {};
+				self.machineResultsIncomplete = {};
+				if (!self.environmentComponent || !self.environmentComponent.machineList || !self.environmentComponent.machineList.length) {
+					self.noData = true;
+				}
+				else {
+					_.each(self.environmentComponent.machineList, function (machine) {
+						self.machineResults[machine.id] = getMachineResults(self.validationResult, machine.id);
+						self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
+					});
+				}
+				if (dataLoadedCallback) {
+					dataLoadedCallback();
+				}
+			},
+			function (err) {
+				errorRepoter.handleResourceError(err);
+			});
 	}
-
-	self.validationResult = srirachaResource.validateEnvironment.get({ buildId: self.build.id, environmentId: self.environment.id },
-		function () {
-			self.environmentResults = getEnvironmentResults(self.validationResult);
-			self.environmentResultsIncomplete = _.any(self.environmentResults, function (x) { return !x.present; });
-
-			self.machineResults = {};
-			self.machineResultsIncomplete = {};
-			if (!self.environmentComponent || !self.environmentComponent.machineList || !self.environmentComponent.machineList.length) {
-				self.noData = true;
-			}
-			else {
-				_.each(self.environmentComponent.machineList, function (machine) {
-					self.machineResults[machine.id] = getMachineResults(self.validationResult, machine.id);
-					self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
-				});
-			}
-			if (dataLoadedCallback) {
-				dataLoadedCallback();
-			}
-		},
-		function (err) {
-			errorRepoter.handleResourceError(err);
-		});
-
-
 };
 

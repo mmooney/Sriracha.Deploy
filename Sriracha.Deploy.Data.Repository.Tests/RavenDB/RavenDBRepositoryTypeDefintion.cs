@@ -9,11 +9,8 @@ namespace Sriracha.Deploy.Data.Repository.Tests.RavenDB
 {
 	public class RavenDBRepositoryTypeDefintion<RepositoryType> : RepositoryTypeDefinition
 	{
-		private List<IDisposable> _disposableList;
-
 		public RavenDBRepositoryTypeDefintion()
 		{
-			_disposableList = new List<IDisposable>();
 		}
 
 		public override object CreateRepository()

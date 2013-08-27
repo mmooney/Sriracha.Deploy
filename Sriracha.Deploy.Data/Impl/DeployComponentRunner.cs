@@ -33,8 +33,8 @@ namespace Sriracha.Deploy.Data.Impl
 						break;
 					case EnumDeployTaskExecutionResultStatus.Error:
 						statusManager.Info(deployStateId, string.Format("Step {0}: End {1}, failed", stepCounter, taskDefinition.TaskDefintionName));
-						return;
-						break;
+						return;	//error error eject!
+						//break;
 					case EnumDeployTaskExecutionResultStatus.Warning:
 						statusManager.Info(deployStateId, string.Format("Step {0}: End {1}, completed with warnings", stepCounter, taskDefinition.TaskDefintionName));
 						break;

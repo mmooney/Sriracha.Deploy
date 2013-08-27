@@ -61,5 +61,28 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			return _deployRepository.GetBatchRequest(id);
 		}
+
+
+		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList)
+		{
+			return _deployRepository.CreateBatchRequest(itemList);
+		}
+
+
+		public DeployBatchStatus GetBatchDeployStatus(string deployBatchRequestId)
+		{
+			var status = new DeployBatchStatus
+			{
+				DeployBatchRequestId = deployBatchRequestId,
+				Request = _deployRepository.GetBatchRequest(deployBatchRequestId),
+				DeployStateList = new List<DeployStateSummary>()
+			};
+			foreach(var requestItem in status.Request.ItemList)
+			{
+				var state = _deployRepository.TryGetDeployStateSummaryByDeployBatchRequestItemId(requestItem.Id);
+				status.DeployStateList.Add(state);
+			}
+			return status;
+		}
 	}
 }

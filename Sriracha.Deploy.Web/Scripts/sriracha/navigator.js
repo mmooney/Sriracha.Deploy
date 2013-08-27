@@ -108,6 +108,11 @@
 				url: "/deploy/batchRequest",
 				clientUrl: function () { return root.getUrl(this.url) },
 				go: function() { root.goTo(this.url) }
+			},
+			batchStatus: {
+				url: "/deploy/batchStatus/:deployBatchRequestId",
+				clientUrl: function (deployBatchRequestId) { return root.getUrl(this.url, { deployBatchRequestId: deployBatchRequestId }); },
+				go: function (deployBatchRequestId) { root.goTo(this.url, { deployBatchRequestId: deployBatchRequestId }); }
 			}
 		};
 		return root;

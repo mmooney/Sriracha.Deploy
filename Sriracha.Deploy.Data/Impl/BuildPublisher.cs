@@ -85,7 +85,6 @@ namespace Sriracha.Deploy.Data.Impl
 				FileName = Path.GetFileName(zipPath)
 			};
 			branchId = FormatBranch(branchId, version);
-			string fileId;
 			using (var client = new JsonServiceClient(url))
 			{
 				_logger.Debug("Posting file {0} to URL {1}", zipPath, url);

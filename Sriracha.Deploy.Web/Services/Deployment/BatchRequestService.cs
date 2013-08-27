@@ -31,15 +31,20 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 
 		public object Post(DeployBatchRequest request)
 		{
-			//if(request == null)
-			//{
-			//	throw new ArgumentNullException();
-			//}
-			//if(string.IsNullOrWhiteSpace(request.Id))
-			//{
-			//	_deployRequestManager.CreateBatchRequest(
-			//}
-			throw new NotImplementedException();
+			var returnValue = Save(request);
+			return returnValue;
+		}
+
+		public object Put(DeployBatchRequest request)
+		{
+			return this.Save(request);
+		}
+
+
+		private DeployBatchRequest Save(DeployBatchRequest request)
+		{
+			var item = _deployRequestManager.CreateBatchRequest(request.ItemList);
+			return item;
 		}
 	}
 }

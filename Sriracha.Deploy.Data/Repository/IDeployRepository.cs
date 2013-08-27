@@ -17,5 +17,9 @@ namespace Sriracha.Deploy.Data.Repository
 
 		List<DeployBatchRequest> GetBatchRequestList();
 		DeployBatchRequest GetBatchRequest(string id);
+
+		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList);
+
+		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
 	}
 }
