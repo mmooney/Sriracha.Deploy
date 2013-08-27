@@ -1,4 +1,5 @@
 ﻿ngSriracha.controller("deployBatchRequestController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {
 
 	};
@@ -123,7 +124,7 @@
 		request.itemList = $scope.selectedItems;
 		request.$save(null,
 			function () {
-				alert("success!")
+				$scope.navigator.deployment.batchStatus.go(request.id);
 			},
 			function (err) {
 				ErrorReporter.handleResourceError(err);

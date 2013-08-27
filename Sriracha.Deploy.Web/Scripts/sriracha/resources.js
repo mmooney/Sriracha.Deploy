@@ -12,6 +12,7 @@
 		deployRequest: $resource("/api/deployRequest/:deployRequestId"),
 		deployState: $resource("/api/deployState/:deployState"),
 		deployBatchRequest: $resource("/api/deploybatchRequest/:deployBatchRequestId"),
+		deployBatchStatus: $resource("/api/deploybatchStatus/:id"),
 		validateEnvironment: $resource("/api/validateEnvironment"),
 		systemLog: $resource("/api/systemLog")
 	}
