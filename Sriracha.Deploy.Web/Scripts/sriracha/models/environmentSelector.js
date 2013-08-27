@@ -43,8 +43,6 @@
 			for (var i = 0; i < validationResult.validationResult.resultList.length; i++) {
 				var resultItem = validationResult.validationResult.resultList[i];
 				var machineResultList = resultItem.taskValidationResult.machineResultList[machineId];
-				console.log(resultItem.taskValidationResult.machineResultList);
-				console.log(machineId);
 				if (machineResultList && machineResultList.length) {
 					for (var j = 0; j < machineResultList.length; j++) {
 						var machineResultItem = machineResultList[j];
@@ -98,7 +96,6 @@
 					self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
 				});
 			}
-			console.log(self);
 			if (dataLoadedCallback) {
 				dataLoadedCallback();
 			}

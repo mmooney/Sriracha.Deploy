@@ -1,5 +1,12 @@
 ﻿ngSriracha.controller("deployBatchRequestController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
-	$scope.name = "test";
+	$scope.selection = {
+
+	};
+	$scope.idValues = {
+		buildId: $routeParams.buildId,
+		environmentId: $routeParams.environmentId
+	};
+
 	$scope.projectList = SrirachaResource.project.query({},
 		function () {
 		},
@@ -37,15 +44,41 @@
 											return anyItems;
 										})
 		}
+		$scope.updateEnvironmentMachines();
+	}
+
+	$scope.buildSelected = function () {
+		$scope.updateEnvironmentMachines();
 	}
 
 	$scope.environmentSelected = function () {
-		$scope.machineList = null;
-		$scope.selectedMachines = null;
-		var environmentComponent = _.find($scope.environment.componentList, function (component) { return component.componentId == $scope.component.id; });
-		if (environmentComponent) {
-			$scope.machineList = environmentComponent.machineList;
-			$scope.selectedMachines = [];
+		//$scope.machineList = null;
+		//$scope.selectedMachines = null;
+		//var environmentComponent = _.find($scope.environment.componentList, function (component) { return component.componentId == $scope.component.id; });
+		//if (environmentComponent) {
+		//	$scope.machineList = environmentComponent.machineList;
+		//	$scope.selectedMachines = [];
+		//}
+		$scope.updateEnvironmentMachines();
+	}
+
+	$scope.canAddBuild = function () {
+		if ($scope.build && $scope.selection.machineList && $scope.selection.machineList.length) {
+			return _.any($scope.selection.machineList, function (x) { return x.selected; });
+		}
+		else {
+			return false;
+		}
+	}
+
+	$scope.updateEnvironmentMachines = function () {
+		if($scope.build && $scope.environment) {
+			$scope.idValues.buildId = $scope.build.id;
+			$scope.idValues.environmentId = $scope.environment.id;
+		}
+		else  {
+			$scope.idValues.buildId = null;
+			$scope.idValues.environmentId = null;
 		}
 	}
 
@@ -55,8 +88,27 @@
 			alert("This build has already been included");
 		}
 		else {
-			$scope.selectedItems.push($scope.build);
+			var deploymentItem = {
+				build: $scope.build,
+				machineList: _.filter($scope.selection.machineList, function (x) { return x.selected; })
+			};
+
+			$scope.selectedItems.push(deploymentItem);
 			$scope.build = null;
 		}
+	}
+
+	$scope.moveItemUp = function (item) {
+		var index = $scope.selectedItems.indexOf(item);
+		$scope.selectedItems.splice(index - 1, 2, $scope.selectedItems[index], $scope.selectedItems[index-1]);
+	}
+
+	$scope.moveItemDown = function (item) {
+		var index = $scope.selectedItems.indexOf(item);
+		console.log(item);
+		console.log(index);
+		console.log($scope.selectedItems[index + 1]);
+		console.log($scope.selectedItems[index]);
+		$scope.selectedItems.splice(index, 2, $scope.selectedItems[index+1], $scope.selectedItems[index]);
 	}
 });

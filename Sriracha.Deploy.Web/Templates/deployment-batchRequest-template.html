@@ -5,12 +5,22 @@
 			<tr>
 				<th>Execution Order</th>
 				<th>Build</th>
+				<th>Machines</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="item in selectedItems">
-				<td>{{$index+1}}</td>
-				<td>{{item.displayValue}}</td>
+				<td>{{$index+1}}
+					<button class="btn" ng-disabled="$index==0" ng-click="moveItemUp(item)"><i class="icon-arrow-up"></i></button>
+					<button class="btn" ng-disabled="$index==(selectedItems.length-1)" ng-click="moveItemDown(item)"><i class="icon-arrow-down"></i></button>
+					<button class="btn btn-danger"><i class="icon-trash"></i></button>
+				</td>
+				<td>{{item.build.displayValue}}</td>
+				<td>
+					<ul>
+						<li ng-repeat="machine in item.machineList">{{machine.machineName}}</li>
+					</ul>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -45,7 +55,7 @@
 					</div>
 					<div>
 						<b>Build:</b>
-						<select ng-model="build" ng-options="item as item.displayValue for item in buildList" ></select>
+						<select ng-model="build" ng-options="item as item.displayValue for item in buildList" ng-change="buildSelected()" ></select>
 					</div>
 				</td>
 				<td style="vertical-align:top">
@@ -55,19 +65,14 @@
 					</div>
 					<div>
 						<b>Machines:</b>
-						<div ng-model="machine" ng-repeat="item in machineList" class="control-group">
-							<label class="checkbox">
-								<input type="checkbox" ng-model="selectedMachines[item.id]" />
-								{{item.machineName}}
-							</label>
-						</div>
+						<select-environment-machines buildId="{{idValues.buildId}}" environmentId="{{idValues.environmentId}}" selection="selection">a</select-environment-machines>
 					</div>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 	<div>
-		<button class="btn btn-primary" ng-click="addBuildToBatch()" ng-disabled="!build">Add Build</button>
+		<button class="btn btn-primary" ng-click="addBuildToBatch()" ng-disabled="!canAddBuild()">Add Build</button>
 	</div>
 </fieldset>
 <center>

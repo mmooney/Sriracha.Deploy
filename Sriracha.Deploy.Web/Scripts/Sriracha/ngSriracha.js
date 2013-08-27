@@ -43,16 +43,13 @@ ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, Er
 								function () {
 									scope.environmentSelector = new EnvironmentSelector(scope.build, scope.project, scope.environmentid, SrirachaResource, ErrorReporter,
 										function () {
-											console.log("hello");
 											if (scope.environmentSelector.environmentComponent) {
 												scope.selection.machineList = scope.environmentSelector.environmentComponent.machineList;
 											}
 											if (!scope.selection.machineList || !scope.selection.machineList.length) {
 												scope.selection.machineList = [];
 											}
-											console.log("goodbye");
 										});
-									console.log("what?");
 								},
 								function (err) {
 									ErrorReporter.handleResourceError(error);
