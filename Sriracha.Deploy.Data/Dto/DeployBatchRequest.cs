@@ -12,8 +12,8 @@ namespace Sriracha.Deploy.Data.Dto
 		public List<DeployBatchRequestItem> ItemList { get; set; }
 		public EnumDeployStatus Status { get; set; }
 
-		public DateTime? DeploymentStartedDateTimeUtc { get; set; }
-		public DateTime? DeploymentCompleteDateTimeUtc { get; set; }
+		public DateTime? StartedDateTimeUtc { get; set; }
+		public DateTime? CompleteDateTimeUtc { get; set; }
 		public string ErrorDetails { get; set; }
 
 	}

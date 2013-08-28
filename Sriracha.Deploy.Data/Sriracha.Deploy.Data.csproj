@@ -96,6 +96,7 @@
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
     <Compile Include="IUserIdentity.cs" />
+    <Compile Include="Dto\PagedSortedList.cs" />
     <Compile Include="NLogDBLogTarget.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
     <Compile Include="IDeployHistoryManager.cs" />

@@ -76,7 +76,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 						{
 							foreach(var machine in item.MachineList)
 							{
-								var deployState = _deployStateManager.CreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id);
+								var deployState = _deployStateManager.CreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
 								try 
 								{
 									var machineIdList = new List<string> { machine.Id };

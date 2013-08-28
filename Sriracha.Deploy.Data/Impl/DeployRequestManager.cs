@@ -49,7 +49,7 @@ namespace Sriracha.Deploy.Data.Impl
 				var machine = _projectRepository.GetMachine(id);
 				machineList.Add(machine);
 			}
-			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList);
+			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList, null);
 		}
 
 
@@ -69,7 +69,7 @@ namespace Sriracha.Deploy.Data.Impl
 			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow);
 		}
 
-		public IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
+		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
 		{
 			return _deployRepository.GetDeployBatchStatusList(listOptions);
 		}
@@ -84,8 +84,11 @@ namespace Sriracha.Deploy.Data.Impl
 			};
 			foreach(var requestItem in status.Request.ItemList)
 			{
-				var state = _deployRepository.TryGetDeployStateSummaryByDeployBatchRequestItemId(requestItem.Id);
-				status.DeployStateList.Add(state);
+				var state = _deployRepository.TryGetDeployStateSummaryByDeployBatchRequestItemId(deployBatchRequestId);
+				if(state != null)
+				{
+					status.DeployStateList.Add(state);
+				}
 			}
 			return status;
 		}

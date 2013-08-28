@@ -18,14 +18,15 @@ namespace Sriracha.Deploy.RavenDB
 			var documentQuery = documentSession.Advanced.LuceneQuery<T>()
 							.Statistics(out stats);
 
-			string sortField = StringHelper.IsNullOrEmpty(listOptions.SortField, defaultSortField);
-			if (listOptions.SortAscending.GetValueOrDefault(defaultSortAscending))
+			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, defaultSortField);
+			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(defaultSortAscending);
+			if (listOptions.SortAscending.Value)
 			{
-				documentQuery = documentQuery.OrderBy(sortField);
+				documentQuery = documentQuery.OrderBy(listOptions.SortField);
 			}
 			else
 			{
-				documentQuery = documentQuery.OrderByDescending(sortField);
+				documentQuery = documentQuery.OrderByDescending(listOptions.SortField);
 			}
 
 			int pageNumber = listOptions.PageNumber.GetValueOrDefault(1);

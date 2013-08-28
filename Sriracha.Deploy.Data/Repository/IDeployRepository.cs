@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IDeployRepository
 	{
-		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList);
+		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId);
 		DeployState GetDeployState(string deployStateId);
 		DeployState PopNextDeployment();
 		DeployBatchRequest PopNextBatchDeployment();
@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.Data.Repository
 
 		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc);
 
-		IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
+		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
 
 

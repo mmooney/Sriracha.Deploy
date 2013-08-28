@@ -204,7 +204,6 @@
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
-    <Compile Include="Services\JsonPagedList.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RequestBase.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
@@ -323,6 +322,7 @@
     <Content Include="Scripts\angular\ng-upload.min.js" />
     <Content Include="Scripts\sriracha\buildController.js" />
     <Content Include="Scripts\sriracha\deployController.js" />
+    <Content Include="Scripts\sriracha\deployment\deployBatchListController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchRequestController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchStatusController.js" />
     <Content Include="Scripts\sriracha\homeController.js" />
@@ -360,6 +360,7 @@
     <Content Include="Templates\build-delete-template.html" />
     <Content Include="Templates\build-view-template.html" />
     <Content Include="Templates\deployment-batchRequest-template.html" />
+    <Content Include="Templates\deployment-batchList-template.html" />
     <Content Include="Templates\deployment-batchStatus-template.html" />
     <Content Include="Templates\directives\selectEnvironmentMachines.html" />
     <Content Include="Templates\systemlog-list-template.html" />

@@ -109,6 +109,24 @@
 				clientUrl: function () { return root.getUrl(this.url) },
 				go: function() { root.goTo(this.url) }
 			},
+			batchList: {
+				urlList: [
+					"/deploy/batchList",
+					"/deploy/batchList/:pageNumber",
+					"/deploy/batchList/:pageNumber/:pageSize",
+					"/deploy/batchList/:pageNumber/:pageSize/:sortField",
+					"/deploy/batchList/:pageNumber/:pageSize/:sortField/:sortAscending"
+				],
+				url: "/deploy/batchList/:pageNumber/:pageSize/:sortField/:sortAscending",
+				clientUrl: function (pageNumber, pageSize, sortField, sortAscending) 
+					{ 
+						return root.getUrl(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+					},
+				go: function (pageNumber, pageSize, sortField, sortAscending)  
+					{ 
+						root.goTo(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+					}
+			},
 			batchStatus: {
 				url: "/deploy/batchStatus/:deployBatchRequestId",
 				clientUrl: function (deployBatchRequestId) { return root.getUrl(this.url, { deployBatchRequestId: deployBatchRequestId }); },

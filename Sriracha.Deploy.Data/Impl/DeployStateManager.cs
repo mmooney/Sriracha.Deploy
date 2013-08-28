@@ -28,7 +28,7 @@ namespace Sriracha.Deploy.Data.Impl
 			return _deployRepository.GetDeployState(deployStateId);
 		}
 
-		public DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId)
+		public DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
 		{
 			var build = _buildRepository.GetBuild(buildId);
 			var environment = _projectRepository.GetEnvironment(environmentId);
@@ -39,7 +39,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				_projectRepository.GetMachine(machineId)
 			};
-			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList);
+			return _deployRepository.CreateDeployment(build, branch, environment, component, machineList, deployBatchRequestItemId);
 		}
 
 

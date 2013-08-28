@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data
 	public interface IDeployStateManager
 	{
 		DeployState GetDeployState(string deployStateId);
-		DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId);
+		DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
 		DeployState PopNextDeployment();
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);

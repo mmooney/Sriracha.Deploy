@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.RavenDB
 			_logger = DIHelper.VerifyParameter(logger);
 		}
 
-		public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList)
+		public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
 		{
 			var deployState = new DeployState
 			{
@@ -37,7 +37,8 @@ namespace Sriracha.Deploy.RavenDB
 				Component = component,
 				MachineList = machineList.ToList(),
 				Status = EnumDeployStatus.NotStarted,
-				SubmittedDateTimeUtc = DateTime.UtcNow
+				SubmittedDateTimeUtc = DateTime.UtcNow,
+				DeployBatchRequestItemId = deployBatchRequestItemId
 			};
 			_documentSession.Store(deployState);
 			_documentSession.SaveChanges();
@@ -117,7 +118,7 @@ namespace Sriracha.Deploy.RavenDB
 				}
 
 				reloadedItem.Status = EnumDeployStatus.InProcess;
-				reloadedItem.DeploymentStartedDateTimeUtc = DateTime.UtcNow;
+				reloadedItem.StartedDateTimeUtc = DateTime.UtcNow;
 				itemId = reloadedItem.Id;
 				this._documentSession.SaveChanges();
 
@@ -216,11 +217,12 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
+		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
 		{
 			var requestList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
 			var returnListItems = requestList.Select(i=>BuildDeployBatchStatus(i)).ToList();
-			return new StaticPagedList<DeployBatchStatus>(returnListItems, requestList.PageNumber, requestList.PageSize, requestList.TotalItemCount);
+			var pagedList = new StaticPagedList<DeployBatchStatus>(returnListItems, requestList.PageNumber, requestList.PageSize, requestList.TotalItemCount);
+			return new PagedSortedList<DeployBatchStatus>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
 
 		private DeployBatchStatus BuildDeployBatchStatus(DeployBatchRequest deployBatchRequest)
@@ -248,7 +250,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				case EnumDeployStatus.Success:
 				case EnumDeployStatus.Error:
-					batchRequest.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
+					batchRequest.CompleteDateTimeUtc = DateTime.UtcNow;
 					break;
 			}
 			if (err != null)

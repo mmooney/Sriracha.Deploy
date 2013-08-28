@@ -4,17 +4,22 @@ using System.Linq;
 using System.Web;
 using PagedList;
 
-namespace Sriracha.Deploy.Web.Services
+namespace Sriracha.Deploy.Data.Dto
 {
-	public class JsonPagedList<T> : IPagedList
+	public class PagedSortedList<T> : IPagedList
 	{
 		private IPagedList<T> _list;
 		private IPagedList<Data.Dto.SystemLog> pagedList;
 
-		public JsonPagedList(IPagedList<T> list)
+		public PagedSortedList(IPagedList<T> list, string sortField, bool sortAscending)
 		{
 			_list = list;
+			this.SortAscending = sortAscending;
+			this.SortField = sortField;
 		}
+
+		public string SortField { get; private set; }
+		public bool SortAscending { get; private set; }
 
 		public List<T> Items
 		{

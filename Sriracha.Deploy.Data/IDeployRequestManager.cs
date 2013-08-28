@@ -16,7 +16,7 @@ namespace Sriracha.Deploy.Data
 		DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList);
 		DeployBatchRequest GetDeployBatchRequest(string id);
 
-		IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
+		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		DeployBatchStatus GetDeployBatchStatus(string deployBatchRequestId);
 	}
 }

@@ -40,7 +40,7 @@ namespace Sriracha.Deploy.Web.Services.SystemLog
 				sortAscending = request.SortAscending.Value;
 			}
 			var pagedList = _systemLogRepository.GetList(pageSize, pageNumber, sortField, sortAscending);
-			return new JsonPagedList<Sriracha.Deploy.Data.Dto.SystemLog>(pagedList);
+			return new PagedSortedList<Sriracha.Deploy.Data.Dto.SystemLog>(pagedList, sortField.ToString(), sortAscending);
 		}
 
 	}
