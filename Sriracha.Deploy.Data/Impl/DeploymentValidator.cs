@@ -95,5 +95,28 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return returnValue;
 		}
+
+		public TaskDefinitionValidationResult ValidateMachineTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentComponent environmentComponent, DeployMachine machine)
+		{
+			var result = new TaskDefinitionValidationResult();
+			//Verify Static Values
+			var environmentParmeters = taskDefinition.GetEnvironmentTaskParameterList();
+			foreach (var p in environmentParmeters)
+			{
+				var item = this.GetValidationResultItem(p, environmentComponent.ConfigurationValueList);
+				result.EnvironmentResultList.Add(item);
+			}
+			var machineParameters = taskDefinition.GetMachineTaskParameterList();
+
+			var machineResultList = new List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem>();
+			foreach (var p in machineParameters)
+			{
+				var item = this.GetValidationResultItem(p, machine.ConfigurationValueList);
+				machineResultList.Add(item);
+			}
+			result.MachineResultList.Add(machine.Id, machineResultList);
+
+			return result;
+		}
 	}
 }

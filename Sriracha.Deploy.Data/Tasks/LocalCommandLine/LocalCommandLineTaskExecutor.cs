@@ -21,19 +21,16 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			this._validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			var result = new DeployTaskExecutionResult();
-			var validationResult = _validator.ValidateTaskDefinition(definition, environmentComponent);
+			var validationResult = _validator.ValidateMachineTaskDefinition(definition, environmentComponent, machine);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			foreach (var machine in environmentComponent.MachineList)
-			{
-				this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
-			}
+			this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
 			statusManager.Info(deployStateId, string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			return statusManager.BuildResult();
 		}

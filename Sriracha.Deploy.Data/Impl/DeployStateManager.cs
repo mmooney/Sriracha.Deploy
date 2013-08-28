@@ -11,16 +11,37 @@ namespace Sriracha.Deploy.Data.Impl
 	public class DeployStateManager : IDeployStateManager
 	{
 		private readonly IDeployRepository _deployRepository;
+		private readonly IBuildRepository _buildRepository;
+		private readonly IProjectRepository _projectRepository;
+		private readonly IDeploymentValidator _validator;
 
-		public DeployStateManager(IDeployRepository deployRepository)
+		public DeployStateManager(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+			_buildRepository = DIHelper.VerifyParameter(buildRepository);
+			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_validator = DIHelper.VerifyParameter(deploymentValidator);
 		}
 
 		public DeployState GetDeployState(string deployStateId)
 		{
 			return _deployRepository.GetDeployState(deployStateId);
 		}
+
+		public DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId)
+		{
+			var build = _buildRepository.GetBuild(buildId);
+			var environment = _projectRepository.GetEnvironment(environmentId);
+			var component = _projectRepository.GetComponent(build.ProjectComponentId);
+			var branch = _projectRepository.GetBranch(build.ProjectBranchId);
+			var validationResult = _validator.ValidateDeployment(component, environment);
+			var machineList = new List<DeployMachine>()
+			{
+				_projectRepository.GetMachine(machineId)
+			};
+			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList);
+		}
+
 
 		public DeployState PopNextDeployment()
 		{
@@ -42,6 +63,22 @@ namespace Sriracha.Deploy.Data.Impl
 		public void MarkDeploymentFailed(string deployStateId, Exception err)
 		{
 			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
+		}
+
+		public DeployBatchRequest PopNextBatchDeployment()
+		{
+			return _deployRepository.PopNextBatchDeployment();
+		}
+
+
+		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
+		{
+			_deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success);
+		}
+
+		public void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err)
+		{
+			_deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err);
 		}
 	}
 }

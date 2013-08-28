@@ -16,7 +16,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		public void ExecuteWithValidConfiguration_CreatesXmlFiles()
 		{
 			var testData = XmlConfigFileTaskTestData.Create();
-			testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.RuntimeSystemSettings);
+			testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
 			foreach (var machine in testData.EnvironmentComponent.MachineList)
 			{
 				string outputPath = Path.Combine(testData.RuntimeSystemSettings.GetLocalMachineDirectory(machine.MachineName), testData.TaskDefinition.Options.TargetFileName);
@@ -31,7 +31,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		{
 			var testData = XmlConfigFileTaskTestData.Create();
 			testData.EnvironmentComponent.ConfigurationValueList = new Dictionary<string, string>();
-			Assert.Throws<InvalidOperationException>(() => testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.RuntimeSystemSettings));
+			Assert.Throws<InvalidOperationException>(() => testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings));
 		}
 
 		private bool CompareXml(string expectedResult, string actualResult)

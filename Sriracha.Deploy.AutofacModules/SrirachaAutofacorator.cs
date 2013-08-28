@@ -54,27 +54,33 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<FileManager>().As<IFileManager>();
 			builder.RegisterType<TaskManager>().As<ITaskManager>();
 			builder.RegisterType<DeployHistoryManager>().As<IDeployHistoryManager>();
-			builder.RegisterType<ModuleInspector>().As<IModuleInspector>();
+			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
+			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
+			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
+
+			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
+			builder.RegisterType<ModuleInspector>().As<IModuleInspector>().SingleInstance();
+			builder.RegisterType<ParameterParser>().As<IParameterParser>().SingleInstance();
+			builder.RegisterType<FileWriter>().As<IFileWriter>().SingleInstance();
+			builder.RegisterType<Zipper>().As<IZipper>();
+			
 			builder.RegisterType<DeployRunner>().As<IDeployRunner>();
 			builder.RegisterType<DeployTaskStatusManager>().As<IDeployTaskStatusManager>();
 			builder.RegisterType<DeployComponentRunner>().As<IDeployComponentRunner>();
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();
-			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
 			builder.RegisterType<DeploymentValidator>().As<IDeploymentValidator>().SingleInstance();
-			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
-			builder.RegisterType<ParameterParser>().As<IParameterParser>().SingleInstance();
-			builder.RegisterType<FileWriter>().As<IFileWriter>().SingleInstance();
-			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
-			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
-			builder.RegisterType<JobScheduler>().As<IJobScheduler>();
-			builder.RegisterType<Zipper>().As<IZipper>();
+
 			builder.RegisterType<DataGenerator>().As<IDataGenerator>();
+
 			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>().SingleInstance();
 
 			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
+			builder.RegisterType<RunBatchDeploymentJob>().As<IRunBatchDeploymentJob>();
+			builder.RegisterType<PurgeSystemLogJob>().As<IPurgeSystemLogJob>();
 
 			if(_diMode == EnumDIMode.Service)
 			{
+				builder.RegisterType<JobScheduler>().As<IJobScheduler>();
 				builder.RegisterType<JobFactory>().As<IJobFactory>();
 				builder.RegisterType<StdSchedulerFactory>().As<ISchedulerFactory>();
 				builder.Register(CreateScheduler).As<IScheduler>().SingleInstance();

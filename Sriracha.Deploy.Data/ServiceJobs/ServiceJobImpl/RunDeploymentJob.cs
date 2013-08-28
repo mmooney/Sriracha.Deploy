@@ -60,7 +60,8 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 							LocalDeployDirectory = deployDirectory
 						};
 						Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-						_deployRunner.Deploy(nextDeployment.Id, nextDeployment.Environment.Id, nextDeployment.Build.Id, runtimeSettings);
+						var machineIdList = nextDeployment.MachineList.Select(i=>i.Id).ToList();
+						_deployRunner.Deploy(nextDeployment.Id, nextDeployment.Environment.Id, nextDeployment.Build.Id, machineIdList, runtimeSettings);
 
 						_deployStateManager.MarkDeploymentSuccess(nextDeployment.Id);
 

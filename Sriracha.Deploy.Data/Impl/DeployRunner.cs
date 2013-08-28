@@ -29,7 +29,7 @@ namespace Sriracha.Deploy.Data.Impl
 			_zipper = DIHelper.VerifyParameter(zipper);
 		}
 
-		public void Deploy(string deployStateId, string environmentId, string buildId, RuntimeSystemSettings systemSettings)
+		public void Deploy(string deployStateId, string environmentId, string buildId, List<string> machineIdList, RuntimeSystemSettings systemSettings)
 		{
 			var build = _buildRepository.GetBuild(buildId);
 			var environment = _projectRepository.GetEnvironment(environmentId);
@@ -55,8 +55,9 @@ namespace Sriracha.Deploy.Data.Impl
 			_zipper.ExtractFile(compressedFilePath, extractedDirectory);
 			_statusManager.Info(deployStateId, string.Format("Done decompressing deployment package {0} to directory {1}", compressedFilePath, extractedDirectory));
 
-			foreach(var machine in environmentComponent.MachineList)
+			foreach(var machineId in machineIdList)
 			{
+				var machine = environment.GetMachine(machineId);
 				string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
 				if(!Directory.Exists(machineDirectory))
 				{
@@ -66,8 +67,9 @@ namespace Sriracha.Deploy.Data.Impl
 				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
 
 				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
+
+				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentComponent, machine, systemSettings);
 			}
-			_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentComponent, systemSettings);
 		}
 
 		private void CopyAllFiles(string sourcePath, string targetPath)

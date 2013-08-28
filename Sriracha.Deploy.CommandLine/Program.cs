@@ -128,7 +128,11 @@ namespace Sriracha.Deploy.CommandLine
 						{
 							throw new Exception("BuildID (--build|-b) required for Deploy");
 						}
-						Deploy(options.EnvironmentId, options.BuildId);
+						if(string.IsNullOrWhiteSpace(options.MachineId))
+						{
+							throw new Exception("MachineID (--machine|-m) required for Deploy");
+						}
+						Deploy(options.EnvironmentId, options.BuildId, options.MachineId);
 						break;
 					case ActionType.Configure:
 						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.MachineId))
@@ -240,7 +244,7 @@ namespace Sriracha.Deploy.CommandLine
 			pm.UpdateEnvironmentComponentConfig(environmentId, componentId, configName, configValue);
 		}
 
-		private static void Deploy(string environmentID, string buildID)
+		private static void Deploy(string environmentID, string buildID, string machineId)
 		{
 			Program._logger.Info("Executing deployment request for build " + buildID + " to environment " + environmentID);
 
@@ -252,7 +256,8 @@ namespace Sriracha.Deploy.CommandLine
 			Directory.CreateDirectory(runtimeSystemSettings.LocalDeployDirectory);
 			Program._logger.Info("\tUsing path: " + runtimeSystemSettings.LocalDeployDirectory);
 
-			deploymentRunner.Deploy(null, environmentID, buildID, runtimeSystemSettings);
+			var machineIdList = new List<string> { machineId };
+			deploymentRunner.Deploy(null, environmentID, buildID, machineIdList, runtimeSystemSettings);
 
 			Program._logger.Info("Done executing deployment request for build " + buildID + " to environment " + environmentID);
 		}

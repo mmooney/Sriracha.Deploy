@@ -21,19 +21,17 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			_validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			var result = new DeployTaskExecutionResult();
-			var validationResult = _validator.ValidateTaskDefinition(definition, environmentComponent);
+			var validationResult = _validator.ValidateMachineTaskDefinition(definition, environmentComponent, machine);
 			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			foreach (var machine in environmentComponent.MachineList)
-			{
-				this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
-			}
+			this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
+
 			statusManager.Info(deployStateId, string.Format("Done XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			return statusManager.BuildResult();
 		}
@@ -80,5 +78,6 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			}
 			node.InnerText = value;
 		}
+
 	}
 }

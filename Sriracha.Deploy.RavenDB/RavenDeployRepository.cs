@@ -92,6 +92,46 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
+		public DeployBatchRequest PopNextBatchDeployment()
+		{
+			string itemId = null;
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+			{
+				this._logger.Trace("Checking for next deployment");
+				var tempItem = this._documentSession.Query<DeployBatchRequest>()
+										.Customize(i => i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
+										.OrderBy(i => i.SubmittedDateTimeUtc)
+										.Where(i => i.Status == EnumDeployStatus.NotStarted)
+										.FirstOrDefault();
+				if (tempItem == null)
+				{
+					this._logger.Trace("No pending deployment found");
+					return null;
+				}
+
+				var reloadedItem = this._documentSession.Load<DeployBatchRequest>(tempItem.Id);
+				if (reloadedItem.Status != EnumDeployStatus.NotStarted)
+				{
+					this._logger.Warn("Stale pending deployment found, actual status: " + reloadedItem.Status.ToString());
+					return null;
+				}
+
+				reloadedItem.Status = EnumDeployStatus.InProcess;
+				reloadedItem.DeploymentStartedDateTimeUtc = DateTime.UtcNow;
+				itemId = reloadedItem.Id;
+				this._documentSession.SaveChanges();
+
+				transaction.Complete();
+			}
+			if(string.IsNullOrEmpty(itemId))
+			{
+				return null;
+			}
+			else 
+			{
+				return _documentSession.Load<DeployBatchRequest>(itemId);
+			}
+		}
 
 		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
 		{
@@ -197,6 +237,26 @@ namespace Sriracha.Deploy.RavenDB
 				status.DeployStateList.Add(state);
 			}
 			return status;
+		}
+
+
+		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null)
+		{
+			var batchRequest = GetBatchRequest(deployBatchRequestId);
+			batchRequest.Status = status;
+			switch (status)
+			{
+				case EnumDeployStatus.Success:
+				case EnumDeployStatus.Error:
+					batchRequest.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
+					break;
+			}
+			if (err != null)
+			{
+				batchRequest.ErrorDetails = err.ToString();
+			}
+			this._documentSession.SaveChanges();
+			return batchRequest;
 		}
 	}
 }

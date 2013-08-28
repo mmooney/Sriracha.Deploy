@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data
 {
 	public interface IDeployRunner
 	{
-		void Deploy(string deployStateId, string environmentId, string buildId, RuntimeSystemSettings systemSettings);
+		void Deploy(string deployStateId, string environmentId, string buildId, List<string> machineIdList, RuntimeSystemSettings systemSettings);
 	}
 }

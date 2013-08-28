@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Tasks
 	public abstract class BaseDeployTaskExecutor<TaskDefinition> : IDeployTaskExecutor 
 		where TaskDefinition: IDeployTaskDefinition
 	{
-		public DeployTaskExecutionResult Execute(string deployStateId, IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+		public DeployTaskExecutionResult Execute(string deployStateId, IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			if(definition == null)
 			{
@@ -20,9 +20,9 @@ namespace Sriracha.Deploy.Data.Tasks
 				throw new ArgumentException(string.Format("Task definition must be {0}, found {1}", typeof(TaskDefinition).FullName, definition.GetType().FullName));
 			}
 			var typedDefinition = (TaskDefinition)definition;
-			return this.InternalExecute(deployStateId, statusManager, typedDefinition, environmentComponent, runtimeSystemSettings);
+			return this.InternalExecute(deployStateId, statusManager, typedDefinition, environmentComponent, machine, runtimeSystemSettings);
 		}
 
-		protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployEnvironmentComponent environmentComponent, RuntimeSystemSettings runtimeSystemSettings);
+		protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings);
 	}
 }

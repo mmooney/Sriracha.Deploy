@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.Data.Impl
 				}
 				else 
 				{
-					return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WorkingDirectory"); 
+					return Path.Combine("C:\\Temp\\Sriracha\\", "WorkingDirectory"); 
 				}
 			}
 			set 

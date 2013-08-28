@@ -12,7 +12,9 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList);
 		DeployState GetDeployState(string deployStateId);
 		DeployState PopNextDeployment();
+		DeployBatchRequest PopNextBatchDeployment();
 		DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
+		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null);
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
@@ -23,5 +25,7 @@ namespace Sriracha.Deploy.Data.Repository
 
 		IPagedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
+
+
 	}
 }
