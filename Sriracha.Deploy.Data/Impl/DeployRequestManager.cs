@@ -66,7 +66,7 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList)
 		{
-			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow);
+			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, EnumDeployStatus.NotStarted);
 		}
 
 		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)

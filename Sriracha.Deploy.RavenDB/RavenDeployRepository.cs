@@ -186,7 +186,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc)
+		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status)
 		{
 			foreach(var item in itemList)
 			{
@@ -196,7 +196,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				SubmittedDateTimeUtc = submittedDateTimeUtc,
-				ItemList = itemList
+				ItemList = itemList,
+				Status = status
 			};
 			_documentSession.Store(request);
 			_documentSession.SaveChanges();

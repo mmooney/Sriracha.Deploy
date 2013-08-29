@@ -124,7 +124,7 @@
 		request.itemList = $scope.selectedItems;
 		request.$save(null,
 			function () {
-				$scope.navigator.deployment.batchStatusView.go(request.id);
+				$scope.navigator.deployment.batchStatus.go(request.id);
 			},
 			function (err) {
 				ErrorReporter.handleResourceError(err);
