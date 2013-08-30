@@ -90,19 +90,19 @@
 
 		//Builds
 		.when(navigator.build.list.url, {
-			templateUrl: "templates/build/build-list-template.html",
+			templateUrl: "templates/builds/build-list-template.html",
 			controller: "BuildController"
 		})
 		.when(navigator.build.submit.url, {
-			templateUrl: "templates/build/build-submit-template.html",
+			templateUrl: "templates/builds/build-submit-template.html",
 			controller: "BuildController"
 		})
 		.when(navigator.build.view.url, {
-			templateUrl: "templates/build/build-view-template.html",
+			templateUrl: "templates/builds/build-view-template.html",
 			controller: "BuildController"
 		})
 		.when(navigator.build.remove.url, {
-			templateUrl: "templates/build/build-delete-template.html",
+			templateUrl: "templates/builds/build-delete-template.html",
 			controller: "BuildController"
 		})
 

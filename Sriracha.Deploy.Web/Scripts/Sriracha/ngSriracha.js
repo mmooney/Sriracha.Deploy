@@ -75,7 +75,7 @@ ngSriracha.directive("projectList", function () {
 ngSriracha.directive("buildList", function () {
 	return {
 		restrict: "E",
-		templateUrl: "templates/build-list-template.html"
+		templateUrl: "templates/builds/build-list-template.html"
 	}
 });
 

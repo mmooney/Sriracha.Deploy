@@ -137,15 +137,11 @@
 	};
 
 	//Projects
-	$scope.cancelDeleteProject = function () {
-		Sriracha.Navigation.Project.List();
-	}
-
 	$scope.deleteProject = function () {
 		SrirachaResource.project.delete(
 			{ id: $routeParams.projectId },
 			function () {
-				Sriracha.Navigation.Project.List();
+				$scope.navigator.project.list.go();
 			},
 			function (error) {
 				$scope.reportError(error);
