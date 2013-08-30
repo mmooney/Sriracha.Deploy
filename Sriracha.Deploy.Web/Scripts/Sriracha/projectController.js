@@ -97,6 +97,7 @@
 		});
 	}
 	else {
+		$scope.projectList = SrirachaResource.project.query({});
 		$scope.project = new SrirachaResource.project({});
 	}
 
