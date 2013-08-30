@@ -2,7 +2,7 @@
 
 ngSriracha.directive("taskConfig", function () {
 	return {
-		templateUrl: "templates/deploymentstep-options-edit-template.html",
+		templateUrl: "templates/project/deploymentStep/deploymentstep-options-edit-template.html",
 		link: function (scope, element, attrs) {
 			scope.taskTypeName = attrs.taskTypeName;
 			scope.addXPathValueListItem = function () {

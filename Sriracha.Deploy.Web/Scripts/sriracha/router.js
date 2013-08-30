@@ -47,16 +47,16 @@
 		})
 
 		//Deployment Steps
-		.when(Sriracha.Navigation.DeploymentStep.CreateUrl, {
-			templateUrl: "templates/deploymentstep-edit-template.html",
+		.when(navigator.deploymentStep.create.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.DeploymentStep.EditUrl, {
-			templateUrl: "templates/deploymentstep-edit-template.html",
+		.when(navigator.deploymentStep.edit.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.DeploymentStep.DeleteUrl, {
-			templateUrl: "templates/deploymentstep-delete-template.html",
+		.when(navigator.deploymentStep.remove.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-delete-template.html",
 			controller: "ProjectController"
 		})
 
