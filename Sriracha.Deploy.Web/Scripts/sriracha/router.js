@@ -61,16 +61,16 @@
 		})
 
 		//Branches
-		.when(Sriracha.Navigation.Branch.CreateUrl, {
-			templateUrl: "templates/branch-edit-template.html",
+		.when(navigator.branch.create.url, {
+			templateUrl: "templates/project/branch/branch-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Branch.EditUrl, {
-			templateUrl: "templates/branch-edit-template.html",
+		.when(navigator.branch.edit.url, {
+			templateUrl: "templates/project/branch/branch-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Branch.DeleteUrl, {
-			templateUrl: "templates/branch-delete-template.html",
+		.when(navigator.branch.remove.url, {
+			templateUrl: "templates/project/branch/branch-delete-template.html",
 			controller: "ProjectController"
 		})
 

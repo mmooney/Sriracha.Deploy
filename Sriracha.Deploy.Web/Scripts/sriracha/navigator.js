@@ -98,6 +98,23 @@
 				go: function (projectId, componentId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId }); }
 			}
 		};
+		root.branch = {
+			create: {
+				url: "/project/:projectId/branch/create",
+				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }); },
+				go: function (projectId) { root.goTo(this.url, { projectId: projectId }); }
+			},
+			edit: {
+				url: "/project/:projectId/branch/edit/:branchId",
+				clientUrl: function (projectId, branchId) { return root.getUrl(this.url, { projectId: projectId, branchId: branchId }); },
+				go: function (projectId, branchId) { root.goTo(this.url, { projectId: projectId, branchId: branchId }); }
+			},
+			remove: {
+				url: "/project/:projectId/branch/delete/:branchId",
+				clientUrl: function (projectId, branchId) { return root.getUrl(this.url, { projectId: projectId, branchId: branchId }); },
+				go: function (projectId, branchId) { root.goTo(this.url, { projectId: projectId, branchId: branchId }); }
+			}
+		}
 		root.build = {
 			list: {
 				url: "/build",

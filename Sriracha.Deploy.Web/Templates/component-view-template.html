@@ -10,12 +10,12 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="deploymentStep in component.deploymentStepList">
-			<td><a ng-href="{{getEditDeploymentStepUrl(deploymentStep)}}">{{deploymentStep.stepName}}</a></td>
-			<td><a class="btn btn-danger" ng-href="{{getDeleteDeploymentStepUrl(deploymentStep)}}">Delete</a></td>
+			<td><a ng-href="{{navigator.deploymentStep.edit.clientUrl(component.projectId, component.id, deploymentStep.id)}}">{{deploymentStep.stepName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.deploymentStep.delete.clientUrl(component.projectId, component.id, deploymentStep.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="component.deploymentStepList.length">
 	<em>No Deployment Steps</em>
 </div>
-<a ng-href="{{getCreateDeploymentStepUrl(component)}}" class="btn btn-primary">Create Deployment Step</a>
+<a ng-href="{{navigator.deploymentStep.create.clientUrl(component.projectId, component.id)}}" class="btn btn-primary">Create Deployment Step</a>

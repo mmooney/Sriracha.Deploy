@@ -206,7 +206,7 @@
 		$scope.deploymentStep.$save(
 			saveParams,
 			function () {
-				Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
+				$scope.navigator.component.view.go($scope.project.id, $scope.component.id);
 			},
 			function (error) {
 				$scope.reportError(error);
@@ -218,51 +218,16 @@
 		$scope.deploymentStep.$delete(
 			$scope.deploymentStep,
 			function () {
-				Sriracha.Navigation.Component.View($routeParams.projectId, $routeParams.componentId);
+				$scope.navigator.component.view.go($scope.project.id, $scope.component.id);
 			},
 			function (error) {
 				$scope.reportError(error);
 			}
 		);
 	}
-
-	$scope.getCreateDeploymentStepUrl = function (component) {
-		if (component) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.CreateUrl, { projectId: component.projectId, componentId: component.id });
-		}
-	}
-
-	$scope.getEditDeploymentStepUrl = function (deploymentStep) {
-		if (deploymentStep) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.EditUrl, { projectId: deploymentStep.projectId, componentId: deploymentStep.componentId, deploymentStepId: deploymentStep.id });
-		}
-	}
-	$scope.getDeleteDeploymentStepUrl = function (deploymentStep) {
-		if (deploymentStep) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.DeploymentStep.DeleteUrl, { projectId: deploymentStep.projectId, componentId: deploymentStep.componentId, deploymentStepId: deploymentStep.id });
-		}
-	}
 	//End Deployment Steps
 
 	//Branches
-	$scope.getCreateBranchUrl = function (project) {
-		if (project) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Branch.CreateUrl, { projectId: project.id });
-		}
-	}
-	$scope.getEditBranchUrl = function (branch) {
-		if (branch) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Branch.EditUrl, { projectId: branch.projectId, branchId: branch.id });
-		}
-	}
-	$scope.getDeleteBranchUrl = function (branch) {
-		if (branch) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Branch.DeleteUrl, { projectId: branch.projectId, branchId: branch.id });
-		}
-	}
-	$scope.cancelBranch = function () {
-		Sriracha.Navigation.Project.View($routeParams.projectId);
-	}
 	$scope.saveBranch = function () {
 		var saveParams = {
 			projectId: $routeParams.projectId,
@@ -271,7 +236,7 @@
 		$scope.branch.$save(
 			saveParams,
 			function () {
-				Sriracha.Navigation.Project.View($routeParams.projectId);
+				$scope.navigator.project.view.go($scope.project.id);
 			},
 			function (error) {
 				$scope.reportError(error);
@@ -282,7 +247,7 @@
 		$scope.branch.$delete(
 			$scope.branch,
 			function () {
-				Sriracha.Navigation.Project.View($routeParams.projectId);
+				$scope.navigator.project.view.go($scope.project.id);
 			},
 			function (error) {
 				$scope.reportError(error);
