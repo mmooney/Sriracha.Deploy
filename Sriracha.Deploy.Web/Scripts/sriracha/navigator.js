@@ -36,7 +36,7 @@
 				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
 				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
 			},
-			"delete": {
+			remove: {
 				url: "/project/delete/:projectId",
 				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
 				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
@@ -51,12 +51,12 @@
 			edit: {
 				url: "/project/:projectId/environment/edit/:environmentId",
 				clientUrl: function (projectId, environmentId) { return root.getUrl(this.url, { projectId: projectId, environmentId: environmentId }) },
-				go: function (projectId, environmentId) { root.goto(this.url, { projectId: projectId, environmentId: environmentId }) }
+				go: function (projectId, environmentId) { root.goTo(this.url, { projectId: projectId, environmentId: environmentId }) }
 			},
-			"delete": {
+			remove: {
 				url: "/project/:projectId/environment/delete/:environmentId",
 				clientUrl: function (projectId, environmentId) { return root.getUrl(this.url, { projectId: projectId, environmentId: environmentId }) },
-				go: function (projectId, environmentId) { root.goto(this.url, { projectId: projectId, environmentId: environmentId }) }
+				go: function (projectId, environmentId) { root.goTo(this.url, { projectId: projectId, environmentId: environmentId }) }
 			},
 		};
 		root.component = {
@@ -75,7 +75,7 @@
 				clientUrl: function(projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
 				go: function(projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId}) }
 			},
-			"delete": {
+			remove: {
 				url: "/project/:projectId/component/delete/:componentId",
 				clientUrl: function(projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
 				go: function(projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId}) }

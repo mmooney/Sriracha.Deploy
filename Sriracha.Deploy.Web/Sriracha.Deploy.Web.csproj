@@ -353,8 +353,8 @@
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
-    <Content Include="Templates\branch-edit-template.html" />
-    <Content Include="Templates\branch-delete-template.html" />
+    <Content Include="Templates\project\branch\branch-edit-template.html" />
+    <Content Include="Templates\project\branch\branch-delete-template.html" />
     <Content Include="Templates\builds\build-delete-template.html" />
     <Content Include="Templates\builds\build-list-template.html" />
     <Content Include="Templates\builds\build-submit-template.html" />

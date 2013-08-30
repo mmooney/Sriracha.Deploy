@@ -13,7 +13,7 @@
 		<tr ng-repeat="component in project.componentList">
 			<td><a ng-href="{{navigator.component.view.clientUrl(component.projectId, component.id)}}">{{component.componentName}}</a></td>
 			<td><a class="btn btn-primary" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">Edit</a></td>
-			<td><a class="btn btn-danger" ng-href="{{navigator.component.delete.clientUrl(component.projectId, component.id)}}">Delete</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.component.remove.clientUrl(component.projectId, component.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
@@ -55,11 +55,11 @@
 	<tbody>
 		<tr ng-repeat="environment in project.environmentList">
 			<td><a ng-href="{{navigator.environment.edit.clientUrl(environment.projectId, environment.id)}}">{{environment.environmentName}}</a></td>
-			<td><a class="btn btn-danger" ng-href="{{getDeleteEnvironmentUrl(environment)}}">Delete</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.environment.remove.clientUrl(environment.projectId, environment.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.environmentList">
 	<em>No Environments</em>
 </div>
-<a class="btn btn-primary" ng-href="{{getCreateEnvironmentUrl(project)}}">Create Environment</a>
+<a class="btn btn-primary" ng-href="{{navigator.environment.create.clientUrl(project.id)}}">Create Environment</a>

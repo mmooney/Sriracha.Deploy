@@ -257,19 +257,6 @@
 	//End Branches
 
 	//Environments
-	$scope.getCreateEnvironmentUrl = function (project) {
-		if (project) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.CreateUrl, { projectId: project.id });
-		}
-	}
-	$scope.getDeleteEnvironmentUrl = function (environment) {
-		if (environment) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.DeleteUrl, { projectId: environment.projectId, environmentId: environment.id });
-		}
-	}
-	$scope.cancelEnvironment = function () {
-		Sriracha.Navigation.Project.View($routeParams.projectId);
-	}
 	$scope.saveEnvironment = function () {
 		var saveParams = {
 			projectId: $routeParams.projectId
@@ -281,10 +268,10 @@
 			saveParams,
 			function () {
 				if (saveParams.id) {
-					Sriracha.Navigation.Project.View($routeParams.projectId);
+					$scope.navigator.project.view.go($scope.project.id);
 				}
 				else {
-					Sriracha.Navigation.Environment.Edit($routeParams.projectId, $scope.environment.id)
+					$scope.navigator.environment.edit.go($scope.project.id, $scope.environment.id);
 				}
 				
 			},
@@ -295,55 +282,19 @@
 	}
 
 	$scope.deleteEnvironment = function () {
+		var deleteParams = {
+			id: $routeParams.environmentId,
+			projectId: $routeParams.projectId
+		};
 		$scope.environment.$delete(
-			$scope.environment,
+			deleteParams,
 			function () {
-				Sriracha.Navigation.Project.View($routeParams.projectId);
+				$scope.navigator.project.view.go($scope.project.id);
 			},
 			function (error) {
 				$scope.reportError(error);
 			}
 		);
-	}
-
-	$scope.editEnvironmentComponentMachine = function (environmentComponent, machine) {
-		var existingMachineName = machine.machineName;
-		var newMachineName = prompt("Please enter machine name", existingMachineName);
-		if (newMachineName != existingMachineName) {
-			var duplicate = _.find(environmentComponent.machineList, function (s) { return s.machineName == newMachineName });
-			if (duplicate) {
-				alert(newMachineName + " already exists");
-				return;
-			}
-			machine.machineName = newMachineName;
-		}
-	}
-
-	$scope.deleteEnvironmentMachine = function (environmentComponent, machine) {
-		var index = environmentComponent.machineList.indexOf(machine);
-		if (index >= 0) {
-			environmentComponent.machineList.splice(index, 1);
-		}
-	}
-
-	$scope.addEnvironmentComponentMachine = function (environmentComponent) {
-		var machineName = prompt("Please enter machine name");
-		if (machineName) {
-			if (environmentComponent.machineList) {
-				var duplicate = _.find($scope.environment.machineList, function (s) { return s.machineName == machineName });
-				if (duplicate) {
-					alert(machineName + " already exists");
-					return;
-				}
-			}
-			else {
-				environmentComponent.machineList = [];
-			}
-			var newMachine = {
-				machineName: machineName
-			};
-			environmentComponent.machineList.push(newMachine);
-		}
 	}
 	//End Environments
 });

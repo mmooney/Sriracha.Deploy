@@ -23,7 +23,7 @@
 			templateUrl: "templates/project-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(navigator.project.delete.url, {
+		.when(navigator.project.remove.url, {
 			templateUrl: "templates/project-delete-template.html",
 			controller: "ProjectController"
 		})
@@ -41,7 +41,7 @@
 			templateUrl: "templates/component-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(navigator.component.delete.url, {
+		.when(navigator.component.remove.url, {
 			templateUrl: "templates/component-delete-template.html",
 			controller: "ProjectController"
 		})
