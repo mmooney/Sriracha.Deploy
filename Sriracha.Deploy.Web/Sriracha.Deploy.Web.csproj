@@ -327,7 +327,6 @@
     <Content Include="Scripts\sriracha\deployment\deployBatchStatusController.js" />
     <Content Include="Scripts\sriracha\homeController.js" />
     <Content Include="Scripts\sriracha\models\environmentSelector.js" />
-    <Content Include="Scripts\sriracha\navigation.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\jquery\jquery-1.9.1.js" />
