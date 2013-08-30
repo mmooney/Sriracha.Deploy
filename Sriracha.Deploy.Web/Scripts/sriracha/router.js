@@ -75,15 +75,15 @@
 		})
 
 		//Environments
-		.when(Sriracha.Navigation.Environment.CreateUrl, {
+		.when(navigator.environment.create.url, {
 			templateUrl: "templates/environment-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Environment.EditUrl, {
+		.when(navigator.environment.edit.url, {
 			templateUrl: "templates/environment-edit-template.html",
 			controller: "ProjectController"
 		})
-		.when(Sriracha.Navigation.Environment.DeleteUrl, {
+		.when(navigator.environment.remove.url, {
 			templateUrl: "templates/environment-delete-template.html",
 			controller: "ProjectController"
 		})
@@ -135,17 +135,17 @@
 			templateUrl: "templates/deployment-batchStatus-template.html",
 			controller: "deployBatchStatusController"
 		})
-		.when(Sriracha.Navigation.Deployment.SubmitUrl, {
+		.when(navigator.deployment.submit.url, {
 			templateUrl: "templates/deployment-submit-template.html",
 			controller: "DeployController"
 		})
-		.when(Sriracha.Navigation.Deployment.ViewUrl, {
+		.when(navigator.deployment.view.url, {
 			templateUrl: "templates/deployment-view-template.html",
 			controller: "DeployController"
 		})
 
 		//System Log
-		.when(Sriracha.Navigation.SystemLog.ListUrl, {
+		.when(navigator.systemLog.list.url, {
 			templateUrl: "templates/systemlog-list-template.html",
 			controller: "SystemLogController"
 		})

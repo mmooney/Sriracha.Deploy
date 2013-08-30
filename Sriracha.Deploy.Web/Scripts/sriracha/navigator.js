@@ -15,6 +15,13 @@
 				window.location.href = url;
 			}
 		};
+		root.systemLog = {
+			list: {
+				url: "/systemlog",
+				clientUrl: function () { return root.getUrl(this.url); },
+				go: function () { root.goTo(this.url); }
+			}
+		};
 		root.project = {
 			list: {
 				url: "/project",

@@ -26,7 +26,6 @@ namespace Sriracha.Deploy.Web
 			var srirachaBundle = new ScriptBundle("~/bundles/sriracha")
 										.Include("~/scripts/sriracha/shared.js")
 										.Include("~/scripts/sriracha/ngSriracha.js")
-										.Include("~/scripts/sriracha/navigation.js")
 										.Include("~/scripts/sriracha/resources.js")
 										.Include("~/scripts/sriracha/navigator.js")
 										.Include("~/scripts/sriracha/router.js")

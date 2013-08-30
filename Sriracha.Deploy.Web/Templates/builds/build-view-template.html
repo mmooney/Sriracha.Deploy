@@ -16,7 +16,7 @@
 			<td>
 				{{getDeployHistoryStatus(build, environment)}}
 				<div ng-show="!anyDeployment(build, environment)">
-					<a class="btn btn-primary" ng-href="{{getDeploymentSubmitUrl(build, environment)}}">Deploy Now</a>
+					<a class="btn btn-primary" ng-href="{{navigator.deployment.submit.clientUrl(build.id, environment.id)}}">Deploy Now</a>
 				</div>
 			</td>
 		</tr>
