@@ -332,11 +332,6 @@
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.CreateUrl, { projectId: project.id });
 		}
 	}
-	$scope.getEditEnvironmentUrl = function (environment) {
-		if (environment) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
-		}
-	}
 	$scope.getDeleteEnvironmentUrl = function (environment) {
 		if (environment) {
 			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.DeleteUrl, { projectId: environment.projectId, environmentId: environment.id });

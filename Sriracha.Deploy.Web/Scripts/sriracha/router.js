@@ -89,20 +89,20 @@
 		})
 
 		//Builds
-		.when(Sriracha.Navigation.Build.ListUrl, {
-			templateUrl: "templates/build-list-template.html",
+		.when(navigator.build.list.url, {
+			templateUrl: "templates/build/build-list-template.html",
 			controller: "BuildController"
 		})
-		.when(Sriracha.Navigation.Build.SubmitUrl, {
-			templateUrl: "templates/build-submit-template.html",
+		.when(navigator.build.submit.url, {
+			templateUrl: "templates/build/build-submit-template.html",
 			controller: "BuildController"
 		})
-		.when(Sriracha.Navigation.Build.ViewUrl, {
-			templateUrl: "templates/build-view-template.html",
+		.when(navigator.build.view.url, {
+			templateUrl: "templates/build/build-view-template.html",
 			controller: "BuildController"
 		})
-		.when(Sriracha.Navigation.Build.DeleteUrl, {
-			templateUrl: "templates/build-delete-template.html",
+		.when(navigator.build.remove.url, {
+			templateUrl: "templates/build/build-delete-template.html",
 			controller: "BuildController"
 		})
 

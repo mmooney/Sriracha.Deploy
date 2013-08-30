@@ -1,4 +1,5 @@
-﻿ngSriracha.controller("DeployController", function ($scope, $routeParams, SrirachaResource, ErrorReporter) {
+﻿ngSriracha.controller("DeployController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {
 
 	};
@@ -57,12 +58,6 @@
 			});
 	}
 
-	$scope.getEditEnvironmentUrl = function (environment) {
-		if (environment) {
-			return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Environment.EditUrl, { projectId: environment.projectId, environmentId: environment.id });
-		}
-	}
-
 	$scope.canSubmitDeployment = function () {
 		if ($scope.selection && $scope.selection.machineList) {
 			return _.any($scope.selection.machineList, function (x) { return x.selected; });
@@ -87,7 +82,7 @@
 			saveParams,
 			function (result) {
 				alert("Deployment submitted!");
-				Sriracha.Navigation.Deployment.View(result.deployStateId);
+				$scope.navigator.deployment.view.go(result.deployStateId);
 			},
 			function (error) {
 				ErrorReporter.handleResourceError(error);

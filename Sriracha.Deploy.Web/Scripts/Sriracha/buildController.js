@@ -1,4 +1,5 @@
-﻿ngSriracha.controller("BuildController", function ($scope, $routeParams, SrirachaResource) {
+﻿ngSriracha.controller("BuildController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.buildId) {
 		$scope.build = SrirachaResource.build.get({ id: $routeParams.buildId }, function () {
 			$scope.project = SrirachaResource.project.get({ id: $scope.build.projectId });
@@ -27,10 +28,6 @@
 		}
 	}
 
-	$scope.cancelBuild = function () {
-		Sriracha.Navigation.Build.List();
-	}
-
 	$scope.saveBuild = function () {
 		var saveParams = {
 			projectId: $scope.project.id,
@@ -40,7 +37,7 @@
 		$scope.build.$save(
 			saveParams,
 			function () {
-				Sriracha.Navigation.Build.List();
+				$scope.navigator.build.list.go();
 			},
 			function (error) {
 				$scope.reportError(error);
@@ -52,7 +49,7 @@
 		$scope.build.$delete(
 			$scope.build,
 			function () {
-				Sriracha.Navigation.Build.List();
+				$scope.navigator.build.list.go();
 			},
 			function (error) {
 				$scope.reportError(error);
@@ -60,28 +57,11 @@
 		);
 	}
 
-	$scope.getSubmitBuildUrl = function () {
-		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.SubmitUrl);
-	}
-	$scope.getBuildListUrl = function () {
-		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ListUrl);
-	}
-	$scope.getDeleteBuildUrl = function (build) {
-		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.DeleteUrl, { buildId: build.id });
-	}
-	$scope.getDeploymentSubmitUrl = function (build, environment) {
-		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Deployment.SubmitUrl, { buildId: build.id, environmentId: environment.id });
-	}
-
 	$scope.getDeployHistory = function (build, environment) {
 		if (build && environment) {
 			return _.find($scope.deployHistory, function (x) { return (x.buildId == build.id && x.environmentId == environment.Id); });
 		}
 		return null;
-	}
-
-	$scope.getViewBuildUrl = function (build) {
-		return Sriracha.Navigation.GetUrl(Sriracha.Navigation.Build.ViewUrl, { buildId: build.id });
 	}
 
 	$scope.getDeployHistoryStatus = function (build, environment) {

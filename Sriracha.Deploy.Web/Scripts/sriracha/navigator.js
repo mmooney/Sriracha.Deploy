@@ -97,7 +97,7 @@
 				clientUrl: function (buildId) { return root.getUrl(this.url, { buildId: buildId }); },
 				go: function (buildId) { root.goTo(this.url, { buildId: buildId }); }
 			},
-			"delete": {
+			remove: {
 				url: "/build/delete/:buildId",
 				clientUrl: function (buildId) { return root.getUrl(this.url, { buildId: buildId }); },
 				go: function (buildId) { root.goTo(this.url, { buildId: buildId }); }
@@ -119,18 +119,28 @@
 				],
 				url: "/deploy/batchList/:pageNumber/:pageSize/:sortField/:sortAscending",
 				clientUrl: function (pageNumber, pageSize, sortField, sortAscending) 
-					{ 
-						return root.getUrl(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
-					},
+				{ 
+					return root.getUrl(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+				},
 				go: function (pageNumber, pageSize, sortField, sortAscending)  
-					{ 
-						root.goTo(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
-					}
+				{ 
+					root.goTo(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+				}
 			},
 			batchStatus: {
 				url: "/deploy/batchStatus/:deployBatchRequestId",
 				clientUrl: function (deployBatchRequestId) { return root.getUrl(this.url, { deployBatchRequestId: deployBatchRequestId }); },
 				go: function (deployBatchRequestId) { root.goTo(this.url, { deployBatchRequestId: deployBatchRequestId }); }
+			},
+			submit: {
+				url: "/deploy/submit/:buildId/:environmentId",
+				clientUrl: function (buildId, environmentId) { return root.getUrl(this.url, { buildId: buildId, environmentId: environmentId }); },
+				go: function (buildId, environmentId) { root.goTo(this.url, { buildId: buildId, environmentId: environmentId }); }
+			},
+			view: {
+				url: "/deploy/:deployStateId",
+				clientUrl: function (deployStateId) { return this.getUrl(this.url, { deployStateId: deployStateId }) },
+				go: function (deployStateId) { root.goTo(this.url, { deployStateId: deployStateId }) }
 			}
 		};
 		return root;
