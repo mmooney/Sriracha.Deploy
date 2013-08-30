@@ -14,6 +14,7 @@ namespace Sriracha.Deploy.Data
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
+		void MarkDeploymentInProcess(string deployStateId);
 		void MarkDeploymentSuccess(string deployStateId);
 		void MarkDeploymentFailed(string deployStateId, Exception err);
 

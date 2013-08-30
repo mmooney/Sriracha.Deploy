@@ -79,6 +79,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 								var deployState = _deployStateManager.CreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
 								try 
 								{
+									_deployStateManager.MarkDeploymentInProcess(deployState.Id);
 									var machineIdList = new List<string> { machine.Id };
 									_deployRunner.Deploy(deployState.Id, machine.EnvironmentId, item.Build.Id, machineIdList, runtimeSettings);
 									_deployStateManager.MarkDeploymentSuccess(deployState.Id);
