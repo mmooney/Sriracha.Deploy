@@ -15,6 +15,8 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest PopNextBatchDeployment();
 		DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
 		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null);
+		List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId);
+		List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId);
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
@@ -25,7 +27,6 @@ namespace Sriracha.Deploy.Data.Repository
 
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
-
 
 	}
 }

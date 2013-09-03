@@ -25,6 +25,11 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._buildRepository.GetBuildList(projectId, branchId, componentId);
 		}
 
+		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions)
+		{
+			return this._buildRepository.GetBuildList(listOptions);
+		}
+
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, string version)
 		{
 			var project = _projectRepository.TryGetProject(projectId);

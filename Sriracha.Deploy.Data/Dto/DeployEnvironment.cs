@@ -71,5 +71,19 @@ namespace Sriracha.Deploy.Data.Dto
 			}
 			return null;
 		}
+
+		public List<DeployMachine> GetMachineListForName(string machineName)
+		{
+			List<DeployMachine> machineList = new List<DeployMachine>();
+			if(this.ComponentList != null)
+			{
+				foreach(var component in this.ComponentList)
+				{
+					var tempList = component.MachineList.Where(i=>i.MachineName == machineName);
+					machineList.AddRange(tempList);
+				}
+			}
+			return machineList;
+		}
 	}
 }

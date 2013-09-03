@@ -29,6 +29,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			//this.ScheduleJob("RunDeployment", typeof(IRunDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
 			this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
 			this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
+			this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds);
 
 			this._quartzScheduler.Start();
 

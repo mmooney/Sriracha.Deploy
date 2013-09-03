@@ -31,6 +31,20 @@ namespace Sriracha.Deploy.Data.Dto
 			return returnValue;
 		}
 
+		public List<DeployMachine> GetMachineListForName(string machineName)
+		{
+			List<DeployMachine> machineList = new List<DeployMachine>();
+			if (this.EnvironmentList != null)
+			{
+				foreach(var environment in this.EnvironmentList)
+				{
+					var tempList = environment.GetMachineListForName(machineName);
+					machineList.AddRange(tempList);
+				}
+			}
+			return null;
+		}
+
 		private DeployMachine TryGetMachine(string machineId)
 		{
 			if(this.EnvironmentList != null)
@@ -43,5 +57,6 @@ namespace Sriracha.Deploy.Data.Dto
 			}
 			return null;
 		}
+
 	}
 }

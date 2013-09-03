@@ -9,7 +9,6 @@ namespace Sriracha.Deploy.Data.Dto
 	public class PagedSortedList<T> : IPagedList
 	{
 		private IPagedList<T> _list;
-		private IPagedList<Data.Dto.SystemLog> pagedList;
 
 		public PagedSortedList(IPagedList<T> list, string sortField, bool sortAscending)
 		{

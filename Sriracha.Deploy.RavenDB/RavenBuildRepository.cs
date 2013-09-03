@@ -37,6 +37,12 @@ namespace Sriracha.Deploy.RavenDB
 			return query.ToList();
 		}
 
+		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions)
+		{
+			var pagedList = _documentSession.QueryPageAndSort<DeployBuild>(listOptions, "UpdatedDateTimeUtc", false);
+			return new PagedSortedList<DeployBuild>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
+		}
+
 		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
 		{
 			var existingItem = (from i in this._documentSession.Query<DeployBuild>()
@@ -61,7 +67,9 @@ namespace Sriracha.Deploy.RavenDB
 				ProjectBranchId = projectBranchId,
 				ProjectBranchName = projectBranchName,
 				FileId = fileId,
-				Version = version
+				Version = version,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedDateTimeUtc = DateTime.UtcNow
 			};
 			this._documentSession.Store(item);
 			this._documentSession.SaveChanges();
@@ -123,6 +131,7 @@ namespace Sriracha.Deploy.RavenDB
 			build.ProjectBranchName = projectBranchName;
 			build.FileId = fileId;
 			build.Version = version;
+			build.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveChanges();
 			return build;
 		}

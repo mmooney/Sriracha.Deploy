@@ -648,7 +648,5 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 			return item;
 		}
-
-
 	}
 }

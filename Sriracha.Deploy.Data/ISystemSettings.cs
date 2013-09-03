@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
 
 namespace Sriracha.Deploy.Data
 {
@@ -18,5 +19,8 @@ namespace Sriracha.Deploy.Data
 		int? LogPurgeErrorAgeMinutes { get; set; }
 		int? LogPurgeFatalAgeMinutes { get; set; }
 
+		int BuildPurgeJobIntervalSeconds { get; set; }
+		int? DefaultBuildRetentionMinutes { get; set; }
+		List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList { get; set; }
 	}
 }

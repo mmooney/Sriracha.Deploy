@@ -55,7 +55,7 @@ namespace Sriracha.Deploy.Server
 						//_logger = kernel.Get<NLog.Logger>();
 						//_diFactory = kernel.Get<IDIFactory>();
 					}
-					break;
+					//break;
 				case DIContainer.Autofac:
 					{
 						var builder = new ContainerBuilder();

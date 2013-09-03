@@ -24,7 +24,8 @@ namespace Sriracha.Deploy.RavenDB
 					Conventions = new DocumentConvention
 					{
 						DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites,
-						ShouldCacheRequest = url => false 
+						ShouldCacheRequest = url => false,
+						MaxNumberOfRequestsPerSession = 3000
 					}
 				};
 				documentStore.Initialize();

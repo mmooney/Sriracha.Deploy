@@ -93,7 +93,7 @@ namespace Sriracha.Deploy.CommandLine
 						//var kernel = new StandardKernel(new NinjectModules.SrirachaNinjectorator());
 						//_diFactory = kernel.Get<IDIFactory>();
 					}
-					break;
+					//break;
 				case DIContainer.Autofac:
 					{
 						var builder = new ContainerBuilder();

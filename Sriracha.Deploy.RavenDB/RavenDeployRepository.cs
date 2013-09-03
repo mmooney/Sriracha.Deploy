@@ -93,6 +93,18 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
+		public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
+		{
+			return _documentSession.Query<DeployState>().Where(i=>i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
+		}
+
+
+		public List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId)
+		{
+			var tempList = _documentSession.Query<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
+			return tempList.Where(i=>i.MachineList.Any(j=>j.Id == machineId)).ToList();;
+		}
+
 		public DeployBatchRequest PopNextBatchDeployment()
 		{
 			string itemId = null;

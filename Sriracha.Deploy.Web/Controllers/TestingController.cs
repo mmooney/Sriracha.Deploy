@@ -29,7 +29,7 @@ namespace Sriracha.Deploy.Web.Controllers
 			return Content("Done");
 		}
 
-		public ActionResult File(string deployFileId, string contentType="application/octet-stream")
+		public ActionResult FileData(string deployFileId, string contentType="application/octet-stream")
 		{
 			var fileObject = _fileRepository.GetFile(deployFileId);
 			var data = _fileRepository.GetFileData(deployFileId);

@@ -76,6 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\BuildPurgeRule.cs" />
+    <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
+    <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
     <Compile Include="Dto\ComponentConfigurationDefinition.cs" />
     <Compile Include="Dto\DeployBatchRequest.cs" />
     <Compile Include="Dto\DeployBatchRequestItem.cs" />
@@ -93,7 +96,9 @@
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IBuildPublisher.cs" />
+    <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
+    <Compile Include="Impl\BuildPurger.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
     <Compile Include="IUserIdentity.cs" />
     <Compile Include="Dto\PagedSortedList.cs" />
@@ -133,11 +138,14 @@
     <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
     <Compile Include="ServiceJobs\IJobScheduler.cs" />
+    <Compile Include="ServiceJobs\IPurgeBuildJob.cs" />
     <Compile Include="ServiceJobs\IPurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\IRunBatchDeploymentJob.cs" />
     <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\BaseSingletonJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobScheduler.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\PurgeBuildJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\PurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunBatchDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunDeploymentJob.cs" />

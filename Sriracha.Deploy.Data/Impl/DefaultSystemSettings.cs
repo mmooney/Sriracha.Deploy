@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
 
 namespace Sriracha.Deploy.Data.Impl
 {
@@ -83,6 +84,54 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			get { return _logPurgeFatalAgeMinutes.GetValueOrDefault(60*24*30); }
 			set { _logPurgeFatalAgeMinutes = value; }
+		}
+
+		private int? _buildPurgeJobIntervalSeconds;
+		public int BuildPurgeJobIntervalSeconds
+		{
+			get { return _buildPurgeJobIntervalSeconds.GetValueOrDefault(60*60); }
+			set { _buildPurgeJobIntervalSeconds = value; }
+		}
+
+		private int? _defaultBuildRetentionMinutes;
+		public int? DefaultBuildRetentionMinutes
+		{
+			get { return _defaultBuildRetentionMinutes.GetValueOrDefault(60*24); }
+			set { _defaultBuildRetentionMinutes = value; }
+		}
+
+		private List<BaseBuildPurgeRetentionRule> _buildPurgeRetentionRuleList;
+		public List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList
+		{
+			get
+			{
+				if (_buildPurgeRetentionRuleList == null)
+				{
+					_buildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
+					{
+						new DeployHistoryBuildRetentionRule 
+						{ 
+							BuildRetentionMinutes = 60*24*7,
+							EnvironmentNameList = new List<string> { "DEV" }
+						},
+						new DeployHistoryBuildRetentionRule 
+						{
+							BuildRetentionMinutes = 60*24*30,
+							EnvironmentNameList = new List<string> { "QA", "INT" }
+						},
+						new DeployHistoryBuildRetentionRule 
+						{
+							BuildRetentionMinutes = null,
+							EnvironmentNameList = new List<string> { "PROD" }
+						}
+					};
+				}
+				return _buildPurgeRetentionRuleList;
+			}
+			set
+			{
+				_buildPurgeRetentionRuleList = value;
+			}
 		}
 	}
 }

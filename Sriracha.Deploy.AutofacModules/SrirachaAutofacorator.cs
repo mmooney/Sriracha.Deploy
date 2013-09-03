@@ -57,6 +57,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
+			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
 
 			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
 			builder.RegisterType<ModuleInspector>().As<IModuleInspector>().SingleInstance();
@@ -77,6 +78,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
 			builder.RegisterType<RunBatchDeploymentJob>().As<IRunBatchDeploymentJob>();
 			builder.RegisterType<PurgeSystemLogJob>().As<IPurgeSystemLogJob>();
+			builder.RegisterType<PurgeBuildJob>().As<IPurgeBuildJob>();
 
 			if(_diMode == EnumDIMode.Service)
 			{
