@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("ProjectController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+﻿ngSriracha.controller("ProjectController",
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
 	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.projectId) {
 		$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
@@ -297,5 +299,5 @@
 		);
 	}
 	//End Environments
-});
+}]);
 

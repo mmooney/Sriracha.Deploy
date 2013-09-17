@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("deployBatchStatusController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+﻿ngSriracha.controller("deployBatchStatusController",
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 
 	if ($routeParams.deployBatchRequestId) {
@@ -30,4 +32,4 @@
 			});
 		return "NotStarted";
 	}
-});
+}]);

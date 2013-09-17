@@ -19,7 +19,9 @@ ngSriracha.directive("taskConfig", function () {
 	}
 });
 
-ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, ErrorReporter, SrirachaNavigator) {
+ngSriracha.directive("selectEnvironmentMachines",
+		['SrirachaResource', 'ErrorReporter', 'SrirachaNavigator',
+		function (SrirachaResource, ErrorReporter, SrirachaNavigator) {
 	return {
 		restrict: "E",
 		templateUrl: "templates/directives/selectEnvironmentMachines.html",
@@ -63,7 +65,7 @@ ngSriracha.directive("selectEnvironmentMachines", function (SrirachaResource, Er
 			});
 		}
 	}
-});
+}]);
 
 ngSriracha.directive("projectList", function () {
 	return {

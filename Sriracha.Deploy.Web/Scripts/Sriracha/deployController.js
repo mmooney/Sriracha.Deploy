@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("DeployController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+﻿ngSriracha.controller("DeployController",
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {
 
@@ -89,69 +91,4 @@
 			}
 		);
 	}
-
-	//	var returnValue = [];
-
-	//	if (deployRequestTemplate && deployRequestTemplate.validationResult) {
-	//		for (var i = 0; i < deployRequestTemplate.validationResult.resultList.length; i++) {
-	//			var resultItem = deployRequestTemplate.validationResult.resultList[i];
-	//			var machineResultList = resultItem.taskValidationResult.machineResultList[machineId];
-	//			if (machineResultList && machineResultList.length) {
-	//				for (var j = 0; j < machineResultList.length; j++) {
-	//					var machineResultItem = machineResultList[j];
-	//					var item = {
-	//						taskName: resultItem.deploymentStep.stepName,
-	//						settingName: machineResultItem.fieldName,
-	//						present: machineResultItem.present
-	//					};
-	//					if (machineResultItem.present) {
-	//						if (machineResultItem.sensitive) {
-	//							item.settingValue = "*******************";
-	//						}
-	//						else {
-	//							item.settingValue = machineResultItem.fieldValue;
-	//						}
-	//					}
-	//					else {
-	//						item.settingValue = "N/A";
-	//					}
-	//					returnValue.push(item);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	return returnValue;
-	//}
-
-	//$scope.getEnvironmentResults = function (deployRequestTemplate) {
-	//	var returnValue = [];
-	//	if (deployRequestTemplate && deployRequestTemplate.validationResult) {
-	//		for (var i = 0; i < deployRequestTemplate.validationResult.resultList.length; i++) {
-	//			var resultItem = deployRequestTemplate.validationResult.resultList[i];
-	//			if (resultItem.taskValidationResult.environmentResultList.length) {
-	//				for (var j = 0; j < resultItem.taskValidationResult.environmentResultList.length; j++) {
-	//					var environmentResultItem = resultItem.taskValidationResult.environmentResultList[j];
-	//					var item = {
-	//						taskName: resultItem.deploymentStep.stepName,
-	//						settingName: environmentResultItem.fieldName,
-	//						present: environmentResultItem.present
-	//					};
-	//					if (environmentResultItem.present) {
-	//						if (environmentResultItem.sensitive) {
-	//							item.settingValue = "*******************";
-	//						}
-	//						else {
-	//							item.settingValue = environmentResultItem.fieldValue;
-	//						}
-	//					}
-	//					else {
-	//						item.settingValue = "N/A";
-	//					}
-	//					returnValue.push(item);
-	//				}
-	//			}
-	//		}
-	//	}
-	//	return returnValue;
-	//}
-});
+}]);

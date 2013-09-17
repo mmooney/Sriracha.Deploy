@@ -1,4 +1,6 @@
-﻿ngSriracha.factory("SrirachaResource", function ($resource) {
+﻿ngSriracha.factory("SrirachaResource",
+		['$resource',
+		function ($resource) {
 	return {
 		project: $resource("/api/project"),
 		component: $resource("/api/project/:projectId/component"),
@@ -16,4 +18,4 @@
 		validateEnvironment: $resource("/api/validateEnvironment"),
 		systemLog: $resource("/api/systemLog")
 	}
-});
+}]);

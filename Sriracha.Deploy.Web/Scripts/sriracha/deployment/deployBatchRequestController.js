@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("deployBatchRequestController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+﻿ngSriracha.controller("deployBatchRequestController",
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {
 
@@ -130,4 +132,4 @@
 				ErrorReporter.handleResourceError(err);
 			});
 	}
-});
+}]);

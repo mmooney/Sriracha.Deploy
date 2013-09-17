@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("deployBatchListController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+﻿ngSriracha.controller("deployBatchListController",
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.listOptions = {};
 	if ($routeParams.pageNumber) $scope.listOptions.pageNumber = $routeParams.pageNumber;
@@ -14,4 +16,4 @@
 			ErrorReporter.handleResourceError(err);
 		});
 		
-});
+}]);

@@ -1,4 +1,6 @@
-﻿ngSriracha.config(function ($routeProvider, SrirachaNavigatorProvider) {
+﻿ngSriracha.config(
+		['$routeProvider', 'SrirachaNavigatorProvider',
+		function ($routeProvider, SrirachaNavigatorProvider) {
 	var navigator = SrirachaNavigatorProvider.$get();
 	$routeProvider
 		.when("/", {
@@ -155,5 +157,5 @@
 		})
 
 	;
-});
+}]);
 

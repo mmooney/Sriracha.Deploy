@@ -1,4 +1,6 @@
-﻿ngSriracha.controller("BuildController", function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+﻿ngSriracha.controller("BuildController", 
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
 	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.buildId) {
 		$scope.build = SrirachaResource.build.get({ id: $routeParams.buildId }, function () {
@@ -87,4 +89,4 @@
 	}
 
 
-});
+}]);
