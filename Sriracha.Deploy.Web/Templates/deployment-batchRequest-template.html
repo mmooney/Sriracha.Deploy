@@ -43,19 +43,19 @@
 				<td style="vertical-align:top">
 					<div>
 						<b>Project:</b>
-						<select ng-model="project" ng-options="item as item.projectName for item in projectList" ng-change="refreshBuildList()"></select>
+						<select ng-model="project" ng-options="item as item.projectName for item in projectList | orderBy:'projectName'" ng-change="refreshBuildList()"></select>
 					</div>
 					<div>
 						<b>Branch:</b>
-						<select ng-model="branch" ng-options="item as item.branchName for item in project.branchList" ng-change="refreshBuildList()"></select>
+						<select ng-model="branch" ng-options="item as item.branchName for item in project.branchList | orderBy:'-branchName'" ng-change="refreshBuildList()"></select>
 					</div>
 					<div>
 						<b>Component:</b>
-						<select ng-model="component" ng-options="item as item.componentName for item in project.componentList" ng-change="refreshBuildAndEnvironmentList()"></select>
+						<select ng-model="component" ng-options="item as item.componentName for item in project.componentList | orderBy:'componentName'" ng-change="refreshBuildAndEnvironmentList()"></select>
 					</div>
 					<div>
 						<b>Build:</b>
-						<select ng-model="build" ng-options="item as item.displayValue for item in buildList" ng-change="buildSelected()" ></select>
+						<select ng-model="build" ng-options="item as item.displayValue for item in buildList | orderBy:'-displayValue'" ng-change="buildSelected()" ></select>
 					</div>
 				</td>
 				<td style="vertical-align:top">
