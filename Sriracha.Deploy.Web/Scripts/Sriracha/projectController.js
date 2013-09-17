@@ -130,6 +130,7 @@
 				componentId: component.componentId,
 				configurationValueList: {}
 			};
+			component.machineList = component.machineList || [];
 			component.machineList.push(machine);
 		}
 	}
