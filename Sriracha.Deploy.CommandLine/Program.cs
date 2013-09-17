@@ -63,6 +63,9 @@ namespace Sriracha.Deploy.CommandLine
 		[CommandLineParser.Option('f',"file")]
 		public string File { get; set; }
 
+		[CommandLineParser.Option("newfilename")]
+		public string NewFileName { get; set; }
+
 		[CommandLineParser.Option("pause")]
 		public bool Pause { get; set; }
 
@@ -168,7 +171,7 @@ namespace Sriracha.Deploy.CommandLine
 							{
 								throw new Exception("File (--file|-f) Directory (--directory|-f) cannot be both be used together for Publish");
 							}
-							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version);
+							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName);
 						}
 						else if (!string.IsNullOrWhiteSpace(options.Directory))
 						{
@@ -220,10 +223,10 @@ namespace Sriracha.Deploy.CommandLine
 			}
 		}
 
-		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version)
+		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
-			publisher.PublishFile(filePath, apiUrl, projectId, componentId, branchId, version);
+			publisher.PublishFile(filePath, apiUrl, projectId, componentId, branchId, version, newFileName);
 		}
 
 		private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)

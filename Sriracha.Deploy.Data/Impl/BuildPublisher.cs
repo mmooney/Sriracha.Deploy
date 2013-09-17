@@ -44,13 +44,23 @@ namespace Sriracha.Deploy.Data.Impl
 			_logger.Info("Done publishing directory {0} to URL {1}", directoryPath, apiUrl);
 		}
 
-		public void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version)
+		public void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
 		{
+			bool deleteFile = false;
 			_logger.Info("Start publishing file {0} to URL {1}", filePath, apiUrl);
 			string zipPath = Path.ChangeExtension(Path.GetTempFileName(), ".zip");
 			if (!File.Exists(filePath))
 			{
 				throw new DirectoryNotFoundException(string.Format("File directory \"{0}\" not found", filePath));
+			}
+			if(!string.IsNullOrWhiteSpace(newFileName))
+			{
+				_logger.Info("New file name {0} provided", newFileName);
+				string oldFilePath = filePath;
+				filePath = Path.Combine(Path.GetDirectoryName(filePath), newFileName);
+				_logger.Info("Copying {0} to {1}", oldFilePath, filePath);
+				File.Copy(oldFilePath, filePath);
+				deleteFile = true;
 			}
 			_zipper.ZipFile(filePath, zipPath);
 
@@ -63,6 +73,18 @@ namespace Sriracha.Deploy.Data.Impl
 			catch (Exception err)
 			{
 				_logger.WarnException(string.Format("Failed to delete ZIP file {0}: {1}", zipPath, err.ToString()), err);
+			}
+
+			if(deleteFile)
+			{
+				try 
+				{
+					File.Delete(filePath);
+				}
+				catch(Exception err)
+				{
+					_logger.WarnException(string.Format("Failed to delete file {0}: {1}", filePath, err.ToString()), err);
+				}
 			}
 
 			_logger.Info("Done publishing file {0} to URL {1}", filePath, apiUrl);
