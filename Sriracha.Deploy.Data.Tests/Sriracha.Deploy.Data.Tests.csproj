@@ -65,6 +65,7 @@
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexResolverTests.cs" />
     <Compile Include="TaskManagerTests.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinitionTests.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutorTests.cs" />

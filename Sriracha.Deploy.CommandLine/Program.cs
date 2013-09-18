@@ -119,6 +119,8 @@ namespace Sriracha.Deploy.CommandLine
 				{
 					throw new Exception(options.GetUsage());
 				}
+				var regexResolver = _diFactory.CreateInjectedObject<IRegexResolver>();
+				regexResolver.ResolveValues(options);
 				pause = options.Pause;
 				switch(options.Action)
 				{

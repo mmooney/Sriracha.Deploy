@@ -100,6 +100,8 @@
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Impl\BuildPurger.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
+    <Compile Include="Impl\RegexResolver.cs" />
+    <Compile Include="IRegexResolver.cs" />
     <Compile Include="IUserIdentity.cs" />
     <Compile Include="Dto\PagedSortedList.cs" />
     <Compile Include="NLogDBLogTarget.cs" />
