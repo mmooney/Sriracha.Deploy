@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status);
 
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
-		DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId);
+		List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId);
 
 	}
 }

@@ -217,16 +217,18 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployStateSummary TryGetDeployStateSummaryByDeployBatchRequestItemId(string deployBatchRequestItemId)
+		public List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId)
 		{
-			var dbItem = (from i in _documentSession.Query<DeployState>()
+			var list = (from i in _documentSession.Query<DeployState>()
 							where i.DeployBatchRequestItemId == deployBatchRequestItemId
-							select i).FirstOrDefault();
-			if(dbItem == null)
+							select i).ToList();
+			var returnList = new List<DeployStateSummary>();
+			foreach(var dbItem in list)
 			{
-				return null;
+				var returnItem = Mapper.Map(dbItem, new DeployStateSummary());
+				returnList.Add(returnItem);
 			}
-			return Mapper.Map(dbItem, new DeployStateSummary());
+			return returnList;
 		}
 
 
@@ -244,13 +246,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Request = deployBatchRequest,
 				DeployBatchRequestId = deployBatchRequest.Id,
-				DeployStateList = new List<DeployStateSummary>()
+				DeployStateList = this.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequest.Id)
 			};
-			foreach (var requestItem in status.Request.ItemList)
-			{
-				var state = this.TryGetDeployStateSummaryByDeployBatchRequestItemId(requestItem.Id);
-				status.DeployStateList.Add(state);
-			}
 			return status;
 		}
 
