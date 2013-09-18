@@ -180,7 +180,7 @@
 			},
 			view: {
 				url: "/deploy/:deployStateId",
-				clientUrl: function (deployStateId) { return this.getUrl(this.url, { deployStateId: deployStateId }) },
+				clientUrl: function (deployStateId) { return root.getUrl(this.url, { deployStateId: deployStateId }) },
 				go: function (deployStateId) { root.goTo(this.url, { deployStateId: deployStateId }) }
 			}
 		};

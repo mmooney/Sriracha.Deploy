@@ -10,27 +10,6 @@
 		environmentId: $routeParams.environmentId
 	};
 
-	//if ($routeParams.buildId) {
-	//	$scope.build = SrirachaResource.build.get({ buildId: $routeParams.buildId }, function () {
-	//		$scope.project = SrirachaResource.project.get({ id: $scope.build.projectId }, function () {
-	//			$scope.environment = _.findWhere($scope.project.environmentList, { id: $routeParams.environmentId });
-	//			if ($scope.environment.componentList) {
-	//				$scope.environmentComponent = _.findWhere($scope.environment.componentList, { componentId: $scope.build.projectComponentId });
-	//			}
-	//		});
-	//		$scope.deployRequestTemplate = SrirachaResource.deployRequest.get({ buildId: $routeParams.buildId, environmentId: $routeParams.environmentId }, function () {
-	//			$scope.environmentResults = $scope.getEnvironmentResults($scope.deployRequestTemplate);
-	//			$scope.environmentResultsIncomplete = _.any($scope.environmentResults, function (x) { return !x.present; });
-
-	//			$scope.machineResults = {};
-	//			$scope.machineResultsIncomplete = {};
-	//			_.each($scope.environmentComponent.machineList, function (machine) {
-	//				$scope.machineResults[machine.id] = $scope.getMachineResults($scope.deployRequestTemplate, machine.id);
-	//				$scope.machineResultsIncomplete[machine.id] = _.any($scope.machineResults[machine.id], function (x) { return !x.present; });
-	//			});
-	//		});
-	//	});
-	//}
 	if ($routeParams.deployStateId) {
 		$scope.deployState = SrirachaResource.deployState.get({ id: $routeParams.deployStateId }, 
 			function () {
@@ -39,11 +18,11 @@
 						$scope.refreshStatus();
 					},
 					function (error) {
-						$scope.reportError(error);
+						ErrorReporter.handleResourceError(error);
 					});
 			},
 			function(error) {
-				$scope.reportError(error);
+				ErrorReporter.handleResourceError(error);
 			}
 		);
 	}
@@ -56,7 +35,7 @@
 				}
 			},
 			function (error) {
-				$scope.reportError(error);
+				ErrorReporter.handleResourceError(error);
 			});
 	}
 

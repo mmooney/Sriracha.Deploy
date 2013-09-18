@@ -15,10 +15,16 @@
 				<td>
 					<div ng-switch on="getMachineDeployStatus(item, machine)">
 						<div ng-switch-when="NotStarted">Not Started</div>
-						<div ng-switch-when="Running">Running</div>
-						<div ng-switch-when="Error">Error</div>
-						<div ng-switch-when="Success">Success</div>
-						<div ng-switch-default>WAT?</div>
+						<div ng-switch-when="InProcess">
+							<a ng-href="{{navigator.deployment.view.clientUrl(getMachineDeployStateId(item, machine))}}">In Process</a>
+						</div>
+						<div ng-switch-when="Error">
+							<a ng-href="{{navigator.deployment.view.clientUrl(getMachineDeployStateId(item, machine))}}">Error</a>
+						</div>
+						<div ng-switch-when="Success">
+							<a ng-href="{{navigator.deployment.view.clientUrl(getMachineDeployStateId(item, machine))}}">Success</a>
+						</div>
+						<div ng-switch-default>{{getMachineDeployStatus(item, machine)}}</div>
 					</div>
 				</td>
 			</tr>
