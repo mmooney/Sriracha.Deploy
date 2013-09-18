@@ -1,31 +1,29 @@
 ﻿<h1>Deployments</h1>
+
+<a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
+
+
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
+			<th>Status</th>
 			<th>Submitted Date</th>
 			<th>Started Date</th>
 			<th>Completed Date</th>
-			<th>Status</th>
 			<th>Details</th>
 			<th>View</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="deployment in deploymentList.items">
+			<td>
+                <div class="{{getDeployStatusIconClass(deployment.request.status)}}">
+                </div>
+                {{getDeployStatusDescription(deployment.request.status)}}
+			</td>
 			<td>{{deployment.request.submittedDateTimeUtc | date:'medium'}} UTC</td>
 -			<td>{{deployment.request.startedDateTimeUtc | date:'medium'}} UTC</td>
 			<td>{{deployment.request.completeDateTimeUtc | date:'medium'}} UTC</td>
-			<td>
-				<div ng-switch on="deployment.request.status">
-					<div ng-switch-when="Requested">Requested</div>
-					<div ng-switch-when="NotStarted">Not Started</div>
-					<div ng-switch-when="InProcess">In Process</div>
-					<div ng-switch-when="Warning">Warning</div>
-					<div ng-switch-when="Success">Success</div>
-					<div ng-switch-when="Error">Error</div>
-					<div ng-switch-default>{{deployment.request.status}}</div>
-				</div>
-			</td>
 			<td>
 				<div ng-repeat="item in deployment.request.itemList">
 					<b>{{item.build.displayValue}}-></b>

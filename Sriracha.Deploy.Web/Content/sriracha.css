@@ -1,0 +1,24 @@
+﻿body {
+}
+
+.deployStatus-icon {
+    width:24px;
+    height:24px;
+    background-image:url(images/icon-help-16.png);
+    background-size: 24px 24px;
+}
+.deployStatus-icon.ok {
+    background-image:url(images/icon-ok-16.png);
+}
+.deployStatus-icon.in-process{
+    background-image:url(images/icon-play-16.png);
+}
+.deployStatus-icon.warning {
+    background-image:url(images/icon-warning-16.png);
+}
+.deployStatus-icon.error {
+    background-image:url(images/icon-critical-16.png);
+}
+
+ 
+

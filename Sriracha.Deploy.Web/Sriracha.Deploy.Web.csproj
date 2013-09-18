@@ -225,7 +225,17 @@
     <Content Include="Content\images\pepper.jpg" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\icon-alert-16.png" />
+    <Content Include="Content\images\icon-blocked-16.png" />
+    <Content Include="Content\images\icon-ok-16.png" />
+    <Content Include="Content\images\icon-critical-16.png" />
+    <Content Include="Content\images\icon-help-16.png" />
+    <Content Include="Content\images\icon-pause-16.png" />
+    <Content Include="Content\images\icon-play-16.png" />
+    <Content Include="Content\images\icon-required-16.png" />
+    <Content Include="Content\images\icon-warning-16.png" />
     <Content Include="Content\js\ss-validation.js" />
+    <Content Include="Content\sriracha.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />

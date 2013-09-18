@@ -23,14 +23,18 @@ namespace Sriracha.Deploy.Web
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 						"~/Scripts/modernizr-*"));
 
-			var srirachaBundle = new ScriptBundle("~/bundles/sriracha")
+			var srirachaBundleJS = new ScriptBundle("~/bundles/sriracha")
 										.Include("~/scripts/sriracha/shared.js")
 										.Include("~/scripts/sriracha/ngSriracha.js")
 										.Include("~/scripts/sriracha/resources.js")
 										.Include("~/scripts/sriracha/navigator.js")
 										.Include("~/scripts/sriracha/router.js")
 										.IncludeDirectory("~/scripts/sriracha", "*.js", true);
-			bundles.Add(srirachaBundle);
+			bundles.Add(srirachaBundleJS);
+
+			var srirachaBundleCSS = new StyleBundle("~/Content/sriracha")
+										.Include("~/Content/sriracha.css");
+			bundles.Add(srirachaBundleCSS);
 
 			//bundles.Add(new StyleBundle("~/Content/css")
 			//			.Include("~/Content/site.css")
