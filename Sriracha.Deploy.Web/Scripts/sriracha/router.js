@@ -113,6 +113,10 @@
 			templateUrl: "templates/deployment-batchRequest-template.html",
 			controller: "deployBatchRequestController"
 		})
+		.when(navigator.deployment.batchCopy.url, {
+			templateUrl: "templates/deployment-batchRequest-template.html",
+			controller: "deployBatchRequestController"
+		})
 		.when(navigator.deployment.batchList.urlList[0], {
 			templateUrl: "templates/deployment-batchList-template.html",
 			controller: "deployBatchListController"

@@ -2,13 +2,24 @@
 		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
 		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
-	$scope.selection = {
-
-	};
+	$scope.selection = {};
 	$scope.idValues = {
 		buildId: $routeParams.buildId,
 		environmentId: $routeParams.environmentId
 	};
+
+	if ($routeParams.sourceDeployBatchRequestId) {
+		$scope.sourceDeployBatchRequest = SrirachaResource.deployBatchRequest.get({ id: $routeParams.sourceDeployBatchRequestId },
+			function () {
+				$scope.selectedItems = $scope.selectedItems || [];
+				_.each($scope.sourceDeployBatchRequest.itemList, function (x) {
+					$scope.selectedItems.push(x);
+				});
+			},
+			function (err) {
+				ErrorReporter.handleResourceError()
+			});
+	}
 
 	$scope.projectList = SrirachaResource.project.query({},
 		function () {

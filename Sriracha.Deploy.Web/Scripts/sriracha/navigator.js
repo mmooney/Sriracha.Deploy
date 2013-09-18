@@ -150,6 +150,11 @@
 				clientUrl: function () { return root.getUrl(this.url) },
 				go: function() { root.goTo(this.url) }
 			},
+			batchCopy: {
+				url: "/deploy/batchCopy/:sourceDeployBatchRequestId",
+				clientUrl: function (sourceDeployBatchRequestId) { return root.getUrl(this.url, { sourceDeployBatchRequestId: sourceDeployBatchRequestId }) },
+				go: function (sourceDeployBatchRequestId) { root.goTo(this.url, { sourceDeployBatchRequestId: sourceDeployBatchRequestId }) }
+			},
 			batchList: {
 				urlList: [
 					"/deploy/batchList",

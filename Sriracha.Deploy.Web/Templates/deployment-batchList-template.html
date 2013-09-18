@@ -11,7 +11,7 @@
 			<th>Started Date</th>
 			<th>Completed Date</th>
 			<th>Details</th>
-			<th>View</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -33,7 +33,12 @@
 				</div>
 			</td>
 			<td>
-				<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
+                <div>
+                    <a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
+                </div>
+                <div>
+                    <a ng-href="{{navigator.deployment.batchCopy.clientUrl(deployment.request.id)}}">Re-deploy</a>
+                </div>
 			</td>
 		</tr>
 	</tbody>
