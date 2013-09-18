@@ -65,7 +65,19 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				}
 				else 
 				{
-					string errorText = StringHelper.IsNullOrEmpty(errorOutput, standardOutput, "Error Code " + result.ToString());
+					string errorText;
+					if(!string.IsNullOrWhiteSpace(errorOutput)) 
+					{
+						errorText = errorOutput;
+					}
+					else if (!string.IsNullOrWhiteSpace(standardOutput))
+					{
+						errorText = standardOutput;
+					}
+					else 
+					{
+						errorText = "Error Code " + result.ToString();
+					}
 					statusManager.Error(deployStateId, errorText);
 					throw new Exception("LocalCommandLine Task Failed: " + errorText);
 				}
