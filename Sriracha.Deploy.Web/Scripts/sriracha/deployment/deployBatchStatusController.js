@@ -9,7 +9,7 @@
 				console.log($scope.deployBatchStatus);
 			},
 			function(err) {
-				ErrorReport.handleResourceException(err);
+				ErrorReporter.handleResourceError(err);
 			});
 	}
 
