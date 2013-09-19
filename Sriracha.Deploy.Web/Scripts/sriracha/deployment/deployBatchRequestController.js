@@ -8,11 +8,26 @@
 		environmentId: $routeParams.environmentId
 	};
 
+
 	if ($routeParams.sourceDeployBatchRequestId) {
 		$scope.sourceDeployBatchRequest = SrirachaResource.deployBatchRequest.get({ id: $routeParams.sourceDeployBatchRequestId },
 			function () {
 				$scope.selectedItems = $scope.selectedItems || [];
 				_.each($scope.sourceDeployBatchRequest.itemList, function (x) {
+					var selectedBuild = x.build;
+					var queryParameters = {
+						projectId: x.build.projectId,
+						projectBranchId: x.build.projectBranchId,
+						projectComponentId: x.build.projectComponentId
+					};
+					x.availableBuildList = SrirachaResource.build.query(
+						queryParameters,
+						function () {
+							
+						},
+						function (error) {
+							Error.handleResourceError(error);
+						});
 					$scope.selectedItems.push(x);
 				});
 			},
@@ -21,6 +36,9 @@
 			});
 	}
 
+	$scope.test = function (item) {
+		console.log(item);
+	}
 	$scope.projectList = SrirachaResource.project.query({},
 		function () {
 		},
@@ -28,6 +46,9 @@
 			ErrorReporter.handleResourceError(error);
 		});
 
+	$scope.isLatestBuild = function (item) {
+		return false;
+	}
 	$scope.refreshBuildAndEnvironmentList = function () {
 		queryParameters = {};
 		if($scope.project) {
