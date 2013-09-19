@@ -15,7 +15,14 @@
 					<button class="btn" ng-disabled="$index==(selectedItems.length-1)" ng-click="moveItemDown(item)"><i class="icon-arrow-down"></i></button>
 					<button class="btn btn-danger" ng-click="removeItem(item)"><i class="icon-trash"></i></button>
 				</td>
-				<td>{{item.build.displayValue}}</td>
+				<td>
+					<div>
+						{{item.build.displayValue}}
+					</div>	
+					<div>
+						Select a different build: <select ng-model="item.build" ng-options="x as x.displayValue for x in item.availableBuildList | orderBy:'-displayValue'" ng-change="test(item)"></select>
+					</div>
+				</td>
 				<td>
 					<ul>
 						<li ng-repeat="machine in item.machineList">{{machine.machineName}}</li>

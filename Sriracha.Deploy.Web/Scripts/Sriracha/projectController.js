@@ -194,6 +194,46 @@
 			}
 		);
 	}
+
+	$scope.startCopyDeploymentSteps = function () {
+		$scope.copyingDeploymentSteps = true;
+	}
+
+	$scope.copyDeploymentSteps = function(item) {
+		$scope.component.deploymentStepList = [];
+		if (item.deploymentStepList && item.deploymentStepList) {
+			$scope.copyNextDeploymentStep(item.deploymentStepList, item.deploymentStepList[0]);
+		}
+	}
+
+	$scope.copyNextDeploymentStep = function(list, step) {
+		var saveParams = {
+			projectId: $routeParams.projectId,
+			componentId: $routeParams.componentId
+		};
+		step.id = null;
+		var x = new SrirachaResource.deploymentStep(step);
+		console.log(x)
+		x.$save(
+			saveParams,
+			function () {
+				var found = false;
+				for (var i = 0; i < list.length - 1; i++) {
+					if (step == list[i]) {
+						var nextStep = list[i + 1];
+						found = true;
+						$scope.copyNextDeploymentStep(list, nextStep)
+					}
+				}
+				if (!found) {
+					$scope.navigator.component.view.go($routeParams.projectId,$routeParams.componentId);
+				}
+			},
+			function (error) {
+				$scope.reportError(error);
+			}
+		);
+	}
 	//End Components
 
 	//Deployment Steps
@@ -218,8 +258,14 @@
 	}
 
 	$scope.deleteDeploymentStep = function () {
+		var deleteParms = {
+			projectId: $routeParams.projectId,
+			componentId: $routeParams.componentId,
+			id: $routeParams.deploymentStepId
+		};
+		console.log(deleteParms);
 		$scope.deploymentStep.$delete(
-			$scope.deploymentStep,
+			deleteParms,
 			function () {
 				$scope.navigator.component.view.go($scope.project.id, $scope.component.id);
 			},
