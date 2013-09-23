@@ -42,7 +42,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, false);
 			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, true);
 
-			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineDirectory(machine.MachineName);
+			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ComponentId);
 
 			statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 			using (var standardOutputWriter = new StringWriter())

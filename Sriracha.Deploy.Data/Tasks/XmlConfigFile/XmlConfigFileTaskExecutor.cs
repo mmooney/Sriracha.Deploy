@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 				}
 				this.UpdateXmlNode(xmlDoc, xpathItem.XPath, value);
 			}
-			string outputDirectory = runtimeSystemSettings.GetLocalMachineDirectory(machine.MachineName);
+			string outputDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ComponentId);
 			if(!Directory.Exists(outputDirectory))
 			{
 				Directory.CreateDirectory(outputDirectory);

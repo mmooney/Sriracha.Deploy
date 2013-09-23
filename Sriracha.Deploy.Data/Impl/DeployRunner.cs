@@ -58,15 +58,16 @@ namespace Sriracha.Deploy.Data.Impl
 			foreach(var machineId in machineIdList)
 			{
 				var machine = environment.GetMachine(machineId);
-				string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
-				if(!Directory.Exists(machineDirectory))
-				{
-					Directory.CreateDirectory(machineDirectory);
-				}
-				CopyAllFiles(extractedDirectory, machineDirectory);
-				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
+				//string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
+				//if(!Directory.Exists(machineDirectory))
+				//{
+				//	Directory.CreateDirectory(machineDirectory);
+				//}
+				string machineComponentDirectory = systemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ComponentId);
+				CopyAllFiles(extractedDirectory, machineComponentDirectory);
+				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine/component directory {1}", extractedDirectory, machineComponentDirectory));
 
-				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine directory {1}", extractedDirectory, machineDirectory));
+				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine/component  directory {1}", extractedDirectory, machineComponentDirectory));
 
 				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentComponent, machine, systemSettings);
 			}

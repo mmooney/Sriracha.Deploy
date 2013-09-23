@@ -10,13 +10,22 @@ namespace Sriracha.Deploy.Data.Tasks
 	{
 		public string LocalDeployDirectory { get; set; }
 
-		public string GetLocalMachineDirectory(string machineName)
-		{	
-			if(string.IsNullOrEmpty(this.LocalDeployDirectory))
+		//public string GetLocalMachineDirectory(string machineName)
+		//{	
+		//	if(string.IsNullOrEmpty(this.LocalDeployDirectory))
+		//	{
+		//		throw new Exception("Missing LocalDeployDirectory");
+		//	}
+		//	return Path.Combine(this.LocalDeployDirectory, "Machines", machineName);
+		//}
+
+		public string GetLocalMachineComponentDirectory(string machineName, string componentId)
+		{
+			if (string.IsNullOrEmpty(this.LocalDeployDirectory))
 			{
 				throw new Exception("Missing LocalDeployDirectory");
 			}
-			return Path.Combine(this.LocalDeployDirectory, "Machines", machineName);
+			return Path.Combine(this.LocalDeployDirectory, machineName, componentId);
 		}
 
 		public string GetLocalCompressedPackageDirectory()
