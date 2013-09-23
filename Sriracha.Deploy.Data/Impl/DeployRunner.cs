@@ -45,12 +45,12 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			
 			var fileData = _fileManager.GetFile(build.FileId);
-			string compressedFilePath = Path.Combine(systemSettings.GetLocalCompressedPackageDirectory(), fileData.FileName);
+			string compressedFilePath = Path.Combine(systemSettings.GetLocalCompressedPackageDirectory(component.Id), fileData.FileName);
 			_statusManager.Info(deployStateId, string.Format("Extracting deployment package {0} to {1}", fileData.Id, compressedFilePath));
 			_fileManager.ExportFile(fileData.Id, compressedFilePath);
 			_statusManager.Info(deployStateId, string.Format("Deployment extracted package {0} to {1}", fileData.Id, compressedFilePath));
 
-			string extractedDirectory = systemSettings.GetLocalExtractedDirectory();
+			string extractedDirectory = systemSettings.GetLocalExtractedDirectory(component.Id);
 			_statusManager.Info(deployStateId, string.Format("Decompressing deployment package {0} to directory {1}", compressedFilePath, extractedDirectory));
 			_zipper.ExtractFile(compressedFilePath, extractedDirectory);
 			_statusManager.Info(deployStateId, string.Format("Done decompressing deployment package {0} to directory {1}", compressedFilePath, extractedDirectory));

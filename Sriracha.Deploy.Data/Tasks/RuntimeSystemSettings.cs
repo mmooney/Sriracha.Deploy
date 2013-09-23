@@ -28,22 +28,22 @@ namespace Sriracha.Deploy.Data.Tasks
 			return Path.Combine(this.LocalDeployDirectory, machineName, componentId);
 		}
 
-		public string GetLocalCompressedPackageDirectory()
+		public string GetLocalCompressedPackageDirectory(string componentId)
 		{
 			if (string.IsNullOrEmpty(this.LocalDeployDirectory))
 			{
 				throw new Exception("Missing LocalDeployDirectory");
 			}
-			return Path.Combine(this.LocalDeployDirectory, "Compressed");
+			return Path.Combine(this.LocalDeployDirectory, componentId, "Compressed");
 		}
 
-		public string GetLocalExtractedDirectory()
+		public string GetLocalExtractedDirectory(string componentId)
 		{
 			if (string.IsNullOrEmpty(this.LocalDeployDirectory))
 			{
 				throw new Exception("Missing LocalDeployDirectory");
 			}
-			return Path.Combine(this.LocalDeployDirectory, "Extracted");
+			return Path.Combine(this.LocalDeployDirectory, componentId, "Extracted");
 		}
 	}
 }
