@@ -320,7 +320,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else if (!string.IsNullOrEmpty(sharedDeploymentStepId))
 			{
-				item = component.DeploymentStepList.Single(i=>i.Id == sharedDeploymentStepId);
+				item = component.DeploymentStepList.Single(i=>i.SharedDeploymentStepId == sharedDeploymentStepId);
 			}
 			else
 			{
