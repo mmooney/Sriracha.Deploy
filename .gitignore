@@ -169,3 +169,5 @@ pip-log.txt
 packages/dropkick.core.0.4.13.0/tools/dropkick/**/*.log
 Publish/**/*
 PublishTemp/**/*
+/packages/dropkick.0.4.13.0
+/packages/dropkick.core.0.4.13.0
