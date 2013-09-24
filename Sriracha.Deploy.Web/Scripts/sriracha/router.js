@@ -32,19 +32,19 @@
 
 		//Components
 		.when(navigator.component.create.url, {
-			templateUrl: "templates/component-edit-template.html",
+			templateUrl: "templates/project/component/component-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.component.view.url, {
-			templateUrl: "templates/component-view-template.html",
+			templateUrl: "templates/project/component/component-view-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.component.edit.url, {
-			templateUrl: "templates/component-edit-template.html",
+			templateUrl: "templates/project/component/component-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.component.remove.url, {
-			templateUrl: "templates/component-delete-template.html",
+			templateUrl: "templates/project/component/component-delete-template.html",
 			controller: "ProjectController"
 		})
 
