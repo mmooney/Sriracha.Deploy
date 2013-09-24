@@ -78,15 +78,15 @@
 
 		//Environments
 		.when(navigator.environment.create.url, {
-			templateUrl: "templates/environment-edit-template.html",
+			templateUrl: "templates/project/environment/environment-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.environment.edit.url, {
-			templateUrl: "templates/environment-edit-template.html",
+			templateUrl: "templates/project/environment/environment-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.environment.remove.url, {
-			templateUrl: "templates/environment-delete-template.html",
+			templateUrl: "templates/project/environment/environment-delete-template.html",
 			controller: "ProjectController"
 		})
 

@@ -377,8 +377,8 @@
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment\deployment-submit-template.html" />
     <Content Include="Templates\deployment\deployment-view-template.html" />
-    <Content Include="Templates\environment-delete-template.html" />
-    <Content Include="Templates\environment-edit-template.html" />
+    <Content Include="Templates\project\environment\environment-delete-template.html" />
+    <Content Include="Templates\project\environment\environment-edit-template.html" />
     <Content Include="Templates\project\deploymentStep\deploymentstep-delete-template.html" />
     <Content Include="Templates\project\component\component-delete-template.html" />
     <Content Include="Templates\project\deploymentStep\deploymentstep-edit-template.html" />
