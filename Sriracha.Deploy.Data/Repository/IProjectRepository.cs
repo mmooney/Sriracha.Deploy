@@ -9,12 +9,12 @@ namespace Sriracha.Deploy.Data.Repository
 	public interface IProjectRepository
 	{
 		IEnumerable<DeployProject> GetProjectList(string[] idList=null);
-		DeployProject CreateProject(string projectName);
+		DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration);
 		DeployProject TryGetProject(string projectId);
 		DeployProject GetProject(string projectId);
 		DeployProject TryGetProjectByName(string projectName);
 		DeployProject GetProjectByName(string projectName);
-		DeployProject UpdateProject(string projectId, string projectName);
+		DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration);
 		void DeleteProject(string projectId);
 
 		IEnumerable<DeployComponent> GetComponentList(string projectId);

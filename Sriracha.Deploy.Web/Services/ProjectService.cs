@@ -35,11 +35,11 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if(string.IsNullOrEmpty(project.Id))
 			{
-				return _projectManager.CreateProject(project.ProjectName);
+				return _projectManager.CreateProject(project.ProjectName, project.UsesSharedComponentConfiguration);
 			}
 			else 
 			{
-				return _projectManager.UpdateProject(project.Id, project.ProjectName);
+				return _projectManager.UpdateProject(project.Id, project.ProjectName, project.UsesSharedComponentConfiguration);
 			}
 		}
 

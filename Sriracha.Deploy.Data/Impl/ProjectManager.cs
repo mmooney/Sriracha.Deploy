@@ -16,13 +16,13 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
 		}
 
-		public DeployProject CreateProject(string projectName)
+		public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
 		{
 			if(string.IsNullOrEmpty(projectName))
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			var project = this._projectRepository.CreateProject(projectName);
+			var project = this._projectRepository.CreateProject(projectName, usesSharedComponentConfiguration);
 			this._projectRepository.CreateBranch(project.Id, "Trunk");
 			return project;
 		}
@@ -57,7 +57,7 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public DeployProject UpdateProject(string projectId, string projectName)
+		public DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -67,7 +67,7 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			return this._projectRepository.UpdateProject(projectId, projectName);
+			return this._projectRepository.UpdateProject(projectId, projectName, usesSharedComponentConfiguration);
 		}
 
 		public IEnumerable<DeployComponent> GetComponentList(string projectId)

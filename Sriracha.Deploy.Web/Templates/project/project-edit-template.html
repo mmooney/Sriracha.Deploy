@@ -5,6 +5,14 @@
 		<th>Project Name:</th>
 		<td><input type="text" required ng-model="project.projectName" /></td>
 	</tr>
+    <tr>
+        <td colspan="2">    
+            <label class="checkbox">
+                <input type="checkbox" ng-model="project.usesSharedComponentConfiguration" />
+                All components in this project use same deployment and environment configuration?
+            </label>
+        </td>
+    </tr>
 </table>
 <button class="btn" ng-click="navigator.project.list.go()">Cancel</button>
 <button class="btn" ng-click="saveProject()">Save</button>

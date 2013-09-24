@@ -9,9 +9,9 @@ namespace Sriracha.Deploy.Data
 	public interface IProjectManager
 	{
 		IEnumerable<DeployProject> GetProjectList();
-		DeployProject CreateProject(string projectName);
+		DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration);
 		DeployProject GetProject(string projectId);
-		DeployProject UpdateProject(string projectId, string projectName);
+		DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration);
 		void DeleteProject(string projectId);
 
 		IEnumerable<DeployComponent> GetComponentList(string projectId);

@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Dto
 	{
 		public string Id { get; set; }
 		public string ProjectName { get; set; }
+		public bool UsesSharedComponentConfiguration { get; set; }
 		public List<DeployProjectBranch> BranchList { get; set; }
 		public List<DeployComponent> ComponentList { get; set; }
 		public List<DeployEnvironment> EnvironmentList { get; set; }

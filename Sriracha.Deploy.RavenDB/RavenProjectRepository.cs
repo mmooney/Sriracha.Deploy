@@ -32,7 +32,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public DeployProject CreateProject(string projectName)
+		public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
 		{
 			if(string.IsNullOrEmpty(projectName))
 			{
@@ -41,7 +41,8 @@ namespace Sriracha.Deploy.RavenDB
 			var project = new DeployProject
 			{
 				Id = Guid.NewGuid().ToString(),
-				ProjectName = projectName
+				ProjectName = projectName,
+				UsesSharedComponentConfiguration = usesSharedComponentConfiguration
 			};
 			_documentSession.Store(project);
 			_documentSession.SaveChanges();
@@ -116,7 +117,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployProject UpdateProject(string projectId, string projectName)
+		public DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration)
 		{
 			if(string.IsNullOrEmpty(projectName))
 			{
@@ -124,6 +125,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var item = this.GetProject(projectId);
 			item.ProjectName = projectName;
+			item.UsesSharedComponentConfiguration = usesSharedComponentConfiguration;
 			this._documentSession.SaveChanges();
 			return item;
 		}

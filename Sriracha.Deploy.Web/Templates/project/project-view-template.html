@@ -2,6 +2,13 @@
 
 <hr />
 
+<div ng-show="project.usesSharedComponentConfiguration">
+    All components in this project use same deployment and environment configuration
+</div>
+<div ng-hide="project.usesSharedComponentConfiguration">
+    Components in this project use seperate deployment and environment configuration
+</div>
+
 <h3>Components</h3>
 <table class="table table-border table-striped" ng-show="project.componentList.length">
 	<thead>

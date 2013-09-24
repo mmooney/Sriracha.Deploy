@@ -57,7 +57,7 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			if(project == null)
 			{
-				project = _projectRepository.CreateProject(projectId);
+				project = _projectRepository.CreateProject(projectId, false);
 			}
 			var branch = _projectRepository.TryGetBranch(project, branchId);
 			if(branch == null)

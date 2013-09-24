@@ -23,12 +23,13 @@ namespace Sriracha.Deploy.Data.Tests
 				var project = new DeployProject
 				{
 					ProjectName = Guid.NewGuid().ToString(),
-					Id = Guid.NewGuid().ToString()
+					Id = Guid.NewGuid().ToString(),
+					UsesSharedComponentConfiguration = false
 				};
-				repository.Setup(i=>i.CreateProject(project.ProjectName)).Returns(project);
-				DeployProject result = sut.CreateProject(project.ProjectName);
+				repository.Setup(i=>i.CreateProject(project.ProjectName, project.UsesSharedComponentConfiguration)).Returns(project);
+				DeployProject result = sut.CreateProject(project.ProjectName, project.UsesSharedComponentConfiguration);
 				Assert.AreEqual(project, result);
-				repository.Verify(i => i.CreateProject(project.ProjectName), Times.Once());
+				repository.Verify(i => i.CreateProject(project.ProjectName, project.UsesSharedComponentConfiguration), Times.Once());
 			}
 
 			[Test]
@@ -36,8 +37,8 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				var repository = new Mock<IProjectRepository>();
 				IProjectManager sut = new ProjectManager(repository.Object);
-				Assert.Throws<ArgumentNullException>(delegate { sut.CreateProject(string.Empty); });
-				repository.Verify(i => i.CreateProject(It.IsAny<string>()), Times.Never());
+				Assert.Throws<ArgumentNullException>(delegate { sut.CreateProject(string.Empty, false); });
+				repository.Verify(i => i.CreateProject(It.IsAny<string>(), It.IsAny<bool>()), Times.Never());
 			}
 		}
 
@@ -178,8 +179,8 @@ namespace Sriracha.Deploy.Data.Tests
 				string projectId = Guid.NewGuid().ToString();
 				string projectName = Guid.NewGuid().ToString();
 				IProjectManager sut = new ProjectManager(repository.Object);
-				sut.UpdateProject(projectId, projectName);
-				repository.Verify(i=>i.UpdateProject(projectId, projectName), Times.Once());
+				sut.UpdateProject(projectId, projectName, true);
+				repository.Verify(i=>i.UpdateProject(projectId, projectName, true), Times.Once());
 			}
 
 			[Test]
@@ -189,8 +190,8 @@ namespace Sriracha.Deploy.Data.Tests
 				string projectId = string.Empty;
 				string projectName = Guid.NewGuid().ToString();
 				IProjectManager sut = new ProjectManager(repository.Object);
-				Assert.Throws<ArgumentNullException>(delegate { sut.UpdateProject(projectId, projectName); });
-				repository.Verify(i => i.UpdateProject(projectId, projectName), Times.Never());
+				Assert.Throws<ArgumentNullException>(delegate { sut.UpdateProject(projectId, projectName, true); });
+				repository.Verify(i => i.UpdateProject(projectId, projectName, true), Times.Never());
 			}
 
 			[Test]
@@ -200,8 +201,8 @@ namespace Sriracha.Deploy.Data.Tests
 				string projectId = Guid.NewGuid().ToString();
 				string projectName = string.Empty;
 				IProjectManager sut = new ProjectManager(repository.Object);
-				Assert.Throws<ArgumentNullException>(delegate { sut.UpdateProject(projectId, projectName); });
-				repository.Verify(i => i.UpdateProject(projectId, projectName), Times.Never());
+				Assert.Throws<ArgumentNullException>(delegate { sut.UpdateProject(projectId, projectName, true); });
+				repository.Verify(i => i.UpdateProject(projectId, projectName, true), Times.Never());
 			}
 
 		}

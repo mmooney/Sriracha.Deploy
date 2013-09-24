@@ -16,7 +16,7 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public void CreateSampleData()
 		{
-			var sampleProject1 = _projectManager.CreateProject("Sample Project 1");
+			var sampleProject1 = _projectManager.CreateProject("Sample Project 1", false);
 			var devBranch1 = _projectManager.CreateBranch(sampleProject1.Id, "DEV Branch");
 			var prodBranch1 = _projectManager.CreateBranch(sampleProject1.Id, "PROD Branch");
 			var componentWeb1 = _projectManager.CreateComponent(sampleProject1.Id, "Website");

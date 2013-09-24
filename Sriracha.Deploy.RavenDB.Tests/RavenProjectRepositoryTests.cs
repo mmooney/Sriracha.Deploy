@@ -18,10 +18,11 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectName = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				var result = sut.CreateProject(projectName);
+				var result = sut.CreateProject(projectName, false);
 				Assert.IsNotNull(result);
 				Assert.IsNotNullOrEmpty(result.Id);
 				Assert.AreEqual(projectName, result.ProjectName);
+				Assert.AreEqual(false, result.UsesSharedComponentConfiguration);
 				var dbItem = this.DocumentSession.Load<DeployProject>(result.Id);
 				Assert.AreEqual(projectName, result.ProjectName);
 			}
@@ -31,7 +32,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectName = string.Empty;
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<ArgumentNullException>( ()=> sut.CreateProject(projectName) );
+				Assert.Throws<ArgumentNullException>( ()=> sut.CreateProject(projectName, false) );
 			}
 		}
 
@@ -203,18 +204,21 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				var project = new DeployProject
 				{
 					Id = Guid.NewGuid().ToString(),
-					ProjectName = Guid.NewGuid().ToString()
+					ProjectName = Guid.NewGuid().ToString(),
+					UsesSharedComponentConfiguration = false
 				};
 				this.DocumentSession.Store(project);
 				this.DocumentSession.SaveChanges();
 
 				string newProjectName = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				sut.UpdateProject(project.Id, newProjectName);
+				sut.UpdateProject(project.Id, newProjectName, true);
 
 				var dbItem = this.DocumentSession.Load<DeployProject>(project.Id);
 				Assert.IsNotNull(dbItem);
 				Assert.AreEqual(newProjectName, dbItem.ProjectName);
+				Assert.AreEqual(true, dbItem.UsesSharedComponentConfiguration);
+
 			}
 
 			[Test]
@@ -223,7 +227,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				string projectId = string.Empty;
 				string projectName = Guid.NewGuid().ToString();
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<ArgumentNullException>(()=>sut.UpdateProject(projectId, projectName));
+				Assert.Throws<ArgumentNullException>(()=>sut.UpdateProject(projectId, projectName, false));
 			}
 
 			[Test]
@@ -232,7 +236,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				string projectId = Guid.NewGuid().ToString();
 				string projectName = string.Empty;
 				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
-				Assert.Throws<ArgumentNullException>(() => sut.UpdateProject(projectId, projectName));
+				Assert.Throws<ArgumentNullException>(() => sut.UpdateProject(projectId, projectName, false));
 			}
 		}
 	}
