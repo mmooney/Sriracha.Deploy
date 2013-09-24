@@ -18,11 +18,16 @@
 <div ng-hide="component.deploymentStepList.length">
 	<em>No Deployment Steps</em>
 </div>
+<div ng-show="project.usesSharedComponentConfiguration">
+    Note: All components in this project use same deployment and environment configuration.  Any changes here will affect all components in the project.
+    <br />
+    <br />
+</div>
 <a ng-href="{{navigator.deploymentStep.create.clientUrl(component.projectId, component.id)}}" class="btn btn-primary">Create Deployment Step</a>
 <br />
 <br />
-<div ng-hide="copyingDeploymentSteps">
-	<button class="btn" ng-click="startCopyDeploymentSteps()">Copy Deployment Steps From Another Component</button>
+<div ng-hide="copyingDeploymentSteps || project.usesSharedComponentConfiguration">
+    <button class="btn" ng-click="startCopyDeploymentSteps()">Copy Deployment Steps From Another Component</button>
 </div>
 <div ng-show="copyingDeploymentSteps">
 	<table class="table table-striped table-bordered">

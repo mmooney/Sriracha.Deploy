@@ -264,18 +264,24 @@ namespace Sriracha.Deploy.RavenDB
 			return component.DeploymentStepList;
 		}
 
-		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson) 
+		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
 		{
 			var project = GetProject(projectId);
+			return this.CreateDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+		}
+
+		public DeployComponentDeploymentStep CreateDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+		{
 			var component = project.ComponentList.Single(i => i.Id == componentId);
 			var item = new DeployComponentDeploymentStep
 			{
 				Id = Guid.NewGuid().ToString(),
-				ProjectId = projectId,
+				ProjectId = project.Id,
 				ComponentId = componentId,
 				StepName = stepName,
 				TaskTypeName = taskTypeName,
-				TaskOptionsJson = taskOptionsJson
+				TaskOptionsJson = taskOptionsJson,
+				SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, Guid.NewGuid().ToString())
 			};
 			
 			if(component.DeploymentStepList == null)
@@ -298,16 +304,35 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson) 
+		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
 		{
 			var project = GetProject(projectId);
+			return UpdateDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+		}
+
+		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+		{
 			var component = project.ComponentList.Single(i => i.Id == componentId);
-			var item = component.DeploymentStepList.Single(i=>i.Id == deploymentStepId);
+			DeployComponentDeploymentStep item;
+			if(!string.IsNullOrEmpty(deploymentStepId))
+			{
+				item = component.DeploymentStepList.Single(i=>i.Id == deploymentStepId);
+			}
+			else if (!string.IsNullOrEmpty(sharedDeploymentStepId))
+			{
+				item = component.DeploymentStepList.Single(i=>i.Id == sharedDeploymentStepId);
+			}
+			else
+			{
+				throw new ArgumentNullException("Either deploymentStepId or sharedDeploymentStepId must be specified");
+			}
 			item.StepName = stepName;
 			item.TaskTypeName = taskTypeName;
 			item.TaskOptionsJson = taskOptionsJson;
+			item.SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, item.SharedDeploymentStepId);
 			this._documentSession.SaveChanges();
 			return item;
+			
 		}
 
 

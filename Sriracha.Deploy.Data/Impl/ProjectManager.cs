@@ -122,7 +122,19 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Task Options");
 			}
-			return this._projectRepository.CreateDeploymentStep(projectId, componentId, stepName, taskTypeName, taskOptionsJson);
+			var project = this._projectRepository.GetProject(projectId);
+			var returnValue = this._projectRepository.CreateDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			if(project.UsesSharedComponentConfiguration)
+			{
+				foreach(var component in project.ComponentList)
+				{
+					if(component.Id != componentId)
+					{
+						this._projectRepository.CreateDeploymentStep(project, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
+					}
+				}
+			}
+			return returnValue;
 		}
 
 
@@ -157,7 +169,16 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				throw new ArgumentNullException("Missing Task Options");
 			}
-			return this._projectRepository.UpdateDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson);
+			var project = this._projectRepository.GetProject(projectId);
+			var returnValue = this._projectRepository.UpdateDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			if(project.UsesSharedComponentConfiguration)
+			{ 
+				foreach(var component in project.ComponentList)
+				{
+					this._projectRepository.UpdateDeploymentStep(null, projectId, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
+				}
+			}
+			return returnValue;
 		}
 
 		public void DeleteDeploymentStep(string deploymentStepId)

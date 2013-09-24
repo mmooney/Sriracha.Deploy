@@ -14,5 +14,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public string StepName { get; set; }
 		public string TaskTypeName { get; set; }
 		public string TaskOptionsJson { get; set; }
+
+		public string SharedDeploymentStepId { get; set; }
 	}
 }

@@ -29,9 +29,11 @@ namespace Sriracha.Deploy.Data.Repository
 		void DeleteComponent(string componentId);
 
 		List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId);
-		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployComponentDeploymentStep CreateDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
 		DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId);
-		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
 		void DeleteDeploymentStep(string deploymentStepId);
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
