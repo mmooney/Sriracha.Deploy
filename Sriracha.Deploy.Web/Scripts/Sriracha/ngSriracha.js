@@ -70,7 +70,7 @@ ngSriracha.directive("selectEnvironmentMachines",
 ngSriracha.directive("projectList", function () {
 	return {
 		restrict: "E",
-		templateUrl: "templates/project-list-template.html"
+		templateUrl: "templates/project/project-list-template.html"
 	}
 });
 

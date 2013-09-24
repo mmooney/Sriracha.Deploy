@@ -1,0 +1,18 @@
+﻿<h2><a ng-href="{{navigator.project.list.clientUrl()}}">Project List</a></h2>
+<table class="table table-striped" ng-show="projectList.length">
+	<thead>
+		<tr>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="project in projectList">
+			<td><a ng-href="{{navigator.project.view.clientUrl(project.id)}}">{{project.projectName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.project.remove.clientUrl(project.id)}}">Delete</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="projectList.length">
+	No projects yet
+</div>
+<a ng-href="{{navigator.project.create.clientUrl()}}">Create Project</a>

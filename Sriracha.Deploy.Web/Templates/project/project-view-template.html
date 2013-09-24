@@ -1,0 +1,65 @@
+﻿<h2>Project {{project.projectName}} <a ng-href="{{navigator.project.edit.clientUrl(project.id)}}">(edit)</a></h2> 
+
+<hr />
+
+<h3>Components</h3>
+<table class="table table-border table-striped" ng-show="project.componentList.length">
+	<thead>
+		<tr>
+			<th>Component Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="component in project.componentList">
+			<td><a ng-href="{{navigator.component.view.clientUrl(component.projectId, component.id)}}">{{component.componentName}}</a></td>
+			<td><a class="btn btn-primary" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">Edit</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.component.remove.clientUrl(component.projectId, component.id)}}">Delete</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.componentList">
+	<em>No Components</em>
+</div>
+<a class="btn btn-primary" ng-href="{{navigator.component.create.clientUrl(project.id)}}">Create Component</a>
+
+<hr />
+
+<h3>Branches</h3>
+<table class="table table-border table-striped" ng-show="project.branchList.length">
+	<thead>
+		<tr>
+			<th>Branch Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="branch in project.branchList">
+			<td><a ng-href="{{navigator.branch.edit.clientUrl(project.id, branch.id)}}">{{branch.branchName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.branch.remove.clientUrl(project.id, branch.id)}}">Delete</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.branchList">
+	<em>No Branches</em>
+</div>
+<a class="btn btn-primary" ng-href="{{navigator.branch.create.clientUrl(project.id)}}">Create Branch</a>
+
+<hr />
+
+<h3>Environments</h3>
+<table class="table table-border table-striped" ng-show="project.environmentList.length">
+	<thead>
+		<tr>
+			<th>Environment Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="environment in project.environmentList">
+			<td><a ng-href="{{navigator.environment.edit.clientUrl(environment.projectId, environment.id)}}">{{environment.environmentName}}</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.environment.remove.clientUrl(environment.projectId, environment.id)}}">Delete</a></td>
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.environmentList">
+	<em>No Environments</em>
+</div>
+<a class="btn btn-primary" ng-href="{{navigator.environment.create.clientUrl(project.id)}}">Create Environment</a>

@@ -10,23 +10,23 @@
 
 		//Projects
 		.when(navigator.project.list.url, {
-			templateUrl: "templates/project-list-template.html",
+			templateUrl: "templates/project/project-list-template.html",
 			controller: "ProjectController",
 		})
 		.when(navigator.project.create.url, {
-			templateUrl: "templates/project-edit-template.html",
+			templateUrl: "templates/project/project-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.project.view.url, {
-			templateUrl: "templates/project-view-template.html",
+			templateUrl: "templates/project/project-view-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.project.edit.url, {
-			templateUrl: "templates/project-edit-template.html",
+			templateUrl: "templates/project/project-edit-template.html",
 			controller: "ProjectController"
 		})
 		.when(navigator.project.remove.url, {
-			templateUrl: "templates/project-delete-template.html",
+			templateUrl: "templates/project/project-delete-template.html",
 			controller: "ProjectController"
 		})
 
