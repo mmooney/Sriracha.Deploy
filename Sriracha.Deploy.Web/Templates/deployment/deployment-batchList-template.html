@@ -1,0 +1,45 @@
+﻿<h1>Deployments</h1>
+
+<a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
+
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Status</th>
+			<th>Submitted Date</th>
+			<th>Started Date</th>
+			<th>Completed Date</th>
+			<th>Details</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="deployment in deploymentList.items">
+			<td>
+                <div class="{{getDeployStatusIconClass(deployment.request.status)}}">
+                </div>
+                {{getDeployStatusDescription(deployment.request.status)}}
+			</td>
+			<td>{{deployment.request.submittedDateTimeUtc | date:'medium'}} UTC</td>
+-			<td>{{deployment.request.startedDateTimeUtc | date:'medium'}} UTC</td>
+			<td>{{deployment.request.completeDateTimeUtc | date:'medium'}} UTC</td>
+			<td>
+				<div ng-repeat="item in deployment.request.itemList">
+					<b>{{item.build.displayValue}}-></b>
+					<ul>
+						<li ng-repeat="machine in item.machineList">{{machine.machineName}}</li>
+					</ul>
+				</div>
+			</td>
+			<td>
+                <div>
+                    <a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
+                </div>
+                <div>
+                    <a ng-href="{{navigator.deployment.batchCopy.clientUrl(deployment.request.id)}}">Re-deploy</a>
+                </div>
+			</td>
+		</tr>
+	</tbody>
+</table>

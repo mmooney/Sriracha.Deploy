@@ -110,43 +110,43 @@
 
 		//Deployments
 		.when(navigator.deployment.batchRequest.url, {
-			templateUrl: "templates/deployment-batchRequest-template.html",
+			templateUrl: "templates/deployment/deployment-batchRequest-template.html",
 			controller: "deployBatchRequestController"
 		})
 		.when(navigator.deployment.batchCopy.url, {
-			templateUrl: "templates/deployment-batchRequest-template.html",
+			templateUrl: "templates/deployment/deployment-batchRequest-template.html",
 			controller: "deployBatchRequestController"
 		})
 		.when(navigator.deployment.batchList.urlList[0], {
-			templateUrl: "templates/deployment-batchList-template.html",
+			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})
 		.when(navigator.deployment.batchList.urlList[1], {
-			templateUrl: "templates/deployment-batchList-template.html",
+			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})
 		.when(navigator.deployment.batchList.urlList[2], {
-			templateUrl: "templates/deployment-batchList-template.html",
+			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})
 		.when(navigator.deployment.batchList.urlList[3], {
-			templateUrl: "templates/deployment-batchList-template.html",
+			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})
 		.when(navigator.deployment.batchList.urlList[4], {
-			templateUrl: "templates/deployment-batchList-template.html",
+			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})
 		.when(navigator.deployment.batchStatus.url, {
-			templateUrl: "templates/deployment-batchStatus-template.html",
+			templateUrl: "templates/deployment/deployment-batchStatus-template.html",
 			controller: "deployBatchStatusController"
 		})
 		.when(navigator.deployment.submit.url, {
-			templateUrl: "templates/deployment-submit-template.html",
+			templateUrl: "templates/deployment/deployment-submit-template.html",
 			controller: "DeployController"
 		})
 		.when(navigator.deployment.view.url, {
-			templateUrl: "templates/deployment-view-template.html",
+			templateUrl: "templates/deployment/deployment-view-template.html",
 			controller: "DeployController"
 		})
 
