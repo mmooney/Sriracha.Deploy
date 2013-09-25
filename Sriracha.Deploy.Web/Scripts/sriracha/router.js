@@ -51,15 +51,15 @@
 		//Deployment Steps
 		.when(navigator.deploymentStep.create.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectDeploymentStepController"
 		})
 		.when(navigator.deploymentStep.edit.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectDeploymentStepController"
 		})
 		.when(navigator.deploymentStep.remove.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-delete-template.html",
-			controller: "ProjectController"
+			controller: "ProjectDeploymentStepController"
 		})
 
 		//Branches
