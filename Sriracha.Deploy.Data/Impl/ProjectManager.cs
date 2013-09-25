@@ -77,7 +77,20 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployComponent CreateComponent(string projectId, string componentName)
 		{
-			return this._projectRepository.CreateComponent(projectId, componentName);
+			var project = this._projectRepository.GetProject(projectId);
+			var returnValue = this._projectRepository.CreateComponent(project, componentName);
+			if(project.UsesSharedComponentConfiguration)
+			{
+				var someOtherComponent = project.ComponentList.FirstOrDefault(i=>i.Id != returnValue.Id);
+				if(someOtherComponent != null)
+				{
+					foreach(var deploymentStep in someOtherComponent.DeploymentStepList)
+					{
+						this._projectRepository.CreateDeploymentStep(project, returnValue.Id, deploymentStep.StepName, deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson, deploymentStep.SharedDeploymentStepId);
+					}
+				}
+			}
+			return returnValue;
 		}
 
 		public DeployComponent GetComponent(string componentId)

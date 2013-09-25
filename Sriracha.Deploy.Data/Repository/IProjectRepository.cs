@@ -19,6 +19,7 @@ namespace Sriracha.Deploy.Data.Repository
 
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
 		DeployComponent CreateComponent(string projectId, string componentName);
+		DeployComponent CreateComponent(DeployProject project, string componentName);
 		DeployComponent GetComponent(string componentId);
 		DeployComponent TryGetComponent(string componentId);
 		DeployComponent GetComponent(DeployProject project, string componentId);

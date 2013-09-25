@@ -139,11 +139,16 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployComponent CreateComponent(string projectId, string componentName)
 		{
-			var project = GetProject(projectId);
+			var project = this.GetProject(projectId);
+			return this.CreateComponent(project, componentName);
+		}
+
+		public DeployComponent CreateComponent(DeployProject project, string componentName)
+		{
 			var item = new DeployComponent
 			{
 				Id = Guid.NewGuid().ToString(),
-				ProjectId = projectId,
+				ProjectId = project.Id,
 				ComponentName = componentName
 			};
 			project.ComponentList.Add(item);
