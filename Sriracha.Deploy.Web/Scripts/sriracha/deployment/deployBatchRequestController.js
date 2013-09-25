@@ -57,7 +57,7 @@
 	$scope.isLatestBuild = function (item) {
 		return false;
 	}
-	$scope.refreshBuildAndEnvironmentList = function () {
+	$scope.refreshBuildAndEnvironmentList = function (selectedBuildId, selectedEnvironmentId) {
 		queryParameters = {};
 		if($scope.project) {
 			queryParameters.projectId = $scope.project.id;
@@ -69,8 +69,10 @@
 			queryParameters.projectComponentId = $scope.component.id;
 		}
 		$scope.buildList = SrirachaResource.build.query(queryParameters,
-			function() {
-				//console.log($scope.buildList);
+			function () {
+				if (selectedBuildId) {
+					$scope.build = _.findWhere($scope.buildList, { id: selectedBuildId });
+				}
 			},
 			function(error) {
 				Error.handleResourceError(error);
@@ -89,6 +91,9 @@
 											);
 											return anyItems;
 										})
+		}
+		if (selectedEnvironmentId) {
+			$scope.environment = _.findWhere($scope.environmentList, { id: selectedEnvironmentId });
 		}
 		$scope.updateEnvironmentMachines();
 	}
@@ -119,6 +124,7 @@
 
 	$scope.updateEnvironmentMachines = function () {
 		if($scope.build && $scope.environment) {
+			console.log("Hi1");
 			$scope.idValues.buildId = $scope.build.id;
 			$scope.idValues.environmentId = $scope.environment.id;
 		}
@@ -163,17 +169,21 @@
 		}
 	}
 
-	//$scope.editItem = function (item) {
-	//	$scope.project = _.findWhere($scope.projectList, { id: item.build.projectId });
-	//	$scope.branch = _.findWhere($scope.project.branchList, { id: item.build.projectBranchId });
-	//	$scope.component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
-	//	console.log(item);
-	//	$(".editBuildDialog").dialog({
-	//		width: 'auto',
-	//		height: 'auto',
-	//		modal: true
-	//	});
-	//}
+	$scope.editItem = function (item) {
+		$scope.project = _.findWhere($scope.projectList, { id: item.build.projectId });
+		$scope.branch = _.findWhere($scope.project.branchList, { id: item.build.projectBranchId });
+		$scope.component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
+		var environmentId;
+		if (item.machineList) {
+			environmentId = item.machineList[0].environmentId;
+		}
+		$scope.refreshBuildAndEnvironmentList(item.build.id,environmentId);
+		$(".editBuildDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
+	}
 
 	$scope.submitBuildRequest = function () {
 		var request = new SrirachaResource.deployBatchRequest();
