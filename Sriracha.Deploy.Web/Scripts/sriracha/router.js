@@ -33,19 +33,19 @@
 		//Components
 		.when(navigator.component.create.url, {
 			templateUrl: "templates/project/component/component-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectComponentController"
 		})
 		.when(navigator.component.view.url, {
 			templateUrl: "templates/project/component/component-view-template.html",
-			controller: "ProjectController"
+			controller: "ProjectComponentController"
 		})
 		.when(navigator.component.edit.url, {
 			templateUrl: "templates/project/component/component-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectComponentController"
 		})
 		.when(navigator.component.remove.url, {
 			templateUrl: "templates/project/component/component-delete-template.html",
-			controller: "ProjectController"
+			controller: "ProjectComponentController"
 		})
 
 		//Deployment Steps

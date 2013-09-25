@@ -4,6 +4,11 @@
 	<b>Environment Name:</b>
 	<input type="text" ng-model="environment.environmentName" />
 </div>
+<div ng-show="project.usesSharedComponentConfiguration">
+	Note: All components in this project use same deployment and environment configuration.  Any changes here will affect all components in the project.
+	<br />
+	<br />
+</div>
 <div ng-show="environment.id">
 	<div ng-repeat="component in environment.componentList">
 		<h3>{{component.componentName}}</h3>
