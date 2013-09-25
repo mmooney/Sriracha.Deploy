@@ -193,6 +193,8 @@
     <Compile Include="Helpers\AutofacIocAdapter.cs" />
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\sriracha\project\projectDeploymentStepControlller.js" />
+    <Content Include="Scripts\sriracha\project\projectEnvironmentController.js" />
     <Compile Include="Services\BranchService.cs" />
     <Compile Include="Services\BuildService.cs" />
     <Compile Include="Services\ComponentService.cs" />
@@ -356,7 +358,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\sriracha\navigator.js" />
     <Content Include="Scripts\sriracha\ngSriracha.js" />
-    <Content Include="Scripts\sriracha\projectController.js" />
+    <Content Include="Scripts\sriracha\project\projectController.js" />
     <Content Include="Scripts\sriracha\project\projectBranchController.js" />
     <Content Include="Scripts\sriracha\project\projectComponentController.js" />
     <Content Include="Scripts\sriracha\resources.js" />
