@@ -1,6 +1,6 @@
 ﻿ngSriracha.controller("deployBatchRequestController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
-		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', '$rootElement', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
+		function ($scope, $routeParams, $rootElement, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {};
 	$scope.idValues = {
@@ -38,6 +38,14 @@
 
 	$scope.test = function (item) {
 		console.log(item);
+	}
+
+	$scope.displayAddBuildScreen = function (element) {
+		$(".editBuildDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
 	}
 	$scope.projectList = SrirachaResource.project.query({},
 		function () {
@@ -133,6 +141,8 @@
 
 			$scope.selectedItems.push(deploymentItem);
 			$scope.build = null;
+
+			angular.element(".editBuildDialog").dialog("close");
 		}
 	}
 
@@ -152,6 +162,18 @@
 			$scope.selectedItems.splice(index, 1);
 		}
 	}
+
+	//$scope.editItem = function (item) {
+	//	$scope.project = _.findWhere($scope.projectList, { id: item.build.projectId });
+	//	$scope.branch = _.findWhere($scope.project.branchList, { id: item.build.projectBranchId });
+	//	$scope.component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
+	//	console.log(item);
+	//	$(".editBuildDialog").dialog({
+	//		width: 'auto',
+	//		height: 'auto',
+	//		modal: true
+	//	});
+	//}
 
 	$scope.submitBuildRequest = function () {
 		var request = new SrirachaResource.deployBatchRequest();

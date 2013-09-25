@@ -13,7 +13,6 @@
 				<td>{{$index+1}}
 					<button class="btn" ng-disabled="$index==0" ng-click="moveItemUp(item)"><i class="icon-arrow-up"></i></button>
 					<button class="btn" ng-disabled="$index==(selectedItems.length-1)" ng-click="moveItemDown(item)"><i class="icon-arrow-down"></i></button>
-					<button class="btn btn-danger" ng-click="removeItem(item)"><i class="icon-trash"></i></button>
 				</td>
 				<td>
 					<div>
@@ -28,11 +27,19 @@
 						<li ng-repeat="machine in item.machineList">{{machine.machineName}}</li>
 					</ul>
 				</td>
+				<td>
+					<div>
+						<button class="btn btn-danger" ng-click="removeItem(item)"><i class="icon-trash"></i>Remove Build</button>
+					</div>
+					<div>
+						<button class="btn btn-primary" ng-click="editItem(item)"><i class="icon-pencil"></i>Edit Build</button>
+					</div>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 </fieldset>
-<fieldset>
+<div style="display:none" class="editBuildDialog">
 	<legend>Add Build</legend>
 	<table class="table table-bordered">
 		<colgroup>
@@ -83,7 +90,8 @@
 			</tr>
 		</tbody>
 	</table>
-</fieldset>
+</div>
+<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
 <center>
 	<button class="btn btn-primary" ng-click="submitBuildRequest()" ng-disabled="!selectedItems.length">Submit Deployment Request</button>
 </center>
