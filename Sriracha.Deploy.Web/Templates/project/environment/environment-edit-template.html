@@ -30,7 +30,7 @@
 			</tbody>
 		</table>
 
-		<strong>Environment Values</strong>
+		<strong>Machine Values</strong>
 		<div ng-repeat="machine in component.machineList" style="text-indent:20px">
 			{{machine.machineName}} <button class="btn" ng-click="editMachine(machine)">Edit</button> <button class="btn" ng-click="deleteMachine(component,machine)">Delete</button>
 			<table class="table table-striped table-bordered ">
@@ -45,7 +45,7 @@
 					<tr ng-repeat="configItem in configDefinitionList[component.componentId].machineTaskParameterList">
 						<td>{{configItem.fieldName}}</td>
 						<td>{{machine.configurationValueList[configItem.fieldName]}}</td>
-						<td><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList)">Edit</button></td>
+						<td><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
 					</tr>
 				</tbody>
 			</table>

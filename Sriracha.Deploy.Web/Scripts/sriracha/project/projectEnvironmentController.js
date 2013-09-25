@@ -8,7 +8,7 @@
 	}
 	$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
 		if ($routeParams.environmentId && $scope.project.environmentList) {
-			var environment = _.find($scope.project.environmentList, function (e) { return e.id == $routeParams.environmentId });
+			var environment = _.findWhere($scope.project.environmentList, { id: $routeParams.environmentId });
 			if (environment) {
 				$scope.environment = new SrirachaResource.environment(environment);
 				if (!$scope.environment.componentList) {
@@ -29,22 +29,28 @@
 
 				_.each($scope.project.componentList, function (component) {
 					var environmentComponent = _.findWhere($scope.environment.componentList, { componentId: component.id });
-					var configDefinition = SrirachaResource.componentConfiguration.get({ projectId: $routeParams.projectId, componentId: component.id }, function () {
-						$scope.configDefinitionList = $scope.configDefinitionList || {};
-						$scope.configDefinitionList[component.id] = configDefinition;
+					var configDefinition = SrirachaResource.componentConfiguration.get(
+						{ projectId: $routeParams.projectId, componentId: component.id },
+						function () {
+							$scope.configDefinitionList = $scope.configDefinitionList || {};
+							$scope.configDefinitionList[component.id] = configDefinition;
 
-						var oldConfigurationValueList = environmentComponent.configurationValueList || {};
-						environmentComponent.configurationValueList = {};
+							var oldConfigurationValueList = environmentComponent.configurationValueList || {};
+							environmentComponent.configurationValueList = {};
 
-						_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
-							var existingItem = oldConfigurationValueList[taskParameter.fieldName];
-							if (existingItem) {
-								environmentComponent.configurationValueList[taskParameter.fieldName] = existingItem;
+							_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
+								var existingItem = oldConfigurationValueList[taskParameter.fieldName];
+								if (existingItem) {
+									environmentComponent.configurationValueList[taskParameter.fieldName] = existingItem;
+								}
+								else {
+									environmentComponent.configurationValueList[taskParameter.fieldName] = null;
+								}
+							},
+							function (err) {
+								ErrorReporter.handleResourceError(err);
 							}
-							else {
-								environmentComponent.configurationValueList[taskParameter.fieldName] = null;
-							}
-						});
+						);
 
 						_.each(environmentComponent.machineList, function (machine) {
 							var oldMachineConfigurationValueList = machine.configurationValueList;
@@ -69,35 +75,80 @@
 	});
 
 	$scope.editMachine = function (machine) {
+		var oldMachineName = machine.machineName;
 		var newValue = prompt("Enter machine name:", machine.machineName);
 		if (newValue !== null) {
 			machine.machineName = newValue;
+			if ($scope.project.usesSharedComponentConfiguration) {
+				_.each($scope.environment.componentList, function (component) {
+					console.log("tesT234S");
+					var existingMachine = _.findWhere(component.machineList, { machineName: oldMachineName });
+					if (existingMachine) {
+						existingMachine.machineName = newValue;
+					}
+				});
+			}
 		}
 	}
 
 	$scope.deleteMachine = function (environmentComponent, machine) {
 		if (confirm("Are you SURE you want to delete this machine (" + machine.machineName + ")?")) {
-			environmentComponent.machineList = _.reject(environmentComponent.machineList, function (x) { return x.id == machine.id; });
+			$scope.deleteMachineFromEnvironmentComponent(environmentComponent, machine.machineName)
+			if ($scope.project.usesSharedComponentConfiguration) {
+				_.each($scope.environment.componentList, function (x) {
+					$scope.deleteMachineFromEnvironmentComponent(x, machine.machineName)
+				})
+			}
 		}
 	}
 
-	$scope.editConfigurationItem = function (configItemDefinition, configurationValueList) {
+	$scope.deleteMachineFromEnvironmentComponent = function (environmentComponent, machineName) {
+		environmentComponent.machineList = _.reject(environmentComponent.machineList, function (x) { return x.machineName == machineName; });
+	}
+
+	$scope.editConfigurationItem = function (configItemDefinition, configurationValueList, machineName) {
 		var newValue = prompt("Edit Value for " + configItemDefinition.fieldName, configurationValueList[configItemDefinition.fieldName]);
 		if (newValue !== null) {
-			configurationValueList[configItemDefinition.fieldName] = newValue;
+			if ($scope.project.usesSharedComponentConfiguration) {
+				_.each($scope.environment.componentList, function (component) {
+					if (!machineName) {
+						component.configurationValueList[configItemDefinition.fieldName] = newValue;
+					}
+					else {
+						var machine = _.findWhere(component.machineList, { machineName: machineName });
+						if (machine) {
+							machine.configurationValueList[configItemDefinition.fieldName] = newValue;
+						}
+					}
+				});
+			}
+			else {
+				configurationValueList[configItemDefinition.fieldName] = newValue;
+			}
 		}
 	}
 
 	$scope.addMachine = function (component) {
 		var newMachineName = prompt("Please enter machine name:");
 		if (newMachineName) {
+			$scope.addMachineToEnvironmentComponent(component, newMachineName);
+			if ($scope.project.usesSharedComponentConfiguration) {
+				_.each($scope.environment.componentList, function (environmentComponent) {
+					$scope.addMachineToEnvironmentComponent(environmentComponent, newMachineName);
+				});
+			}
+		}
+	}
+	$scope.addMachineToEnvironmentComponent = function(environmentComponent, newMachineName) {
+		environmentComponent.machineList = environmentComponent.machineList || [];
+		var existingMachine = _.findWhere(environmentComponent.machineList, { machineName: newMachineName });
+		if (!existingMachine) {
 			var machine = {
 				machineName: newMachineName,
-				componentId: component.componentId,
+				componentId: environmentComponent.componentId,
 				configurationValueList: {}
 			};
-			component.machineList = component.machineList || [];
-			component.machineList.push(machine);
+			environmentComponent.machineList.push(machine);
 		}
 	}
 
