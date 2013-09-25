@@ -3,14 +3,27 @@
 		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 
-	if ($routeParams.deployBatchRequestId) {
+	$scope.refreshStatus = function () {
 		$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
-			function() {
+			function () {
 				console.log($scope.deployBatchStatus);
+				if ($scope.deployBatchStatus.request.status != "Success" || $scope.deployBatchStatus.request.status == "Error") {
+					setTimeout($scope.refreshStatus, 10000);
+				}
 			},
-			function(err) {
-				ErrorReporter.handleResourceError(err);
+			function (error) {
+				ErrorReporter.handleResourceError(error);
 			});
+	}
+
+	if ($routeParams.deployBatchRequestId) {
+		$scope.refreshStatus();
+		//$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
+		//	function() {
+		//	},
+		//	function(err) {
+		//		ErrorReporter.handleResourceError(err);
+		//	});
 	}
 
 	$scope.getMachineDeployStateId = function (item, machine) {
