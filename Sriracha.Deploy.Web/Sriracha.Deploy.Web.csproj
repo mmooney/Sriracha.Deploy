@@ -357,6 +357,7 @@
     <Content Include="Scripts\sriracha\navigator.js" />
     <Content Include="Scripts\sriracha\ngSriracha.js" />
     <Content Include="Scripts\sriracha\projectController.js" />
+    <Content Include="Scripts\sriracha\project\projectBranchController.js" />
     <Content Include="Scripts\sriracha\project\projectComponentController.js" />
     <Content Include="Scripts\sriracha\resources.js" />
     <Content Include="Scripts\sriracha\router.js" />

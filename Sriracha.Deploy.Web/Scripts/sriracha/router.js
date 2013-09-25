@@ -65,15 +65,15 @@
 		//Branches
 		.when(navigator.branch.create.url, {
 			templateUrl: "templates/project/branch/branch-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectBranchController"
 		})
 		.when(navigator.branch.edit.url, {
 			templateUrl: "templates/project/branch/branch-edit-template.html",
-			controller: "ProjectController"
+			controller: "ProjectBranchController"
 		})
 		.when(navigator.branch.remove.url, {
 			templateUrl: "templates/project/branch/branch-delete-template.html",
-			controller: "ProjectController"
+			controller: "ProjectBranchController"
 		})
 
 		//Environments
