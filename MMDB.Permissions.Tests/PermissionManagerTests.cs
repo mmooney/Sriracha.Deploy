@@ -62,6 +62,7 @@ namespace MMDB.Permissions.Tests
 			public PermissionGroup CreateGroup()
 			{
 				var returnValue = this.Fixture.Create<PermissionGroup>();
+				this.Repository.Setup(i=>i.DeleteGroup(returnValue.Id)).Returns(returnValue);
 				return returnValue;
 			}
 
@@ -140,7 +141,7 @@ namespace MMDB.Permissions.Tests
 		}
 
 		[Test]
-		public void CanCreateAGroup()
+		public void CanCreateGroup()
 		{
 			var testData = TestData.Create(0);
 			var group = testData.Fixture.Create<PermissionGroup>();
@@ -151,6 +152,19 @@ namespace MMDB.Permissions.Tests
 			Assert.IsNotNull(result);
 			Assert.AreEqual(group, result);
 			testData.Repository.Verify(i=>i.CreateGroup(group.GroupName, group.ParentGroupId), Times.Once());
+		}
+
+		[Test]
+		public void CanDeleteGroup()
+		{ 
+			var testData = TestData.Create(1);
+			var group = testData.CreateGroup();
+			
+			var result = testData.Sut.DeleteGroup(group.Id);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(group, result);
+			testData.Repository.Verify(i=>i.DeleteGroup(group.Id), Times.Once());
 		}
 
 		[Test]
@@ -190,5 +204,6 @@ namespace MMDB.Permissions.Tests
 			Assert.AreEqual(assignment, result);
 			testData.Repository.Verify(i=>i.DeleteGroupPermissionAssignment(assignment.Id), Times.Once());
 		}
+
     }
 }

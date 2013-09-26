@@ -94,6 +94,14 @@ namespace MMDB.Permissions
 			return _repository.CreateGroup(groupName, parentGroupId);
 		}
 
+		public PermissionGroup DeleteGroup(string groupId)
+		{
+			if(string.IsNullOrEmpty(groupId))
+			{
+				throw new ArgumentNullException("Missing groupId");
+			}
+			return _repository.DeleteGroup(groupId);
+		}
 
 		public GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access)
 		{

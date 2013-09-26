@@ -23,11 +23,12 @@ namespace MMDB.Permissions
 		UserPermissionAssignment DeleteUserPermissionAssignment(string userPermissionAssignmentId);
 
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
-
+		PermissionGroup DeleteGroup(string groupId);
 		GroupPermissionAssignment CreateGroupPermissionAssignment(string permissionId, string groupId, EnumPermissionAccess enumPermissionAccess);
 		GroupPermissionAssignment TryGetGroupPermissionAssignment(string permissionId, string groupId);
 		GroupPermissionAssignment UpdateGroupPermissionAssignment(string groupPermissionAssignmentId, EnumPermissionAccess access);
 
 		GroupPermissionAssignment DeleteGroupPermissionAssignment(string groupPermissionAssignmentId);
+
 	}
 }

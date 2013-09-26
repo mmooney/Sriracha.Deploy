@@ -15,6 +15,7 @@ namespace MMDB.Permissions
 		UserPermissionAssignment DeletePermissionForUser(string permissionId, string userId);
 
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
+		PermissionGroup DeleteGroup(string groupId);
 		GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access);
 		GroupPermissionAssignment DeletePermissionForGroup(string permissionId, string groupId);
 	}
