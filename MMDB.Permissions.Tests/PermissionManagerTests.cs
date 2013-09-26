@@ -58,6 +58,34 @@ namespace MMDB.Permissions.Tests
 									});
 				return returnValue;
 			}
+
+			public PermissionGroup CreateGroup()
+			{
+				var returnValue = this.Fixture.Create<PermissionGroup>();
+				return returnValue;
+			}
+
+			public GroupPermissionAssignment PermissionAssignedToGroup(PermissionItem permissionItem, string groupId, EnumPermissionAccess access)
+			{
+				var returnValue = new GroupPermissionAssignment
+				{
+					Id = this.Fixture.Create<string>(),
+					PermissionId = permissionItem.Id,
+					GroupId = groupId,
+					Access = access
+				};
+				this.Repository.Setup(i=>i.TryGetGroupPermissionAssignment(permissionItem.Id, groupId)).Returns(returnValue);
+				this.Repository.Setup(i=>i.DeleteGroupPermissionAssignment(returnValue.Id)).Returns(returnValue);
+				this.Repository.Setup(i=>i.UpdateGroupPermissionAssignment(returnValue.Id, It.IsAny<EnumPermissionAccess>()))
+								.Returns(
+									(string id, EnumPermissionAccess innerAccess) 
+									=> 
+									{ 
+										returnValue.Access = innerAccess; 
+										return returnValue; 
+									});
+				return returnValue;
+			}
 		}
 
 		[Test]
@@ -109,7 +137,58 @@ namespace MMDB.Permissions.Tests
 
 			Assert.AreEqual(assignment, result);
 			testData.Repository.Verify(i=>i.DeleteUserPermissionAssignment(assignment.Id), Times.Once());
+		}
 
+		[Test]
+		public void CanCreateAGroup()
+		{
+			var testData = TestData.Create(0);
+			var group = testData.Fixture.Create<PermissionGroup>();
+			testData.Repository.Setup(i=>i.CreateGroup(group.GroupName, group.ParentGroupId)).Returns(group);
+
+			var result = testData.Sut.CreateGroup(group.GroupName, group.ParentGroupId);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(group, result);
+			testData.Repository.Verify(i=>i.CreateGroup(group.GroupName, group.ParentGroupId), Times.Once());
+		}
+
+		[Test]
+		public void CanAssignPermissionToGroup()
+		{
+			var testData = TestData.Create(1);
+			var group = testData.CreateGroup();
+			
+			var result = testData.Sut.AssignPermissionToGroup(testData.PermissionList[0].Id, group.Id, EnumPermissionAccess.Grant);
+
+			testData.Repository.Verify(i=>i.CreateGroupPermissionAssignment(testData.PermissionList[0].Id, group.Id, EnumPermissionAccess.Grant), Times.Once());
+		}
+
+		[Test]
+		public void CanUpdatePermissionForGroup()
+		{
+			var testData = TestData.Create(1);
+			var group = testData.CreateGroup();
+			var assignment = testData.PermissionAssignedToGroup(testData.PermissionList[0], group.Id, EnumPermissionAccess.Grant);
+			
+			var result = testData.Sut.AssignPermissionToGroup(testData.PermissionList[0].Id, group.Id, EnumPermissionAccess.Deny);
+
+			Assert.AreEqual(assignment, result);
+			Assert.AreEqual(EnumPermissionAccess.Deny, result.Access);
+			testData.Repository.Verify(i=>i.UpdateGroupPermissionAssignment(assignment.Id, EnumPermissionAccess.Deny), Times.Once());
+		}
+
+		[Test]
+		public void CanDeletePermissionForGroup()
+		{ 
+			var testData = TestData.Create(1);
+			var group = testData.CreateGroup();
+			var assignment = testData.PermissionAssignedToGroup(testData.PermissionList[0], group.Id, EnumPermissionAccess.Grant);
+			
+			var result = testData.Sut.DeletePermissionForGroup(testData.PermissionList[0].Id, group.Id);
+
+			Assert.AreEqual(assignment, result);
+			testData.Repository.Verify(i=>i.DeleteGroupPermissionAssignment(assignment.Id), Times.Once());
 		}
     }
 }

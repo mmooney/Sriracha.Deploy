@@ -12,7 +12,10 @@ namespace MMDB.Permissions
 
 		UserPermissionAssignment AssignPermissionToUser(string permissionId, string userId, EnumPermissionAccess access);
 		UserPermissionAssignment AssignPermissionToUser(PermissionItem permissionItem, string userId, EnumPermissionAccess access);
-
 		UserPermissionAssignment DeletePermissionForUser(string permissionId, string userId);
+
+		PermissionGroup CreateGroup(string groupName, string parentGroupId);
+		GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access);
+		GroupPermissionAssignment DeletePermissionForGroup(string permissionId, string groupId);
 	}
 }

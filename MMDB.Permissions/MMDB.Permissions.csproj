@@ -42,6 +42,8 @@
     <Compile Include="Enums.cs" />
     <Compile Include="IPermissionManager.cs" />
     <Compile Include="IPermissionRepository.cs" />
+    <Compile Include="PermissionGroup.cs" />
+    <Compile Include="GroupPermissionAssignment.cs" />
     <Compile Include="PermissionItem.cs" />
     <Compile Include="PermissionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

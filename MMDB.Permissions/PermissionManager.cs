@@ -28,7 +28,6 @@ namespace MMDB.Permissions
 			return _repository.CreatePermission(permissionName, permissionDisplayValue);
 		}
 
-
 		public UserPermissionAssignment AssignPermissionToUser(string permissionId, string userId, EnumPermissionAccess access)
 		{
 			if(string.IsNullOrEmpty(permissionId))
@@ -76,7 +75,67 @@ namespace MMDB.Permissions
 				throw new ArgumentNullException("Missing userId");
 			}
 			var assignment = _repository.TryGetUserPermissionAssignment(permissionId, userId);
-			return _repository.DeleteUserPermissionAssignment(assignment.Id);
+			if(assignment != null)
+			{ 
+				return _repository.DeleteUserPermissionAssignment(assignment.Id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public PermissionGroup CreateGroup(string groupName, string parentGroupId)
+		{
+			if(string.IsNullOrEmpty(groupName))
+			{
+				throw new ArgumentNullException("Missing groupName");
+			}
+			return _repository.CreateGroup(groupName, parentGroupId);
+		}
+
+
+		public GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access)
+		{
+			if(string.IsNullOrEmpty(permissionId))
+			{
+				throw new Exception("Missing permissionId");
+			}
+			if(string.IsNullOrEmpty(groupId))
+			{
+				throw new Exception("Missing groupId");
+			}
+			var existingAssignment = _repository.TryGetGroupPermissionAssignment(permissionId, groupId);
+			if(existingAssignment != null)
+			{
+				return _repository.UpdateGroupPermissionAssignment(existingAssignment.Id, access);
+			}
+			else
+			{
+				return _repository.CreateGroupPermissionAssignment(permissionId, groupId, access);
+			}
+		}
+
+
+		public GroupPermissionAssignment DeletePermissionForGroup(string permissionId, string groupId)
+		{
+			if(string.IsNullOrEmpty(permissionId))
+			{
+				throw new ArgumentNullException("Missing permissionId");
+			}
+			if(string.IsNullOrEmpty(groupId))
+			{
+				throw new ArgumentNullException("Missing groupId");
+			}
+			var assignment = _repository.TryGetGroupPermissionAssignment(permissionId, groupId);
+			if(assignment != null)
+			{ 
+				return _repository.DeleteGroupPermissionAssignment(assignment.Id);
+			}
+			else
+			{
+				return null;
+			}
 		}
 	}
 }
