@@ -36,11 +36,106 @@
 			});
 	}
 
-	$scope.test = function (item) {
-		console.log(item);
+	$scope.displayPromoteBuildScreen = function () {
+		$scope.promoteDeployment = {};
+		$scope.promoteDeployment.allEnvironmentNameList = [];
+		_.each($scope.projectList, function (project) {
+			_.each(project.environmentList, function (environment) {
+				if (environment.componentList) {
+					_.each(environment.componentList, function (component) {
+						if (component.machineList && component.machineList.length) {
+							if (!_.contains($scope.promoteDeployment.allEnvironmentNameList, environment.environmentName)) {
+								$scope.promoteDeployment.allEnvironmentNameList.push(environment.environmentName);
+							}
+						}
+					});
+				}
+			});
+		});
+		$(".promoteBuildDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
 	}
 
-	$scope.displayAddBuildScreen = function (element) {
+	$scope.canPromoteDeployment = function () {
+		if ($scope.promoteDeployment) {
+			return ($scope.promoteDeployment.environmentName);
+		}
+		return false;
+	}
+
+	$scope.anyfailedValidationBuilds = function () {
+		if ($scope.promoteDeployment && $scope.promoteDeployment.failedValidationBuilds && $scope.promoteDeployment.failedValidationBuilds.length) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	$scope.promoteEnvironmentSelected = function () {
+		$scope.promoteDeployment.buildsWithNoMachines = [];
+		$scope.promoteDeployment.failedValidationBuilds = [];
+		_.each($scope.selectedItems, function (item) {
+			var project = _.findWhere($scope.projectList, { id: item.build.projectId });
+			var environment = _.findWhere(project.environmentList, { environmentName: $scope.promoteDeployment.environmentName });
+			if (environment == null) {
+				$scope.promoteDeployment.buildsWithNoMachines.push(item);
+			}
+			else {
+				var environmentComponent = _.findWhere(environment.componentList, { componentId: item.build.projectComponentId });
+				if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
+					$scope.promoteDeployment.buildsWithNoMachines.push(item);
+				}
+				else {
+					var validationResult = SrirachaResource.validateEnvironment.get(
+						{ buildId: item.build.id, environmentId: environment.id },
+						function () {
+							_.each(validationResult.validationResult.resultList, function (resultItem) {
+								if (resultItem.taskValidationResult.status != "Success") {
+									if (!_.contains($scope.promoteDeployment.failedValidationBuilds, item)) {
+										$scope.promoteDeployment.failedValidationBuilds.push(item);
+									}
+								}
+							});
+						},
+						function (err) {
+							ErrorReporter.handleResourceError(err);
+						}
+					);
+				}
+			}
+		});
+
+	}
+
+	$scope.completeBuildPromotion = function () {
+		console.log($scope.selectedItems);
+		if ($scope.promoteDeployment.failedValidationBuilds) {
+			_.each($scope.promoteDeployment.failedValidationBuilds, function (failedBuild) {
+				if (_.contains($scope.selectedItems, failedBuild)) {
+					$scope.selectedItems = _.without($scope.selectedItems, failedBuild);
+				}
+			});
+		}
+		if ($scope.promoteDeployment.buildsWithNoMachines) {
+			_.each($scope.promoteDeployment.buildsWithNoMachines, function (badBuild) {
+				$scope.selectedItems = _.reject($scope.selectedItems, function (x) { return x == badBuild; });
+			});
+		}
+		_.each($scope.selectedItems, function (item) {
+			var project = _.findWhere($scope.projectList, { id: item.build.projectId });
+			var environment = _.findWhere(project.environmentList, { environmentName: $scope.promoteDeployment.environmentName });
+			var environmentComponent = _.findWhere(environment.componentList, { componentId: item.build.projectComponentId });
+			item.machineList = environmentComponent.machineList.slice(0);
+		});
+		console.log($scope.selectedItems);
+		$(".promoteBuildDialog").dialog("close");
+	}
+
+	$scope.displayAddBuildScreen = function () {
+		$scope.resetAddEditBuildForm();
 		$(".editBuildDialog").dialog({
 			width: 'auto',
 			height: 'auto',
@@ -57,7 +152,7 @@
 	$scope.isLatestBuild = function (item) {
 		return false;
 	}
-	$scope.refreshBuildAndEnvironmentList = function (selectedBuildId, selectedEnvironmentId) {
+	$scope.refreshBuildAndEnvironmentList = function (selectedBuildId, selectedEnvironmentId, selectedMachineIds) {
 		queryParameters = {};
 		if($scope.project) {
 			queryParameters.projectId = $scope.project.id;
@@ -72,6 +167,8 @@
 			function () {
 				if (selectedBuildId) {
 					$scope.build = _.findWhere($scope.buildList, { id: selectedBuildId });
+					$scope.selection.preselectedMachineIds = selectedMachineIds;
+					$scope.updateEnvironmentMachines();
 				}
 			},
 			function(error) {
@@ -95,7 +192,6 @@
 		if (selectedEnvironmentId) {
 			$scope.environment = _.findWhere($scope.environmentList, { id: selectedEnvironmentId });
 		}
-		$scope.updateEnvironmentMachines();
 	}
 
 	$scope.buildSelected = function () {
@@ -124,7 +220,6 @@
 
 	$scope.updateEnvironmentMachines = function () {
 		if($scope.build && $scope.environment) {
-			console.log("Hi1");
 			$scope.idValues.buildId = $scope.build.id;
 			$scope.idValues.environmentId = $scope.environment.id;
 		}
@@ -136,8 +231,9 @@
 
 	$scope.addBuildToBatch = function () {
 		$scope.selectedItems = $scope.selectedItems || [];
-		if ($scope.selectedItems.indexOf($scope.build) >= 0) {
-			alert("This build has already been included");
+		if ($scope.editingItem) {
+			$scope.editingItem.build = $scope.build,
+			$scope.editingItem.machineList = _.filter($scope.selection.machineList, function (x) { return x.selected; })
 		}
 		else {
 			var deploymentItem = {
@@ -146,10 +242,18 @@
 			};
 
 			$scope.selectedItems.push(deploymentItem);
-			$scope.build = null;
 
-			angular.element(".editBuildDialog").dialog("close");
 		}
+		angular.element(".editBuildDialog").dialog("close");
+		$scope.resetAddEditBuildForm();
+	}
+
+	$scope.resetAddEditBuildForm = function () {
+		$scope.editingItem = null;
+		$scope.project = null;
+		$scope.environment = null;
+		$scope.build = null;
+		$scope.branch = null;
 	}
 
 	$scope.moveItemUp = function (item) {
@@ -170,6 +274,7 @@
 	}
 
 	$scope.editItem = function (item) {
+		$scope.resetAddEditBuildForm();
 		$scope.project = _.findWhere($scope.projectList, { id: item.build.projectId });
 		$scope.branch = _.findWhere($scope.project.branchList, { id: item.build.projectBranchId });
 		$scope.component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
@@ -177,7 +282,12 @@
 		if (item.machineList) {
 			environmentId = item.machineList[0].environmentId;
 		}
-		$scope.refreshBuildAndEnvironmentList(item.build.id,environmentId);
+		var selectedMachineIds = [];
+		if (item.machineList) {
+			selectedMachineIds = _.pluck(item.machineList, "id");
+		}
+		$scope.refreshBuildAndEnvironmentList(item.build.id, environmentId, selectedMachineIds);
+		$scope.editingItem = item;
 		$(".editBuildDialog").dialog({
 			width: 'auto',
 			height: 'auto',

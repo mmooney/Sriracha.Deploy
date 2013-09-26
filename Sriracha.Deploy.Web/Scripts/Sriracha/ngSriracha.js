@@ -143,6 +143,14 @@ ngSriracha.directive("selectEnvironmentMachines",
 										function () {
 											if (scope.environmentSelector.environmentComponent) {
 												scope.selection.machineList = scope.environmentSelector.environmentComponent.machineList;
+												if (scope.selection.preselectedMachineIds) {
+													_.each(scope.selection.preselectedMachineIds, function (id) {
+														var machine = _.findWhere(scope.selection.machineList, { id: id });
+														if (machine) {
+															machine.selected = true;
+														}
+													});
+												}
 											}
 											if (!scope.selection.machineList || !scope.selection.machineList.length) {
 												scope.selection.machineList = [];

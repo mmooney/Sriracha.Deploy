@@ -85,13 +85,36 @@
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align:center">
-					<button class="btn btn-primary" ng-click="addBuildToBatch()" ng-disabled="!canAddBuild()">Add Build</button>
+					<button class="btn btn-primary" ng-click="addBuildToBatch()" ng-disabled="!canAddBuild()">Save Build To Deployment</button>
 				</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
+<div>
+	<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
+</div>
+<div>
+	<button class="btn" ng-click="displayPromoteBuildScreen()" >Promote Build to Different Environment</button>
+</div>
+<div style="display:none" class="promoteBuildDialog">
+	Environments:<select ng-model="promoteDeployment.environmentName" ng-options="item for item in promoteDeployment.allEnvironmentNameList" ng-change="promoteEnvironmentSelected()" />
+	<div ng-show="promoteDeployment.buildsWithNoMachines">
+		The following builds do not have machines set up for this environment, they will be removed from the deploy request:
+		<ul>
+			<li ng-repeat="item in promoteDeployment.buildsWithNoMachines">{{item.build.displayValue}}</li>
+		</ul>
+	</div>
+	<div ng-show="anyfailedValidationBuilds()">
+		The following builds do not have complete confirmations for this environment, they will be removed from the deploy request:
+		<ul>
+			<li ng-repeat="item in promoteDeployment.failedValidationBuilds">{{item.build.displayValue}}</li>
+		</ul>
+	</div>
+	<center>
+		<button class="btn btn-primary" ng-disabled="!canPromoteDeployment()" ng-click="completeBuildPromotion()">OK</button>
+	</center>
+</div>
 <center>
 	<button class="btn btn-primary" ng-click="submitBuildRequest()" ng-disabled="!selectedItems.length">Submit Deployment Request</button>
 </center>
