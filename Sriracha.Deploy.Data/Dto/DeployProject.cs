@@ -14,6 +14,10 @@ namespace Sriracha.Deploy.Data.Dto
 		public List<DeployProjectBranch> BranchList { get; set; }
 		public List<DeployComponent> ComponentList { get; set; }
 		public List<DeployEnvironment> EnvironmentList { get; set; }
+		public DateTime CreatedDateTimeUtc { get; set; }
+		public string CreatedByUserName { get; set; }
+		public DateTime UpdatedDateTimeUtc { get; set; }
+		public string UpdatedByUserName { get; set; }
 
 		public DeployProject()
 		{

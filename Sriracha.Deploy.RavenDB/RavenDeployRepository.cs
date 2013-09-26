@@ -18,11 +18,13 @@ namespace Sriracha.Deploy.RavenDB
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly Logger _logger;
+		private readonly IUserIdentity _userIdentity;
 
-		public RavenDeployRepository(IDocumentSession documentSession, Logger logger)
+		public RavenDeployRepository(IDocumentSession documentSession, Logger logger, IUserIdentity userIdentity)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_logger = DIHelper.VerifyParameter(logger);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
 		public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
@@ -38,7 +40,11 @@ namespace Sriracha.Deploy.RavenDB
 				MachineList = machineList.ToList(),
 				Status = EnumDeployStatus.NotStarted,
 				SubmittedDateTimeUtc = DateTime.UtcNow,
-				DeployBatchRequestItemId = deployBatchRequestItemId
+				DeployBatchRequestItemId = deployBatchRequestItemId,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			_documentSession.Store(deployState);
 			_documentSession.SaveChanges();
@@ -58,7 +64,6 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			return returnValue;
 		}
-
 
 		public DeployState PopNextDeployment()
 		{
@@ -153,7 +158,8 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				DeployStateId = deployStateId,
 				Message = message,
-				DateTimeUtc = DateTime.UtcNow
+				DateTimeUtc = DateTime.UtcNow,
+				MessageUserName = _userIdentity.UserName
 			};
 			var state = GetDeployState(deployStateId);
 			state.MessageList.Add(deployStateMessage);
@@ -182,6 +188,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				state.ErrorDetails = err.ToString();
 			}
+			state.UpdatedDateTimeUtc = DateTime.UtcNow;
+			state.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
 			return state;
 		}
@@ -197,7 +205,6 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Load<DeployBatchRequest>(id);
 		}
 
-
 		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status)
 		{
 			foreach(var item in itemList)
@@ -209,7 +216,12 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				SubmittedDateTimeUtc = submittedDateTimeUtc,
 				ItemList = itemList,
-				Status = status
+				Status = status,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
+
 			};
 			_documentSession.Store(request);
 			_documentSession.SaveChanges();
@@ -267,6 +279,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				batchRequest.ErrorDetails = err.ToString();
 			}
+			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
+			batchRequest.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
 			return batchRequest;
 		}

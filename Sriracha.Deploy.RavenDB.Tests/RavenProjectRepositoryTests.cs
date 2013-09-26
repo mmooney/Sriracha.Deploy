@@ -6,6 +6,8 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using System.Linq;
 using MMDB.Shared;
+using Moq;
+using Sriracha.Deploy.Data;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
@@ -17,7 +19,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void StoresProject()
 			{
 				string projectName = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				var result = sut.CreateProject(projectName, false);
 				Assert.IsNotNull(result);
 				Assert.IsNotNullOrEmpty(result.Id);
@@ -31,7 +33,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void MissingProjectName_ThrowsError()
 			{
 				string projectName = string.Empty;
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>( ()=> sut.CreateProject(projectName, false) );
 			}
 		}
@@ -53,7 +55,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				}
 				this.DocumentSession.SaveChanges();
 
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				var result = sut.GetProjectList().ToList();
 				
 				Assert.GreaterOrEqual(result.Count, projectList.Count);
@@ -77,7 +79,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				this.DocumentSession.Store(project);
 				this.DocumentSession.SaveChanges();
 
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				var result = sut.GetProject(project.Id);
 
 				Assert.IsNotNull(result);
@@ -89,7 +91,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void MissingProjectId_ThrowsError()
 			{
 				string projectId = string.Empty;
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>( ()=> sut.GetProject(projectId) );
 			}
 
@@ -97,7 +99,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void BadProjectId_ThrowsError()
 			{
 				string projectId = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<RecordNotFoundException>(() => sut.GetProject(projectId));
 			}
 		}
@@ -116,7 +118,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				this.DocumentSession.SaveChanges();
 
 				string branchName = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				var result = sut.CreateBranch(project.Id, branchName);
 
 				Assert.IsNotNull(result);
@@ -136,7 +138,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = Guid.NewGuid().ToString();
 				string branchName = null;
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>(() => sut.CreateBranch(projectId, branchName));
 			}
 
@@ -145,7 +147,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = null;
 				string branchName = Guid.NewGuid().ToString(); 
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>(() => sut.CreateBranch(projectId, branchName));
 			}
 
@@ -154,7 +156,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = Guid.NewGuid().ToString();
 				string branchName = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<RecordNotFoundException>(() => sut.CreateBranch(projectId, branchName));
 			}
 		}
@@ -172,7 +174,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				this.DocumentSession.Store(project);
 				this.DocumentSession.SaveChanges();
 
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				sut.DeleteProject(project.Id);
 
 				var dbItem = this.DocumentSession.Load<DeployProject>(project.Id);
@@ -183,7 +185,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void MissingProjectId_ThrowsError()
 			{
 				string projectId = string.Empty;
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>(()=> sut.DeleteProject(projectId));
 			}
 
@@ -191,7 +193,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			public void BadProjectId_ThrowsError()
 			{
 				string projectId = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<RecordNotFoundException>(() => sut.DeleteProject(projectId));
 			}
 		}
@@ -211,7 +213,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 				this.DocumentSession.SaveChanges();
 
 				string newProjectName = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				sut.UpdateProject(project.Id, newProjectName, true);
 
 				var dbItem = this.DocumentSession.Load<DeployProject>(project.Id);
@@ -226,7 +228,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = string.Empty;
 				string projectName = Guid.NewGuid().ToString();
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>(()=>sut.UpdateProject(projectId, projectName, false));
 			}
 
@@ -235,7 +237,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 			{
 				string projectId = Guid.NewGuid().ToString();
 				string projectName = string.Empty;
-				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession);
+				IProjectRepository sut = new RavenProjectRepository(this.DocumentSession, new Mock<IUserIdentity>().Object, new Mock<NLog.Logger>().Object);
 				Assert.Throws<ArgumentNullException>(() => sut.UpdateProject(projectId, projectName, false));
 			}
 		}

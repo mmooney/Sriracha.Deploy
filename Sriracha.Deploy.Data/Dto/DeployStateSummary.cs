@@ -16,6 +16,10 @@ namespace Sriracha.Deploy.Data.Dto
 		public DeployEnvironment Environment { get; set; }
 		public DeployComponent Component { get; set; }
 		public List<DeployMachine> MachineList { get; set; }
+		public DateTime CreatedDateTimeUtc { get; set; }
+		public string CreatedByUserName { get; set; }
+		public DateTime UpdatedDateTimeUtc { get; set; }
+		public string UpdatedByUserName { get; set; }
 
 		public EnumDeployStatus Status { get; set; }
 		public string StatusDisplayValue

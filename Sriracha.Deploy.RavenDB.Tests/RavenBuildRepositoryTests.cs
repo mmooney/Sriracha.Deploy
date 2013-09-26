@@ -4,8 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
+using Moq;
+using NLog;
 using NUnit.Framework;
 using Raven.Client;
+using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Exceptions;
 
@@ -39,7 +42,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 						ProjectBranchName = Guid.NewGuid().ToString(),
 						FileId = Guid.NewGuid().ToString(),
 						Version = Guid.NewGuid().ToString(),
-						Sut = new RavenBuildRepository(session)
+						Sut = new RavenBuildRepository(session, new Mock<IUserIdentity>().Object, new Mock<Logger>().Object )
 					};
 					return testData;
 				}

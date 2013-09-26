@@ -11,5 +11,6 @@ namespace Sriracha.Deploy.Data.Dto
 		public string DeployStateId { get; set; }
 		public string Message { get; set; }
 		public DateTime DateTimeUtc { get; set; }
+		public string MessageUserName { get; set; }
 	}
 }

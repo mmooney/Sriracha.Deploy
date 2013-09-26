@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -13,10 +14,13 @@ namespace Sriracha.Deploy.RavenDB
 	public class RavenBuildRepository : IBuildRepository
 	{
 		private readonly IDocumentSession _documentSession;
-
-		public RavenBuildRepository(IDocumentSession documentSession)
+		private readonly IUserIdentity _userIdentity;
+		private readonly Logger _logger;
+		public RavenBuildRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
 		{
-			this._documentSession = DIHelper.VerifyParameter(documentSession);
+			_documentSession = DIHelper.VerifyParameter(documentSession);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
+			_logger = DIHelper.VerifyParameter(logger);
 		}
 
 		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
@@ -69,7 +73,9 @@ namespace Sriracha.Deploy.RavenDB
 				FileId = fileId,
 				Version = version,
 				CreatedDateTimeUtc = DateTime.UtcNow,
-				UpdatedDateTimeUtc = DateTime.UtcNow
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			this._documentSession.Store(item);
 			this._documentSession.SaveChanges();
@@ -132,12 +138,14 @@ namespace Sriracha.Deploy.RavenDB
 			build.FileId = fileId;
 			build.Version = version;
 			build.UpdatedDateTimeUtc = DateTime.UtcNow;
+			build.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
 			return build;
 		}
 
 		public void DeleteBuild(string buildId)
 		{
+			_logger.Info("User {0} deleting build {1}", _userIdentity.UserName, buildId);
 			var build = GetBuild(buildId);
 			this._documentSession.Delete(build);
 			this._documentSession.SaveChanges();

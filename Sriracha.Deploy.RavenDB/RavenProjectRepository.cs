@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
+using NLog;
 using Raven.Client;
 using Raven.Imports.Newtonsoft.Json;
 using Sriracha.Deploy.Data;
@@ -14,10 +15,13 @@ namespace Sriracha.Deploy.RavenDB
 	public class RavenProjectRepository : IProjectRepository
 	{
 		private readonly IDocumentSession _documentSession;
-
-		public RavenProjectRepository(IDocumentSession documentSession)
+		private readonly IUserIdentity _userIdentity;
+		private readonly Logger _logger;
+		public RavenProjectRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
+			_logger = DIHelper.VerifyParameter(logger);
 		}
 
 		public IEnumerable<DeployProject> GetProjectList(string[] idList = null)
@@ -42,7 +46,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectName = projectName,
-				UsesSharedComponentConfiguration = usesSharedComponentConfiguration
+				UsesSharedComponentConfiguration = usesSharedComponentConfiguration,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			_documentSession.Store(project);
 			_documentSession.SaveChanges();
@@ -111,6 +119,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void DeleteProject(string projectId)
 		{
+			_logger.Info("User {0} deleting project {1}", _userIdentity.UserName, projectId);
 			var item = this.GetProject(projectId);
 			this._documentSession.Delete(item);
 			this._documentSession.SaveChanges();
@@ -126,6 +135,8 @@ namespace Sriracha.Deploy.RavenDB
 			var item = this.GetProject(projectId);
 			item.ProjectName = projectName;
 			item.UsesSharedComponentConfiguration = usesSharedComponentConfiguration;
+			item.UpdatedByUserName = _userIdentity.UserName;
+			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveChanges();
 			return item;
 		}
@@ -149,7 +160,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = project.Id,
-				ComponentName = componentName
+				ComponentName = componentName,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			project.ComponentList.Add(item);
 			this._documentSession.SaveChanges();
@@ -243,6 +258,8 @@ namespace Sriracha.Deploy.RavenDB
 			var project = GetProject(projectId);
 			var item = project.ComponentList.Single(i=>i.Id == componentId);
 			item.ComponentName = componentName;
+			item.UpdatedByUserName = _userIdentity.UserName;
+			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveChanges();
 			return item;
 		}
@@ -258,6 +275,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new KeyNotFoundException("No project found for component ID " + componentId);
 			}
+			_logger.Info("User {0} deleting component {1}", _userIdentity.UserName, componentId);
 			var component = project.ComponentList.First(i => i.Id == componentId);
 			project.ComponentList.Remove(component);
 			this._documentSession.SaveChanges();
@@ -286,7 +304,11 @@ namespace Sriracha.Deploy.RavenDB
 				StepName = stepName,
 				TaskTypeName = taskTypeName,
 				TaskOptionsJson = taskOptionsJson,
-				SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, Guid.NewGuid().ToString())
+				SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, Guid.NewGuid().ToString()),
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			
 			if(component.DeploymentStepList == null)
@@ -335,6 +357,8 @@ namespace Sriracha.Deploy.RavenDB
 			item.TaskTypeName = taskTypeName;
 			item.TaskOptionsJson = taskOptionsJson;
 			item.SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, item.SharedDeploymentStepId);
+			item.UpdatedByUserName = _userIdentity.UserName;
+			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveChanges();
 			return item;
 			
@@ -348,6 +372,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new KeyNotFoundException("Could not find project for deployment step " + deploymentStepId);
 			}
+			_logger.Info("User {0} deleting deployment step {1}", _userIdentity.UserName, deploymentStepId);
 			var component = project.ComponentList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
 			var item = component.DeploymentStepList.First(i => i.Id == deploymentStepId);
 			component.DeploymentStepList.Remove(item);
@@ -377,7 +402,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				BranchName = branchName,
-				ProjectId = projectId
+				ProjectId = projectId,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			project.BranchList.Add(branch);
 			this._documentSession.SaveChanges();
@@ -505,6 +534,8 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentException("Unable to find branch " + branchId + " in project " + projectId);
 			}
+			branch.UpdatedByUserName = _userIdentity.UserName;
+			branch.UpdatedDateTimeUtc = DateTime.UtcNow;
 			branch.BranchName = branchName;
 			this._documentSession.SaveChanges();
 			return branch;
@@ -521,6 +552,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentException("Unable to find project for branch ID " + branchId);
 			}
+			_logger.Info("User {0} deleting branch {1}", _userIdentity.UserName, branchId);
 			var branch = project.BranchList.First(i=>i.Id == branchId);
 			project.BranchList.Remove(branch);
 			this._documentSession.SaveChanges();
@@ -553,7 +585,11 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
 				EnvironmentName = environmentName,
-				ComponentList = componentList.ToList()
+				ComponentList = componentList.ToList(),
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			UpdateComponentList(componentList, project, environment);
 			if(project.EnvironmentList == null)
@@ -633,6 +669,8 @@ namespace Sriracha.Deploy.RavenDB
 			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
 			environment.EnvironmentName = environmentName;
 			environment.ComponentList = componentList.ToList();
+			environment.UpdatedByUserName = _userIdentity.UserName;
+			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
 			UpdateComponentList(componentList, project, environment);
 			this._documentSession.SaveChanges();
 			return environment;
@@ -651,6 +689,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
 			}
+			_logger.Info("User {0} deleting environment {1}", _userIdentity.UserName, environmentId);
 			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
 			project.EnvironmentList.Remove(environment);
 			this._documentSession.SaveChanges();

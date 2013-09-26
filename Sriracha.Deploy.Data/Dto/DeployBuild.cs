@@ -17,7 +17,9 @@ namespace Sriracha.Deploy.Data.Dto
 		public string FileId { get; set; }
 		public string Version { get; set; }
 		public DateTime CreatedDateTimeUtc { get; set; }
+		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
+		public string UpdatedByUserName { get; set; }
 
 		public string DisplayValue
 		{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
+using NLog;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -14,11 +15,15 @@ namespace Sriracha.Deploy.RavenDB
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IFileStorage _fileStorage;
+		private readonly IUserIdentity _userIdentity;
+		private readonly Logger _logger;
 
-		public RavenFileRepository(IDocumentSession documentSession, IFileStorage fileStorage)
+		public RavenFileRepository(IDocumentSession documentSession, IFileStorage fileStorage, IUserIdentity userIdentity, Logger logger)
 		{
-			this._documentSession = DIHelper.VerifyParameter(documentSession);
-			this._fileStorage = DIHelper.VerifyParameter(fileStorage);
+			_documentSession = DIHelper.VerifyParameter(documentSession);
+			_fileStorage = DIHelper.VerifyParameter(fileStorage);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
+			_logger = DIHelper.VerifyParameter(logger);
 		}
 
 		public IEnumerable<DeployFile> GetFileList()
@@ -41,7 +46,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				FileName = fileName,
-				FileStorageId = fileId
+				FileStorageId = fileId,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
 			};
 			this._documentSession.Store(file);
 			this._documentSession.SaveChanges();
@@ -74,7 +83,8 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var file = this.GetFile(fileId);
 			file.FileName = fileName;
-			//file.FileData = fileData;
+			file.UpdatedDateTimeUtc = DateTime.UtcNow;
+			file.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
 
 			_fileStorage.UpdateFile(file.FileStorageId, fileData);
@@ -83,6 +93,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void DeleteFile(string fileId)
 		{
+			_logger.Info("User {0} deleting file {1}", _userIdentity.UserName, fileId);
 			var file = this.GetFile(fileId);
 			this._documentSession.Delete(file);
 			this._fileStorage.DeleteFile(file.FileStorageId);
