@@ -20,14 +20,6 @@
 						projectBranchId: x.build.projectBranchId,
 						projectComponentId: x.build.projectComponentId
 					};
-					x.availableBuildList = SrirachaResource.build.query(
-						queryParameters,
-						function () {
-							
-						},
-						function (error) {
-							Error.handleResourceError(error);
-						});
 					$scope.selectedItems.push(x);
 				});
 			},
@@ -132,6 +124,26 @@
 		});
 		console.log($scope.selectedItems);
 		$(".promoteBuildDialog").dialog("close");
+	}
+
+	$scope.takeLatestBuilds = function () {
+		if (confirm("Are you sure you want the latest version of all builds?")) {
+			_.each($scope.selectedItems, function (item) {
+				var queryParameters = {
+					projectId: item.build.projectId,
+					projectBranchId: item.build.projectBranchId,
+					projectComponentId: item.build.projectComponentId
+				};
+				var buildList = SrirachaResource.build.query(queryParameters,
+					function (data) {
+						var latest = _.first(_.sortBy(data, function (build) { return build.version; }).reverse());
+						item.build = latest;
+					},
+					function (error) {
+						Error.handleResourceError(error);
+					});
+			})
+		}
 	}
 
 	$scope.displayAddBuildScreen = function () {

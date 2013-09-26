@@ -18,9 +18,6 @@
 					<div>
 						{{item.build.displayValue}}
 					</div>	
-					<div>
-						Select a different build: <select ng-model="item.build" ng-options="x as x.displayValue for x in item.availableBuildList | orderBy:'-displayValue'" ng-change="test(item)"></select>
-					</div>
 				</td>
 				<td>
 					<ul>
@@ -95,7 +92,10 @@
 	<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
 </div>
 <div>
-	<button class="btn" ng-click="displayPromoteBuildScreen()" >Promote Build to Different Environment</button>
+	<button class="btn" ng-click="displayPromoteBuildScreen()">Promote Deployment to Different Environment</button>
+</div>
+<div>
+	<button class="btn" ng-click="takeLatestBuilds()">Take Latest Build Of All Components</button>
 </div>
 <div style="display:none" class="promoteBuildDialog">
 	Environments:<select ng-model="promoteDeployment.environmentName" ng-options="item for item in promoteDeployment.allEnvironmentNameList" ng-change="promoteEnvironmentSelected()" />
