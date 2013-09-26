@@ -8,7 +8,7 @@ namespace MMDB.Permissions
 {
 	public interface IPermissionRepository
 	{
-		PermissionItem CreatePermission(string permissionName, string permissionDescription);
+		PermissionItem CreatePermission(string permissionName, string permissionDisplayValue);
 
 		PermissionItem GetPermission(string id);
 
