@@ -38,7 +38,7 @@ namespace MMDB.Permissions.Tests
 		}
 
 		[Test]
-		public void CreatePermission_ChecksUniqe()
+		public void CreatePermission_DuplicateName_ThrowsArgumentException()
 		{
 			var sut = this.GetRepository();
 			var existingPermissionList = sut.GetPermissionList();
@@ -87,7 +87,7 @@ namespace MMDB.Permissions.Tests
 		}
 
 		[Test]
-		public void GetPermissionByName_ThrowsRecordNotFoundException()
+		public void GetPermissionByName_NoRecord_ThrowsRecordNotFoundException()
 		{
 			var sut = this.GetRepository();
 
@@ -98,6 +98,7 @@ namespace MMDB.Permissions.Tests
 			Assert.Throws<RecordNotFoundException>(()=>sut.GetPermissionByName(permissionName));
 		}
 
+		[Test]
 		public void TryGetPermissionByName()
 		{ 
 			var sut = this.GetRepository();
@@ -114,7 +115,8 @@ namespace MMDB.Permissions.Tests
 			Assert.AreEqual(permissionDisplayValue, dbItem.PermissionDisplayValue);
 		}
 
-		public void TryGetPermissionName_ReturnsNull()
+		[Test]
+		public void TryGetPermissionName_NoPermission_ReturnsNull()
 		{
 			var sut = this.GetRepository();
 
@@ -125,6 +127,111 @@ namespace MMDB.Permissions.Tests
 			var result = sut.TryGetPermissionByName(permissionName);
 
 			Assert.IsNull(result);
+		}
+
+		[Test]
+		public void TryGetUserPermissionAssignment()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			string userId = fixture.Create<string>();
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateUserPermissionAssignment(permission.Id, userId, EnumPermissionAccess.Grant);
+
+			var result = sut.TryGetUserPermissionAssignment(permission.Id, userId);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(userId, result.UserId);
+			Assert.AreEqual(EnumPermissionAccess.Grant, result.Access);
+		}
+
+		[Test]
+		public void TryGetUserPermissionAssignment_NoRecord_ReturnsNull()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			string userId = fixture.Create<string>();
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+
+			var result = sut.TryGetUserPermissionAssignment(permission.Id, userId);
+
+			Assert.IsNull(result);
+		}
+
+		[Test]
+		public void UpdateUserPermissionAssignment()
+		{ 
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			string userId = fixture.Create<string>();
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateUserPermissionAssignment(permission.Id, userId, EnumPermissionAccess.Grant);
+
+			var result = sut.UpdateUserPermissionAssignment(assignment.Id, EnumPermissionAccess.Deny);
+			var dbItem = sut.TryGetUserPermissionAssignment(permission.Id, userId);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(userId, result.UserId);
+			Assert.AreEqual(EnumPermissionAccess.Deny, result.Access);	
+			
+			Assert.IsNotNull(dbItem);
+			Assert.AreEqual(assignment.Id, dbItem.Id);
+			Assert.AreEqual(permission.Id, dbItem.PermissionId);
+			Assert.AreEqual(userId, dbItem.UserId);
+			Assert.AreEqual(EnumPermissionAccess.Deny, dbItem.Access);	
+		}
+
+		[Test]
+		public void UpdateUserPermissionAssignment_NoRecord_ThrowRecordNotFoundException()
+		{ 
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.UpdateUserPermissionAssignment(Guid.NewGuid().ToString(), EnumPermissionAccess.Deny));
+		}
+
+		[Test]
+		public void DeleteUserPermissionAssignment()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			string userId = fixture.Create<string>();
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateUserPermissionAssignment(permission.Id, userId, EnumPermissionAccess.Grant);
+
+			var result = sut.DeleteUserPermissionAssignment(assignment.Id);
+			var dbItem = sut.TryGetUserPermissionAssignment(permission.Id, userId);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(userId, result.UserId);
+			Assert.AreEqual(EnumPermissionAccess.Grant, result.Access);	
+			
+			Assert.IsNull(dbItem);
+		}
+
+		[Test]
+		public void DeleteUserPermissionAssignment_NoRecord_ThrowRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.DeleteUserPermissionAssignment(Guid.NewGuid().ToString()));
 		}
 	}
 }

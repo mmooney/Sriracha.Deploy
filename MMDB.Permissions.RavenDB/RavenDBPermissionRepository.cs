@@ -77,7 +77,7 @@ namespace MMDB.Permissions.RavenDB
 
 		public UserPermissionAssignment TryGetUserPermissionAssignment(string permissionId, string userId)
 		{
-			throw new NotImplementedException();
+			return _session.Query<UserPermissionAssignment>().FirstOrDefault(i=>i.PermissionId == permissionId && i.UserId == userId);
 		}
 
 		public List<PermissionItem> GetPermissionList()
@@ -85,19 +85,64 @@ namespace MMDB.Permissions.RavenDB
 			return this._session.Query<PermissionItem>().ToList();
 		}
 
-		public UserPermissionAssignment CreateUserPermissionAssignment(string permissionId, string userId, EnumPermissionAccess enumPermissionAccess)
+		public UserPermissionAssignment CreateUserPermissionAssignment(string permissionId, string userId, EnumPermissionAccess access)
 		{
+			if(string.IsNullOrEmpty(permissionId))
+			{
+				throw new ArgumentNullException("Missing permission ID");
+			}
+			if(string.IsNullOrEmpty(userId))
+			{
+				throw new ArgumentNullException("Missing user ID");
+			}
+			var existingItem = _session.Query<UserPermissionAssignment>().Any(i=>i.PermissionId == permissionId && i.UserId == userId);
+			if(existingItem)
+			{
+				throw new ArgumentException(string.Format("User Permission Assignment already exists for user {0} and permission {1}", userId, permissionId));
+			}
+			var item = new UserPermissionAssignment
+			{
+				Id = Guid.NewGuid().ToString(),
+				PermissionId = permissionId,
+				UserId = userId,
+				Access = access
+			};
+			_session.Store(item);
+			_session.SaveChanges();
+			return item;
 			throw new NotImplementedException();
 		}
 
 		public UserPermissionAssignment UpdateUserPermissionAssignment(string userPermissionAssignmentId, EnumPermissionAccess access)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrEmpty(userPermissionAssignmentId))
+			{
+				throw new ArgumentNullException("Missing userPermissionAssignmentId");
+			}
+			var item = _session.Load<UserPermissionAssignment>(userPermissionAssignmentId);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(UserPermissionAssignment), "Id", userPermissionAssignmentId);
+			}
+			item.Access = access;
+			_session.SaveChanges();
+			return item;
 		}
 
 		public UserPermissionAssignment DeleteUserPermissionAssignment(string userPermissionAssignmentId)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrEmpty(userPermissionAssignmentId))
+			{
+				throw new ArgumentNullException("Missing userPermissionAssignmentId");
+			}
+			var item = _session.Load<UserPermissionAssignment>(userPermissionAssignmentId);
+			if(item == null)
+			{
+				throw new RecordNotFoundException(typeof(UserPermissionAssignment), "Id", userPermissionAssignmentId);
+			}
+			_session.Delete(item);
+			_session.SaveChanges();
+			return item;
 		}
 
 		public PermissionGroup CreateGroup(string groupName, string parentGroupId)
