@@ -13,6 +13,7 @@ namespace MMDB.Permissions
 		PermissionItem GetPermission(string id);
 
 		PermissionItem GetPermissionByName(string permissionName);
+		PermissionItem TryGetPermissionByName(string permissionName);
 
 		UserPermissionAssignment TryGetUserPermissionAssignment(string permissionId, string userId);
 

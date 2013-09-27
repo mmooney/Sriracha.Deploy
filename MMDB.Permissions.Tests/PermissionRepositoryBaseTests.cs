@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MMDB.Shared;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 
@@ -62,10 +63,68 @@ namespace MMDB.Permissions.Tests
 			var newPermission = sut.CreatePermission(permissionName, permissionDisplayValue);
 
 			var dbItem = sut.GetPermission(newPermission.Id);
+
 			Assert.IsNotNull(dbItem);
 			Assert.AreEqual(permissionName, dbItem.PermissionName);
 			Assert.AreEqual(permissionDisplayValue, dbItem.PermissionDisplayValue);
 		}
 
+		[Test]
+		public void GetPermissionByName()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var newPermission = sut.CreatePermission(permissionName, permissionDisplayValue);
+
+			var dbItem = sut.GetPermissionByName(permissionName);
+
+			Assert.IsNotNull(dbItem);
+			Assert.AreEqual(permissionName, dbItem.PermissionName);
+			Assert.AreEqual(permissionDisplayValue, dbItem.PermissionDisplayValue);
+		}
+
+		[Test]
+		public void GetPermissionByName_ThrowsRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.GetPermissionByName(permissionName));
+		}
+
+		public void TryGetPermissionByName()
+		{ 
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var newPermission = sut.CreatePermission(permissionName, permissionDisplayValue);
+
+			var dbItem = sut.TryGetPermissionByName(permissionName);
+
+			Assert.IsNotNull(dbItem);
+			Assert.AreEqual(permissionName, dbItem.PermissionName);
+			Assert.AreEqual(permissionDisplayValue, dbItem.PermissionDisplayValue);
+		}
+
+		public void TryGetPermissionName_ReturnsNull()
+		{
+			var sut = this.GetRepository();
+
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+
+			var result = sut.TryGetPermissionByName(permissionName);
+
+			Assert.IsNull(result);
+		}
 	}
 }

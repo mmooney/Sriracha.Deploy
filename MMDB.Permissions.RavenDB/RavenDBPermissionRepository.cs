@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MMDB.Shared;
 using Raven.Client;
 
 namespace MMDB.Permissions.RavenDB
@@ -44,12 +45,34 @@ namespace MMDB.Permissions.RavenDB
 
 		public PermissionItem GetPermission(string id)
 		{
+			if(string.IsNullOrEmpty(id))
+			{
+				throw new ArgumentNullException("Missing id");
+			}
 			return _session.Load<PermissionItem>(id);
 		}
 
 		public PermissionItem GetPermissionByName(string permissionName)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrEmpty(permissionName))
+			{
+				throw new ArgumentNullException("Missing permissionName");
+			}
+			var returnValue = TryGetPermissionByName(permissionName);
+			if(returnValue == null)
+			{
+				throw new RecordNotFoundException(typeof(PermissionItem), "PermissionName", permissionName);
+			}
+			return returnValue;
+		}
+
+		public PermissionItem TryGetPermissionByName(string permissionName)
+		{
+			if(string.IsNullOrEmpty(permissionName))
+			{
+				throw new ArgumentNullException("Missing permissionName");
+			}
+			return _session.Query<PermissionItem>().FirstOrDefault(i=>i.PermissionName == permissionName);
 		}
 
 		public UserPermissionAssignment TryGetUserPermissionAssignment(string permissionId, string userId)
