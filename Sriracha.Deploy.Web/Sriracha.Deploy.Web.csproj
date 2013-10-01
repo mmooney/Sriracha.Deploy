@@ -335,7 +335,7 @@
     <Content Include="Scripts\angular\ng-upload.js" />
     <Content Include="Scripts\angular\ng-upload.min.js" />
     <Content Include="Scripts\sriracha\buildController.js" />
-    <Content Include="Scripts\sriracha\deployController.js" />
+    <Content Include="Scripts\sriracha\deployment\deployController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchListController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchRequestController.js" />
     <Content Include="Scripts\sriracha\deployment\deployBatchStatusController.js" />

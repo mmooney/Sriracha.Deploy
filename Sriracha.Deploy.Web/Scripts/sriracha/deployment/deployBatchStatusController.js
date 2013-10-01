@@ -4,27 +4,13 @@
 	$scope.navigator = SrirachaNavigator;
 
 	$scope.$on("$destroy", function () {
-		console.log("deployBatchStatusController.$destroy");
 		if ($scope.refreshInterval) {
 			clearInterval($scope.refreshInterval);
 			$scope.refreshInterval = null;
 		}
 	});
 
-	$scope.refreshStatus = function () {
-		console.log("deployBatchStatusController.refreshStatus()");
-		$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
-			function () {
-				if ($scope.deployBatchStatus.request.status != "Success" || $scope.deployBatchStatus.request.status == "Error") {
-					setTimeout($scope.refreshStatus, 10000);
-				}
-			},
-			function (error) {
-				ErrorReporter.handleResourceError(error);
-			});
-	}
-
-	$scope.refreshStatusInterval = function () {
+	$scope.refreshData = function () {
 		console.log("deployBatchStatusController.refreshStatusInterval()");
 		$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
 			function () {
@@ -36,23 +22,16 @@
 				}
 			},
 			function (error) {
-				ErrorReporter.handleResourceError(error);
 				if ($scope.refreshInterval) {
 					clearInterval($scope.refreshInterval);
 					$scope.refreshInterval = null;
 				}
+				ErrorReporter.handleResourceError(error);
 			});
 	}
 	if ($routeParams.deployBatchRequestId) {
-		$scope.refreshStatusInterval();
-		$scope.refreshInterval = setInterval($scope.refreshStatusInterval, 10000);
-		//$scope.refreshStatus();
-		//$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
-		//	function() {
-		//	},
-		//	function(err) {
-		//		ErrorReporter.handleResourceError(err);
-		//	});
+		$scope.refreshData();
+		$scope.refreshInterval = setInterval($scope.refreshData, 10000);
 	}
 
 	$scope.getMachineDeployStateId = function (item, machine) {
