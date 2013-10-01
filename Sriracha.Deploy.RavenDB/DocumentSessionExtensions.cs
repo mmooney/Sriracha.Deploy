@@ -31,10 +31,12 @@ namespace Sriracha.Deploy.RavenDB
 
 			int pageNumber = listOptions.PageNumber.GetValueOrDefault(1);
 			int pageSize = listOptions.PageSize.GetValueOrDefault(20);
+
 			var resultQuery = documentQuery
 						.Skip((pageNumber - 1) * pageSize)
 						.Take(pageSize);
-			return new StaticPagedList<T>(resultQuery.ToList(), pageSize, pageNumber, stats.TotalResults);
+			var resultList = resultQuery.ToList();
+			return new StaticPagedList<T>(resultList, pageSize, pageNumber, stats.TotalResults);
 		}
 	}
 }

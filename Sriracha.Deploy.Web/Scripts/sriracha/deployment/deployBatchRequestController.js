@@ -103,7 +103,6 @@
 	}
 
 	$scope.completeBuildPromotion = function () {
-		console.log($scope.selectedItems);
 		if ($scope.promoteDeployment.failedValidationBuilds) {
 			_.each($scope.promoteDeployment.failedValidationBuilds, function (failedBuild) {
 				if (_.contains($scope.selectedItems, failedBuild)) {
@@ -122,7 +121,6 @@
 			var environmentComponent = _.findWhere(environment.componentList, { componentId: item.build.projectComponentId });
 			item.machineList = environmentComponent.machineList.slice(0);
 		});
-		console.log($scope.selectedItems);
 		$(".promoteBuildDialog").dialog("close");
 	}
 

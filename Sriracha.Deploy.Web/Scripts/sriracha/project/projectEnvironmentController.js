@@ -81,7 +81,6 @@
 			machine.machineName = newValue;
 			if ($scope.project.usesSharedComponentConfiguration) {
 				_.each($scope.environment.componentList, function (component) {
-					console.log("tesT234S");
 					var existingMachine = _.findWhere(component.machineList, { machineName: oldMachineName });
 					if (existingMachine) {
 						existingMachine.machineName = newValue;
