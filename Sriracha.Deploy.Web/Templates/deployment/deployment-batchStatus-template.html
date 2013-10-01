@@ -1,5 +1,20 @@
 ﻿<h1>Deployment Batch Status</h1>
-<b>Submitted {{deployBatchStatus.request.submittedDateTimeUtc | date:'medium'}} UTC</b>
+<div>
+	<b>Status: {{deployBatchStatus.request.status}}</b>
+</div>
+<div>
+	<b>Submitted {{deployBatchStatus.request.submittedDateTimeUtc | date:'medium'}} UTC</b>
+</div>
+<div>
+	<b>Started {{deployBatchStatus.request.startedDateTimeUtc | date:'medium'}} UTC</b>
+</div>
+<div>
+	<b>Completed {{deployBatchStatus.request.completeDateTimeUtc | date:'medium'}} UTC</b>
+</div>
+<div ng-show="deployBatchStatus.request.errorDetails" class="error">
+	<h3>Error Details: </h3> 
+	<pre>{{deployBatchStatus.request.errorDetails}}</pre>
+</div>
 <div ng-repeat="item in deployBatchStatus.request.itemList">
 	<h2>{{item.build.displayValue}}</h2>
 	<table class="table table-striped table-bordered">
