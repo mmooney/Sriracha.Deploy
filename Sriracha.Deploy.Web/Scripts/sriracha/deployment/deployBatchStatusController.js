@@ -11,7 +11,6 @@
 	});
 
 	$scope.refreshData = function () {
-		console.log("deployBatchStatusController.refreshStatusInterval()");
 		$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
 			function () {
 				if ($scope.deployBatchStatus.request.status == "Success" || $scope.deployBatchStatus.request.status == "Error") {

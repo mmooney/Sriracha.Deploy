@@ -10,7 +10,6 @@
 
 	$scope.deploymentList = SrirachaResource.deployBatchStatus.get($scope.listOptions,
 		function () {
-			//console.log($scope.deploymentList);
 		},
 		function (err) {
 			ErrorReporter.handleResourceError(err);

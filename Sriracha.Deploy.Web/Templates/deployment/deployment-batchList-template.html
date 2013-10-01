@@ -21,9 +21,9 @@
                 </div>
                 {{getDeployStatusDescription(deployment.request.status)}}
 			</td>
-			<td>{{deployment.request.submittedDateTimeUtc | date:'medium'}} UTC</td>
--			<td>{{deployment.request.startedDateTimeUtc | date:'medium'}} UTC</td>
-			<td>{{deployment.request.completeDateTimeUtc | date:'medium'}} UTC</td>
+			<td>{{deployment.request.submittedDateTimeUtc | displayDate}}</td>
+-			<td>{{deployment.request.startedDateTimeUtc | displayDate}}</td>
+			<td>{{deployment.request.completeDateTimeUtc | displayDate}}</td>
 			<td>
 				<div ng-repeat="item in deployment.request.itemList">
 					<b>{{item.build.displayValue}}-></b>

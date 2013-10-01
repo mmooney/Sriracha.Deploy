@@ -1,5 +1,14 @@
 ﻿var ngSriracha = angular.module("ngSriracha", ["ngResource", "SharedServices", "ngUpload"]);
 
+ngSriracha.filter("displayDate", function () {
+	return function (input) {
+		if (input) {
+			var date = new Date(input);
+			console.log(date);
+			return date.toString();
+		}
+	}
+});
 ngSriracha.directive("breadcrumbs",
 		['$location','$rootScope','SrirachaResource', 'ErrorReporter', 'SrirachaNavigator',
 		function ($location, $rootScope, SrirachaResource, ErrorReporter, SrirachaNavigator) {
