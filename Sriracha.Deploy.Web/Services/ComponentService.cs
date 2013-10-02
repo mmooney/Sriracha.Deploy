@@ -38,11 +38,11 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if (string.IsNullOrEmpty(component.Id))
 			{
-				return _projectManager.CreateComponent(component.ProjectId, component.ComponentName);
+				return _projectManager.CreateComponent(component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId);
 			}
 			else
 			{
-				return _projectManager.UpdateComponent(component.Id, component.ProjectId, component.ComponentName);
+				return _projectManager.UpdateComponent(component.Id, component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId);
 			}
 		}
 

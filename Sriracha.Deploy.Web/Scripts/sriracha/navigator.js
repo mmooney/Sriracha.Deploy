@@ -66,28 +66,35 @@
 				go: function (projectId, environmentId) { root.goTo(this.url, { projectId: projectId, environmentId: environmentId }) }
 			},
 		};
+		root.configuration = {
+			create: {
+				url: "/project/:projectId/configuration/create",
+				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
+				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
+			}
+		};
 		root.component = {
 			create: {
 				url: "/project/:projectId/component/create",
-				clientUrl: function(projectId) { return root.getUrl(this.url, { projectId: projectId }) },
-				go: function(projectId) { root.goTo(this.url, { projectId: projectId}) }
+				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
+				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
 			},
 			view: {
 				url: "/project/:projectId/component/:componentId",
-				clientUrl: function(projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
-				go: function(projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId}) }
+				clientUrl: function (projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
+				go: function (projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId }) }
 			},
 			edit: {
 				url: "/project/:projectId/component/edit/:componentId",
-				clientUrl: function(projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
-				go: function(projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId}) }
+				clientUrl: function (projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
+				go: function (projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId }) }
 			},
 			remove: {
 				url: "/project/:projectId/component/delete/:componentId",
-				clientUrl: function(projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
-				go: function(projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId}) }
+				clientUrl: function (projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }) },
+				go: function (projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId }) }
 			}
-		}
+		};
 		root.deploymentStep = {
 			create: {
 				url: "/project/:projectId/component/:componentId/step/create",

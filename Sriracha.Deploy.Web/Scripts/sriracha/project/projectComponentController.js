@@ -14,6 +14,7 @@
 			var component = _.find($scope.project.componentList, function (c) { return c.id == $routeParams.componentId; });
 			if (component) {
 				$scope.component = new SrirachaResource.component(component);
+				$scope.component.useConfigurationGroup = $scope.component.useConfigurationGroup || false;
 				$scope.taskMetadataList = SrirachaResource.taskMetadata.query({});
 
 				if ($routeParams.deploymentStepId && $scope.component.deploymentStepList) {

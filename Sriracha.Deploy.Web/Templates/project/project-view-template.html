@@ -10,7 +10,7 @@
 </div>
 
 <h3>Components</h3>
-<table class="table table-border table-striped" ng-show="project.componentList.length">
+<table class="table table-bordered table-striped" ng-show="project.componentList.length">
 	<thead>
 		<tr>
 			<th>Component Name</th>
@@ -28,11 +28,29 @@
 	<em>No Components</em>
 </div>
 <a class="btn btn-primary" ng-href="{{navigator.component.create.clientUrl(project.id)}}">Create Component</a>
-
 <hr />
 
+<h3>Configurations</h3>
+<table class="table table-bordered table-striped" ng-show="project.configurationList.length">	
+	<thead>
+		<tr>
+			<th>Configuration Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="configuration in project.configurationList">
+			<td>{{configuration}}</td>	
+		</tr>
+	</tbody>
+</table>
+<div ng-hide="project.configurationList.length">
+	<em>No Configuration</em>
+</div>
+<a class="btn btn-primary" ng-href="{{navigator.configuration.create.clientUrl(project.id)}}">Create Component</a>
+<hr/>
+
 <h3>Branches</h3>
-<table class="table table-border table-striped" ng-show="project.branchList.length">
+<table class="table table-bordered table-striped" ng-show="project.branchList.length">
 	<thead>
 		<tr>
 			<th>Branch Name</th>
@@ -53,7 +71,7 @@
 <hr />
 
 <h3>Environments</h3>
-<table class="table table-border table-striped" ng-show="project.environmentList.length">
+<table class="table table-bordered table-striped" ng-show="project.environmentList.length">
 	<thead>
 		<tr>
 			<th>Environment Name</th>

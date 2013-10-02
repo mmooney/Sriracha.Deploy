@@ -30,6 +30,12 @@
 			controller: "ProjectController"
 		})
 
+		//Configurations
+		.when(navigator.configuration.create.url, {
+			templateUrl: "templates/project/configuration/configuration-edit-template.html",
+			controller: "ProjectConfigurationController"
+		})
+
 		//Components
 		.when(navigator.component.create.url, {
 			templateUrl: "templates/project/component/component-edit-template.html",

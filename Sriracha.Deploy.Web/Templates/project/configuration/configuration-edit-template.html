@@ -1,0 +1,9 @@
+﻿<h2 ng-show="id">Create a configuration in project {{project.projectName}}</h2>
+<h2 ng-hide="id">Edit Configuration: {{configuration.configurationName}} in project {{project.projectName}}</h2>
+<h2>Project {{project.ProjectName}} - Component</h2>
+<div>
+	<b>Configuration Name:</b>
+	<input type="text" ng-model="configuration.configurationName" />
+</div>
+<button class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Cancel</button>
+<button class="btn btn-action" ng-click="saveConfiguration()">Save</button>

@@ -75,10 +75,10 @@ namespace Sriracha.Deploy.Data.Impl
 			return _projectRepository.GetComponentList(projectId);
 		}
 
-		public DeployComponent CreateComponent(string projectId, string componentName)
+		public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId)
 		{
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponent(project, componentName);
+			var returnValue = this._projectRepository.CreateComponent(project, componentName, useConfigurationGroup, configurationId);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				var someOtherComponent = project.ComponentList.FirstOrDefault(i=>i.Id != returnValue.Id);
@@ -103,9 +103,9 @@ namespace Sriracha.Deploy.Data.Impl
 			_projectRepository.DeleteComponent(componentId);
 		}
 
-		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName)
+		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
 		{
-			return this._projectRepository.UpdateComponent(componentId, projectId, componentName);
+			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId);
 		}
 
 		public List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId)
@@ -303,6 +303,33 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
 			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList);
+		}
+
+
+		public List<DeployConfiguration> GetConfigurationList(string projectId)
+		{
+			return _projectRepository.GetConfigurationList(projectId);
+		}
+
+		public DeployConfiguration GetConfiguration(string configurationId)
+		{
+			return _projectRepository.GetConfiguration(configurationId);
+		}
+
+
+		public DeployConfiguration CreateConfiguration(string projectId, string configurationName)
+		{
+			return _projectRepository.CreateConfiguration(projectId, configurationName);
+		}
+
+		public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName)
+		{
+			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName);
+		}
+
+		public void DeleteConfiguration(string configurationId)
+		{
+			_projectRepository.DeleteConfiguration(configurationId);
 		}
 	}
 }

@@ -85,6 +85,7 @@
     <Compile Include="Dto\DeployBatchRequest.cs" />
     <Compile Include="Dto\DeployBatchRequestItem.cs" />
     <Compile Include="Dto\DeployBatchStatus.cs" />
+    <Compile Include="Dto\DeployConfiguration.cs" />
     <Compile Include="Dto\DeployEnvironmentComponent.cs" />
     <Compile Include="Dto\DeployFileDto.cs" />
     <Compile Include="Dto\DeployMachine.cs" />

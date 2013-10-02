@@ -51,6 +51,8 @@ namespace Sriracha.Deploy.Web.App_Start
 			Routes
 				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step")
 				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step/{id*}")
+				.Add<DeployConfiguration>("/project/{projectId}/configuration")
+				.Add<DeployConfiguration>("/project/{projectId}/configuration/{id*}")
 				.Add<DeployComponent>("/project/{projectId}/component")
 				.Add<DeployComponent>("/project/{projectId}/component/{id*}")
 				.Add<ComponentConfigurationDefinition>("/project/{projectId}/component/{componentId}/configuration")

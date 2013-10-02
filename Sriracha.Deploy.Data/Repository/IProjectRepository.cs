@@ -17,16 +17,24 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration);
 		void DeleteProject(string projectId);
 
+		List<DeployConfiguration> GetConfigurationList(string projectId);
+		DeployConfiguration CreateConfiguration(string projectId, string configurationName);
+		DeployConfiguration CreateConfiguration(DeployProject project, string configurationName);
+		DeployConfiguration GetConfiguration(string configurationId);
+		DeployConfiguration TryGetConfiguration(string configurationId);
+		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName);
+		void DeleteConfiguration(string configurationId);
+		
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
-		DeployComponent CreateComponent(string projectId, string componentName);
-		DeployComponent CreateComponent(DeployProject project, string componentName);
+		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
+		DeployComponent CreateComponent(DeployProject project, string componentName, bool useConfigurationGroup, string configurationId);
 		DeployComponent GetComponent(string componentId);
 		DeployComponent TryGetComponent(string componentId);
 		DeployComponent GetComponent(DeployProject project, string componentId);
 		DeployComponent TryGetComponent(DeployProject project, string componentId);
 		DeployComponent GetComponentByName(DeployProject project, string componentName);
 		DeployComponent TryGetComponentByName(DeployProject project, string componentName);
-		DeployComponent UpdateComponent(string projectId, string componentId, string componentName);
+		DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId);
 		void DeleteComponent(string componentId);
 
 		List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId);
@@ -58,5 +66,6 @@ namespace Sriracha.Deploy.Data.Repository
 
 		DeployMachine GetMachine(string machineId);
 		DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configurationList);
+
 	}
 }

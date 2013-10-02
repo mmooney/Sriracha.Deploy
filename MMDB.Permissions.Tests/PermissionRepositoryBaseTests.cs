@@ -233,5 +233,6 @@ namespace MMDB.Permissions.Tests
 
 			Assert.Throws<RecordNotFoundException>(()=>sut.DeleteUserPermissionAssignment(Guid.NewGuid().ToString()));
 		}
+
 	}
 }

@@ -3,6 +3,7 @@
 		function ($resource) {
 	return {
 		project: $resource("/api/project"),
+		configuration: $resource("/api/project/:projectId/configuration"),
 		component: $resource("/api/project/:projectId/component"),
 		componentConfiguration: $resource("api/project/:projectId/component/:componentId/configuration"),
 		branch: $resource("/api/project/:projectId/branch"),

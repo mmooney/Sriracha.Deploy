@@ -75,7 +75,7 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			if(component == null)
 			{
-				component = _projectRepository.CreateComponent(project.Id, componentId);
+				component = _projectRepository.CreateComponent(project.Id, componentId, false, null);
 			}
 			return this._buildRepository.CreateBuild(project.Id, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
 		}

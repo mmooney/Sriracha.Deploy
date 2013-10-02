@@ -26,7 +26,7 @@ ngSriracha.directive("breadcrumbs",
 				var splitParams = $location.path().split('/');
 				for (i in splitParams) {
 					if (currentParam) {
-						if (splitParams[i] != "view" && splitParams[i] != "edit" && splitParams[i] != "delete" && splitParams[i] != "remove") {
+						if (splitParams[i] != "create" && splitParams[i] != "view" && splitParams[i] != "edit" && splitParams[i] != "delete" && splitParams[i] != "remove") {
 							var item = { key: currentParam, value: splitParams[i] };
 							keyValueList.push(item);
 							currentParam = null;
@@ -47,11 +47,19 @@ ngSriracha.directive("breadcrumbs",
 								displayValue: "Project: " + project.projectName
 							};
 							scope.breadcrumbList.push(breadcrumbItem);
-							var component, step, environment, branch;
+							var component, step, environment, branch, configuration;
 							for (var i = 1; i < keyValueList.length; i++) {
 								var item = keyValueList[i];
 								if (item.value) {
 									switch (item.key) {
+										case "configuration":
+											configuration = _.findWhere(project.configurationList, { id: item.value });
+											x = {
+												url: SrirachaNavigator.configuration.view.clientUrl(project.id, configuration.id),
+												displayValue: "Configuration: " + configuration.configurationName
+											};
+											scope.breadcrumbList.push(x);
+											break;
 										case "component":
 											component = _.findWhere(project.componentList, { id: item.value });
 											x = {
