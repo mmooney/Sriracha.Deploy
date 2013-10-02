@@ -49,8 +49,8 @@ namespace Sriracha.Deploy.Web.App_Start
 
 			//Configure User Defined REST Paths
 			Routes
-				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step")
-				.Add<DeployComponentDeploymentStep>("/project/{projectId}/component/{componentId}/step/{id*}")
+				.Add<DeployStep>("/project/{projectId}/{parentType}/{parentId}/step")
+				.Add<DeployStep>("/project/{projectId}/{parentType}/{parentId}/step/{id*}")
 				.Add<DeployConfiguration>("/project/{projectId}/configuration")
 				.Add<DeployConfiguration>("/project/{projectId}/configuration/{id*}")
 				.Add<DeployComponent>("/project/{projectId}/component")

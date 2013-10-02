@@ -35,6 +35,18 @@
 			templateUrl: "templates/project/configuration/configuration-edit-template.html",
 			controller: "ProjectConfigurationController"
 		})
+		.when(navigator.configuration.view.url, {
+			templateUrl: "templates/project/configuration/configuration-view-template.html",
+			controller: "ProjectConfigurationController"
+		})
+		.when(navigator.configuration.edit.url, {
+			templateUrl: "templates/project/configuration/configuration-edit-template.html",
+			controller: "ProjectConfigurationController"
+		})
+		.when(navigator.configuration.remove.url, {
+			templateUrl: "templates/project/configuration/configuration-delete-template.html",
+			controller: "ProjectConfigurationController"
+		})
 
 		//Components
 		.when(navigator.component.create.url, {
@@ -55,15 +67,27 @@
 		})
 
 		//Deployment Steps
-		.when(navigator.deploymentStep.create.url, {
+		.when(navigator.deploymentStep.componentCreate.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
 			controller: "ProjectDeploymentStepController"
 		})
-		.when(navigator.deploymentStep.edit.url, {
+		.when(navigator.deploymentStep.configurationCreate.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
 			controller: "ProjectDeploymentStepController"
 		})
-		.when(navigator.deploymentStep.remove.url, {
+		.when(navigator.deploymentStep.componentEdit.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
+			controller: "ProjectDeploymentStepController"
+		})
+		.when(navigator.deploymentStep.configurationEdit.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-edit-template.html",
+			controller: "ProjectDeploymentStepController"
+		})
+		.when(navigator.deploymentStep.componentRemove.url, {
+			templateUrl: "templates/project/deploymentStep/deploymentstep-delete-template.html",
+			controller: "ProjectDeploymentStepController"
+		})
+		.when(navigator.deploymentStep.configurationRemove.url, {
 			templateUrl: "templates/project/deploymentStep/deploymentstep-delete-template.html",
 			controller: "ProjectDeploymentStepController"
 		})

@@ -26,11 +26,16 @@ namespace Sriracha.Deploy.Data
 		DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId);
 		void DeleteComponent(string componentId);
 
-		List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId);
-		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
-		DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId);
-		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
-		void DeleteDeploymentStep(string deploymentStepId);
+		List<DeployStep> GetComponentDeploymentStepList(string componentId);
+		List<DeployStep> GetConfigurationDeploymentStepList(string configurationId);
+		DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
+		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJSON);
+		DeployStep GetComponentDeploymentStep(string deploymentStepId);
+		DeployStep GetConfigurationDeploymentStep(string deploymentStepId);
+		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
+		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configuration, string stepName, string taskTypeName, string taskOptionsJSON);
+		void DeleteComponentDeploymentStep(string deploymentStepId);
+		void DeleteConfigurationDeploymentStep(string deploymentStepId);
 
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);

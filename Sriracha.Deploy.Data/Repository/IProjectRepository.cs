@@ -37,13 +37,20 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId);
 		void DeleteComponent(string componentId);
 
-		List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId);
-		DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployComponentDeploymentStep CreateDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId);
-		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		void DeleteDeploymentStep(string deploymentStepId);
+		List<DeployStep> GetComponentDeploymentStepList(string componentId);
+		List<DeployStep> GetConfigurationDeploymentStepList(string configurationId);
+		DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployStep CreateComponentDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployStep CreateConfigurationDeploymentStep(DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployStep GetComponentDeploymentStep(string deploymentStepId);
+		DeployStep GetConfigurationDeploymentStep(string deploymentStepId);
+		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
+		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
+		void DeleteComponentDeploymentStep(string deploymentStepId);
+		void DeleteConfigurationDeploymentStep(string deploymentStepId);
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);

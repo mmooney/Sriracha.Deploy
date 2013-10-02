@@ -78,7 +78,8 @@
 	$scope.copyNextDeploymentStep = function(list, step) {
 		var saveParams = {
 			projectId: $routeParams.projectId,
-			componentId: $routeParams.componentId
+			parentId: $routeParams.componentId,
+			parentType: "Component"
 		};
 		step.id = null;
 		var x = new SrirachaResource.deploymentStep(step);

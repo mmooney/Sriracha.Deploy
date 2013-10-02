@@ -6,11 +6,19 @@ using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Dto
 {
-	public class DeployComponentDeploymentStep
+	public enum EnumDeployStepParentType
+	{
+		Unknown,
+		Component, 
+		Configuration
+	}
+
+	public class DeployStep
 	{
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
-		public string ComponentId { get; set; }
+		public string ParentId { get; set; }
+		public EnumDeployStepParentType ParentType { get; set; }
 		public string StepName { get; set; }
 		public string TaskTypeName { get; set; }
 		public string TaskOptionsJson { get; set; }

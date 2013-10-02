@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Dto
 	{
 		public class DeploymentValidationResultItem
 		{
-			public DeployComponentDeploymentStep DeploymentStep { get; set; }
+			public DeployStep DeploymentStep { get; set; }
 			public TaskDefinitionValidationResult TaskValidationResult { get; set; }
 		}
 		public List<DeploymentValidationResultItem> ResultList { get; set; }
@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Dto
 			this.ResultList = new List<DeploymentValidationResultItem>();
 		}
 
-		public DeploymentValidationResultItem AddResult(DeployComponentDeploymentStep deploymentStep, TaskDefinitionValidationResult validationItem)
+		public DeploymentValidationResultItem AddResult(DeployStep deploymentStep, TaskDefinitionValidationResult validationItem)
 		{
 			var resultItem = new DeploymentValidationResultItem
 			{

@@ -1,0 +1,64 @@
+﻿<h2>Project {{project.projectName}} - {{configuration.configurationName}} Configuration
+	<a ng-href="{{navigator.configuration.edit.clientUrl(configuration.projectId, configuration.id)}}">(edit)</a> </h2>
+<h3>Deployment Steps</h3>
+<div>
+	<table class="table table-border table-striped" ng-show="configuration.deploymentStepList.length">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Task Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="deploymentStep in configuration.deploymentStepList">
+				<td><a ng-href="{{navigator.deploymentStep.configurationEdit.clientUrl(configuration.projectId, configuration.id, deploymentStep.id)}}">{{deploymentStep.stepName}}</a></td>
+				<td><a class="btn btn-danger" ng-href="{{navigator.deploymentStep.configurationRemove.clientUrl(configuration.projectId, configuration.id, deploymentStep.id)}}">Delete</a></td>
+			</tr>
+		</tbody>
+	</table>
+	<div ng-hide="configuration.deploymentStepList.length">
+		<em>No Deployment Steps</em>
+	</div>
+	<a ng-href="{{navigator.deploymentStep.configurationCreate.clientUrl(configuration.projectId, configuration.id)}}" class="btn btn-primary">Create Deployment Step</a>
+	<br />
+	<br />
+	<div ng-hide="copyingDeploymentSteps">
+		<button class="btn" ng-click="startCopyDeploymentSteps()">Copy Deployment Steps From A Component</button>
+	</div>
+	<div ng-show="copyingDeploymentSteps">
+		<table class="table table-striped table-bordered">
+			<tr>
+				<th colspan="2">Configurations</th>
+			</tr>
+			<tr ng-repeat="item in project.componentList">
+				<td>{{item.configurationName}}</td>
+				<td>
+					<ul>
+						<li ng-repeat="step in item.deploymentStepList">
+							{{step.stepName}}
+						</li>
+					</ul>
+				</td>
+				<td>
+					<button class="btn" ng-click="copyDeploymentSteps(item)">Copy Deployment Steps</button>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2">Components</th>
+			</tr>
+			<tr ng-repeat="item in project.componentList">
+				<td>{{item.componentName}}</td>
+				<td>
+					<ul>
+						<li ng-repeat="step in item.deploymentStepList">
+							{{step.stepName}}
+						</li>
+					</ul>
+				</td>
+				<td>
+					<button class="btn" ng-click="copyDeploymentSteps(item)">Copy Deployment Steps</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

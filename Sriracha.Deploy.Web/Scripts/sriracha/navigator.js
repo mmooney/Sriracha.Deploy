@@ -71,7 +71,22 @@
 				url: "/project/:projectId/configuration/create",
 				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }) },
 				go: function (projectId) { root.goTo(this.url, { projectId: projectId }) }
-			}
+			},
+			view: {
+				url: "/project/:projectId/configuration/:configurationId",
+				clientUrl: function (projectId, configurationId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId }) },
+				go: function (projectId, configurationId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId }) }
+			},
+			edit: {
+				url: "/project/:projectId/configuration/edit/:configurationId",
+				clientUrl: function (projectId, configurationId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId }) },
+				go: function (projectId, configurationId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId }) }
+			},
+			remove: {
+				url: "/project/:projectId/configuration/remove/:configurationId",
+				clientUrl: function (projectId, configurationId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId }) },
+				go: function (projectId, configurationId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId }) }
+			},
 		};
 		root.component = {
 			create: {
@@ -96,20 +111,35 @@
 			}
 		};
 		root.deploymentStep = {
-			create: {
+			componentCreate: {
 				url: "/project/:projectId/component/:componentId/step/create",
 				clientUrl: function (projectId, componentId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId }); },
-				go: function (projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId });}
+				go: function (projectId, componentId) { root.goTo(this.url, { projectId: projectId, componentId: componentId }); }
 			},
-			edit: {
+			configurationCreate: {
+				url: "/project/:projectId/configuration/:configurationId/step/create",
+				clientUrl: function (projectId, configurationId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId }); },
+				go: function (projectId, configurationId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId }); }
+			},
+			componentEdit: {
 				url: "/project/:projectId/component/:componentId/step/edit/:deploymentStepId",
 				clientUrl: function (projectId, componentId, deploymentStepId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId }); },
-				go: function (projectId, componentId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId });}
+				go: function (projectId, componentId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId }); }
 			},
-			remove: {
+			configurationEdit: {
+				url: "/project/:projectId/configuration/:configurationId/step/edit/:deploymentStepId",
+				clientUrl: function (projectId, configurationId, deploymentStepId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId, deploymentStepId: deploymentStepId }); },
+				go: function (projectId, configurationId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId, deploymentStepId: deploymentStepId }); }
+			},
+			componentRemove: {
 				url: "/project/:projectId/component/:componentId/step/delete/:deploymentStepId",
 				clientUrl: function (projectId, componentId, deploymentStepId) { return root.getUrl(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId }); },
 				go: function (projectId, componentId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, componentId: componentId, deploymentStepId: deploymentStepId }); }
+			},
+			configurationRemove: {
+				url: "/project/:projectId/configuration/:configurationId/step/delete/:deploymentStepId",
+				clientUrl: function (projectId, configurationId, deploymentStepId) { return root.getUrl(this.url, { projectId: projectId, configurationId: configurationId, deploymentStepId: deploymentStepId }); },
+				go: function (projectId, configurationId, deploymentStepId) { root.goTo(this.url, { projectId: projectId, configurationId: configurationId, deploymentStepId: deploymentStepId }); }
 			}
 		};
 		root.branch = {

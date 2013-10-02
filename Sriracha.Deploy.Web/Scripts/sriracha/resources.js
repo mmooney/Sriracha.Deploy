@@ -8,7 +8,7 @@
 		componentConfiguration: $resource("api/project/:projectId/component/:componentId/configuration"),
 		branch: $resource("/api/project/:projectId/branch"),
 		environment: $resource("/api/project/:projectId/environment"),
-		deploymentStep: $resource("/api/project/:projectId/component/:componentId/step", { projectId: "@projectId", componentId: "@componentId" }),
+		deploymentStep: $resource("/api/project/:projectId/:parentType/:parentId/step", { projectId: "@projectId", parentType: "@parentType", parentId: "@parentId" }),
 		deployHistory: $resource("/api/deploy/history"),
 		taskMetadata: $resource("/api/taskmetadata"),
 		build: $resource("/api/build/:buildId"),

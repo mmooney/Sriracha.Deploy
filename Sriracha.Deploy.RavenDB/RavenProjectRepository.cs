@@ -373,26 +373,36 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 		}
 
-		public List<DeployComponentDeploymentStep> GetDeploymentStepList(string componentId)
+		public List<DeployStep> GetComponentDeploymentStepList(string componentId)
 		{
 			var component = GetComponent(componentId);
 			return component.DeploymentStepList;
 		}
-
-		public DeployComponentDeploymentStep CreateDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
+		public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId)
 		{
-			var project = GetProject(projectId);
-			return this.CreateDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+			var configuration = GetConfiguration(configurationId);
+			return configuration.DeploymentStepList;
 		}
 
-		public DeployComponentDeploymentStep CreateDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+		public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
+		{
+			var project = GetProject(projectId);
+			return this.CreateComponentDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+		}
+		public DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson) 
+		{
+			var project = GetProject(projectId);
+			return this.CreateConfigurationDeploymentStep(project, configurationId, stepName, taskTypeName, taskOptionsJson);
+		}
+
+		public DeployStep CreateComponentDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
 		{
 			var component = project.ComponentList.Single(i => i.Id == componentId);
-			var item = new DeployComponentDeploymentStep
+			var item = new DeployStep
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = project.Id,
-				ComponentId = componentId,
+				ParentId = componentId,
 				StepName = stepName,
 				TaskTypeName = taskTypeName,
 				TaskOptionsJson = taskOptionsJson,
@@ -405,34 +415,75 @@ namespace Sriracha.Deploy.RavenDB
 			
 			if(component.DeploymentStepList == null)
 			{
-				component.DeploymentStepList = new List<DeployComponentDeploymentStep>();
+				component.DeploymentStepList = new List<DeployStep>();
 			}
 			component.DeploymentStepList.Add(item);
 			this._documentSession.SaveChanges();
 			return item;
 		}
+		public DeployStep CreateConfigurationDeploymentStep(DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+		{
+			var configuration = project.ConfigurationList.Single(i => i.Id == configurationId);
+			var item = new DeployStep
+			{
+				Id = Guid.NewGuid().ToString(),
+				ProjectId = project.Id,
+				ParentId = configurationId,
+				StepName = stepName,
+				TaskTypeName = taskTypeName,
+				TaskOptionsJson = taskOptionsJson,
+				CreatedDateTimeUtc = DateTime.UtcNow,
+				CreatedByUserName = _userIdentity.UserName,
+				UpdatedDateTimeUtc = DateTime.UtcNow,
+				UpdatedByUserName = _userIdentity.UserName
+			};
+			
+			if(configuration.DeploymentStepList == null)
+			{
+				configuration.DeploymentStepList = new List<DeployStep>();
+			}
+			configuration.DeploymentStepList.Add(item);
+			this._documentSession.SaveChanges();
+			return item;
+		}
 
-		public DeployComponentDeploymentStep GetDeploymentStep(string deploymentStepId)
+		public DeployStep GetComponentDeploymentStep(string deploymentStepId)
 		{
 			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i=>i.ComponentList.Any(j=>j.DeploymentStepList.Any(k=>k.Id == deploymentStepId)));
 			if(project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for deployment step " + deploymentStepId);
+				throw new KeyNotFoundException("Could not find project for component deployment step " + deploymentStepId);
 			}
 			var item = project.ComponentList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
 			return item;
 		}
-
-		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
+		
+		public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
 		{
-			var project = GetProject(projectId);
-			return UpdateDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i=>i.ConfigurationList.Any(j=>j.DeploymentStepList.Any(k=>k.Id == deploymentStepId)));
+			if(project == null)
+			{
+				throw new KeyNotFoundException("Could not find project for configuration deployment step " + deploymentStepId);
+			}
+			var item = project.ConfigurationList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
+			return item;
 		}
 
-		public DeployComponentDeploymentStep UpdateDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
+		{
+			var project = this.GetProject(projectId);
+			return this.UpdateComponentDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId);
+		}
+		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson) 
+		{
+			var project = this.GetProject(projectId);
+			return this.UpdateConfigurationDeploymentStep(deploymentStepId, project, configurationId, stepName, taskTypeName, taskOptionsJson);
+		}
+
+		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
 		{
 			var component = project.ComponentList.Single(i => i.Id == componentId);
-			DeployComponentDeploymentStep item;
+			DeployStep item;
 			if(!string.IsNullOrEmpty(deploymentStepId))
 			{
 				item = component.DeploymentStepList.Single(i=>i.Id == deploymentStepId);
@@ -455,16 +506,36 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 			
 		}
-
-
-		public void DeleteDeploymentStep(string deploymentStepId)
+		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+		{
+			var component = project.ConfigurationList.Single(i => i.Id == configurationId);
+			if(string.IsNullOrEmpty(deploymentStepId))
+			{
+				throw new ArgumentNullException("Missing deploymentStepId");
+			}
+			var item = component.DeploymentStepList.FirstOrDefault(i=>i.Id == deploymentStepId);
+			if(item == null)
+			{
+				throw new ArgumentException("Could not find configuration DeployStep object with Id " + deploymentStepId);
+			}
+			item.StepName = stepName;
+			item.TaskTypeName = taskTypeName;
+			item.TaskOptionsJson = taskOptionsJson;
+			item.UpdatedByUserName = _userIdentity.UserName;
+			item.UpdatedDateTimeUtc = DateTime.UtcNow;
+			this._documentSession.SaveChanges();
+			return item;
+			
+		}
+		
+		public void DeleteComponentDeploymentStep(string deploymentStepId)
 		{
 			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
 			if (project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for deployment step " + deploymentStepId);
+				throw new KeyNotFoundException("Could not find project for component deployment step " + deploymentStepId);
 			}
-			_logger.Info("User {0} deleting deployment step {1}", _userIdentity.UserName, deploymentStepId);
+			_logger.Info("User {0} deleting component deployment step {1}", _userIdentity.UserName, deploymentStepId);
 			var component = project.ComponentList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
 			var item = component.DeploymentStepList.First(i => i.Id == deploymentStepId);
 			component.DeploymentStepList.Remove(item);
@@ -472,7 +543,21 @@ namespace Sriracha.Deploy.RavenDB
 
 		}
 
+		public void DeleteConfigurationDeploymentStep(string deploymentStepId)
+		{
+			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
+			if (project == null)
+			{
+				throw new KeyNotFoundException("Could not find project for configuration deployment step " + deploymentStepId);
+			}
+			_logger.Info("User {0} deleting configuration deployment step {1}", _userIdentity.UserName, deploymentStepId);
+			var configuration = project.ConfigurationList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
+			var item = configuration.DeploymentStepList.First(i => i.Id == deploymentStepId);
+			configuration.DeploymentStepList.Remove(item);
+			this._documentSession.SaveChanges();
 
+		}
+		
 		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
 		{
 			if(string.IsNullOrEmpty(projectId))

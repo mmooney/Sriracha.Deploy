@@ -39,14 +39,16 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="configuration in project.configurationList">
-			<td>{{configuration}}</td>	
+			<td><a ng-href="{{navigator.configuration.view.clientUrl(configuration.projectId, configuration.id)}}">{{configuration.configurationName}}</a></td>
+			<td><a class="btn btn-primary" ng-href="{{navigator.configuration.edit.clientUrl(configuration.projectId, configuration.id)}}">Edit</a></td>
+			<td><a class="btn btn-danger" ng-href="{{navigator.configuration.remove.clientUrl(configuration.projectId, configuration.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.configurationList.length">
-	<em>No Configuration</em>
+	<em>No Configurations</em>
 </div>
-<a class="btn btn-primary" ng-href="{{navigator.configuration.create.clientUrl(project.id)}}">Create Component</a>
+<a class="btn btn-primary" ng-href="{{navigator.configuration.create.clientUrl(project.id)}}">Create Configuration</a>
 <hr/>
 
 <h3>Branches</h3>

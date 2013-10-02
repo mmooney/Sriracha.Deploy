@@ -69,13 +69,25 @@ ngSriracha.directive("breadcrumbs",
 											scope.breadcrumbList.push(x);
 											break;
 										case "step":
-											step = _.findWhere(component.deploymentStepList, { id: item.value });
-											if(step) {
-												x = {
-													url: SrirachaNavigator.deploymentStep.edit.clientUrl(project.id, component.id, item.value),
-													displayValue: "Deployment Step: " + step.stepName
-												};
-												scope.breadcrumbList.push(x);
+											if (component) {
+												step = _.findWhere(component.deploymentStepList, { id: item.value });
+												if (step) {
+													x = {
+														url: SrirachaNavigator.deploymentStep.componentEdit.clientUrl(project.id, component.id, item.value),
+														displayValue: "Deployment Step: " + step.stepName
+													};
+													scope.breadcrumbList.push(x);
+												}
+											}
+											else if (configuration) {
+												step = _.findWhere(configuration.deploymentStepList, { id: item.value });
+												if (step) {
+													x = {
+														url: SrirachaNavigator.deploymentStep.configurationEdit.clientUrl(project.id, configuration.id, item.value),
+														displayValue: "Deployment Step: " + step.stepName
+													};
+													scope.breadcrumbList.push(x);
+												}
 											}
 											break;
 										case "branch":

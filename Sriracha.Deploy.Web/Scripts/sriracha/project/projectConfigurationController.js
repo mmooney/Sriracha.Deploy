@@ -11,7 +11,7 @@
 					$scope.configuration = new SrirachaResource.configuration({ projectId: $routeParams.projectId });
 				}
 				else if ($scope.project.configurationList) {
-					var configuration = _.findWhere($scope.project.configurationList, { id: $routeParams.componentId });
+					var configuration = _.findWhere($scope.project.configurationList, { id: $routeParams.configurationId });
 					if (configuration) {
 						$scope.configuration = new SrirachaResource.configuration(configuration);
 						$scope.taskMetadataList = SrirachaResource.taskMetadata.query({});
@@ -77,7 +77,8 @@
 			$scope.copyNextDeploymentStep = function (list, step) {
 				var saveParams = {
 					projectId: $routeParams.projectId,
-					configurationId: $routeParams.configurationId
+					parentId: $routeParams.configurationId,
+					parentType: "Configuration"
 				};
 				step.id = null;
 				var x = new SrirachaResource.deploymentStep(step);

@@ -381,6 +381,7 @@
     <Content Include="Templates\deployment\deployment-batchList-template.html" />
     <Content Include="Templates\deployment\deployment-batchStatus-template.html" />
     <Content Include="Templates\directives\selectEnvironmentMachines.html" />
+    <Content Include="Templates\project\configuration\configuration-view-template.html" />
     <Content Include="Templates\project\configuration\configuration-edit-template.html" />
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment\deployment-submit-template.html" />

@@ -16,10 +16,10 @@ namespace Sriracha.Deploy.Data.Dto
 		public string UpdatedByUserName { get; set; }
 		public bool UseConfigurationGroup { get; set; }
 		public string ConfigurationId { get; set; }
-		public List<DeployComponentDeploymentStep> DeploymentStepList { get; set; }
+		public List<DeployStep> DeploymentStepList { get; set; }
 		public DeployComponent()
 		{
-			this.DeploymentStepList = new List<DeployComponentDeploymentStep>();
+			this.DeploymentStepList = new List<DeployStep>();
 		}
 	}
 }
