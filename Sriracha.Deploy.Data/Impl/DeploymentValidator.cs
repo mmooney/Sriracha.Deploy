@@ -41,16 +41,28 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public DeploymentValidationResult ValidateDeployment(DeployComponent component, DeployEnvironment environment)
+		public DeploymentValidationResult ValidateDeployment(DeployProject project, DeployComponent component, DeployEnvironment environment)
 		{
 			var returnValue = new DeploymentValidationResult();
-			var environmentComponent = environment.TryGetEnvironmentComponent(component.Id);
-			if(environmentComponent != null)
+			DeployEnvironmentConfiguration environmentConfiguration;
+			List<DeployStep> deploymentStepList;
+			if(component.UseConfigurationGroup)
 			{
-				foreach(var deploymentStep in component.DeploymentStepList)
+				environmentConfiguration = environment.TryGetConfigurationItem(component.ConfigurationId);
+				var configuration = project.GetConfiguration(component.ConfigurationId);
+				deploymentStepList = configuration.DeploymentStepList;;
+			}
+			else
+			{
+				environmentConfiguration = environment.TryGetComponentItem(component.Id);
+				deploymentStepList = component.DeploymentStepList;
+			}
+			if(environmentConfiguration != null)
+			{
+				foreach(var deploymentStep in deploymentStepList)
 				{
 					var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
-					var validationItem = this.ValidateTaskDefinition(taskDefinition, environmentComponent);
+					var validationItem = this.ValidateTaskDefinition(taskDefinition, environmentConfiguration);
 					returnValue.AddResult(deploymentStep, validationItem);
 				}
 			}

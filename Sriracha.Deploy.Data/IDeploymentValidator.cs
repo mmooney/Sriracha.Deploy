@@ -11,7 +11,7 @@ namespace Sriracha.Deploy.Data
 	{
 		TaskDefinitionValidationResult ValidateMachineTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine);
 		TaskDefinitionValidationResult ValidateTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentConfiguration environmentComponent);
-		DeploymentValidationResult ValidateDeployment(DeployComponent component, DeployEnvironment environment);
+		DeploymentValidationResult ValidateDeployment(DeployProject project, DeployComponent component, DeployEnvironment environment);
 		ComponentConfigurationDefinition GetComponentConfigurationDefinition(List<DeployStep> deploymentStepList);
 	}
 }

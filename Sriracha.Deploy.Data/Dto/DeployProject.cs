@@ -94,5 +94,15 @@ namespace Sriracha.Deploy.Data.Dto
 			}
 			return returnValue;
 		}
+
+		public DeployProjectBranch GetBranch(string branchId)
+		{
+			var returnValue = this.BranchList.SingleOrDefault(i=>i.Id == branchId);
+			if(returnValue == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
+			}
+			return returnValue;
+		}
 	}
 }

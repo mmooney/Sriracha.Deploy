@@ -25,13 +25,17 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 		public DeployRequestTemplate InitializeDeployRequest(string buildId, string environmentId)
 		{
+			var build = _buildRepository.GetBuild(buildId);
+			var project = _projectRepository.GetProject(build.ProjectId);
+			var environment = project.GetEnvironment(environmentId);
+			var component = project.GetComponent(build.ProjectComponentId);
 			var returnValue = new DeployRequestTemplate
 			{
-				Build = _buildRepository.GetBuild(buildId),
-				Environment = _projectRepository.GetEnvironment(environmentId),
+				Build = build,
+				Environment = environment,
+				Component = component,
+				ValidationResult = _validator.ValidateDeployment(project, component, environment)
 			};
-			returnValue.Component = _projectRepository.GetComponent(returnValue.Build.ProjectComponentId);
-			returnValue.ValidationResult = _validator.ValidateDeployment(returnValue.Component, returnValue.Environment);
 			return returnValue;
 		}
 
@@ -39,10 +43,11 @@ namespace Sriracha.Deploy.Data.Impl
 		public DeployState SubmitDeployRequest(string projectId, string buildId, string environmentId, IEnumerable<string> machineIdList)
 		{
 			var build = _buildRepository.GetBuild(buildId);
-			var environment = _projectRepository.GetEnvironment(environmentId);
-			var component = _projectRepository.GetComponent(build.ProjectComponentId);
-			var branch = _projectRepository.GetBranch(build.ProjectBranchId);
-			var validationResult = _validator.ValidateDeployment(component, environment);
+			var project = _projectRepository.GetProject(projectId);
+			var environment = project.GetEnvironment(environmentId);
+			var component = project.GetComponent(build.ProjectComponentId);
+			var branch = project.GetBranch(build.ProjectBranchId);
+			var validationResult = _validator.ValidateDeployment(project, component, environment);
 			var machineList = new List<DeployMachine>();
 			foreach(string id in machineIdList)
 			{

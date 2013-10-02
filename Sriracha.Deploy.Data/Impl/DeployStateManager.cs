@@ -31,10 +31,11 @@ namespace Sriracha.Deploy.Data.Impl
 		public DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
 		{
 			var build = _buildRepository.GetBuild(buildId);
-			var environment = _projectRepository.GetEnvironment(environmentId);
-			var component = _projectRepository.GetComponent(build.ProjectComponentId);
-			var branch = _projectRepository.GetBranch(build.ProjectBranchId);
-			var validationResult = _validator.ValidateDeployment(component, environment);
+			var project = _projectRepository.GetProject(projectId);
+			var environment = project.GetEnvironment(environmentId);
+			var component = project.GetComponent(build.ProjectComponentId);
+			var branch = project.GetBranch(build.ProjectBranchId);
+			var validationResult = _validator.ValidateDeployment(project, component, environment);
 			var machineList = new List<DeployMachine>()
 			{
 				_projectRepository.GetMachine(machineId)

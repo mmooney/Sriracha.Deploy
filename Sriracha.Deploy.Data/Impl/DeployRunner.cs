@@ -36,7 +36,15 @@ namespace Sriracha.Deploy.Data.Impl
 			var project = _projectRepository.GetProject(build.ProjectId);
 			var environment = project.GetEnvironment(environmentId);
 			var component = project.GetComponent(build.ProjectComponentId);
-			var environmentComponent = environment.GetEnvironmentComponent(component.Id);
+			DeployEnvironmentConfiguration environmentConfiguration;
+			if(component.UseConfigurationGroup)
+			{
+				environmentConfiguration = environment.GetConfigurationItem(component.ConfigurationId);
+			}
+			else
+			{
+				environmentConfiguration = environment.GetComponentItem(component.Id);
+			}
 
 			_statusManager.Info(deployStateId, "Building task definition objects");
 			var taskDefinitionList = new List<IDeployTaskDefinition>();
@@ -73,19 +81,19 @@ namespace Sriracha.Deploy.Data.Impl
 
 			foreach(var machineId in machineIdList)
 			{
-				var machine = environmentComponent.GetMachine(machineId);
+				var machine = environmentConfiguration.GetMachine(machineId);
 				//string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
 				//if(!Directory.Exists(machineDirectory))
 				//{
 				//	Directory.CreateDirectory(machineDirectory);
 				//}
-				string machineComponentDirectory = systemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ParentId);
+				string machineComponentDirectory = systemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 				CopyAllFiles(extractedDirectory, machineComponentDirectory);
 				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine/component directory {1}", extractedDirectory, machineComponentDirectory));
 
 				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine/component  directory {1}", extractedDirectory, machineComponentDirectory));
 
-				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentComponent, machine, systemSettings);
+				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, environmentConfiguration, machine, systemSettings);
 			}
 		}
 

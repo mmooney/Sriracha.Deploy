@@ -361,7 +361,7 @@ namespace Sriracha.Deploy.Data.Impl
 		public void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue)
 		{
 			var environment = this._projectRepository.GetEnvironment(environmentId);
-			var component = environment.GetEnvironmentComponent(componentId);
+			var component = environment.GetComponentItem(componentId);
 			if (component.ConfigurationValueList == null)
 			{
 				component.ConfigurationValueList = new Dictionary<string, string>();

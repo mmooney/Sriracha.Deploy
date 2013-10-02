@@ -24,13 +24,13 @@ namespace Sriracha.Deploy.Data.Dto
 			this.ConfigurationList = new List<DeployEnvironmentConfiguration>();
 		}
 
-		public DeployEnvironmentConfiguration GetEnvironmentComponent(string componentId)
+		public DeployEnvironmentConfiguration GetComponentItem(string componentId)
 		{
 			if(this.ComponentList == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "ComponentId", componentId);
 			}
-			var returnValue = this.TryGetEnvironmentComponent(componentId);
+			var returnValue = this.TryGetComponentItem(componentId);
 			if(returnValue == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "ComponentId", componentId);
@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Dto
 			return returnValue;
 		}
 
-		public DeployEnvironmentConfiguration TryGetEnvironmentComponent(string componentId)
+		public DeployEnvironmentConfiguration TryGetComponentItem(string componentId)
 		{
 			if(this.ComponentList != null)
 			{
@@ -46,6 +46,28 @@ namespace Sriracha.Deploy.Data.Dto
 			}
 			else 
 			{
+				return null;
+			}
+		}
+
+		public DeployEnvironmentConfiguration GetConfigurationItem(string configurationId)
+		{
+			var returnValue = this.GetConfigurationItem(configurationId);
+			if(returnValue == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "Id", configurationId);
+			}
+			return returnValue;
+		}
+
+		public DeployEnvironmentConfiguration TryGetConfigurationItem(string configurationId)
+		{
+			if(this.ConfigurationList != null)
+			{
+				return this.ConfigurationList.SingleOrDefault(i=>i.ParentId == configurationId);
+			}
+			else
+			{ 
 				return null;
 			}
 		}
