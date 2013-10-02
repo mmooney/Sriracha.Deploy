@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Tasks
 	public abstract class BaseDeployTaskExecutor<TaskDefinition> : IDeployTaskExecutor 
 		where TaskDefinition: IDeployTaskDefinition
 	{
-		public DeployTaskExecutionResult Execute(string deployStateId, IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		public DeployTaskExecutionResult Execute(string deployStateId, IDeployTaskStatusManager statusManager, IDeployTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			if(definition == null)
 			{
@@ -23,6 +23,6 @@ namespace Sriracha.Deploy.Data.Tasks
 			return this.InternalExecute(deployStateId, statusManager, typedDefinition, environmentComponent, machine, runtimeSystemSettings);
 		}
 
-		protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings);
+		protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings);
 	}
 }

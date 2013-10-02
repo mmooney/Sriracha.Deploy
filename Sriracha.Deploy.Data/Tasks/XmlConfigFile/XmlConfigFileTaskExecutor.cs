@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			_validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			var result = new DeployTaskExecutionResult();
@@ -36,7 +36,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.Id];
@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 				}
 				this.UpdateXmlNode(xmlDoc, xpathItem.XPath, value);
 			}
-			string outputDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ComponentId);
+			string outputDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ParentId);
 			if(!Directory.Exists(outputDirectory))
 			{
 				Directory.CreateDirectory(outputDirectory);

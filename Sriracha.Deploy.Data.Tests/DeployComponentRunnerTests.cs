@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Tests
 			public Mock<IDeployTaskFactory> TaskFactory { get; set; }
 			public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
 			public TupleList<Mock<IDeployTaskDefinition>, Mock<IDeployTaskExecutor>, Type> TaskDefinitionExecutorList { get; set; }
-			public DeployEnvironmentComponent EnvironmentComponent { get; set; }
+			public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
 			public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 			public DeployComponentRunner Sut { get; set; }
 			public string DeployStateId { get; set; }
@@ -46,7 +46,7 @@ namespace Sriracha.Deploy.Data.Tests
 				{
 					TaskFactory = new Mock<IDeployTaskFactory>(),
 					StatusManager = new Mock<IDeployTaskStatusManager>(),
-					EnvironmentComponent = fixture.Create<DeployEnvironmentComponent>(),
+					EnvironmentComponent = fixture.Create<DeployEnvironmentConfiguration>(),
 					RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 					TaskDefinitionExecutorList = new TupleList<Mock<IDeployTaskDefinition>,Mock<IDeployTaskExecutor>,Type>(),
 					DeployStateId = fixture.Create<string>()

@@ -10,8 +10,9 @@
 	<br />
 </div>
 <div ng-show="environment.id">
-	<div ng-repeat="component in environment.componentList">
-		<h3>{{component.componentName}}</h3>
+	<h3>Configuration Groups</h3>
+	<div ng-repeat="configuration in environment.configurationList" class="environment-component">
+		<h3>{{configuration.itemName}}</h3>
 		<strong>Environment Values</strong>
 		<table class="table table-striped table-bordered ">
 			<thead>
@@ -22,17 +23,23 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="configItem in configDefinitionList[component.componentId].environmentTaskParameterList">
+				<tr ng-repeat="configItem in configDefinitionList[configuration.parentId].environmentTaskParameterList">
 					<td>{{configItem.fieldName}}</td>
-					<td>{{component.configurationValueList[configItem.fieldName]}}</td>
-					<td><button class="btn" ng-click="editConfigurationItem(configItem, component.configurationValueList)">Edit</button></td>
+					<td>{{configuration.configurationValueList[configItem.fieldName]}}</td>
+					<td><button class="btn" ng-click="editConfigurationItem(configItem, configuration.configurationValueList)">Edit</button></td>
+				</tr>
+				<tr ng-show="!configDefinitionList[configuration.parentId].environmentTaskParameterList.length">
+					<td colspan="3">No Configuration Values</td>
 				</tr>
 			</tbody>
 		</table>
 
 		<strong>Machine Values</strong>
-		<div ng-repeat="machine in component.machineList" style="text-indent:20px">
-			{{machine.machineName}} <button class="btn" ng-click="editMachine(machine)">Edit</button> <button class="btn" ng-click="deleteMachine(component,machine)">Delete</button>
+		<div ng-show="!configuration.machineList.length" class="alert">
+			No machines created yet
+		</div>
+		<div ng-repeat="machine in configuration.machineList" class="environment-component-machine">
+			Machine: {{machine.machineName}} <button class="btn" ng-click="editMachine(machine)">Edit</button><button class="btn" ng-click="deleteMachine(configuration,machine)">Delete</button>
 			<table class="table table-striped table-bordered ">
 				<thead>
 					<tr>
@@ -42,15 +49,76 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="configItem in configDefinitionList[component.componentId].machineTaskParameterList">
+					<tr ng-repeat="configItem in configDefinitionList[configuration.parentId].machineTaskParameterList">
 						<td>{{configItem.fieldName}}</td>
 						<td>{{machine.configurationValueList[configItem.fieldName]}}</td>
 						<td><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
 					</tr>
+					<tr ng-show="!configDefinitionList[configuration.parentId].machineTaskParameterList.length">
+						<td colspan="3">No Configuration Values</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
-		<button class="btn" ng-click="addMachine(component)">Add Machine</button>
+		<button class="btn" ng-click="addMachine(configuration)">Add Machine</button>
+	</div>
+	<h3>Components</h3>
+	<div ng-repeat="component in environment.componentList" class="environment-component">
+		<h3>{{component.itemName}}</h3>
+		<div ng-show="component.useConfigurationGroup">
+			<div ng-show="component.configurationId">This component will use the configuration group "{{component.configurationName}}"</div>
+			<div ng-hide="component.configurationId" class="alert">Warning: this component is marked to use a configuration group, but no configuration is selected</div>
+		</div>
+		<div ng-hide="component.useConfigurationGroup">
+			<strong>Environment Values</strong>
+			<table class="table table-striped table-bordered ">
+				<thead>
+					<tr>
+						<th>Setting Name:</th>
+						<th>Setting Value:</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="configItem in configDefinitionList[component.parentId].environmentTaskParameterList">
+						<td>{{configItem.fieldName}}</td>
+						<td>{{component.configurationValueList[configItem.fieldName]}}</td>
+						<td><button class="btn" ng-click="editConfigurationItem(configItem, component.configurationValueList)">Edit</button></td>
+					</tr>
+					<tr ng-show="!configDefinitionList[component.parentId].environmentTaskParameterList.length">
+						<td colspan="3">No Configuration Values</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<strong>Machine Values</strong>
+			<div ng-show="!component.machineList.length" class="alert">
+				No machines created yet
+			</div>
+			<div ng-repeat="machine in component.machineList" class="environment-component-machine">
+				Machine: {{machine.machineName}} <button class="btn" ng-click="editMachine(machine)">Edit</button> <button class="btn" ng-click="deleteMachine(component,machine)">Delete</button>
+				<table class="table table-striped table-bordered ">
+					<thead>
+						<tr>
+							<th>Setting Name:</th>
+							<th>Setting Value:</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="configItem in configDefinitionList[component.componentId].machineTaskParameterList">
+							<td>{{configItem.fieldName}}</td>
+							<td>{{machine.configurationValueList[configItem.fieldName]}}</td>
+							<td><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
+						</tr>
+						<tr ng-show="!configDefinitionList[component.parentId].machineTaskParameterList.length">
+							<td colspan="3">No Configuration Values</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<button class="btn" ng-click="addMachine(component)">Add Machine</button>
+		</div>
 	</div>
 </div>
 <div>

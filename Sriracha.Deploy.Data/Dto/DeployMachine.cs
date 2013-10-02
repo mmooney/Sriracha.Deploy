@@ -10,7 +10,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
 		public string EnvironmentId { get; set; }
-		public string EnvironmentComponentId { get; set; }
+		public string ParentId { get; set; }
 		public string MachineName { get; set; }
 		public string RoleName { get; set; }
 		public Dictionary<string, string> ConfigurationValueList { get; set; }

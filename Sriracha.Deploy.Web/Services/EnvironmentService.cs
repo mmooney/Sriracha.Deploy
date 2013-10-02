@@ -38,11 +38,11 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if (string.IsNullOrEmpty(environment.Id))
 			{
-				return _projectManager.CreateEnvironment(environment.ProjectId, environment.EnvironmentName, environment.ComponentList);
+				return _projectManager.CreateEnvironment(environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
 			}
 			else
 			{
-				return _projectManager.UpdateEnvironment(environment.Id, environment.ProjectId, environment.EnvironmentName, environment.ComponentList);
+				return _projectManager.UpdateEnvironment(environment.Id, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
 			}
 		}
 

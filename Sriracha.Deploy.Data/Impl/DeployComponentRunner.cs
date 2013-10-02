@@ -17,7 +17,7 @@ namespace Sriracha.Deploy.Data.Impl
 			this._deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
 		}
 
-		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentComponent environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			int stepCounter = 0;
 			foreach(var taskDefinition in taskDefinitionList)

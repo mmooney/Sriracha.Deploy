@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MMDB.Shared;
 using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -21,12 +22,25 @@ namespace Sriracha.Deploy.Web.Services
 
 		public object Get(ComponentConfigurationDefinition request)
 		{	
-			if(request == null || string.IsNullOrWhiteSpace(request.ComponentId))
+			if(request == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("request is null");
+			}
+			else if(string.IsNullOrWhiteSpace(request.ParentId))
+			{
+				throw new ArgumentNullException("request.parentId is null");
 			}	
-			var component = _projectManager.GetComponent(request.ComponentId);
-			return _deploymentValidator.GetComponentConfigurationDefinition(component);
+			switch(request.ParentType)
+			{
+				case EnumDeployStepParentType.Component:
+					var component = _projectManager.GetComponent(request.ParentId);
+					return _deploymentValidator.GetComponentConfigurationDefinition(component.DeploymentStepList);
+				case EnumDeployStepParentType.Configuration:
+					var configuration = _projectManager.GetConfiguration(request.ParentId);
+					return _deploymentValidator.GetComponentConfigurationDefinition(configuration.DeploymentStepList);
+				default:
+					throw new UnknownEnumValueException(request.ParentType);
+			}
 		}
 	}
 }

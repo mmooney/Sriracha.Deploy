@@ -9,70 +9,90 @@
 	$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
 		if ($routeParams.environmentId && $scope.project.environmentList) {
 			var environment = _.findWhere($scope.project.environmentList, { id: $routeParams.environmentId });
+			console.log(environment);
 			if (environment) {
 				$scope.environment = new SrirachaResource.environment(environment);
-				if (!$scope.environment.componentList) {
-					$scope.enviornment.componentList = [];
-				}
-				var oldEnvironmentComponentList = $scope.environment.componentList;
-				$scope.environment.componentList = [];
-				_.each($scope.project.componentList, function (component) {
-					var environmentComponentItem = _.findWhere(oldEnvironmentComponentList, { componentId: component.id });
-					if (!environmentComponentItem) {
-						environmentComponentItem = {
-							componentId: component.id
-						};
-					}
-					environmentComponentItem.componentName = component.componentName;
-					$scope.environment.componentList.push(environmentComponentItem);
-				});
+				$scope.environment.componentList = environment.componentList || [];
+				$scope.environment.configurationList = environment.configurationList || [];
+				console.log($scope.environment.configurationList);
 
-				_.each($scope.project.componentList, function (component) {
-					var environmentComponent = _.findWhere($scope.environment.componentList, { componentId: component.id });
-					var configDefinition = SrirachaResource.componentConfiguration.get(
-						{ projectId: $routeParams.projectId, componentId: component.id },
-						function () {
-							$scope.configDefinitionList = $scope.configDefinitionList || {};
-							$scope.configDefinitionList[component.id] = configDefinition;
-
-							var oldConfigurationValueList = environmentComponent.configurationValueList || {};
-							environmentComponent.configurationValueList = {};
-
-							_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
-								var existingItem = oldConfigurationValueList[taskParameter.fieldName];
-								if (existingItem) {
-									environmentComponent.configurationValueList[taskParameter.fieldName] = existingItem;
-								}
-								else {
-									environmentComponent.configurationValueList[taskParameter.fieldName] = null;
-								}
-							},
-							function (err) {
-								ErrorReporter.handleResourceError(err);
-							}
-						);
-
-						_.each(environmentComponent.machineList, function (machine) {
-							var oldMachineConfigurationValueList = machine.configurationValueList;
-							machine.configurationValueList = {};
-							_.each(configDefinition.machineTaskParameterList, function (taskParameter) {
-								var existingItem = oldMachineConfigurationValueList[taskParameter.fieldName];
-								if (existingItem) {
-									machine.configurationValueList[taskParameter.fieldName] = existingItem;
-								}
-								else {
-									machine.configurationValueList[taskParameter.fieldName] = null;
-								}
-							});
-						});
-					});
-				});
+				$scope.validateList(environment.componentList, $scope.project.componentList, "Component");
+				$scope.validateList(environment.configurationList, $scope.project.configurationList, "Configuration");
 			}
 		}
 		if (!$scope.environment) {
 			$scope.environment = new SrirachaResource.environment({ projectId: $routeParams.projectId });
 		}
 	});
+
+	$scope.getConfigurationName = function (configurationId) {
+		if(configurationId && $scope.project) {
+			var configuration = _.findWhere($scope.project.configurationList, { id: configurationId });
+			if (configuration) {
+				return configuration.configurationName;
+			}
+		}
+		return "???";
+	}
+
+	$scope.validateList = function (environmentComponentList, projectComponentList, parentType) {
+		var oldEnvironmentComponentList = environmentComponentList.slice(0);
+		environmentComponentList.length = 0;
+		_.each(projectComponentList, function (component) {
+			var environmentComponentItem = _.findWhere(oldEnvironmentComponentList, { parentId: component.id });
+			if (!environmentComponentItem) {
+				environmentComponentItem = {
+					parentId: component.id
+				};
+			}
+			environmentComponentItem.itemName = component.componentName || component.configurationName;
+			environmentComponentItem.useConfigurationGroup = component.useConfigurationGroup || false;
+			environmentComponentItem.configurationId = component.configurationId;
+			if (environmentComponentItem.configurationId) {
+				environmentComponentItem.configurationName = $scope.getConfigurationName(component.configurationId);
+			}
+			environmentComponentList.push(environmentComponentItem);
+		});
+
+		_.each(projectComponentList, function (component) {
+			var environmentComponent = _.findWhere(environmentComponentList, { parentId: component.id });
+			var configDefinition = SrirachaResource.componentConfiguration.get(
+				{ projectId: $routeParams.projectId, parentId: component.id, parentType: parentType },
+				function () {
+					$scope.configDefinitionList = $scope.configDefinitionList || {};
+					$scope.configDefinitionList[component.id] = configDefinition;
+
+					var oldConfigurationValueList = environmentComponent.configurationValueList || {};
+					environmentComponent.configurationValueList = {};
+
+					_.each(configDefinition.environmentTaskParameterList, function (taskParameter) {
+						var existingItem = oldConfigurationValueList[taskParameter.fieldName];
+						if (existingItem) {
+							environmentComponent.configurationValueList[taskParameter.fieldName] = existingItem;
+						}
+						else {
+							environmentComponent.configurationValueList[taskParameter.fieldName] = null;
+						}
+					});
+					_.each(environmentComponent.machineList, function (machine) {
+						var oldMachineConfigurationValueList = machine.configurationValueList;
+						machine.configurationValueList = {};
+						_.each(configDefinition.machineTaskParameterList, function (taskParameter) {
+							var existingItem = oldMachineConfigurationValueList[taskParameter.fieldName];
+							if (existingItem) {
+								machine.configurationValueList[taskParameter.fieldName] = existingItem;
+							}
+							else {
+								machine.configurationValueList[taskParameter.fieldName] = null;
+							}
+						});
+					});
+				},
+				function (err) {
+					ErrorReporter.handleResourceError(err);
+				});
+		});
+	};
 
 	$scope.editMachine = function (machine) {
 		var oldMachineName = machine.machineName;
@@ -144,7 +164,7 @@
 		if (!existingMachine) {
 			var machine = {
 				machineName: newMachineName,
-				componentId: environmentComponent.componentId,
+				parentId: environmentComponent.parentId,
 				configurationValueList: {}
 			};
 			environmentComponent.machineList.push(machine);

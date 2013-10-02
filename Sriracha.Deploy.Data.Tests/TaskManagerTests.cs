@@ -30,7 +30,7 @@ namespace Sriracha.Deploy.Data.Tests
 					throw new NotImplementedException();
 				}
 
-				public void Execute(Dto.DeployEnvironmentComponent deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+				public void Execute(Dto.DeployEnvironmentConfiguration deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 				{
 					throw new NotImplementedException();
 				}

@@ -15,32 +15,34 @@ namespace Sriracha.Deploy.Data.Dto
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
-		public List<DeployEnvironmentComponent> ComponentList { get; set; }
+		public List<DeployEnvironmentConfiguration> ComponentList { get; set; }
+		public List<DeployEnvironmentConfiguration> ConfigurationList { get; set; }
 
 		public DeployEnvironment()
 		{
-			this.ComponentList = new List<DeployEnvironmentComponent>();
+			this.ComponentList = new List<DeployEnvironmentConfiguration>();
+			this.ConfigurationList = new List<DeployEnvironmentConfiguration>();
 		}
 
-		public DeployEnvironmentComponent GetEnvironmentComponent(string componentId)
+		public DeployEnvironmentConfiguration GetEnvironmentComponent(string componentId)
 		{
 			if(this.ComponentList == null)
 			{
-				throw new RecordNotFoundException(typeof(DeployEnvironmentComponent), "ComponentId", componentId);
+				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "ComponentId", componentId);
 			}
 			var returnValue = this.TryGetEnvironmentComponent(componentId);
 			if(returnValue == null)
 			{
-				throw new RecordNotFoundException(typeof(DeployEnvironmentComponent), "ComponentId", componentId);
+				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "ComponentId", componentId);
 			}
 			return returnValue;
 		}
 
-		public DeployEnvironmentComponent TryGetEnvironmentComponent(string componentId)
+		public DeployEnvironmentConfiguration TryGetEnvironmentComponent(string componentId)
 		{
 			if(this.ComponentList != null)
 			{
-				return this.ComponentList.SingleOrDefault(i=>i.ComponentId == componentId);
+				return this.ComponentList.SingleOrDefault(i=>i.ParentId == componentId);
 			}
 			else 
 			{
@@ -72,6 +74,14 @@ namespace Sriracha.Deploy.Data.Dto
 				{
 					return component.MachineList.First(i=>i.Id == machineId);
 				}
+				else
+				{
+					var configuration = this.ConfigurationList.FirstOrDefault(i=>i.MachineList.Any(j=>j.Id == machineId));
+					if(configuration != null)
+					{
+						return configuration.MachineList.First(i=>i.Id == machineId);
+					}
+				}
 			}
 			return null;
 		}
@@ -84,6 +94,14 @@ namespace Sriracha.Deploy.Data.Dto
 				foreach(var component in this.ComponentList)
 				{
 					var tempList = component.MachineList.Where(i=>i.MachineName == machineName);
+					machineList.AddRange(tempList);
+				}
+			}
+			if(this.ConfigurationList != null)
+			{
+				foreach(var configuration in this.ConfigurationList)
+				{
+					var tempList = configuration.MachineList.Where(i=>i.MachineName == machineName);
 					machineList.AddRange(tempList);
 				}
 			}

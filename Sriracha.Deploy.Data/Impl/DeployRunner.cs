@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 
@@ -32,12 +33,27 @@ namespace Sriracha.Deploy.Data.Impl
 		public void Deploy(string deployStateId, string environmentId, string buildId, List<string> machineIdList, RuntimeSystemSettings systemSettings)
 		{
 			var build = _buildRepository.GetBuild(buildId);
-			var environment = _projectRepository.GetEnvironment(environmentId);
-			var component = _projectRepository.GetComponent(build.ProjectComponentId);
+			var project = _projectRepository.GetProject(build.ProjectId);
+			var environment = project.GetEnvironment(environmentId);
+			var component = project.GetComponent(build.ProjectComponentId);
 			var environmentComponent = environment.GetEnvironmentComponent(component.Id);
 
 			_statusManager.Info(deployStateId, "Building task definition objects");
 			var taskDefinitionList = new List<IDeployTaskDefinition>();
+			List<DeployStep> deploymentStepList;
+			if(component.UseConfigurationGroup)
+			{
+				if(string.IsNullOrEmpty(component.ConfigurationId))
+				{
+					throw new Exception(string.Format("Component {0} should use configuration group, but no configuration specified", component.Id));
+				}
+				var configuration = project.GetConfiguration(component.ConfigurationId);
+				deploymentStepList = configuration.DeploymentStepList;
+			}
+			else
+			{
+				deploymentStepList = component.DeploymentStepList;
+			}
 			foreach(var step in component.DeploymentStepList)
 			{
 				var taskDefinition = _taskFactory.CreateTaskDefinition(step.TaskTypeName, step.TaskOptionsJson);
@@ -57,13 +73,13 @@ namespace Sriracha.Deploy.Data.Impl
 
 			foreach(var machineId in machineIdList)
 			{
-				var machine = environment.GetMachine(machineId);
+				var machine = environmentComponent.GetMachine(machineId);
 				//string machineDirectory = systemSettings.GetLocalMachineDirectory(machine.MachineName);
 				//if(!Directory.Exists(machineDirectory))
 				//{
 				//	Directory.CreateDirectory(machineDirectory);
 				//}
-				string machineComponentDirectory = systemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ComponentId);
+				string machineComponentDirectory = systemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ParentId);
 				CopyAllFiles(extractedDirectory, machineComponentDirectory);
 				_statusManager.Info(deployStateId, string.Format("Copying deployment files from {0} to machine/component directory {1}", extractedDirectory, machineComponentDirectory));
 

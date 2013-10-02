@@ -226,7 +226,7 @@ namespace Sriracha.Deploy.Data.Tests
 					throw new NotImplementedException();
 				}
 
-				public void Execute(DeployEnvironmentComponent deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+				public void Execute(DeployEnvironmentConfiguration deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 				{
 					throw new NotImplementedException();
 				}

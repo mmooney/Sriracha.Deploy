@@ -9,7 +9,8 @@ namespace Sriracha.Deploy.Data.Dto
 	public class ComponentConfigurationDefinition
 	{
 		public string ProjectId { get; set; }
-		public string ComponentId { get; set; }
+		public string ParentId { get; set; }
+		public EnumDeployStepParentType ParentType { get; set; }
 		public List<TaskParameter> EnvironmentTaskParameterList { get; set; }
 		public List<TaskParameter> MachineTaskParameterList { get; set; }
 

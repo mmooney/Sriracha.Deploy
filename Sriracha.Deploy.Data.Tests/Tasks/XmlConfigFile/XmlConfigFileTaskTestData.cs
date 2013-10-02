@@ -14,7 +14,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 	{
 		public XmlConfigFileTaskDefinition TaskDefinition { get; set; }
 		public XmlConfigFileTaskExecutor TaskExecutor { get; set; }
-		public DeployEnvironmentComponent EnvironmentComponent { get; set; }
+		public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public Mock<IFileWriter> FileWriter { get; set; }
 		public Mock<IDeploymentValidator> Validator { get; set; }
@@ -32,7 +32,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
 				RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 				Validator = new Mock<IDeploymentValidator>(),
-				EnvironmentComponent = new DeployEnvironmentComponent
+				EnvironmentComponent = new DeployEnvironmentConfiguration
 				{
 					MachineList = new List<DeployMachine>
 						{

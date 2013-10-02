@@ -65,5 +65,34 @@ namespace Sriracha.Deploy.Data.Dto
 			return null;
 		}
 
+		public DeployEnvironment GetEnvironment(string environmentId)
+		{
+			var returnValue = this.EnvironmentList.SingleOrDefault(i=>i.Id == environmentId);
+			if(returnValue == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
+			}
+			return returnValue;
+		}
+
+		public DeployComponent GetComponent(string componentId)
+		{
+			var returnValue = this.ComponentList.SingleOrDefault(i=>i.Id == componentId);
+			if(returnValue == null)
+			{
+				throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+			}
+			return returnValue;
+		}
+
+		public DeployConfiguration GetConfiguration(string configurationId)
+		{
+			var returnValue = this.ConfigurationList.SingleOrDefault(i=>i.Id == configurationId);
+			if(returnValue != null)
+			{
+				throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+			}
+			return returnValue;
+		}
 	}
 }

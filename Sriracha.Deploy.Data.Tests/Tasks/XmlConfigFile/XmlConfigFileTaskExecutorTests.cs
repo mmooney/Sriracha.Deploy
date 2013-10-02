@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 			testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
 			foreach (var machine in testData.EnvironmentComponent.MachineList)
 			{
-				string outputPath = Path.Combine(testData.RuntimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, testData.EnvironmentComponent.ComponentId), testData.TaskDefinition.Options.TargetFileName);
+				string outputPath = Path.Combine(testData.RuntimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, testData.EnvironmentComponent.ParentId), testData.TaskDefinition.Options.TargetFileName);
 				string expectedResult = testData.ExpectedResult[machine.MachineName];
 				//testData.FileWriter.Verify(i => i.WriteText(outputPath, expectedResult, false), Times.Once());
 				testData.FileWriter.Verify(i => i.WriteText(outputPath, It.Is<string>(j => CompareXml(expectedResult, j)), false), Times.AtLeastOnce());

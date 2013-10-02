@@ -304,9 +304,9 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.GetEnvironmentList(projectId);
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
 		{
-			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList);
+			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList, configurationList);
 		}
 
 		public DeployEnvironment GetEnvironment(string environmentId)
@@ -314,9 +314,9 @@ namespace Sriracha.Deploy.Data.Impl
 			return this._projectRepository.GetEnvironment(environmentId);
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
 		{
-			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList);
+			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList, configurationList);
 		}
 
 		public void DeleteEnvironment(string environmentId)
@@ -333,7 +333,7 @@ namespace Sriracha.Deploy.Data.Impl
 				machine.ConfigurationValueList = new Dictionary<string,string>();
 			}
 			this.UpdateConfig(machine.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateMachine(machine.Id, machine.ProjectId, machine.EnvironmentId, machine.EnvironmentComponentId, machine.MachineName, machine.ConfigurationValueList);
+			this._projectRepository.UpdateMachine(machine.Id, machine.ProjectId, machine.EnvironmentId, machine.ParentId, machine.MachineName, machine.ConfigurationValueList);
 		}
 
 		private void UpdateConfig(Dictionary<string, string> configList, string configName, string configValue)
@@ -367,7 +367,7 @@ namespace Sriracha.Deploy.Data.Impl
 				component.ConfigurationValueList = new Dictionary<string, string>();
 			}
 			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList);
+			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
 		}
 
 

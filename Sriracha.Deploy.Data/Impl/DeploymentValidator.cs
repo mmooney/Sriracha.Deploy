@@ -16,7 +16,7 @@ namespace Sriracha.Deploy.Data.Impl
 			_taskFactory = taskFactory;
 		}
 
-		public TaskDefinitionValidationResult ValidateTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentComponent environmentComponent)
+		public TaskDefinitionValidationResult ValidateTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentConfiguration environmentComponent)
 		{
 			var result = new TaskDefinitionValidationResult();
 			//Verify Static Values
@@ -80,10 +80,10 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public ComponentConfigurationDefinition GetComponentConfigurationDefinition(DeployComponent component)
+		public ComponentConfigurationDefinition GetComponentConfigurationDefinition(List<DeployStep> deploymentStepList)
 		{
 			var returnValue = new ComponentConfigurationDefinition();
-			foreach (var deploymentStep in component.DeploymentStepList)
+			foreach (var deploymentStep in deploymentStepList)
 			{
 				var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
 				
@@ -96,7 +96,7 @@ namespace Sriracha.Deploy.Data.Impl
 			return returnValue;
 		}
 
-		public TaskDefinitionValidationResult ValidateMachineTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentComponent environmentComponent, DeployMachine machine)
+		public TaskDefinitionValidationResult ValidateMachineTaskDefinition(IDeployTaskDefinition taskDefinition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine)
 		{
 			var result = new TaskDefinitionValidationResult();
 			//Verify Static Values

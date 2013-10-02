@@ -55,7 +55,7 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployConfiguration>("/project/{projectId}/configuration/{id*}")
 				.Add<DeployComponent>("/project/{projectId}/component")
 				.Add<DeployComponent>("/project/{projectId}/component/{id*}")
-				.Add<ComponentConfigurationDefinition>("/project/{projectId}/component/{componentId}/configuration")
+				.Add<ComponentConfigurationDefinition>("/project/{projectId}/{parentType}/{parentId}/configuration")
 				.Add<DeployProjectBranch>("/project/{projectId}/branch")
 				.Add<DeployProjectBranch>("/project/{projectId}/branch/{id*}")
 				.Add<DeployEnvironment>("/project/{projectId}/environment")

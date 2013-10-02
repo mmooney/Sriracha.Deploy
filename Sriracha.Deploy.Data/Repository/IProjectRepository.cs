@@ -66,9 +66,9 @@ namespace Sriracha.Deploy.Data.Repository
 		void DeleteBranch(string branchId);
 
 		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
-		DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentComponent> componentList);
+		DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
 		DeployEnvironment GetEnvironment(string environmentId);
-		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentComponent> componentList);
+		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
 		void DeleteEnvironment(string environmentId);
 
 		DeployMachine GetMachine(string machineId);
