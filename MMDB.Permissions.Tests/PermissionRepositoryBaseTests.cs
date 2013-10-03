@@ -234,5 +234,71 @@ namespace MMDB.Permissions.Tests
 			Assert.Throws<RecordNotFoundException>(()=>sut.DeleteUserPermissionAssignment(Guid.NewGuid().ToString()));
 		}
 
+		[Test]
+		public void CreateGroup()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var group = fixture.Create<PermissionGroup>();
+			group.ParentGroupId = null;
+			var oldGroupList = sut.GetGroupList();
+
+			var result = sut.CreateGroup(group.GroupName, group.ParentGroupId);
+			
+			Assert.IsNotNull(result);
+			Assert.AreEqual(group.GroupName, result.GroupName);
+			Assert.AreEqual(group.ParentGroupId, result.ParentGroupId);
+
+			var newGroupList = sut.GetGroupList();
+			Assert.AreEqual(oldGroupList.Count()+1, newGroupList.Count());
+			var newGroupListItem = newGroupList.SingleOrDefault(i=>i.Id == result.Id);
+			Assert.IsNotNull(newGroupListItem);
+			Assert.AreEqual(group.GroupName, newGroupListItem.GroupName);
+			Assert.AreEqual(group.ParentGroupId, newGroupListItem.ParentGroupId);
+		}
+
+		[Test]
+		public void CreateGroup_WithParent()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var parentGroup = sut.CreateGroup(fixture.Create<string>(), null);
+			var group = fixture.Create<PermissionGroup>();
+			group.ParentGroupId = parentGroup.Id;
+			var oldGroupList = sut.GetGroupList();
+
+			var result = sut.CreateGroup(group.GroupName, group.ParentGroupId);
+			
+			Assert.IsNotNull(result);
+			Assert.AreEqual(group.GroupName, result.GroupName);
+			Assert.AreEqual(group.ParentGroupId, result.ParentGroupId);
+
+			var newGroupList = sut.GetGroupList();
+			Assert.AreEqual(oldGroupList.Count()+1, newGroupList.Count());
+			var newGroupListItem = newGroupList.SingleOrDefault(i=>i.Id == result.Id);
+			Assert.IsNotNull(newGroupListItem);
+			Assert.AreEqual(group.GroupName, newGroupListItem.GroupName);
+			Assert.AreEqual(group.ParentGroupId, newGroupListItem.ParentGroupId);
+		}
+
+		[Test]
+		public void CreateGroup_InvalidParentGroupId_ThrowsArgumentException()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var group = fixture.Create<PermissionGroup>();
+
+			Assert.Throws<ArgumentException>(()=>sut.CreateGroup(group.GroupName, group.ParentGroupId));
+		}
+
+		[Test]
+		public void CreateGroup_DuplicateName_ThrowsArgumentException()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var existingGroup = sut.CreateGroup(fixture.Create<string>(), null);
+
+			Assert.Throws<ArgumentException>(()=>sut.CreateGroup(existingGroup.GroupName, null));
+		}
 	}
 }

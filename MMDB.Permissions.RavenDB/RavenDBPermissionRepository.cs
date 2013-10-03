@@ -145,9 +145,39 @@ namespace MMDB.Permissions.RavenDB
 			return item;
 		}
 
+		public List<PermissionGroup> GetGroupList()
+		{
+			return _session.Query<PermissionGroup>().ToList();
+		}
+
 		public PermissionGroup CreateGroup(string groupName, string parentGroupId)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrEmpty(groupName))
+			{
+				throw new ArgumentNullException("Missing groupName");
+			}
+			var existingItem = _session.Query<PermissionGroup>().FirstOrDefault(i=>i.GroupName == groupName);
+			if(existingItem != null)
+			{
+				throw new ArgumentException(string.Format("Permission Group with name \"{0}\" already exists", groupName));
+			}
+			if(!string.IsNullOrEmpty(parentGroupId))
+			{
+				var parent = _session.Load<PermissionGroup>(parentGroupId);
+				if(parent == null)
+				{
+					throw new ArgumentException("No parent group found for parentGroupId " + parentGroupId);
+				}
+			}
+			var item = new PermissionGroup
+			{
+				Id = Guid.NewGuid().ToString(),
+				GroupName = groupName,
+				ParentGroupId = parentGroupId,
+			};
+			_session.Store(item);
+			_session.SaveChanges();
+			return item;
 		}
 
 		public PermissionGroup DeleteGroup(string groupId)

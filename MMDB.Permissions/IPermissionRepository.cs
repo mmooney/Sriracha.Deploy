@@ -23,6 +23,7 @@ namespace MMDB.Permissions
 		UserPermissionAssignment UpdateUserPermissionAssignment(string userPermissionAssignmentId, EnumPermissionAccess access);
 		UserPermissionAssignment DeleteUserPermissionAssignment(string userPermissionAssignmentId);
 
+		List<PermissionGroup> GetGroupList();
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
 		PermissionGroup DeleteGroup(string groupId);
 		GroupPermissionAssignment CreateGroupPermissionAssignment(string permissionId, string groupId, EnumPermissionAccess enumPermissionAccess);
@@ -30,6 +31,5 @@ namespace MMDB.Permissions
 		GroupPermissionAssignment UpdateGroupPermissionAssignment(string groupPermissionAssignmentId, EnumPermissionAccess access);
 
 		GroupPermissionAssignment DeleteGroupPermissionAssignment(string groupPermissionAssignmentId);
-
 	}
 }
