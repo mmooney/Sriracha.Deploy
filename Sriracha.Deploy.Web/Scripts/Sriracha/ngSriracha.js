@@ -4,7 +4,6 @@ ngSriracha.filter("displayDate", function () {
 	return function (input) {
 		if (input) {
 			var date = new Date(input);
-			console.log(date);
 			return date.toString();
 		}
 	}

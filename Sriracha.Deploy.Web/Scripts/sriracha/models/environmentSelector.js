@@ -73,12 +73,16 @@
 
 	self.build = build;
 	self.project = project;
+	self.component = _.findWhere(project.componentList, { id: build.projectComponentId });
 	self.environment = _.findWhere(project.environmentList, { id: environmentId });
 	self.selectedMachines = {};
 
 	if (self.environment) {
-		if (self.environment.componentList) {
-			self.environmentComponent = _.findWhere(self.environment.componentList, { componentId: self.build.projectComponentId });
+		if (self.component.useConfigurationGroup && self.component.configurationId && self.environment.configurationList) {
+			self.environmentComponent = _.findWhere(self.environment.configurationList, { parentId: self.component.configurationId });
+		}
+		else if (self.environment.componentList) {
+			self.environmentComponent = _.findWhere(self.environment.componentList, { parentId: self.build.projectComponentId });
 		}
 
 		self.validationResult = srirachaResource.validateEnvironment.get({ buildId: self.build.id, environmentId: self.environment.id },
@@ -102,7 +106,7 @@
 				}
 			},
 			function (err) {
-				errorRepoter.handleResourceError(err);
+				self.errorRepoter.handleResourceError(err);
 			});
 	}
 };

@@ -52,7 +52,7 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public DeployEnvironmentConfiguration GetConfigurationItem(string configurationId)
 		{
-			var returnValue = this.GetConfigurationItem(configurationId);
+			var returnValue = this.TryGetConfigurationItem(configurationId);
 			if(returnValue == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployEnvironmentConfiguration), "Id", configurationId);

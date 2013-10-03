@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Impl
 			var validationResult = _validator.ValidateDeployment(project, component, environment);
 			var machineList = new List<DeployMachine>()
 			{
-				_projectRepository.GetMachine(machineId)
+				project.GetMachine(machineId)
 			};
 			return _deployRepository.CreateDeployment(build, branch, environment, component, machineList, deployBatchRequestItemId);
 		}

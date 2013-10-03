@@ -82,7 +82,6 @@
 				};
 				step.id = null;
 				var x = new SrirachaResource.deploymentStep(step);
-				console.log(x)
 				x.$save(
 					saveParams,
 					function () {

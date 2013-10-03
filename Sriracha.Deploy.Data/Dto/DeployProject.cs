@@ -88,7 +88,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public DeployConfiguration GetConfiguration(string configurationId)
 		{
 			var returnValue = this.ConfigurationList.SingleOrDefault(i=>i.Id == configurationId);
-			if(returnValue != null)
+			if(returnValue == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
 			}

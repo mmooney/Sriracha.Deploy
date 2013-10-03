@@ -76,7 +76,7 @@
 				$scope.promoteDeployment.buildsWithNoMachines.push(item);
 			}
 			else {
-				var environmentComponent = _.findWhere(environment.componentList, { componentId: item.build.projectComponentId });
+				var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
 				if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
 					$scope.promoteDeployment.buildsWithNoMachines.push(item);
 				}
@@ -118,7 +118,7 @@
 		_.each($scope.selectedItems, function (item) {
 			var project = _.findWhere($scope.projectList, { id: item.build.projectId });
 			var environment = _.findWhere(project.environmentList, { environmentName: $scope.promoteDeployment.environmentName });
-			var environmentComponent = _.findWhere(environment.componentList, { componentId: item.build.projectComponentId });
+			var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
 			item.machineList = environmentComponent.machineList.slice(0);
 		});
 		$(".promoteBuildDialog").dialog("close");
@@ -193,7 +193,7 @@
 											}
 											var anyItems = _.any(env.componentList,
 												function (x) {
-													return x.componentId == $scope.component.id;
+													return x.parentId == $scope.component.id;
 												}
 											);
 											return anyItems;

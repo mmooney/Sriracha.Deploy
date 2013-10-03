@@ -9,12 +9,10 @@
 	$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
 		if ($routeParams.environmentId && $scope.project.environmentList) {
 			var environment = _.findWhere($scope.project.environmentList, { id: $routeParams.environmentId });
-			console.log(environment);
 			if (environment) {
 				$scope.environment = new SrirachaResource.environment(environment);
 				$scope.environment.componentList = environment.componentList || [];
 				$scope.environment.configurationList = environment.configurationList || [];
-				console.log($scope.environment.configurationList);
 
 				$scope.validateList(environment.componentList, $scope.project.componentList, "Component");
 				$scope.validateList(environment.configurationList, $scope.project.configurationList, "Configuration");
