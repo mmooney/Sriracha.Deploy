@@ -14,7 +14,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployState PopNextDeployment();
 		DeployBatchRequest PopNextBatchDeployment();
 		DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
-		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null);
+		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null);
 		List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId);
 		List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId);
 

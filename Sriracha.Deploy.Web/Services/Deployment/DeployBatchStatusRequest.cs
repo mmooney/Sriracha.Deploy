@@ -11,5 +11,7 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 	[Route("/deployBatchStatus/{id}")]
 	public class DeployBatchStatusRequest : RequestBase<DeployBatchStatus>
 	{
+		public EnumDeployStatus? NewStatus { get; set; }
+		public string StatusMessage { get; set; }
 	}
 }

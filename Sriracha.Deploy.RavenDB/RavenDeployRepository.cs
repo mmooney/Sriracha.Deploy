@@ -153,6 +153,15 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
 		{
+			var deployStateMessage = CreateDeploymentMessage(deployStateId, message);
+			var state = GetDeployState(deployStateId);
+			state.MessageList.Add(deployStateMessage);
+			this._documentSession.SaveChanges();
+			return deployStateMessage;
+		}
+
+		private DeployStateMessage CreateDeploymentMessage(string deployStateId, string message)
+		{
 			var deployStateMessage = new DeployStateMessage
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -161,9 +170,6 @@ namespace Sriracha.Deploy.RavenDB
 				DateTimeUtc = DateTime.UtcNow,
 				MessageUserName = _userIdentity.UserName
 			};
-			var state = GetDeployState(deployStateId);
-			state.MessageList.Add(deployStateMessage);
-			this._documentSession.SaveChanges();
 			return deployStateMessage;
 		}
 
@@ -207,6 +213,23 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status)
 		{
+			switch(status)
+			{
+				case EnumDeployStatus.Unknown:
+					status = EnumDeployStatus.NotStarted;
+					break;
+				case EnumDeployStatus.NotStarted:
+				case EnumDeployStatus.Requested:
+					//OK
+					break;
+				case EnumDeployStatus.Error:
+				case EnumDeployStatus.InProcess:
+				case EnumDeployStatus.Success:
+				case EnumDeployStatus.Warning:
+					throw new ArgumentException(EnumHelper.GetDisplayValue(status) + " is not a valid initial status for a batch deployment request");
+				default:
+					throw new UnknownEnumValueException(status);
+			}
 			foreach(var item in itemList)
 			{
 				item.Id = Guid.NewGuid().ToString();
@@ -264,9 +287,10 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null)
+		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null)
 		{
 			var batchRequest = GetBatchRequest(deployBatchRequestId);
+			var oldStatus = batchRequest.Status;
 			batchRequest.Status = status;
 			switch (status)
 			{
@@ -279,6 +303,12 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				batchRequest.ErrorDetails = err.ToString();
 			}
+			string message = string.Format("{0} changed status from {1} to {2} at {3} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(oldStatus), EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
+			if(!string.IsNullOrEmpty(statusMessage))
+			{
+				message += "  Notes: " + statusMessage;
+			}
+			batchRequest.MessageList.Add(message);
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();

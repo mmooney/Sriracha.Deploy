@@ -69,9 +69,9 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList)
+		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus)
 		{
-			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, EnumDeployStatus.NotStarted);
+			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus);
 		}
 
 		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
@@ -96,6 +96,14 @@ namespace Sriracha.Deploy.Data.Impl
 			//	}
 			//}
 			return status;
+		}
+
+
+		public DeployBatchRequest UpdateDeployBatchStatus(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage)
+		{
+			var item = _deployRepository.GetBatchRequest(deployBatchRequestId);
+			_validator.ValidateStatusTransition(item.Status, newStatus);
+			return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, newStatus, statusMessage:statusMessage);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 		{
 			if(request == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("request is null");
 			}
 			if(string.IsNullOrEmpty(request.Id))
 			{
@@ -31,6 +31,23 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 			{
 				return _deployRequestManager.GetDeployBatchStatus(request.Id);
 			}
+		}
+
+		public object Post(DeployBatchStatusRequest request)
+		{
+			if(request == null)
+			{
+				throw new ArgumentNullException("request is null");
+			}
+			if(string.IsNullOrEmpty(request.Id))
+			{
+				throw new ArgumentNullException("request.Id is null");
+			}
+			if(!request.NewStatus.HasValue)
+			{
+				throw new Exception("request.NewStatus is null");
+			}
+			return _deployRequestManager.UpdateDeployBatchStatus(request.Id, request.NewStatus.Value, request.StatusMessage);
 		}
 	}
 }

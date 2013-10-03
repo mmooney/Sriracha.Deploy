@@ -61,4 +61,69 @@
 		}
 		return "NotStarted";
 	}
+
+	$scope.startApproval = function () {
+		$scope.statusChange = {
+			statusMessage: null,
+			newStatus: "Approved",
+			promptText: "Approver Notes:",
+			buttonText: "Approve"
+		};
+		$(".statusChangeDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
+	}
+
+	$scope.startRejection = function () {
+		$scope.statusChange = {
+			statusMessage: null,
+			newStatus: "Rejected",
+			promptText: "Rejection Notes:",
+			buttonText: "Reject"
+		};
+		$(".statusChangeDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
+	}
+
+	$scope.startBeginDeployment = function () {
+		$scope.statusChange = {
+			statusMessage: null,
+			newStatus: "NotStarted",
+			promptText: "Notes:",
+			buttonText: "Begin Deployment"
+		};
+		$(".statusChangeDialog").dialog({
+			width: 'auto',
+			height: 'auto',
+			modal: true
+		});
+	}
+
+	$scope.completeStatusChange = function () {
+		var saveParams = {
+			id: $routeParams.deployBatchRequestId,
+			newStatus: $scope.statusChange.newStatus,
+			statusMessage: $scope.statusChange.statusMessage
+		};
+		$scope.deployBatchStatus.$save(
+			saveParams,
+			function () {
+				$scope.navigator.deployBatchStatus.go($routeParams.deployBatchRequestId)
+			},
+			function (err) {
+				ErrorReporter.handleResourceError(err);
+			}
+		)
+		$(".statusChangeDialog").dialog("close");
+		$scope.statusChangeNotes = {};
+	}
+	$scope.cancelStatusChange = function () {
+		$(".statusChangeDialog").dialog("close");
+		$scope.statusChange = {};
+	}
 }]);

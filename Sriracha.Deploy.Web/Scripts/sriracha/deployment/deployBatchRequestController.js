@@ -308,6 +308,7 @@
 	$scope.submitBuildRequest = function () {
 		var request = new SrirachaResource.deployBatchRequest();
 		request.itemList = $scope.selectedItems;
+		request.status = "Requested";
 		request.$save(null,
 			function () {
 				$scope.navigator.deployment.batchStatus.go(request.id);
@@ -316,4 +317,5 @@
 				ErrorReporter.handleResourceError(err);
 			});
 	}
+
 }]);

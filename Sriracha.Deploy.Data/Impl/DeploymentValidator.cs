@@ -130,5 +130,11 @@ namespace Sriracha.Deploy.Data.Impl
 
 			return result;
 		}
+
+
+		public void ValidateStatusTransition(EnumDeployStatus oldStatus, EnumDeployStatus newStatus)
+		{
+			//OK
+		}
 	}
 }

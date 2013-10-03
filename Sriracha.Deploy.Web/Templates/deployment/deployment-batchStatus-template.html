@@ -2,7 +2,16 @@
 <table>
 	<tr>
 		<th>Status:</th>
-		<td>{{deployBatchStatus.request.status}}</td>
+		<td>
+			{{deployBatchStatus.request.statusDisplayValue}}
+			<span ng-show="deployBatchStatus.request.status=='Requested' || deployBatchStatus.request.status=='Rejected'">
+				<button class="btn btn-primary" ng-click="startApproval()">Approve</button>
+				<button class="btn btn-danger" ng-click="startRejection()">Reject</button>
+			</span>
+			<span ng-show="deployBatchStatus.request.status=='Approved'">
+				<button class="btn btn-primary" ng-click="startBeginDeployment()">Begin Deployment</button>
+			</span>
+		</td>
 	</tr>
 	<tr>
 		<th>Submitted:</th>
@@ -20,6 +29,10 @@
 <div ng-show="deployBatchStatus.request.errorDetails" class="error">
 	<h3>Error Details: </h3> 
 	<pre>{{deployBatchStatus.request.errorDetails}}</pre>
+</div>
+<div ng-show="deployBatchStatus.request.messageList.length">
+	<h3>Status Messages</h3>
+	<pre ng-repeat="message in deployBatchStatus.request.messageList">{{message}}</pre>
 </div>
 <div ng-repeat="item in deployBatchStatus.request.itemList">
 	<h2>{{item.build.displayValue}}</h2>
@@ -51,4 +64,12 @@
 			</tr>
 		</tbody>
 	</table>
+</div>
+<div class="statusChangeDialog" style="display:none">
+	<div>{{statusChange.promptText}}</div>
+	<div><textarea cols="50" rows="5" ng-model="statusChange.statusMessage" /></div>
+	<div>
+		<button class="btn btn-primary" ng-click="completeStatusChange()">{{statusChange.buttonText}}</button>
+		<button class="btn" ng-click="cancelStatusChange()">Cancel</button>
+	</div>
 </div>
