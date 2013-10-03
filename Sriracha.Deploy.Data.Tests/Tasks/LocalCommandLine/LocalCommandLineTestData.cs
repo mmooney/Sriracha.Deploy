@@ -22,6 +22,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public List<string> MachineParameters { get; set; }
 		public List<string> EnvironmentParameters { get; set; }
 		public string DeployStateId { get; set; }
+		public DeployComponent Component { get; set; }
 		public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
 
 		public static LocalCommandLineTestData Create()
@@ -37,6 +38,10 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				RuntimeSystemSettings = new RuntimeSystemSettings(),
 				ProcessRunner = new Mock<IProcessRunner>(),
 				Validator = new Mock<IDeploymentValidator>(),
+				Component = new DeployComponent
+				{
+					Id = Guid.NewGuid().ToString()
+				},
 				EnvironmentComponent = new DeployEnvironmentConfiguration
 				{
 					ConfigurationValueList = new Dictionary<string,string>

@@ -17,7 +17,7 @@ namespace Sriracha.Deploy.Data.Impl
 			this._deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
 		}
 
-		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			int stepCounter = 0;
 			foreach(var taskDefinition in taskDefinitionList)
@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Data.Impl
 				stepCounter++;
 				statusManager.Info(deployStateId, string.Format("Step {0}: Starting {1}", stepCounter, taskDefinition.TaskDefintionName));
 				var executor = _deployTaskFactory.CreateTaskExecutor(taskDefinition.GetTaskExecutorType());
-				var result = executor.Execute(deployStateId, statusManager, taskDefinition, environmentComponent, machine, runtimeSystemSettings);
+				var result = executor.Execute(deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, runtimeSystemSettings);
 				switch(result.Status)
 				{
 					case EnumDeployTaskExecutionResultStatus.Success:

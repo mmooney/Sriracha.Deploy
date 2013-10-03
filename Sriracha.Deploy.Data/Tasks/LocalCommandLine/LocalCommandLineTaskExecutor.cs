@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			this._validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			var result = new DeployTaskExecutionResult();
@@ -30,19 +30,19 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
+			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, runtimeSystemSettings, validationResult);
 			statusManager.Info(deployStateId, string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
 			var machineResult = validationResult.MachineResultList[machine.Id];
 			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, false);
 			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, true);
 
-			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ParentId);
+			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 
 			statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 			using (var standardOutputWriter = new StringWriter())

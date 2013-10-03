@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			_validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			var result = new DeployTaskExecutionResult();
@@ -30,13 +30,13 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			this.ExecuteMachine(deployStateId, statusManager, definition, environmentComponent, machine, runtimeSystemSettings, validationResult);
+			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, runtimeSystemSettings, validationResult);
 
 			statusManager.Info(deployStateId, string.Format("Done XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.Id];
@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 				}
 				this.UpdateXmlNode(xmlDoc, xpathItem.XPath, value);
 			}
-			string outputDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, environmentComponent.ParentId);
+			string outputDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 			if(!Directory.Exists(outputDirectory))
 			{
 				Directory.CreateDirectory(outputDirectory);

@@ -15,7 +15,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public void ExecuteWithValidConfiguration_CallsProcessRunner()
 		{
 			var testData = LocalCommandLineTestData.Create();
-			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
+			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
 			foreach (var machine in testData.EnvironmentComponent.MachineList)
 			{
 				string expectedParameters = testData.TaskDefinition.Options.ExecutableArguments
@@ -32,7 +32,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		{
 			var testData = LocalCommandLineTestData.Create();
 			testData.EnvironmentComponent.ConfigurationValueList = new Dictionary<string, string>();
-			Assert.Throws<InvalidOperationException>(() => testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings));
+			Assert.Throws<InvalidOperationException>(() => testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings));
 		}
 
 		[Test]
@@ -43,7 +43,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 			testData.TaskDefinition.Options.ExecutableArguments = testData.TaskDefinition.Options.ExecutableArguments.Replace("${env:EnvironmentParameter1}", "${env:sensitive:EnvironmentParameter1}");
 			testData.ParameterParser.Setup(i => i.FindEnvironmentParameters(testData.TaskDefinition.Options.ExecutableArguments)).Returns(testData.EnvironmentParameters);
 			testData.ParameterParser.Setup(i => i.FindMachineParameters(testData.TaskDefinition.Options.ExecutableArguments)).Returns(testData.MachineParameters);
-			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
+			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
 			foreach (var machine in testData.EnvironmentComponent.MachineList)
 			{
 				string expectedParameters = testData.TaskDefinition.Options.ExecutableArguments
@@ -63,7 +63,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 			testData.TaskDefinition.Options.ExecutableArguments = testData.TaskDefinition.Options.ExecutableArguments.Replace("${machine:MachineParameter1}", "${machine:sensitive:MachineParameter1}");
 			testData.ParameterParser.Setup(i => i.FindEnvironmentParameters(testData.TaskDefinition.Options.ExecutableArguments)).Returns(testData.EnvironmentParameters);
 			testData.ParameterParser.Setup(i => i.FindMachineParameters(testData.TaskDefinition.Options.ExecutableArguments)).Returns(testData.MachineParameters);
-			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
+			var result = testData.TaskExecutor.Execute(testData.DeployStateId, testData.StatusManager.Object, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.EnvironmentComponent.MachineList.First(), testData.RuntimeSystemSettings);
 			foreach (var machine in testData.EnvironmentComponent.MachineList)
 			{
 				string expectedParameters = testData.TaskDefinition.Options.ExecutableArguments

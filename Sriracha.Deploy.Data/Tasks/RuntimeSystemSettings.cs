@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Data.Tasks
 			{
 				throw new Exception("Missing LocalDeployDirectory");
 			}
-			return Path.Combine(this.LocalDeployDirectory, machineName, componentId);
+			return Path.Combine(this.LocalDeployDirectory, componentId, machineName);
 		}
 
 		public string GetLocalCompressedPackageDirectory(string componentId)
