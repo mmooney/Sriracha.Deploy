@@ -186,18 +186,34 @@
 			});
 		$scope.environmentList = null;
 		if ($scope.project && $scope.component) {
-			$scope.environmentList = _.filter($scope.project.environmentList,
-										function (env) {
-											if(!env || !env.componentList) {
-												return false;
-											}
-											var anyItems = _.any(env.componentList,
-												function (x) {
-													return x.parentId == $scope.component.id;
+			if ($scope.component.useConfigurationGroup && $scope.component.configurationId) {
+				$scope.environmentList = _.filter($scope.project.environmentList,
+											function (env) {
+												if (!env || !env.configurationList) {
+													return false;
 												}
-											);
-											return anyItems;
-										})
+												var anyItems = _.any(env.configurationList,
+													function (x) {
+														return x.parentId == $scope.component.configurationId;
+													}
+												);
+												return anyItems;
+											});
+			}
+			else {
+				$scope.environmentList = _.filter($scope.project.environmentList,
+											function (env) {
+												if (!env || !env.componentList) {
+													return false;
+												}
+												var anyItems = _.any(env.componentList,
+													function (x) {
+														return x.parentId == $scope.component.id;
+													}
+												);
+												return anyItems;
+											});
+			}
 		}
 		if (selectedEnvironmentId) {
 			$scope.environment = _.findWhere($scope.environmentList, { id: selectedEnvironmentId });
