@@ -113,7 +113,7 @@
 		$scope.deployBatchStatus.$save(
 			saveParams,
 			function () {
-				$scope.navigator.deployBatchStatus.go($routeParams.deployBatchRequestId)
+				$scope.navigator.deployment.batchStatus.go($routeParams.deployBatchRequestId)
 			},
 			function (err) {
 				ErrorReporter.handleResourceError(err);
