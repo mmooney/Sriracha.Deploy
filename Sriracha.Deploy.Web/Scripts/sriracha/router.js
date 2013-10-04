@@ -8,6 +8,11 @@
 			controller: "HomeController"
 		})
 
+		.when(navigator.account.edit.url, {
+			templateUrl: "templates/account/account-edit-template.html",
+			controller: "AccountController"
+		})
+
 		//Projects
 		.when(navigator.project.list.url, {
 			templateUrl: "templates/project/project-list-template.html",

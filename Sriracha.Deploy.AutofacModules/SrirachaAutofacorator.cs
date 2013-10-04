@@ -49,6 +49,8 @@ namespace Sriracha.Deploy.AutofacModules
 				//this.SetupLogging(builder, new ConsoleUserIdentity());
 			}
 
+			builder.RegisterType<AccountSettingsManager>().As<IAccountSettingsManager>();
+
 			builder.RegisterType<ProjectManager>().As<IProjectManager>();
 			builder.RegisterType<BuildManager>().As<IBuildManager>();
 			builder.RegisterType<FileManager>().As<IFileManager>();

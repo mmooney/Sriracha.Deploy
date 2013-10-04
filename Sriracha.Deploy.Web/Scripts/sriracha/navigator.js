@@ -22,6 +22,13 @@
 				go: function () { root.goTo(this.url); }
 			}
 		};
+		root.account = {
+			edit: {
+				url: "/account",
+				clientUrl: function () { return root.getUrl(this.url) },
+				go: function () { return root.goTo(this.url) }
+			},
+		};
 		root.project = {
 			list: {
 				url: "/project",

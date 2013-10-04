@@ -1,58 +1,59 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title</title>
 	@Styles.Render("~/Content/bootstrap")
-    @Scripts.Render("~/bundles/modernizr")
+	@Scripts.Render("~/bundles/modernizr")
 	<style>
 	</style>
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Sriracha Deployment System</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#/project">Projects</a></li>
-              <li><a href="#/build">Builds</a></li>
-              <li><a href="#/deploy/batchList">Deployments</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="#">Sriracha Deployment System</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li class="active"><a href="#">Home</a></li>
+						<li><a href="#/project">Projects</a></li>
+						<li><a href="#/build">Builds</a></li>
+						<li><a href="#/deploy/batchList">Deployments</a></li>
+						<li><a href="#/account">My Settings</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
 	<div style="height:50px">&nbsp;</div>
 	<div class="container" style="min-height:500px">
 
-    @RenderBody()
+		@RenderBody()
 
-    @RenderSection("scripts", required: false)
-    @Scripts.Render("~/bundles/js")
-	@Scripts.Render("~/bundles/bootstrap")
-	@Scripts.Render("~/Scripts/underscore.js")
-	@Scripts.Render("~/Scripts/angular/angular.js")
-	@Scripts.Render("~/Scripts/angular/angular-resource.js")
-	@Scripts.Render("~/Scripts/angular/ng-upload.js")
-	@Scripts.Render("~/Scripts/ace/ace.js")
-	@Scripts.Render("~/Scripts/ace/ui-ace.js")
+		@RenderSection("scripts", required: false)
+		@Scripts.Render("~/bundles/js")
+		@Scripts.Render("~/bundles/bootstrap")
+		@Scripts.Render("~/Scripts/underscore.js")
+		@Scripts.Render("~/Scripts/angular/angular.js")
+		@Scripts.Render("~/Scripts/angular/angular-resource.js")
+		@Scripts.Render("~/Scripts/angular/ng-upload.js")
+		@Scripts.Render("~/Scripts/ace/ace.js")
+		@Scripts.Render("~/Scripts/ace/ui-ace.js")
 
-	@Scripts.Render("~/bundles/sriracha")
-	@Styles.Render("~/Content/sriracha")
-	<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+		@Scripts.Render("~/bundles/sriracha")
+		@Styles.Render("~/Content/sriracha")
+		<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
 	</div>
 	<div class="container">
-      <footer>
-        <p>© MMDB Solutions, LLC 2013</p>
-      </footer>
+		<footer>
+			<p>© MMDB Solutions, LLC 2013</p>
+		</footer>
 	</div>
 </body>
 </html>

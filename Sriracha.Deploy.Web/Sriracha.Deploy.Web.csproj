@@ -193,9 +193,12 @@
     <Compile Include="Helpers\AutofacIocAdapter.cs" />
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\project\projectConfigurationController.js" />
     <Content Include="Scripts\sriracha\project\projectDeploymentStepControlller.js" />
     <Content Include="Scripts\sriracha\project\projectEnvironmentController.js" />
+    <Compile Include="Services\Account\AccountSettingsService.cs" />
+    <Compile Include="Services\Account\AccountSettingsServiceRequest.cs" />
     <Compile Include="Services\BranchService.cs" />
     <Compile Include="Services\BuildService.cs" />
     <Compile Include="Services\ComponentService.cs" />
@@ -370,6 +373,7 @@
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
+    <Content Include="Templates\account\account-edit-template.html" />
     <Content Include="Templates\directives\breadcrumbs.html" />
     <Content Include="Templates\project\branch\branch-edit-template.html" />
     <Content Include="Templates\project\branch\branch-delete-template.html" />

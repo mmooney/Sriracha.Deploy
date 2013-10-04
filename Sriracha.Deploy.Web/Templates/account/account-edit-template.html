@@ -1,0 +1,21 @@
+﻿<h1>Account Settings For {{accountSettings.userName}}</h1>
+
+<h2>User Settings</h2>
+<div>
+	<b>Email Address:</b> <input type="text" name="emailAddress" ng-model="accountSettings.emailAddress"/>
+</div>
+<h2>Project Notifications</h2>
+<table class="table table-striped table-bordered">
+	<tr>
+		<th>Project</th>
+		<th ng-repeat="flag in getNotificationFlags(accountSettings.projectNotificationItemList)">{{flag}}</th>
+	</tr>
+	<tr ng-repeat="pni in accountSettings.projectNotificationItemList">
+		<td>{{pni.projectName}}</td>
+		<td ng-repeat="flag in getNotificationFlags(accountSettings.projectNotificationItemList)">
+			<input type="checkbox" ng-model="pni.flags[flag]"/>
+		</td>
+	</tr>
+</table>
+<div class="alert" ng-hide="accountSettings.emailAddress">Warning: You won't get any email notifications without an email address</div>
+<button class="btn btn-primary" ng-click="saveSettings()">Save</button>

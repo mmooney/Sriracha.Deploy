@@ -78,6 +78,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\Account\AccountSettings.cs" />
+    <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
+    <Compile Include="Dto\Account\ProjectNotificationItem.cs" />
     <Compile Include="Dto\BuildPurgeRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
@@ -98,9 +101,11 @@
     <Compile Include="Dto\ListOptions.cs" />
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="IAccountSettingsManager.cs" />
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
+    <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
     <Compile Include="Impl\RegexResolver.cs" />
@@ -139,6 +144,7 @@
     <Compile Include="ISystemSettings.cs" />
     <Compile Include="IZipper.cs" />
     <Compile Include="JsonExtensions.cs" />
+    <Compile Include="Repository\IAccountSettingsRepository.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
