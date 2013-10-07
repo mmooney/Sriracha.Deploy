@@ -70,6 +70,14 @@ namespace MMDB.Permissions.Tests
 		}
 
 		[Test]
+		public void GetPermission_NoRecord_ThrowsRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.GetPermission(Guid.NewGuid().ToString()));
+		}
+
+		[Test]
 		public void GetPermissionByName()
 		{
 			var sut = this.GetRepository();
@@ -126,6 +134,70 @@ namespace MMDB.Permissions.Tests
 
 			var result = sut.TryGetPermissionByName(permissionName);
 
+			Assert.IsNull(result);
+		}
+
+		[Test]
+		public void DeletePermission()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var existingPermission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var existingList = sut.GetPermissionList();
+
+			var deletedPermission = sut.DeletePermission(existingPermission.Id);
+
+			Assert.IsNotNull(deletedPermission);
+			Assert.AreEqual(existingPermission.Id, deletedPermission.Id);
+			Assert.AreEqual(existingPermission.PermissionName, deletedPermission.PermissionName);
+			Assert.AreEqual(existingPermission.PermissionDisplayValue, deletedPermission.PermissionDisplayValue);
+			Assert.Throws<RecordNotFoundException>(()=>sut.GetPermission(existingPermission.Id));
+			var newList = sut.GetPermissionList();
+			Assert.AreEqual(existingList.Count-1, newList.Count);
+			Assert.IsFalse(newList.Any(i=>i.Id == existingPermission.Id));
+		}
+
+		[Test]
+		public void DeletePermission_NoRecord_ThrowsRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.DeletePermission(Guid.NewGuid().ToString()));
+		}
+
+		[Test]
+		public void DeletePermission_DeletesUserPermissionAssignments()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			string userId = fixture.Create<string>();
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateUserPermissionAssignment(permission.Id, userId, EnumPermissionAccess.Grant);
+
+			var deletedPermission = sut.DeletePermission(permission.Id);
+
+			var result = sut.TryGetUserPermissionAssignment(permission.Id, userId);
+			Assert.IsNull(result);
+		}
+
+		[Test]
+		public void DeletePermission_DeletesGroupPermissionAssignment()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(), null);
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateGroupPermissionAssignment(permission.Id, group.Id, EnumPermissionAccess.Grant);
+
+			var deletedPermission = sut.DeletePermission(permission.Id);
+
+			var result = sut.TryGetGroupPermissionAssignment(permission.Id, group.Id);
 			Assert.IsNull(result);
 		}
 
@@ -300,5 +372,140 @@ namespace MMDB.Permissions.Tests
 
 			Assert.Throws<ArgumentException>(()=>sut.CreateGroup(existingGroup.GroupName, null));
 		}
+
+		[Test]
+		public void DeleteGroup()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var existingGroup = sut.CreateGroup(fixture.Create<string>(), null);
+			var existingList = sut.GetGroupList();
+
+			var deletedGroup = sut.DeleteGroup(existingGroup.Id);
+
+			Assert.IsNotNull(deletedGroup);
+			Assert.AreEqual(existingGroup.Id, deletedGroup.Id);
+			Assert.AreEqual(existingGroup.GroupName, deletedGroup.GroupName);
+			Assert.Throws<RecordNotFoundException>(()=>sut.GetGroup(existingGroup.Id));
+			var newList = sut.GetGroupList();
+			Assert.AreEqual(existingList.Count-1, newList.Count);
+			Assert.IsFalse(newList.Any(i=>i.Id == existingGroup.Id));
+		}
+
+		[Test]
+		public void DeleteGroup_NoRecord_ThrowsRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.DeleteGroup(Guid.NewGuid().ToString()));
+		}
+
+		[Test]
+		public void TryGetGroupPermissionAssignment()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(), null);
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateGroupPermissionAssignment(permission.Id, group.Id, EnumPermissionAccess.Grant);
+
+			var result = sut.TryGetGroupPermissionAssignment(permission.Id, group.Id);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(group.Id, result.GroupId);
+			Assert.AreEqual(EnumPermissionAccess.Grant, result.Access);
+		}
+
+		[Test]
+		public void TryGetGroupPermissionAssignment_NoRecord_ReturnsNull()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(), null);
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+
+			var result = sut.TryGetGroupPermissionAssignment(permission.Id, group.Id);
+
+			Assert.IsNull(result);
+		}
+
+		[Test]
+		public void UpdateGroupPermissionAssignment()
+		{ 
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(), null);
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateGroupPermissionAssignment(permission.Id, group.Id, EnumPermissionAccess.Grant);
+
+			var result = sut.UpdateGroupPermissionAssignment(assignment.Id, EnumPermissionAccess.Deny);
+			var dbItem = sut.TryGetGroupPermissionAssignment(permission.Id, group.Id);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(group.Id, result.GroupId);
+			Assert.AreEqual(EnumPermissionAccess.Deny, result.Access);	
+			
+			Assert.IsNotNull(dbItem);
+			Assert.AreEqual(assignment.Id, dbItem.Id);
+			Assert.AreEqual(permission.Id, dbItem.PermissionId);
+			Assert.AreEqual(group.Id, dbItem.GroupId);
+			Assert.AreEqual(EnumPermissionAccess.Deny, dbItem.Access);	
+		}
+
+		[Test]
+		public void UpdateGroupPermissionAssignment_NoRecord_ThrowRecordNotFoundException()
+		{ 
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.UpdateGroupPermissionAssignment(Guid.NewGuid().ToString(), EnumPermissionAccess.Deny));
+		}
+
+		[Test]
+		public void DeleteGroupPermissionAssignment()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			string permissionName = fixture.Create<string>();
+			string permissionDisplayValue = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(), null);
+			var permission = sut.CreatePermission(permissionName, permissionDisplayValue);
+			var assignment = sut.CreateGroupPermissionAssignment(permission.Id, group.Id, EnumPermissionAccess.Grant);
+
+			var result = sut.DeleteGroupPermissionAssignment(assignment.Id);
+			var dbItem = sut.TryGetGroupPermissionAssignment(permission.Id, group.Id);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(assignment.Id, result.Id);
+			Assert.AreEqual(permission.Id, result.PermissionId);
+			Assert.AreEqual(group.Id, result.GroupId);
+			Assert.AreEqual(EnumPermissionAccess.Grant, result.Access);	
+			
+			Assert.IsNull(dbItem);
+		}
+
+		[Test]
+		public void DeleteGroupPermissionAssignment_NoRecord_ThrowRecordNotFoundException()
+		{
+			var sut = this.GetRepository();
+
+			Assert.Throws<RecordNotFoundException>(()=>sut.DeleteGroupPermissionAssignment(Guid.NewGuid().ToString()));
+		}
+
+		[Test]
+		public void HandlesGroupParents()
+		{
+			Assert.Inconclusive();
+		}
+
 	}
 }
