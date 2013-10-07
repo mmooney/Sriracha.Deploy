@@ -113,6 +113,7 @@ namespace Sriracha.Deploy.Data.Impl
 				//var x = client.Send<DeployFileDto>(deployFile);
 				var fileToUpload = new FileInfo(zipPath);
 				string fileUrl = url + "file";
+				client.Credentials = System.Net.CredentialCache.DefaultCredentials;
 				var fileResponse = client.PostFile<DeployFileDto>(fileUrl, fileToUpload, MimeTypes.GetMimeType(fileToUpload.Name));
 				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, fileResponse.Id, fileResponse.FileStorageId);
 
