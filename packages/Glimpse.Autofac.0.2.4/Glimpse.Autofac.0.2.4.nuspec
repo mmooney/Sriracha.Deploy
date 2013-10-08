@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Glimpse.Autofac</id>
+    <version>0.2.4</version>
+    <title>Glimpse for Autofac</title>
+    <authors>Kristian Hellang</authors>
+    <owners>Kristian Hellang</owners>
+    <licenseUrl>https://raw.github.com/khellang/Glimpse.Autofac/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/khellang/Glimpse.Autofac</projectUrl>
+    <iconUrl>https://raw.github.com/wiki/Glimpse/Glimpse/images/Glimpse512.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A Glimpse plugin to show Autofac registrations and resolutions</description>
+    <releaseNotes>Added Glimpse logo to NuGet package.</releaseNotes>
+    <copyright />
+    <language />
+    <tags>glimpse autofac</tags>
+    <dependencies>
+      <dependency id="Glimpse" version="1.0.0" />
+      <dependency id="Autofac" version="2.6.3.862" />
+    </dependencies>
+  </metadata>
+</package>

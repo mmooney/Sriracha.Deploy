@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Glimpse.Autofac</name>
+    </assembly>
+    <members>
+        <member name="M:Autofac.AutofacGlimpseExtensions.ActivateGlimpse(Autofac.IContainer)">
+            <summary>
+            Activates the glimpse plugin for autofac.
+            </summary>
+            <param name="container">The container to use.</param>
+            <exception cref="T:System.ArgumentNullException">If container is <c>null</c>.</exception>
+        </member>
+    </members>
+</doc>
