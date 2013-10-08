@@ -118,8 +118,15 @@
 		_.each($scope.selectedItems, function (item) {
 			var project = _.findWhere($scope.projectList, { id: item.build.projectId });
 			var environment = _.findWhere(project.environmentList, { environmentName: $scope.promoteDeployment.environmentName });
-			var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
-			item.machineList = environmentComponent.machineList.slice(0);
+			var component = _.findWhere(project.componentList, { id: item.build.projectComponentId });
+			if (component.useConfigurationGroup && component.configurationId) {
+				var environmentComponent = _.findWhere(environment.configurationList, { parentId: component.configurationId });
+				item.machineList = environmentComponent.machineList.slice(0);
+			}
+			else {
+				var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
+				item.machineList = environmentComponent.machineList.slice(0);
+			}
 		});
 		$(".promoteBuildDialog").dialog("close");
 	}
