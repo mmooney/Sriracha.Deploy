@@ -15,5 +15,10 @@ namespace Sriracha.Deploy.Data.Dto
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
+
+		public DeployConfiguration()
+		{
+			this.DeploymentStepList = new List<DeployStep>();
+		}
 	}
 }

@@ -95,15 +95,18 @@ namespace Sriracha.Deploy.Data.Impl
 		public ComponentConfigurationDefinition GetComponentConfigurationDefinition(List<DeployStep> deploymentStepList)
 		{
 			var returnValue = new ComponentConfigurationDefinition();
-			foreach (var deploymentStep in deploymentStepList)
+			if(deploymentStepList != null)
 			{
-				var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
+				foreach (var deploymentStep in deploymentStepList)
+				{
+					var taskDefinition = _taskFactory.CreateTaskDefinition(deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson);
 				
-				var environmentList = taskDefinition.GetEnvironmentTaskParameterList();
-				returnValue.EnvironmentTaskParameterList.AddRange(environmentList);
+					var environmentList = taskDefinition.GetEnvironmentTaskParameterList();
+					returnValue.EnvironmentTaskParameterList.AddRange(environmentList);
 
-				var machineList = taskDefinition.GetMachineTaskParameterList();
-				returnValue.MachineTaskParameterList.AddRange(machineList);
+					var machineList = taskDefinition.GetMachineTaskParameterList();
+					returnValue.MachineTaskParameterList.AddRange(machineList);
+				}
 			}
 			return returnValue;
 		}
