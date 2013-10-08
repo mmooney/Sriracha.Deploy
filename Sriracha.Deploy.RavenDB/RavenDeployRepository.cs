@@ -254,16 +254,43 @@ namespace Sriracha.Deploy.RavenDB
 
 		public List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId)
 		{
+			#if true
 			var list = (from i in _documentSession.Query<DeployState>()
 							where i.DeployBatchRequestItemId == deployBatchRequestItemId
-							select i).ToList();
+							select new DeployStateSummary
+							{
+								Id = i.Id,
+								Branch = i.Branch,
+								Build = i.Build,
+								Component = i.Component,
+								CreatedByUserName = i.CreatedByUserName,
+								CreatedDateTimeUtc = i.CreatedDateTimeUtc,
+								DeployBatchRequestItemId = i.DeployBatchRequestItemId,
+								DeploymentCompleteDateTimeUtc = i.DeploymentCompleteDateTimeUtc,
+								DeploymentStartedDateTimeUtc = i.DeploymentStartedDateTimeUtc,
+								Environment = i.Environment,
+								ErrorDetails = i.ErrorDetails,
+								MachineList = i.MachineList,
+								ProjectId = i.ProjectId,
+								Status = i.Status,
+								SubmittedDateTimeUtc = i.SubmittedDateTimeUtc,
+								UpdatedByUserName = i.UpdatedByUserName,
+								UpdatedDateTimeUtc = i.UpdatedDateTimeUtc,
+								UserName = i.UserName 
+							}).ToList();
+			return list;
+			#else 
+			var list = (from i in _documentSession.Query<DeployState>()
+						where i.DeployBatchRequestItemId == deployBatchRequestItemId
+						select i).ToList();
 			var returnList = new List<DeployStateSummary>();
-			foreach(var dbItem in list)
+			foreach (var dbItem in list)
 			{
 				var returnItem = Mapper.Map(dbItem, new DeployStateSummary());
 				returnList.Add(returnItem);
 			}
 			return returnList;
+			#endif 
 		}
 
 
