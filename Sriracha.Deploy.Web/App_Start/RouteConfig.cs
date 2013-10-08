@@ -15,7 +15,7 @@ namespace Sriracha.Deploy.Web
 			routes.IgnoreRoute("favicon.ico"); 
 			routes.IgnoreRoute("api/{*pathInfo}"); 
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+			routes.IgnoreRoute("mini-profiler-resources/{*pathInfo}");
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",

@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
 							RunInMemory = true,
 							Conventions = new DocumentConvention
 							{
-								DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites,
+								DefaultQueryingConsistency = ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite,
 								MaxNumberOfRequestsPerSession = 3000
 							},
 						};

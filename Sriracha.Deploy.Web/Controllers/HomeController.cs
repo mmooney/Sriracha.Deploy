@@ -13,7 +13,7 @@ namespace Sriracha.Deploy.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+	        return View();
         }
 
 		public Action TestError()

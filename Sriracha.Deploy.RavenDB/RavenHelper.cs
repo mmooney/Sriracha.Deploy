@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.RavenDB
 					ConnectionStringName = "RavenDB",
 					Conventions = new DocumentConvention
 					{
-						DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites,
+						DefaultQueryingConsistency = ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite,
 						ShouldCacheRequest = url => false,
 						MaxNumberOfRequestsPerSession = 3000
 					}
