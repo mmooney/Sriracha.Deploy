@@ -100,12 +100,14 @@
     <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Dto\DeployStateSummary.cs" />
     <Compile Include="Dto\ListOptions.cs" />
+    <Compile Include="Dto\SrirachaUser.cs" />
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IAccountSettingsManager.cs" />
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
+    <Compile Include="IMembershipRepository.cs" />
     <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
