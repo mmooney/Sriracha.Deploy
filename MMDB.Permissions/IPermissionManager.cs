@@ -8,6 +8,7 @@ namespace MMDB.Permissions
 {
 	public interface IPermissionManager
 	{
+		List<PermissionItem> GetPermissionList();
 		PermissionItem CreatePermission(string permissionName, string permissionDisplayValue);
 
 		UserPermissionAssignment AssignPermissionToUser(string permissionId, string userId, EnumPermissionAccess access);
@@ -18,5 +19,9 @@ namespace MMDB.Permissions
 		PermissionGroup DeleteGroup(string groupId);
 		GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access);
 		GroupPermissionAssignment DeletePermissionForGroup(string permissionId, string groupId);
+
+		bool HasPermission(string userId, string permissionId);
+
+		List<EffectivePermissionAssignment> GetEffectiveUserPermissionList(string userId);
 	}
 }

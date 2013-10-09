@@ -502,6 +502,47 @@ namespace MMDB.Permissions.Tests
 		}
 
 		[Test]
+		public void GetUserGroupList_WithoutParents_NoGroups_ReturnsEmptyList()
+		{
+			var sut = this.GetRepository();
+			
+			var result = sut.GetUserGroupList(Guid.NewGuid().ToString(), false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(0, result.Count);
+		}
+
+		[Test]
+		public void GetUserGroupList_WitParents_NoGroups_ReturnsEmptyList()
+		{
+			var sut = this.GetRepository();
+
+			var result = sut.GetUserGroupList(Guid.NewGuid().ToString(), false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(0, result.Count);
+		}
+
+		[Test]
+		public void GetUserGroupList_ReturnsSingleGroup()
+		{
+			var sut = this.GetRepository();
+			var fixture = new Fixture();
+			var userId = fixture.Create<string>();
+			var group = sut.CreateGroup(fixture.Create<string>(),null);
+			var assignment = sut.CreateUserGroupAssignment(userId, group.Id);
+
+			var result = sut.GetUserGroupList(userId, false);
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.Count);
+			Assert.AreEqual(group.Id, result[0].Id);
+			Assert.AreEqual(group.GroupName, result[0].GroupName);
+			Assert.AreEqual(group.ParentGroupId, result[0].ParentGroupId);
+		}
+
+
+		[Test]
 		public void HandlesGroupParents()
 		{
 			Assert.Inconclusive();

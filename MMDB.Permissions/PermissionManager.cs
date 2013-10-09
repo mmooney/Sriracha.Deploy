@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MMDB.Shared;
 
 namespace MMDB.Permissions
 {
@@ -13,6 +14,11 @@ namespace MMDB.Permissions
 		public PermissionManager(IPermissionRepository repository)
 		{
 			_repository = repository;
+		}
+
+		public List<PermissionItem> GetPermissionList()
+		{
+			return _repository.GetPermissionList();
 		}
 
 		public PermissionItem CreatePermission(string permissionName, string permissionDisplayValue)
@@ -144,6 +150,66 @@ namespace MMDB.Permissions
 			{
 				return null;
 			}
+		}
+
+
+		public bool HasPermission(string userId, string permissionId)
+		{
+			if(string.IsNullOrEmpty(userId))
+			{
+				throw new ArgumentNullException("Missing user ID");
+			}
+			if(string.IsNullOrEmpty(permissionId))
+			{
+				throw new ArgumentNullException("Missing permission ID");
+			}
+			var effectivePermissions = this.GetEffectiveUserPermissionList(userId);
+			var effectivePermission = effectivePermissions.FirstOrDefault(i=>i.PermissionId == permissionId);
+			if(effectivePermission == null)
+			{
+				throw new RecordNotFoundException(typeof(EffectivePermissionAssignment), "PermissionId", permissionId);
+			}
+			return effectivePermission.HasPermission;
+		}
+
+		public List<EffectivePermissionAssignment> GetEffectiveUserPermissionList(string userId)
+		{
+			var returnList = new List<EffectivePermissionAssignment>();
+			var permissionList = this.GetPermissionList();
+			foreach(var permission in permissionList)
+			{ 
+				var effectiveItem = new EffectivePermissionAssignment
+				{
+					UserId = userId,
+					PermissionId = permission.Id
+				};
+				effectiveItem.UserPermissionAssignment = _repository.TryGetUserPermissionAssignment(permission.Id, userId);
+				var groupList = _repository.GetUserGroupList(userId, true);
+				foreach(var group in groupList)
+				{
+					var groupPermissionAssignment = _repository.TryGetGroupPermissionAssignment(permission.Id, group.Id);
+					if(groupPermissionAssignment != null)
+					{
+						effectiveItem.GroupPermissionAssignmentList.Add(groupPermissionAssignment);
+					}
+				}
+				if((effectiveItem.UserPermissionAssignment != null && effectiveItem.UserPermissionAssignment.Access == EnumPermissionAccess.Deny)
+						|| effectiveItem.GroupPermissionAssignmentList.Any(i=>i.Access == EnumPermissionAccess.Deny))
+				{
+					effectiveItem.HasPermission = false;
+				}
+				else if((effectiveItem.UserPermissionAssignment != null && effectiveItem.UserPermissionAssignment.Access == EnumPermissionAccess.Grant) 
+						|| effectiveItem.GroupPermissionAssignmentList.Any(i=>i.Access == EnumPermissionAccess.Grant))
+				{
+					effectiveItem.HasPermission = true;
+				}
+				else
+				{
+					effectiveItem.HasPermission = false;
+				}
+				returnList.Add(effectiveItem);
+			}
+			return returnList;
 		}
 	}
 }

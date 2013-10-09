@@ -282,5 +282,56 @@ namespace MMDB.Permissions.RavenDB
 			_session.SaveChanges();
 			return item;
 		}
+
+		public List<PermissionGroup> GetUserGroupList(string userId, bool includeParents)
+		{
+			var returnList = new List<PermissionGroup>();
+			var userGroupAssignmentList = _session.Query<UserGroupAssignment>().Where(i=>i.UserId == userId).ToList();
+			foreach(var userGroupAssignment in userGroupAssignmentList)
+			{
+				var group = this.GetGroup(userGroupAssignment.GroupId);
+				returnList.Add(group);
+			}
+			return returnList;
+		}
+
+
+		public UserGroupAssignment CreateUserGroupAssignment(string userId, string groupId)
+		{
+			if(string.IsNullOrEmpty(userId))
+			{
+				throw new ArgumentNullException("Missing user ID");
+			}
+			if(string.IsNullOrEmpty(groupId))
+			{
+				throw new ArgumentNullException("Missing group ID");
+			}
+			var existingItem = this.TryGetUserGroupAssignment(userId, groupId);
+			if(existingItem != null)
+			{
+				throw new ArgumentException(string.Format("UserGroupAssignment already exists for userID {0} and groupID {1}", userId, groupId));
+			}
+			VerifyGroupExists(groupId);
+			var item = new UserGroupAssignment
+			{
+				Id = Guid.NewGuid().ToString(),
+				GroupId = groupId,
+				UserId = userId
+			};
+			_session.Store(item);
+			_session.SaveChanges();
+			return item;
+		}
+
+		private void VerifyGroupExists(string groupId)
+		{
+			GetGroup(groupId);
+		}
+
+
+		public UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId)
+		{
+			return _session.Query<UserGroupAssignment>().FirstOrDefault(i=>i.UserId == userId && i.GroupId == groupId);
+		}
 	}
 }

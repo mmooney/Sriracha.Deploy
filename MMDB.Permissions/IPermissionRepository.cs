@@ -34,5 +34,9 @@ namespace MMDB.Permissions
 
 		GroupPermissionAssignment DeleteGroupPermissionAssignment(string groupPermissionAssignmentId);
 
+		List<PermissionGroup> GetUserGroupList(string userId, bool includeParents);
+
+		UserGroupAssignment CreateUserGroupAssignment(string userId, string groupId);
+		UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId);
 	}
 }
