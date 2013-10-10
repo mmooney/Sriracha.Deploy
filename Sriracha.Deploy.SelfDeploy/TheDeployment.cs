@@ -62,7 +62,7 @@ namespace Sriracha.Deploy.SelfDeploy
 														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 									   }
 
-									   if(string.IsNullOrEmpty(settings.WebsiteAuthenticationMode))
+									   if(!string.IsNullOrEmpty(settings.WebsiteAuthenticationMode))
 									   {
 										   s.XmlPoke(@"{{TargetWebsitePath}}\web.config")
 														.Set("/configuration/system.web/authentication/@mode", settings.WebsiteAuthenticationMode);
