@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Account;
 
 namespace Sriracha.Deploy.Data
 {
@@ -13,7 +14,7 @@ namespace Sriracha.Deploy.Data
 		SrirachaUser DeleteUser(SrirachaUser user);
 
 		SrirachaUser LoadUserByUserName(string userName);
-		SrirachaUser TryLoadUserByUserName(string userGuid);
+		SrirachaUser TryLoadUserByUserName(string userName);
 		SrirachaUser LoadUserByUserGuid(Guid userGuid);
 		SrirachaUser TryLoadUserByUserGuid(Guid userGuid);
 		SrirachaUser LoadUserByEmailAddress(string emailAddress);

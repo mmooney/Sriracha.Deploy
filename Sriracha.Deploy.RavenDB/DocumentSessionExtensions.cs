@@ -11,7 +11,7 @@ namespace Sriracha.Deploy.RavenDB
 {
 	public static class DocumentSessionExtensions
 	{
-		public static IPagedList<T> QueryPageAndSort<T>(this IDocumentSession documentSession, ListOptions listOptions, string defaultSortField, bool defaultSortAscending = true)
+		public static IPagedList<T> QueryPageAndSort<T>(this IDocumentSession documentSession, ListOptions listOptions, string defaultSortField, bool defaultSortAscending = true, Func<T,bool> filter=null)
 		{
 			listOptions = listOptions ?? new ListOptions();
 			RavenQueryStatistics stats;

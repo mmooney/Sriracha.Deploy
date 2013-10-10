@@ -23,8 +23,6 @@ namespace Sriracha.Deploy.AutofacModules
 					.SingleInstance();
 			builder.Register(context => context.Resolve<IDocumentStore>().OpenSession()).As<IDocumentSession>();
 
-			builder.RegisterType<RavenAccountSettingsRepository>().As<IAccountSettingsRepository>();
-
 			builder.RegisterType<RavenBuildRepository>().As<IBuildRepository>();
 			builder.RegisterType<RavenProjectRepository>().As<IProjectRepository>();
 			builder.RegisterType<RavenFileRepository>().As<IFileRepository>();
@@ -34,6 +32,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenDeployHistoryRepository>().As<IDeployHistoryRepository>();
 			builder.RegisterType<RavenDeployRepository>().As<IDeployRepository>();
 			builder.RegisterType<RavenSystemLogRepository>().As<ISystemLogRepository>();
+			builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
 		}
 	}
 }

@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.AutofacModules
 
 			builder.RegisterType<AutofacDIFactory>().As<IDIFactory>();//.SingleInstance();
 
-			if (HttpContext.Current != null)
+			if (this._diMode == EnumDIMode.Web) // (HttpContext.Current != null)
 			{
 				builder.RegisterType<WebUserIdentity>().As<IUserIdentity>();
 				//this.SetupLogging(builder, new WebUserIdentity());

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Repository;
 
@@ -9,13 +10,13 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class AccountSettingsManager : IAccountSettingsManager
 	{
-		private readonly IAccountSettingsRepository _accountSettingsRepository; 
+		private readonly IMembershipRepository _membershipRepository; 
 		private readonly IProjectRepository _projectRepository;
 		private readonly IUserIdentity _userIdentity;
 
-		public AccountSettingsManager(IAccountSettingsRepository accountSettingsRepository, IProjectRepository projectRepository, IUserIdentity userIdentity)
+		public AccountSettingsManager(IMembershipRepository membershipRepository, IProjectRepository projectRepository, IUserIdentity userIdentity)
 		{
-			_accountSettingsRepository = DIHelper.VerifyParameter(accountSettingsRepository);
+			_membershipRepository = DIHelper.VerifyParameter(membershipRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
@@ -27,25 +28,31 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public AccountSettings GetAccountSettings(string userName)
 		{
-			var settings = _accountSettingsRepository.GetAccountSettings(userName);
-			if(settings == null)
+			var settings = new AccountSettings
 			{
-				settings = new AccountSettings
-				{
-					UserName = userName
-				};
+				UserName = userName
+			};
+			var user = _membershipRepository.TryLoadUserByUserName(userName);
+			if(user != null)
+			{
+				settings.EmailAddress = user.EmailAddress;
+				settings.ProjectNotificationItemList = user.ProjectNotificationItemList;
 			}
-			UpdateNotificationList(settings);
+			if(settings.ProjectNotificationItemList == null)
+			{
+				settings.ProjectNotificationItemList = new List<ProjectNotificationItem>();
+			}
+			UpdateNotificationList(userName, settings.ProjectNotificationItemList);
 			return settings;
 		}
 
-		private void UpdateNotificationList(AccountSettings settings)
+		private void UpdateNotificationList(string userName, List<ProjectNotificationItem> projectNotificationItemList)
 		{
 			var projectList = _projectRepository.GetProjectList();
 			var projectsToAdd = (from p in projectList
-								 where !settings.ProjectNotificationItemList.Select(i => i.ProjectId).Contains(p.Id)
+								 where !projectNotificationItemList.Select(i => i.ProjectId).Contains(p.Id)
 								 select p);
-			var projectsToDeactivate = (from pni in settings.ProjectNotificationItemList
+			var projectsToDeactivate = (from pni in projectNotificationItemList
 										where projectList.Select(i => i.Id).Contains(pni.ProjectId)
 										select pni);
 			foreach (var project in projectsToAdd)
@@ -55,9 +62,9 @@ namespace Sriracha.Deploy.Data.Impl
 					ProjectId = project.Id,
 					ProjectName = project.ProjectName,
 					ProjectInactive = false,
-					UserName = settings.UserName
+					UserName = userName
 				};
-				settings.ProjectNotificationItemList.Add(notificationItem);
+				projectNotificationItemList.Add(notificationItem);
 			}
 			foreach (var pni in projectsToDeactivate)
 			{
@@ -68,10 +75,31 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public AccountSettings UpdateCurrentUserSettings(string emailAddress, List<ProjectNotificationItem> projectNotificationItemList)
 		{
-			var accountSettings = this.GetAccountSettings(_userIdentity.UserName);
-			accountSettings.ProjectNotificationItemList = projectNotificationItemList;
-			UpdateNotificationList(accountSettings);
-			return _accountSettingsRepository.UpdateAccountSettings(_userIdentity.UserName, emailAddress, accountSettings.ProjectNotificationItemList);
+			UpdateNotificationList(_userIdentity.UserName, projectNotificationItemList);
+			var user = _membershipRepository.TryLoadUserByUserName(_userIdentity.UserName);
+			if(user == null)
+			{
+				user = new SrirachaUser
+				{
+					UserGuid = Guid.NewGuid(),
+					UserName = _userIdentity.UserName,
+					EmailAddress = emailAddress,
+					ProjectNotificationItemList = projectNotificationItemList
+				};
+				user = _membershipRepository.CreateUser(user);
+			}
+			else 
+			{
+				user.EmailAddress = emailAddress;
+				user.ProjectNotificationItemList = projectNotificationItemList;
+				user = _membershipRepository.UpdateUser(user);
+			}
+			return new AccountSettings
+			{
+				UserName = user.UserName,
+				EmailAddress = user.EmailAddress,
+				ProjectNotificationItemList = projectNotificationItemList
+			};
 		}
 	}
 }

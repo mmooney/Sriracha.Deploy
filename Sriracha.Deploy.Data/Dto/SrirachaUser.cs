@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto.Account;
 
 namespace Sriracha.Deploy.Data.Dto
 {
@@ -30,5 +31,12 @@ namespace Sriracha.Deploy.Data.Dto
 		public string CreatedByUserName { get; set; }
 		public DateTime ModifiedDateTimeUtc { get; set; }
 		public string ModifiedByUserName { get; set; }
+
+		public List<ProjectNotificationItem> ProjectNotificationItemList { get; set; }
+
+		public SrirachaUser()
+		{
+			this.ProjectNotificationItemList = new List<ProjectNotificationItem>();
+		}
 	}
 }

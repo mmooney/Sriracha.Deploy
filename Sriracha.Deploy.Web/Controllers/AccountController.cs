@@ -8,11 +8,12 @@ using Sriracha.Deploy.Web.Models.Account;
 
 namespace Sriracha.Deploy.Web.Controllers
 {
+	[Authorize]
     public class AccountController : Controller
     {
 		//
 		// GET: /Account/LogOn
-
+		[AllowAnonymous]
 		public ActionResult LogOn()
 		{
 			return View();
@@ -21,6 +22,7 @@ namespace Sriracha.Deploy.Web.Controllers
 		//
 		// POST: /Account/LogOn
 
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult LogOn(LogOnModel model, string returnUrl)
 		{
@@ -61,7 +63,7 @@ namespace Sriracha.Deploy.Web.Controllers
 
 		//
 		// GET: /Account/Register
-
+		[AllowAnonymous]
 		public ActionResult Register()
 		{
 			return View();
@@ -70,6 +72,7 @@ namespace Sriracha.Deploy.Web.Controllers
 		//
 		// POST: /Account/Register
 
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Register(RegisterModel model)
 		{

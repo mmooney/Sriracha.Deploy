@@ -194,7 +194,7 @@ namespace Sriracha.Deploy.Web.Security
 					EmailAddress = email,
 					PasswordQuestion = passwordQuestion,
 					PasswordAnswer = passwordAnswer,
-					UserGuid = (Guid)providerUserKey,
+					UserGuid = (Guid)(providerUserKey ?? Guid.NewGuid()),
 					LastLockoutDateTimeUtc = null,
 					LastLoginDateDateTimeUtc = null,
 					LastPasswordChangedDateTimeUtc = DateTime.UtcNow,
