@@ -10,6 +10,8 @@ using Quartz.Impl;
 using Quartz.Spi;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Notifications;
+using Sriracha.Deploy.Data.Notifications.NotificationImpl;
 using Sriracha.Deploy.Data.ServiceJobs;
 using Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl;
 using Sriracha.Deploy.Data.Tasks;
@@ -60,6 +62,8 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
+			builder.RegisterType<ProjectNotifier>().As<IProjectNotifier>();
+			builder.RegisterType<EmailQueue>().As<IEmailQueue>();
 
 			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
 			builder.RegisterType<ModuleInspector>().As<IModuleInspector>().SingleInstance();

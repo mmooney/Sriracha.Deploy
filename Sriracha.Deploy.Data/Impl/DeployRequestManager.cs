@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PagedList;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 
@@ -15,14 +16,17 @@ namespace Sriracha.Deploy.Data.Impl
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeployRepository _deployRepository;
 		private readonly IDeploymentValidator _validator;
+		private readonly IProjectNotifier _projectNotifier;
 
-		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator)
+		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator, IProjectNotifier projectNotifier)
 		{
-			_buildRepository = buildRepository;
-			_projectRepository = projectRepository;
-			_deployRepository = deployRepository;
-			_validator = validator;
+			_buildRepository = DIHelper.VerifyParameter(buildRepository);
+			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+			_validator = DIHelper.VerifyParameter(validator);
+			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
+
 		public DeployRequestTemplate InitializeDeployRequest(string buildId, string environmentId)
 		{
 			var build = _buildRepository.GetBuild(buildId);
@@ -71,7 +75,9 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus)
 		{
-			return _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus);
+			var request = _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus);
+			_projectNotifier.SendDeployRequestedNotification(request);
+			return request;
 		}
 
 		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)

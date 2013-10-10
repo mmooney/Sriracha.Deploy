@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MMDB.RazorEmail</id>
+    <version>1.0.0.8</version>
+    <title>MMDB.RazorEmail</title>
+    <authors>MMDB Solutions,  LLC</authors>
+    <owners>MMDB Solutions,  LLC</owners>
+    <licenseUrl>https://github.com/mmooney/MMDB.RazorEmail/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/mmooney/MMDB.RazorEmail/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Razor-based SMTP email engine</description>
+    <releaseNotes>Format an object into HTML with Razor and send it via email in one line of code, from any .NET app.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <language />
+    <tags>mvc razor email smtp mmdb</tags>
+    <dependencies>
+      <dependency id="MMDB.Shared" version="2.0.0.15" />
+      <dependency id="RazorEngine" version="2.1" />
+    </dependencies>
+  </metadata>
+</package>

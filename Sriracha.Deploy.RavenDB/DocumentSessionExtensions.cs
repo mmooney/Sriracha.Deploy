@@ -11,13 +11,18 @@ namespace Sriracha.Deploy.RavenDB
 {
 	public static class DocumentSessionExtensions
 	{
-		public static IPagedList<T> QueryPageAndSort<T>(this IDocumentSession documentSession, ListOptions listOptions, string defaultSortField, bool defaultSortAscending = true, Func<T,bool> filter=null)
+		public static IPagedList<T> QueryPageAndSort<T>(this IDocumentSession documentSession, ListOptions listOptions, string defaultSortField, bool defaultSortAscending = true, Func<IDocumentQuery<T>, IDocumentQuery<T>> filterFunc=null)
 		{
 			listOptions = listOptions ?? new ListOptions();
 			RavenQueryStatistics stats;
 			var documentQuery = documentSession.Advanced.LuceneQuery<T>()
 							.Statistics(out stats);
 
+			
+			if(filterFunc != null)
+			{
+				documentQuery = filterFunc(documentQuery);
+			}
 			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, defaultSortField);
 			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(defaultSortAscending);
 			if (listOptions.SortAscending.Value)

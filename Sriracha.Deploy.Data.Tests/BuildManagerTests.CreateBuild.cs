@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Tests
@@ -20,6 +21,7 @@ namespace Sriracha.Deploy.Data.Tests
 				public Mock<IFileRepository> FileRepository { get; set; }
 				public Mock<IBuildRepository> BuildRepository { get; set; }
 				public Mock<IProjectRepository> ProjectRepository { get; set; }
+				public Mock<IProjectNotifier> ProjectNotifier { get; set; }
 				public BuildManager Sut { get; set; }
 				public byte[] FileData { get; set; }
 				public DeployProject DeployProject { get; set; }
@@ -34,6 +36,7 @@ namespace Sriracha.Deploy.Data.Tests
 						FileRepository = new Mock<IFileRepository>(),
 						BuildRepository = new Mock<IBuildRepository>(),
 						ProjectRepository = new Mock<IProjectRepository>(),
+						ProjectNotifier = new Mock<IProjectNotifier>(),
 						FileData = TempTestDataHelper.RandomBytes(1024),
 						DeployFile = new DeployFile
 						{
@@ -88,7 +91,7 @@ namespace Sriracha.Deploy.Data.Tests
 					testData.ProjectRepository.Setup(i => i.GetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
 					testData.ProjectRepository.Setup(i => i.TryGetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
 
-					testData.Sut = new BuildManager(testData.BuildRepository.Object, testData.FileRepository.Object, testData.ProjectRepository.Object);
+					testData.Sut = new BuildManager(testData.BuildRepository.Object, testData.FileRepository.Object, testData.ProjectRepository.Object, testData.ProjectNotifier.Object);
 
 					return testData;
 				}
