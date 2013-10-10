@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>RazorEngine</id>
+    <version>2.1</version>
+    <title>RazorEngine</title>
+    <authors>Matthew Abbott,  Ben Dornis</authors>
+    <owners>Matthew Abbott,  Ben Dornis</owners>
+    <licenseUrl>http://razorengine.codeplex.com/license</licenseUrl>
+    <projectUrl>http://razorengine.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A templating engine built upon Microsoft's Razor parsing technology. RazorEngine allows you to use Razor syntax to build robust templates.</description>
+    <summary>A templating engine built upon Microsoft's Razor parsing technology. RazorEngine allows you to use Razor syntax to build robust templates.</summary>
+    <tags>razor razorengine templating</tags>
+  </metadata>
+</package>

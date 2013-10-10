@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using MMDB.Shared;
 using Raven.Client;
+using Raven.Client.Linq;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -118,26 +121,43 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<SrirachaUser>().Any(i=>i.EmailAddress == email);
 		}
 
-		public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions)
+		public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter = null)
 		{
-			var pagedList = _documentSession.QueryPageAndSort<SrirachaUser>(listOptions, "UserName", false);
+			var query = GetQuery(filter);
+			PagedList.IPagedList<SrirachaUser> pagedList;
+			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, "UserName");
+			switch(listOptions.SortField)
+			{
+				case "UserName":
+					pagedList = query.PageAndSort(listOptions, i=>i.UserName);
+					break;
+				case "EmailAddress":
+					pagedList = query.PageAndSort(listOptions, i=>i.EmailAddress);
+					break;
+				default:
+					throw new Exception("Unsupported sort field " + listOptions.SortField);
+			}
 			return new PagedSortedList<SrirachaUser>(pagedList, listOptions.SortField, listOptions.SortAscending.Value );
 		}
 
-		public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, Func<SrirachaUser, bool> filter)
+		public int GetUserCount(Expression<Func<SrirachaUser, bool>> filter=null)
 		{
-			var pagedList = _documentSession.QueryPageAndSort<SrirachaUser>(listOptions, "UserName", false, filter);
-			return new PagedSortedList<SrirachaUser>(pagedList, listOptions.SortField, listOptions.SortAscending.Value );
+			return GetQuery(filter).Count();
 		}
 
-		public int GetUserCount()
+		private IRavenQueryable<SrirachaUser> GetQuery(Expression<Func<SrirachaUser, bool>> filter)
 		{
-			return _documentSession.Query<SrirachaUser>().Count();
+			var query = _documentSession.Query<SrirachaUser>();
+			var tempQuery = query.Where(i=>i.ProjectNotificationItemList.Any(j=>j.ProjectId == "6a6c40ce-f8bc-4c84-b327-e0417b7ad571" && j.Flags.DeployRequested));
+			if (filter != null)
+			{
+				return query.Where(filter);
+			}
+			else
+			{
+				return query;
+			}
 		}
 
-		public int GetUserCount(Func<SrirachaUser, bool> filter)
-		{
-			return _documentSession.Query<SrirachaUser>().Count(filter);
-		}
 	}
 }

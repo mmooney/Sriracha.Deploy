@@ -17,11 +17,19 @@ namespace Sriracha.Deploy.RavenDB
 			RavenQueryStatistics stats;
 			int pageNumber = listOptions.PageNumber.GetValueOrDefault(1);
 			int pageSize = listOptions.PageSize.GetValueOrDefault(20);
-			var resultQuery = query
-						.Statistics(out stats)
-						.Skip((pageNumber- 1) * pageSize)
-						.OrderBy(sortSelector)
-						.Take(pageSize);
+			var startingQuery = query
+						.Statistics(out stats);
+			IRavenQueryable<T> sortedQuery;
+			if(listOptions.SortAscending.GetValueOrDefault())
+			{
+				sortedQuery = startingQuery.OrderBy(sortSelector);
+			}
+			else 
+			{
+				sortedQuery = startingQuery.OrderBy(sortSelector);
+			}
+			var resultQuery = sortedQuery.Skip((pageNumber - 1) * pageSize)
+											.Take(pageSize);
 			return new StaticPagedList<T>(query.ToList(), pageSize, pageNumber, stats.TotalResults);
 		}
 	}

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 
-namespace Sriracha.Deploy.Data
+namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IMembershipRepository
 	{
@@ -24,9 +25,7 @@ namespace Sriracha.Deploy.Data
 
 		bool EmailAddressExists(string email);
 
-		PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions);
-		PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, Func<SrirachaUser, bool> filter);
-		int GetUserCount();
-		int GetUserCount(Func<SrirachaUser, bool> filter);
+		PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter = null);
+		int GetUserCount(Expression<Func<SrirachaUser, bool>> filter = null);
 	}
 }

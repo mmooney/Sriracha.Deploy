@@ -82,9 +82,11 @@
     <Compile Include="RavenFileStorage_Attachment.cs" />
     <Compile Include="RavenFileStorage_Collection.cs" />
     <Compile Include="RavenHelper.cs" />
+    <Compile Include="RavenEmailQueueRepository.cs" />
     <Compile Include="RavenMembershipRepository.cs" />
     <Compile Include="RavenProjectRepository.cs" />
     <Compile Include="RavenQueryExtensions.cs" />
+    <Compile Include="RavenRazorTemplateRepository.cs" />
     <Compile Include="RavenSystemLogRepository.cs" />
   </ItemGroup>
   <ItemGroup>

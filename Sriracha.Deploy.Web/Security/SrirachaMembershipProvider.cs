@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Web.Security
 {

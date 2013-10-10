@@ -41,6 +41,9 @@
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
+    <Reference Include="MMDB.RazorEmail">
+      <HintPath>..\packages\MMDB.RazorEmail.1.0.0.8\lib\net40\MMDB.RazorEmail.dll</HintPath>
+    </Reference>
     <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
@@ -58,6 +61,9 @@
     <Reference Include="Quartz">
       <HintPath>..\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\packages\RazorEngine.2.1\lib\.NetFramework 4.0\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Common, Version=3.9.58.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.Common.3.9.58\lib\net35\ServiceStack.Common.dll</HintPath>
@@ -72,6 +78,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\RazorEngine.2.1\lib\.NetFramework 4.0\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -100,7 +110,10 @@
     <Compile Include="Dto\DeployState.cs" />
     <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Dto\DeployStateSummary.cs" />
+    <Compile Include="Dto\MembershipRepositoryFilters.cs" />
+    <Compile Include="Dto\SrirachaEmailMessage.cs" />
     <Compile Include="Dto\ListOptions.cs" />
+    <Compile Include="Dto\RazorTemplate.cs" />
     <Compile Include="Dto\SrirachaUser.cs" />
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
@@ -108,11 +121,15 @@
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
-    <Compile Include="IMembershipRepository.cs" />
+    <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />
     <Compile Include="Impl\DataGenerator.cs" />
+    <Compile Include="Notifications\IEmailQueue.cs" />
+    <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
+    <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
     <Compile Include="Impl\RegexResolver.cs" />
+    <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="IRegexResolver.cs" />
     <Compile Include="IUserIdentity.cs" />
     <Compile Include="Dto\PagedSortedList.cs" />
@@ -150,6 +167,8 @@
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
+    <Compile Include="Repository\IEmailQueueRepository.cs" />
+    <Compile Include="Repository\IRazorTemplateRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
     <Compile Include="ServiceJobs\IJobScheduler.cs" />
     <Compile Include="ServiceJobs\IPurgeBuildJob.cs" />
@@ -163,6 +182,11 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\PurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunBatchDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunDeploymentJob.cs" />
+    <Compile Include="SrirachaResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SrirachaResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tasks\BaseDeployTaskDefinition.cs" />
     <Compile Include="DIHelper.cs" />
     <Compile Include="Dto\DeployComponent.cs" />
@@ -210,6 +234,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\DeployRequestedEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SrirachaResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SrirachaResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BuildPublishEmail.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

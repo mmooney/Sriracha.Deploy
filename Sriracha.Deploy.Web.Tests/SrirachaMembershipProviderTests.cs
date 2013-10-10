@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration.Provider;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using System.Web.Helpers;
 using System.Web.Security;
 using MMDB.Shared;
 using Moq;
 using NUnit.Framework;
-using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Web.Security;
 
 namespace Sriracha.Deploy.Web.Tests
@@ -415,7 +413,7 @@ namespace Sriracha.Deploy.Web.Tests
 				string emailToMatch = "test1@example.com";
 				var matchedList = userList.Where(i=>i.EmailAddress.Contains(emailToMatch));
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(matchedList,  1, int.MaxValue, matchedList.Count()), string.Empty, true);
-				testData.Repository.Setup(i=>i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Func<SrirachaUser, bool>>())).Returns(pagedList);
+				testData.Repository.Setup(i => i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;
@@ -445,7 +443,7 @@ namespace Sriracha.Deploy.Web.Tests
 				string userNameToMatch = "test1";
 				var matchedList = userList.Where(i=>i.EmailAddress.Contains(userNameToMatch));
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(matchedList,  1, int.MaxValue, matchedList.Count()), string.Empty, true);
-				testData.Repository.Setup(i=>i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Func<SrirachaUser, bool>>())).Returns(pagedList);
+				testData.Repository.Setup(i => i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;
@@ -473,7 +471,7 @@ namespace Sriracha.Deploy.Web.Tests
 					new SrirachaUser { UserName="test5", EmailAddress = "test5@example.com" },
 				};
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(userList,  1, int.MaxValue, userList.Count()), string.Empty, true);
-				testData.Repository.Setup(i => i.GetUserList(It.Is<ListOptions>(j=>j.PageNumber==1 && j.PageSize==10))).Returns(pagedList);
+				testData.Repository.Setup(i => i.GetUserList(It.Is<ListOptions>(j=>j.PageNumber==1 && j.PageSize==10), null)).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;
@@ -497,7 +495,7 @@ namespace Sriracha.Deploy.Web.Tests
 			public void ShouldReturnListOfUsersWhoseLastActivityDateWas15MinutesAgo()
 			{
 				var testData = UserTestData.Setup(false);
-				testData.Repository.Setup(i=>i.GetUserCount(It.IsAny<Func<SrirachaUser,bool>>())).Returns(10);
+				testData.Repository.Setup(i => i.GetUserCount(It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(10);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int userCount = provider.GetNumberOfUsersOnline();

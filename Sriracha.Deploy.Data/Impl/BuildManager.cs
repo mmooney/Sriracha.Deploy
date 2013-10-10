@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Impl
@@ -12,12 +13,14 @@ namespace Sriracha.Deploy.Data.Impl
 		private readonly IFileRepository _fileRepository;
 		private readonly IBuildRepository _buildRepository;
 		private readonly IProjectRepository _projectRepository;
+		private readonly IProjectNotifier _projectNotifier;
 
-		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository)
+		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository, IProjectNotifier projectNotifier)
 		{
 			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
 			this._buildRepository = DIHelper.VerifyParameter(buildRepository);
 			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
+			this._projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
 
 		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
@@ -40,7 +43,9 @@ namespace Sriracha.Deploy.Data.Impl
 			var branch = _projectRepository.GetBranch(project, branchId);
 			var component = _projectRepository.GetComponent(project, componentId);
 			var file = this._fileRepository.CreateFile(fileName, fileData);
-			return this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
+			var build = this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
+			//_projectNotifier.SendBuildPublishedNotification(project, build);
+			return build;
 		}
 
 		public DeployBuild GetBuild(string buildId)
