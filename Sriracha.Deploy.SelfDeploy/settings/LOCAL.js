@@ -4,6 +4,7 @@
 	WebUserName: "NT AUTHORITY\\NETWORK SERVICE",
 	VirtualDirectorySite: "Sriracha",
 	VirtualDirectoryName: "",
+	WebsiteAuthenticationMode: "Windows",
 	RavenDBConnectionString: "Url=http://localhost:8080;Database=SrirachaDeployTest",
 	ApplicationPoolName: "SrirachaAppPool",
 

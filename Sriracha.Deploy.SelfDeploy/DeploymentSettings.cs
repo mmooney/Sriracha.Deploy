@@ -32,6 +32,7 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string VirtualDirectoryName { get; set; }
 		public string RavenDBConnectionString { get; set; }
 		public string ApplicationPoolName { get; set; }
+		public string WebsiteAuthenticationMode { get; set; }
 		//#region Properties
 
 		////service info
@@ -61,5 +62,6 @@ namespace Sriracha.Deploy.SelfDeploy
 		//public RoundhousEMode RoundhousEMode { get; set; }
 
 		//#endregion
-    }
+
+	}
 }
