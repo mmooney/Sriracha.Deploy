@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
@@ -28,13 +29,21 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			dbUser.Id = FormatId(dbUser.UserName);
 			_documentSession.Store(dbUser);
-			_documentSession.SaveChanges();
+			try 
+			{
+				_documentSession.SaveChanges();
+			}
+			catch(Exception err)
+			{
+				Debug.WriteLine(err.ToString());
+				throw;
+			}
 			return dbUser;
 		}
 
 		private string FormatId(string userName)
 		{
-			return "SrirachaUser_" + userName;
+			return "SrirachaUser_" + userName.Replace('\\','_');
 		}
 
 		public SrirachaUser UpdateUser(SrirachaUser user)
