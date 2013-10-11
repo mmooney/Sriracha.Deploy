@@ -23,19 +23,22 @@ namespace Sriracha.Deploy.SelfDeploy
 {
     public class DeploymentSettings : DropkickConfiguration
     {
-		//web stuff
+		//General Config
+		public string RavenDBConnectionString { get; set; }
+		public string EmailConnectionString { get; set; }
+		public string SiteUrl { get; set; }
+
+		//Web
 		public string SourceWebsitePath { get; set; }
 		public string TargetWebsitePath{ get; set; }
 		public string WebUserName { get; set; }
-		//public string WebUserPassword { get; set; }
 		public string VirtualDirectorySite { get; set; }
 		public string VirtualDirectoryName { get; set; }
-		public string RavenDBConnectionString { get; set; }
 		public string ApplicationPoolName { get; set; }
 		public string WebsiteAuthenticationMode { get; set; }
 		//#region Properties
 
-		////service info
+		//Service 
 		public ServiceStartMode ServiceStartMode { get; set; }
 		public string ServiceUserName { get; set; }
 		public string ServiceUserPassword { get; set; }
@@ -45,23 +48,9 @@ namespace Sriracha.Deploy.SelfDeploy
 		public bool AutoStartService { get; set; }
 		public string ServiceExeName { get; set; }
 
-		//Command Line Stuff
+		//Command Line 
 		public string SourceCommandLinePath { get; set; }
 		public string TargetCommandLinePath { get; set; }
 		public string CommandLineExeName { get; set; }
-		//public string WebUserName { get; set; }
-		//public string WebUserPassword { get; set; }
-		//public string VirtualDirectorySite { get; set; }
-		//public string VirtualDirectoryName { get; set; }
-        
-		////database stuff 
-		//public string DbName { get; set; }
-		//public string DbSqlFilesPath { get; set; }
-		//public string DbRestorePath { get; set; }
-		//public DatabaseRecoveryMode DbRecoveryMode { get; set; }
-		//public RoundhousEMode RoundhousEMode { get; set; }
-
-		//#endregion
-
 	}
 }

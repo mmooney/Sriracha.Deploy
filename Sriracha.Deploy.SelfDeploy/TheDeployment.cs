@@ -1,3 +1,4 @@
+using System;
 //ReSharper disable ConvertToLambdaExpression
 // ==============================================================================
 // 
@@ -28,141 +29,162 @@ using dropkick.Wmi;
 
 namespace Sriracha.Deploy.SelfDeploy
 {
-    public class TheDeployment : Deployment<TheDeployment, DeploymentSettings>
-    {
-        #region Constructors
+	public class TheDeployment : Deployment<TheDeployment, DeploymentSettings>
+	{
+		#region Constructors
 
-        public TheDeployment()
-        {
+		public TheDeployment()
+		{
 			Define(settings =>
 			{
-			//	DeploymentStepsFor(Db,
-			//					   s =>
-			//					   {
-			//						   s.RoundhousE()
-			//							   .ForEnvironment(settings.Environment)
-			//							   .OnDatabase(settings.DbName)
-			//							   .WithScriptsFolder(settings.DbSqlFilesPath)
-			//							   .WithDatabaseRecoveryMode(settings.DbRecoveryMode)
-			//							   .WithRestorePath(settings.DbRestorePath)
-			//							   .WithRepositoryPath("__REPLACE_ME__")
-			//							   .WithVersionFile("_BuildInfo.xml")
-			//							   .WithRoundhousEMode(settings.RoundhousEMode)
-			//							   ;
-			//					   });
+				//	DeploymentStepsFor(Db,
+				//					   s =>
+				//					   {
+				//						   s.RoundhousE()
+				//							   .ForEnvironment(settings.Environment)
+				//							   .OnDatabase(settings.DbName)
+				//							   .WithScriptsFolder(settings.DbSqlFilesPath)
+				//							   .WithDatabaseRecoveryMode(settings.DbRecoveryMode)
+				//							   .WithRestorePath(settings.DbRestorePath)
+				//							   .WithRepositoryPath("__REPLACE_ME__")
+				//							   .WithVersionFile("_BuildInfo.xml")
+				//							   .WithRoundhousEMode(settings.RoundhousEMode)
+				//							   ;
+				//					   });
 
-                DeploymentStepsFor(Web,
-                                   s =>
-                                   {
-                                       s.CopyDirectory(settings.SourceWebsitePath).To(@"{{TargetWebsitePath}}").DeleteDestinationBeforeDeploying();
+				DeploymentStepsFor(Web,
+									s =>
+									{
+										ValidateSettings(settings);
+										s.CopyDirectory(settings.SourceWebsitePath).To(@"{{TargetWebsitePath}}").DeleteDestinationBeforeDeploying();
 
-									   if(!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
-									   {
-										   s.XmlPoke(@"{{TargetWebsitePath}}\web.config")
-														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
-									   }
+										ApplySettings(s, settings, @"{{TargetWebsitePath}}\web.config");
+										s.Security(securityOptions =>
+										{
+											securityOptions.ForPath(settings.TargetWebsitePath, fileSecurityConfig => fileSecurityConfig.GrantRead(settings.WebUserName));
+											////securityOptions.ForPath(Path.Combine(settings.WebsitePath, "logs"), fs => fs.GrantReadWrite(settings.WebUserName));
+											//securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
+											//if (Directory.Exists(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files"))
+											//{
+											//	securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
+											//}
+										});
+									});
 
-									   if(!string.IsNullOrEmpty(settings.WebsiteAuthenticationMode))
-									   {
-										   s.XmlPoke(@"{{TargetWebsitePath}}\web.config")
-														.Set("/configuration/system.web/authentication/@mode", settings.WebsiteAuthenticationMode);
-									   }
-
-                                       s.Security(securityOptions =>
-                                       {
-                                           securityOptions.ForPath(settings.TargetWebsitePath, fileSecurityConfig => fileSecurityConfig.GrantRead(settings.WebUserName));
-										   ////securityOptions.ForPath(Path.Combine(settings.WebsitePath, "logs"), fs => fs.GrantReadWrite(settings.WebUserName));
-										   //securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
-										   //if (Directory.Exists(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files"))
-										   //{
-										   //	securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
-										   //}
-                                       });
-                                   });
-
-                DeploymentStepsFor(VirtualDirectory,
+				DeploymentStepsFor(VirtualDirectory,
 									s =>
 									{
 										string appPoolName = settings.ApplicationPoolName;
-										if(string.IsNullOrWhiteSpace(appPoolName))
+										if (string.IsNullOrWhiteSpace(appPoolName))
 										{
 											appPoolName = settings.VirtualDirectorySite;
 										}
-                                       s.Iis7Site(settings.VirtualDirectorySite)
-                                        .VirtualDirectory(settings.VirtualDirectoryName)
-                                        .SetAppPoolTo(appPoolName, pool =>
-                                                        {
-                                                            pool.SetRuntimeToV4();
-                                                            //pool.UseClassicPipeline();
-                                                            //pool.Enable32BitAppOnWin64();
-                                                        }).SetPathTo(@"{{TargetWebsitePath}}");
-                                   });
+										s.Iis7Site(settings.VirtualDirectorySite)
+										 .VirtualDirectory(settings.VirtualDirectoryName)
+										 .SetAppPoolTo(appPoolName, pool =>
+														 {
+															 pool.SetRuntimeToV4();
+															 //pool.UseClassicPipeline();
+															 //pool.Enable32BitAppOnWin64();
+														 }).SetPathTo(@"{{TargetWebsitePath}}");
+									});
 
 				DeploymentStepsFor(Host,
-								   s =>
-								   {
-									   var serviceName = settings.ServiceName;
-									   s.WinService(serviceName).Stop();
+									s =>
+									{
+										ValidateSettings(settings);
+										var serviceName = settings.ServiceName;
+										s.WinService(serviceName).Stop();
 
-									   s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
+										s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
 
-									   ////s.CopyFile(@"..\environment.files\{{Environment}}\{{Environment}}.__REPLACE_ME__.exe.config").ToDirectory(@"{{HostServicePath}}").RenameTo(@"__REPLACE_ME__.exe.config");
+										ApplySettings(s, settings, @"{{ServiceTargetPath}}\{{ServiceExeName}}.config");
 
-									   s.Security(o =>
-									   {
-										   o.LocalPolicy(lp =>
-										   {
-											   lp.LogOnAsService(settings.ServiceUserName);
-											   lp.LogOnAsBatch(settings.ServiceUserName);
-										   });
+										s.Security(o =>
+										{
+											o.LocalPolicy(lp =>
+											{
+												lp.LogOnAsService(settings.ServiceUserName);
+												lp.LogOnAsBatch(settings.ServiceUserName);
+											});
 
-										   o.ForPath(settings.ServiceTargetPath, fs => fs.GrantRead(settings.ServiceUserName));
-										   //o.ForPath(Path.Combine(settings.ServiceTargetPath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
-									   });
+											o.ForPath(settings.ServiceTargetPath, fs => fs.GrantRead(settings.ServiceUserName));
+											//o.ForPath(Path.Combine(settings.ServiceTargetPath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
+										});
 
-									   s.XmlPoke(@"{{ServiceTargetPath}}\{{ServiceExeName}}.config")
+										s.XmlPoke(@"{{ServiceTargetPath}}\{{ServiceExeName}}.config")
 														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 
-									   s.WinService(serviceName).Delete();
-									   s.WinService(serviceName).Create()
+										s.WinService(serviceName).Delete();
+										s.WinService(serviceName).Create()
 											.WithCredentials(settings.ServiceUserName, settings.ServiceUserPassword)
-										   //.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
+											//.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
 											.WithServicePath(@"{{ServiceTargetPath}}\{{ServiceExeName}}")
 											.WithDisplayName(serviceName)
 											.WithStartMode(settings.ServiceStartMode)
-										   //.AddDependency("MSMQ")
-										   ;
+											//.AddDependency("MSMQ")
+											;
 
-									   if (settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
-									   {
-										   if (settings.AutoStartService)
-										   {
-											   s.WinService(serviceName).Start();
-										   }
-									   }
-								   });
+										if (settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
+										{
+											if (settings.AutoStartService)
+											{
+												s.WinService(serviceName).Start();
+											}
+										}
+									});
 				DeploymentStepsFor(CommandLine,
-								   s =>
-								   {
+									s =>
+									{
+										this.ValidateSettings(settings);
 									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").DeleteDestinationBeforeDeploying();
 
-									   s.XmlPoke(@"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config")
-														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
+									   this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
 								   });
 			});
-        }
+		}
 
-        #endregion
+		private void ApplySettings(ProtoServer s, DeploymentSettings settings, string configPath)
+		{
+			s.XmlPoke(configPath).Set("/configuration/connectionStrings[@name='Email']/@connectionString", settings.EmailConnectionString);
+			s.XmlPoke(configPath).Set("/configuration/appSettings[@key='SiteUrl']/@value", settings.SiteUrl);
+			if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
+			{
+				s.XmlPoke(configPath)
+					.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
+			}
 
-        #region Properties
+			if (!string.IsNullOrEmpty(settings.WebsiteAuthenticationMode))
+			{
+				s.XmlPoke(configPath)
+							 .Set("/configuration/system.web/authentication/@mode", settings.WebsiteAuthenticationMode);
+			}
 
-        //order is important
+		}
+
+		private void ValidateSettings(DeploymentSettings settings)
+		{
+			if (string.IsNullOrEmpty(settings.EmailConnectionString))
+			{
+				throw new Exception("Missing EmailConnectionString");
+			}
+			if (string.IsNullOrEmpty(settings.SiteUrl))
+			{
+				throw new Exception("Missing SiteUrl");
+			}
+		}
+
+		#endregion
+
+		#region Properties
+
+		//order is important
 		//public static Role Db { get; set; }
-        public static Role Web { get; set; }
-        public static Role VirtualDirectory { get; set; }
+		public static Role Web { get; set; }
+		public static Role VirtualDirectory { get; set; }
 		public static Role Host { get; set; }
 		public static Role CommandLine { get; set; }
 
-        #endregion
-    }
+		#endregion
+	}
 }

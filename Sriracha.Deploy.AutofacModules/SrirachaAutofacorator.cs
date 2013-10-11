@@ -80,6 +80,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployComponentRunner>().As<IDeployComponentRunner>();
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();
 			builder.RegisterType<DeploymentValidator>().As<IDeploymentValidator>().SingleInstance();
+			builder.RegisterType<UrlGenerator>().As<IUrlGenerator>().SingleInstance();
 
 			builder.RegisterType<DataGenerator>().As<IDataGenerator>();
 

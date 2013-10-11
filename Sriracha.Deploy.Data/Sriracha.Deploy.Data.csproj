@@ -77,6 +77,7 @@
       <HintPath>..\packages\ServiceStack.Text.3.9.58\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -123,6 +124,8 @@
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Impl\BuildParameterEvaluator.cs" />
+    <Compile Include="Impl\UrlGenerator.cs" />
+    <Compile Include="IUrlGenerator.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />

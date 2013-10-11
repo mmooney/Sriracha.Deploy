@@ -14,12 +14,14 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 		private readonly IMembershipRepository _membershipRepository;
 		private readonly IEmailQueue _emailQueue;
 		private readonly IRazorTemplateRepository _razorTemplateRepository;
+		private readonly IUrlGenerator _urlGenerator;
 
-		public ProjectNotifier(IMembershipRepository membershipRepository, IEmailQueue emailQueue, IRazorTemplateRepository razorTemplateRepository)
+		public ProjectNotifier(IMembershipRepository membershipRepository, IEmailQueue emailQueue, IRazorTemplateRepository razorTemplateRepository, IUrlGenerator urlGenerator)
 		{
 			_membershipRepository = DIHelper.VerifyParameter(membershipRepository);
 			_emailQueue = DIHelper.VerifyParameter(emailQueue);
 			_razorTemplateRepository = DIHelper.VerifyParameter(razorTemplateRepository);
+			_urlGenerator = DIHelper.VerifyParameter(urlGenerator);
 		}
 
 		private List<string> GetNotificationEmailAddresses(string projectId, Func<ProjectNotificationFlags, bool> flagsFilter)
@@ -97,6 +99,11 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			var emailAddresseList = GetNotificationEmailAddresses(projectIdList, i=>i.DeployRequested);
 			if(emailAddresseList != null && emailAddresseList.Count > 0)
 			{
+				var dataObject = new 
+				{
+					DeployRequest = deployRequest,
+					BuildStatusUrl = _urlGenerator.BuildStatusUrl(deployRequest.Id)
+				};
 				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", SrirachaResources.DeployRequestedEmailView);
 				_emailQueue.QueueMessage("New Deployment Requested", emailAddresseList, deployRequest, template.ViewData);
 			}
