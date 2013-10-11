@@ -61,7 +61,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 							var emailSettings = _connectionSettingsManager.Load<MMDB.ConnectionSettings.EmailConnectionSettings>(EnumSettingSource.ConnectionString,"Email");
 							AutoMapper.Mapper.CreateMap<MMDB.ConnectionSettings.EmailConnectionSettings, MMDB.RazorEmail.EmailServerSettings>();
 							var razorEmailSettings = AutoMapper.Mapper.Map(emailSettings, new MMDB.RazorEmail.EmailServerSettings());
-							_razorEmailEngine.SendEmail(razorEmailSettings, emailMessage.Subject, emailMessage.DataObject, emailMessage.RazorView, new List<string>{emailAddress}, _systemSettings.FromEmailAddress);
+							_razorEmailEngine.SendEmail(razorEmailSettings, emailMessage.Subject, (dynamic)emailMessage.DataObject, emailMessage.RazorView, new List<string>{emailAddress}, _systemSettings.FromEmailAddress);
 						}
 						catch (Exception err)
 						{

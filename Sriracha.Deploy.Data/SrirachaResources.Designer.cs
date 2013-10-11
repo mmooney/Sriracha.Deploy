@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Data {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SrirachaResources {
+    public class SrirachaResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -74,7 +74,7 @@ namespace Sriracha.Deploy.Data {
         ///
         ///hello hello.
         /// </summary>
-        internal static string DeployRequestedEmailView {
+        public static string DeployRequestedEmailView {
             get {
                 return ResourceManager.GetString("DeployRequestedEmailView", resourceCulture);
             }

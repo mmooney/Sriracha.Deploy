@@ -1,8 +1,36 @@
 <div>
-	A new deployment has been requested:
+	<b>A new deployment has been requested:</b>
 </div>
-<table border="0">
+<table border="1" width="500">
 	<tr>
-		<th>Requested By</th>
+		<th>Requested By:</th>
+		<td>@Model.DeployRequest.SubmittedByUserName</td>
 	</tr>
+	<tr>
+		<th>Requested By:</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<a href="@Model.DeployStatusUrl">Click here to view/approve this deployment</a>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">Details:</th>
+	</tr>
+	@foreach(var item in Model.DeployRequest.ItemList)
+	{
+	<tr>
+		<td colspan="2">
+			@item.Build.DisplayValue
+			<ul>
+				@foreach(var machine in item.MachineList)
+				{
+					<li>@machine.MachineName</li>
+				}
+			</ul>
+		</td>
+
+	</tr>
+	}
 </table>

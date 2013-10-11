@@ -52,6 +52,19 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 		}
 
+		private string _displayTimeZoneIdentifier;
+		public string DisplayTimeZoneIdentifier
+		{
+			get 
+			{
+				return StringHelper.IsNullOrEmpty(_displayTimeZoneIdentifier, DateTimeHelper.TimeZoneIdentifier_EasternStandardTime);
+			}
+			set 
+			{
+				_displayTimeZoneIdentifier = value;
+			}
+		}
+
 		private int? _logPurgeJobIntervalSeconds;
 		public int LogPurgeJobIntervalSeconds
 		{

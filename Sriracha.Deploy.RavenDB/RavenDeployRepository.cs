@@ -238,6 +238,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				SubmittedDateTimeUtc = submittedDateTimeUtc,
+				SubmittedByUserName = _userIdentity.UserName,
 				ItemList = itemList,
 				Status = status,
 				CreatedDateTimeUtc = DateTime.UtcNow,

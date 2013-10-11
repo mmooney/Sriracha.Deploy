@@ -7,6 +7,6 @@ namespace Sriracha.Deploy.Data
 {
 	public interface IUrlGenerator
 	{
-		string  BuildStatusUrl(string deployBatchRequestId);
+		string DeployStatusUrl(string deployBatchRequestId);
 	}
 }

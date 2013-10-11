@@ -13,6 +13,8 @@ namespace Sriracha.Deploy.Data
 		string DeployWorkingDirectory { get; set; }
 
 		string FromEmailAddress { get; set; }
+		
+		string DisplayTimeZoneIdentifier { get; set; }
 
 		int LogPurgeJobIntervalSeconds { get; set; }
 		int? LogPurgeTraceAgeMinutes { get; set; }

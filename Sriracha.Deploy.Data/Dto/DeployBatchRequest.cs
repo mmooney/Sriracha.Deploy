@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Dto
 	{
 		public string Id { get; set; }
 		public DateTime SubmittedDateTimeUtc { get; set; }
+		public string SubmittedByUserName { get; set; }
 		public List<DeployBatchRequestItem> ItemList { get; set; }
 		public EnumDeployStatus Status { get; set; }
 		public string StatusDisplayValue { get {  return EnumHelper.GetDisplayValue(this.Status); } }

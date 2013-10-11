@@ -8,7 +8,7 @@ namespace Sriracha.Deploy.Data.Impl
 {
 	public class UrlGenerator : IUrlGenerator
 	{
-		public string BuildStatusUrl(string deployBatchRequestId)
+		public string DeployStatusUrl(string deployBatchRequestId)
 		{
 			string url = GetRootUrl();
 			if(!url.EndsWith("/"))
