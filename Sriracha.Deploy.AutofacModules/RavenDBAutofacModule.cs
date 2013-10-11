@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Autofac;
+using MMDB.ConnectionSettings;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Repository;
@@ -35,6 +36,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
 			builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();
 			builder.RegisterType<RavenRazorTemplateRepository>().As<IRazorTemplateRepository>();
+			builder.RegisterType<RavenConnectionSettingRepository>().As<IConnectionSettingRepository>();
 		}
 	}
 }

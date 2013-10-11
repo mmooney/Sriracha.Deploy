@@ -4,12 +4,27 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
 
 namespace Sriracha.Deploy.Data.Impl
 {
 	public class DefaultSystemSettings : ISystemSettings
 	{
+		private string _fromEmailAddress;
+		public string FromEmailAddress 
+		{
+			get { return StringHelper.IsNullOrEmpty(_fromEmailAddress, "sriracha@mmdbsolutions.com"); }
+			set { _fromEmailAddress = value; }
+		}
+
+		private int? _emailSenderPollingIntervalSeconds;
+		public int EmailSenderPollingIntervalSeconds
+		{
+			get { return _emailSenderPollingIntervalSeconds.GetValueOrDefault(60); }
+			set { _emailSenderPollingIntervalSeconds = value; }
+		}
+
 		private int? _runDeploymentPollingIntervalSeconds;
 		public int RunDeploymentPollingIntervalSeconds
 		{

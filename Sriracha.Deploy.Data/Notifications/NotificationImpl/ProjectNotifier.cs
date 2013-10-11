@@ -87,7 +87,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					Build = build
 				};
 				var template = _razorTemplateRepository.GetTemplate("BuildPublishEmail", SrirachaResources.BuildPublishEmailView);
-				_emailQueue.QueueMessage(emailAddresseList, dataObject, template.ViewData);
+				_emailQueue.QueueMessage("New Build Published", emailAddresseList, dataObject, template.ViewData);
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			if(emailAddresseList != null && emailAddresseList.Count > 0)
 			{
 				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", SrirachaResources.DeployRequestedEmailView);
-				_emailQueue.QueueMessage(emailAddresseList, deployRequest, template.ViewData);
+				_emailQueue.QueueMessage("New Deployment Requested", emailAddresseList, deployRequest, template.ViewData);
 			}
 		}
 	}

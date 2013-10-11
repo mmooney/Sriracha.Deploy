@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentSessionExtensions.cs" />
+    <Compile Include="RavenConnectionSettingRepository.cs" />
     <Compile Include="RavenDeployRepository.cs" />
     <Compile Include="FileStorageDto.cs" />
     <Compile Include="IRavenAttachmentManager.cs" />
@@ -90,6 +91,10 @@
     <Compile Include="RavenSystemLogRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
+      <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
+      <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>

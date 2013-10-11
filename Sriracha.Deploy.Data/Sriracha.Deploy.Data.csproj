@@ -170,12 +170,14 @@
     <Compile Include="Repository\IEmailQueueRepository.cs" />
     <Compile Include="Repository\IRazorTemplateRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
+    <Compile Include="ServiceJobs\IEmailSenderJob.cs" />
     <Compile Include="ServiceJobs\IJobScheduler.cs" />
     <Compile Include="ServiceJobs\IPurgeBuildJob.cs" />
     <Compile Include="ServiceJobs\IPurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\IRunBatchDeploymentJob.cs" />
     <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\BaseSingletonJob.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\EmailSenderJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobScheduler.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\PurgeBuildJob.cs" />
@@ -244,6 +246,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\BuildPublishEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
+      <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
+      <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using Autofac;
+using MMDB.ConnectionSettings;
+using MMDB.RazorEmail;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -82,10 +84,15 @@ namespace Sriracha.Deploy.AutofacModules
 
 			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>().SingleInstance();
 
+			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
+			builder.RegisterType<EmailSender>().As<IEmailSender>();
+			builder.RegisterType<RazorEmailEngine>().As<IRazorEmailEngine>().UsingConstructor(typeof(EmailSender));
+
 			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
 			builder.RegisterType<RunBatchDeploymentJob>().As<IRunBatchDeploymentJob>();
 			builder.RegisterType<PurgeSystemLogJob>().As<IPurgeSystemLogJob>();
 			builder.RegisterType<PurgeBuildJob>().As<IPurgeBuildJob>();
+			builder.RegisterType<EmailSenderJob>().As<IEmailSenderJob>();
 
 			if(_diMode == EnumDIMode.Service)
 			{

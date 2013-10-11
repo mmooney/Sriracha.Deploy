@@ -16,9 +16,34 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			_emailQueueRepository = DIHelper.VerifyParameter(emailQueueRepository);
 		}
 
-		public SrirachaEmailMessage QueueMessage(List<string> emailAddresseList, object dataObject, string razorView)
+		public SrirachaEmailMessage QueueMessage(string subject, List<string> emailAddresseList, object dataObject, string razorView)
 		{
-			return _emailQueueRepository.CreateMessage(emailAddresseList, dataObject, razorView);
+			return _emailQueueRepository.CreateMessage(subject, emailAddresseList, dataObject, razorView);
+		}
+
+		public SrirachaEmailMessage PopNextMessage()
+		{
+			return _emailQueueRepository.PopNextMessage();
+		}
+
+		public void MarkSucceeded(SrirachaEmailMessage emailMessage)
+		{
+			_emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumEmailMessageStatus.Success);
+		}
+
+		public void MarkFailed(SrirachaEmailMessage emailMessage)
+		{
+			_emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumEmailMessageStatus.Failed);
+		}
+
+		public void MarkReceipientSucceeded(SrirachaEmailMessage emailMessage, string emailAddress)
+		{
+			_emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumEmailMessageStatus.Failed, emailAddress);
+		}
+
+		public void MarkReceipientFailed(SrirachaEmailMessage emailMessage, string emailAddress, Exception err)
+		{
+			_emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumEmailMessageStatus.Failed, emailAddress, err);
 		}
 	}
 }

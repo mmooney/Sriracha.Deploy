@@ -8,8 +8,11 @@ namespace Sriracha.Deploy.Data
 {
 	public interface ISystemSettings
 	{
+		int EmailSenderPollingIntervalSeconds { get; set; }
 		int RunDeploymentPollingIntervalSeconds { get; set; }
 		string DeployWorkingDirectory { get; set; }
+
+		string FromEmailAddress { get; set; }
 
 		int LogPurgeJobIntervalSeconds { get; set; }
 		int? LogPurgeTraceAgeMinutes { get; set; }
@@ -22,5 +25,6 @@ namespace Sriracha.Deploy.Data
 		int BuildPurgeJobIntervalSeconds { get; set; }
 		int? DefaultBuildRetentionMinutes { get; set; }
 		List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList { get; set; }
+
 	}
 }
