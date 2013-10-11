@@ -22,6 +22,11 @@ namespace Sriracha.Deploy.Data.Impl
 			return FindParameters(value, "ENV:");
 		}
 
+		public List<string> FindBuildParameters(string value)
+		{
+			return FindParameters(value, "BUILD:");
+		}
+
 		private List<string> FindParameters(string value, string prefix)
 		{
 			var returnList = new List<string>();
@@ -45,6 +50,5 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return returnList;
 		}
-
 	}
 }

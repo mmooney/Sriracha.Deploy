@@ -90,6 +90,87 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 		}
 
+		public class FindBuildParameters
+		{
+			[Test]
+			public void CanFindSingleMachineParameter()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${BUILD:testvalue} this is a test";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(1, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+			}
+
+			[Test]
+			public void CanFindMultipleMachineParameters()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${BUILD:testvalue} this is a test${BUILD:testvalue2}...";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void IgnoresEnvironmentAndMachineParameters()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${BUILD:testvalue} this ${ENV:ignoreMe} ${MACHINE:ignoreMe2} is a test${BUILD:testvalue2}...";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void IsCaseInsensitive()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${build:testvalue} this is a test${bUILD:testvalue2}...";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void HandlesDuplicates()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${build:testvalue} this is a test${bUILD:testvalue2} and again ${build:testvalue} ...";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+
+			[Test]
+			public void HandlesDuplicatesCaseInsensitive()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${build:testVALUE} this is a test${bUILD:testvalue2} and again ${build:TESTvalue} ...";
+
+				var result = sut.FindBuildParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testVALUE", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+		}
+
 		public class FindMachineParameters
 		{
 			[Test]
