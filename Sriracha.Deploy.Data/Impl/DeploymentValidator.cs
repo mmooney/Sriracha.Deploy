@@ -37,6 +37,9 @@ namespace Sriracha.Deploy.Data.Impl
 				}
 				result.MachineResultList.Add(machine.Id, machineResultList);
 			}
+
+			result.BuildParameterList.AddRange(taskDefinition.GetBuildTaskParameterList());
+
 			return result;
 		}
 
@@ -130,6 +133,8 @@ namespace Sriracha.Deploy.Data.Impl
 				machineResultList.Add(item);
 			}
 			result.MachineResultList.Add(machine.Id, machineResultList);
+
+			result.BuildParameterList.AddRange(taskDefinition.GetBuildTaskParameterList());
 
 			return result;
 		}

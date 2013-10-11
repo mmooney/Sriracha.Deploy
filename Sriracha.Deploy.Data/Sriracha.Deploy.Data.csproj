@@ -118,9 +118,11 @@
     <Compile Include="Dto\SystemLog.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IAccountSettingsManager.cs" />
+    <Compile Include="IBuildParameterEvaluator.cs" />
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
+    <Compile Include="Impl\BuildParameterEvaluator.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />

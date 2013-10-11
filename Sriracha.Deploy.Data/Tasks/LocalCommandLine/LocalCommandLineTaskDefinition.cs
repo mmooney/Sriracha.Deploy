@@ -45,6 +45,17 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 					}).ToList();
 		}
 
+		public override IList<TaskParameter> GetBuildTaskParameterList()
+		{
+			return (from i in _parameterParser.FindBuildParameters(this.Options.ExecutableArguments)
+					select new TaskParameter
+					{
+						FieldName = i,
+						FieldType = EnumTaskParameterType.String,
+						Sensitive = false 
+					}).ToList();
+		}
+
 		public override string TaskDefintionName
 		{
 			get { return "LocalCommandLine"; }

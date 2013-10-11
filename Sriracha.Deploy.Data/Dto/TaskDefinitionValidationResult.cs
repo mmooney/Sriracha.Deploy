@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Dto
 {
@@ -23,11 +24,13 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public List<TaskDefinitionValidationResultItem> EnvironmentResultList { get; set; }
 		public Dictionary<string, List<TaskDefinitionValidationResultItem>> MachineResultList { get; set; }
+		public List<TaskParameter> BuildParameterList { get; set; }
 
 		public TaskDefinitionValidationResult()
 		{
 			this.EnvironmentResultList = new List<TaskDefinitionValidationResultItem>();
 			this.MachineResultList = new Dictionary<string,List<TaskDefinitionValidationResultItem>>();
+			this.BuildParameterList = new List<TaskParameter>();
 		}
 
 		public EnumRuntimeValidationStatus Status

@@ -497,7 +497,7 @@ namespace MMDB.Permissions.Tests
 			Assert.AreEqual(EnumPermissionAccess.Grant, result[0].GroupPermissionAssignmentList[1].Access);
 		}
 
-		[Test]
+		[Test, Ignore]
 		public void UsesPermissionCacheObject()
 		{
 			Assert.Inconclusive();

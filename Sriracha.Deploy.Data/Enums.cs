@@ -9,6 +9,7 @@ namespace Sriracha.Deploy.Data
 	{
 		Static,
 		Environment,
-		Machine
+		Machine,
+		Build
 	}
 }

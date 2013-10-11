@@ -18,12 +18,14 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public Mock<IProcessRunner> ProcessRunner { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
 		public Mock<IDeploymentValidator> Validator { get; set; }
+		public Mock<IBuildParameterEvaluator> BuildParameterEvaluator { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public List<string> MachineParameters { get; set; }
 		public List<string> EnvironmentParameters { get; set; }
 		public string DeployStateId { get; set; }
 		public DeployComponent Component { get; set; }
 		public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
+		public DeployBuild Build { get; set; }
 
 		public static LocalCommandLineTestData Create()
 		{
@@ -38,6 +40,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				RuntimeSystemSettings = new RuntimeSystemSettings(),
 				ProcessRunner = new Mock<IProcessRunner>(),
 				Validator = new Mock<IDeploymentValidator>(),
+				BuildParameterEvaluator = new Mock<IBuildParameterEvaluator>(),
 				Component = new DeployComponent
 				{
 					Id = Guid.NewGuid().ToString()
@@ -61,9 +64,10 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 							}
 						}
 					}
-				}
+				},
+				Build = new DeployBuild()
 			};
-			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object, returnValue.Validator.Object);
+			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object, returnValue.Validator.Object, returnValue.BuildParameterEvaluator.Object);
 			returnValue.TaskDefinition = new LocalCommandLineTaskDefinition(returnValue.ParameterParser.Object)
 			{
 				Options = new LocalCommandLineTaskOptions

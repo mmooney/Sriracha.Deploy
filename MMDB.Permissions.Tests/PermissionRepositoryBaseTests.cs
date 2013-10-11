@@ -542,7 +542,7 @@ namespace MMDB.Permissions.Tests
 		}
 
 
-		[Test]
+		[Test, Ignore]
 		public void HandlesGroupParents()
 		{
 			Assert.Inconclusive();

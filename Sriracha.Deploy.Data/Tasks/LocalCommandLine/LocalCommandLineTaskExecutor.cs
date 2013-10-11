@@ -15,13 +15,13 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 		private readonly IProcessRunner _processRunner;
 		private readonly IDeploymentValidator _validator;
 
-		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator)
+		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
 		{
 			this._processRunner = DIHelper.VerifyParameter(processRunner);
 			this._validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			var result = new DeployTaskExecutionResult();
@@ -30,17 +30,17 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, runtimeSystemSettings, validationResult);
+			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings, validationResult);
 			statusManager.Info(deployStateId, string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
 			var machineResult = validationResult.MachineResultList[machine.Id];
-			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, false);
-			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, true);
+			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, build, false);
+			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, build, true);
 
 			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 
@@ -85,7 +85,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 		}
 
-		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, bool masked)
+		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, List<TaskParameter> buildParameters, DeployBuild build, bool masked)
 		{
 			string returnValue = format;
 			foreach(var item in environmentValues)
@@ -141,6 +141,28 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				else
 				{
 					value = item.FieldValue;
+				}
+				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+			}
+			foreach(var item in buildParameters)
+			{
+				string value;
+				string fieldName;
+				if (item.Sensitive)
+				{
+					fieldName = string.Format("${{machine:sensitive:{0}}}", item.FieldName);
+				}
+				else
+				{
+					fieldName = string.Format("${{machine:{0}}}", item.FieldName);
+				}
+				if (masked && item.Sensitive)
+				{
+					value = LocalCommandLineTaskExecutor.ValueMask;
+				}
+				else
+				{
+					value = this.GetBuildParameterValue(item.FieldName, build);
 				}
 				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
 			}

@@ -22,6 +22,11 @@ namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 			throw new NotImplementedException();
 		}
 
+		public override IList<TaskParameter> GetBuildTaskParameterList()
+		{
+			throw new NotImplementedException();
+		}
+
 		public override string TaskDefintionName
 		{
 			get { return "RoundhousE"; }

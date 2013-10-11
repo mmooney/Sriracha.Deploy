@@ -27,6 +27,11 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			return this.GetTaskParameterList(EnumConfigLevel.Machine);
 		}
 
+		public override IList<TaskParameter> GetBuildTaskParameterList()
+		{
+			return this.GetTaskParameterList(EnumConfigLevel.Build);
+		}
+
 
 		private IList<TaskParameter> GetTaskParameterList(EnumConfigLevel enumConfigLevel)
 		{

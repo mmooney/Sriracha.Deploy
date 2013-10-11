@@ -73,6 +73,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<FileWriter>().As<IFileWriter>().SingleInstance();
 			builder.RegisterType<RegexResolver>().As<IRegexResolver>().SingleInstance();
 			builder.RegisterType<Zipper>().As<IZipper>();
+			builder.RegisterType<BuildParameterEvaluator>().As<IBuildParameterEvaluator>().SingleInstance();
 			
 			builder.RegisterType<DeployRunner>().As<IDeployRunner>();
 			builder.RegisterType<DeployTaskStatusManager>().As<IDeployTaskStatusManager>();

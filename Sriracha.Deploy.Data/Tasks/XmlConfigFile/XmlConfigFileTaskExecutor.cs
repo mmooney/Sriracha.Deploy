@@ -15,13 +15,13 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 		private readonly IFileWriter _fileWriter;
 		private readonly IDeploymentValidator _validator;
 
-		public XmlConfigFileTaskExecutor(IFileWriter fileWriter, IDeploymentValidator validator)
+		public XmlConfigFileTaskExecutor(IFileWriter fileWriter, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
 		{
 			_fileWriter = DIHelper.VerifyParameter(fileWriter);
 			_validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings)
+		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
 		{
 			statusManager.Info(deployStateId, string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			var result = new DeployTaskExecutionResult();
@@ -30,13 +30,13 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			{
 				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
 			}
-			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, runtimeSystemSettings, validationResult);
+			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings, validationResult);
 
 			statusManager.Info(deployStateId, string.Format("Done XmlConfigTask for {0} ", definition.Options.TargetFileName));
 			return statusManager.BuildResult();
 		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
+		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.Id];
@@ -52,6 +52,9 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 						break;
 					case EnumConfigLevel.Machine:
 						value = machineResult.First(i => i.FieldName == xpathItem.ValueName).FieldValue;
+						break;
+					case EnumConfigLevel.Build:
+						value = this.GetBuildParameterValue(xpathItem.ValueName, build);
 						break;
 					default:
 						throw new UnknownEnumValueException(xpathItem.ConfigLevel);

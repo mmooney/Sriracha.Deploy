@@ -93,7 +93,7 @@ namespace Sriracha.Deploy.Data.Impl
 
 				_statusManager.Info(deployStateId, string.Format("Done copying deployment files from {0} to machine/component  directory {1}", extractedDirectory, machineComponentDirectory));
 
-				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, component, environmentConfiguration, machine, systemSettings);
+				_componentRunner.Run(deployStateId, _statusManager, taskDefinitionList, component, environmentConfiguration, machine, build, systemSettings);
 			}
 		}
 

@@ -16,10 +16,12 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		public XmlConfigFileTaskExecutor TaskExecutor { get; set; }
 		public DeployComponent Component { get; set; }
 		public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
+		public DeployBuild Build { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public Mock<IFileWriter> FileWriter { get; set; }
 		public Mock<IDeploymentValidator> Validator { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
+		public Mock<IBuildParameterEvaluator> BuildParameterEvaluator { get; set; } 
 		public Dictionary<string, string> ExpectedResult { get; set; }
 		public string DeployStateId { get; set; }
 
@@ -31,6 +33,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 				FileWriter = new Mock<IFileWriter>(),
 				DeployStateId = fixture.Create<string>(),
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
+				BuildParameterEvaluator = new Mock<IBuildParameterEvaluator>(),
 				RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 				Validator = new Mock<IDeploymentValidator>(),
 				Component = fixture.Create<DeployComponent>(),
@@ -48,6 +51,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 							}
 						}
 				},
+				Build = new DeployBuild(),
 				ExpectedResult = new Dictionary<string, string>()
 			};
 			returnValue.TaskDefinition = new XmlConfigFileTaskDefinition()
@@ -85,7 +89,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 						}
 				}
 			};
-			returnValue.TaskExecutor = new XmlConfigFileTaskExecutor(returnValue.FileWriter.Object, returnValue.Validator.Object);
+			returnValue.TaskExecutor = new XmlConfigFileTaskExecutor(returnValue.FileWriter.Object, returnValue.Validator.Object, returnValue.BuildParameterEvaluator.Object);
 			foreach (var configItem in returnValue.TaskDefinition.Options.XPathValueList)
 			{
 				if (configItem.ConfigLevel == EnumConfigLevel.Environment)
