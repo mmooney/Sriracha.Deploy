@@ -1,7 +1,40 @@
-﻿<h2>Build {{build.projectName}} - {{build.projectBranchName}} - {{build.projectComponentName}} - {{build.version}} 
+﻿<h2>Build {{build.DisplayValue}}</h2>
 
-
-<h3>History</h3>
+<table class="table table-bordered">
+	<tr>
+		<th>Project</th>
+		<td><a ng-href="{{navigator.project.view.clientUrl(build.projectId)}}">{{build.projectName}}</a></td>
+	</tr>
+	<tr>
+		<th>Component</th>
+		<td><a ng-href="{{navigator.component.view.clientUrl(build.projectId, build.projectComponentId)}}">{{build.projectComponentName}}</a></td>
+	</tr>
+	<tr>
+		<th>Branch</th>
+		<td><a ng-href="{{navigator.branch.edit.clientUrl(build.projectId, build.projectBranchId)}}">{{build.projectBranchName}}</a></td>
+	</tr>
+	<tr>
+		<th>Version</th>
+		<td>{{build.version}}</td>
+	</tr>
+	<tr>
+		<th>Created By</th>
+		<th>{{build.createdByUserName}}</th>
+	</tr>
+	<tr>
+		<th>Created Date</th>
+		<th>{{build.createdDateTimeUtc | displayDate}}</th>
+	</tr>
+	<tr>
+		<th>Updated By</th>
+		<th>{{build.updatedByUserName}}</th>
+	</tr>
+	<tr>
+		<th>Updated Date</th>
+		<th>{{build.updatedDateTimeUtc | displayDate}}</th>
+	</tr>
+</table>
+<!--<h3>History</h3>
 <table class="table table-border table-striped" ng-show="project.componentList.length">
 	<thead>
 		<tr>
@@ -20,4 +53,4 @@
 			</td>
 		</tr>
 	</tbody>
-</table>
+</table>-->
