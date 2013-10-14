@@ -297,6 +297,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
 		{
+			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(5);
 			var requestList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
 			var returnListItems = requestList.Select(i=>BuildDeployBatchStatus(i)).ToList();
 			var pagedList = new StaticPagedList<DeployBatchStatus>(returnListItems, requestList.PageNumber, requestList.PageSize, requestList.TotalItemCount);

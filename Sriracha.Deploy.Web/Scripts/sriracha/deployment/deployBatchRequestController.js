@@ -76,11 +76,29 @@
 				$scope.promoteDeployment.buildsWithNoMachines.push(item);
 			}
 			else {
-				var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
-				if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
-					$scope.promoteDeployment.buildsWithNoMachines.push(item);
+				var hasConfig = false;
+				var component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
+				if (component.useConfigurationGroup && component.configurationId) {
+					var environmentComponent = _.findWhere(environment.configurationList, { parentId: component.configurationId });
+					if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
+						$scope.promoteDeployment.buildsWithNoMachines.push(item);
+						hasConfig = false;
+					}
+					else {
+						hasConfig = true;
+					}
 				}
 				else {
+					var environmentComponent = _.findWhere(environment.componentList, { parentId: item.build.projectComponentId });
+					if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
+						$scope.promoteDeployment.buildsWithNoMachines.push(item);
+						hasConfig = false;
+					}
+					else {
+						hasConfig = true;
+					}
+				}
+				if (hasConfig) {
 					var validationResult = SrirachaResource.validateEnvironment.get(
 						{ buildId: item.build.id, environmentId: environment.id },
 						function () {
