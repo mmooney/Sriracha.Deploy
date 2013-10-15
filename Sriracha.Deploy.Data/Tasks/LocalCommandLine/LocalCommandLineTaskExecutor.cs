@@ -150,11 +150,11 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				string fieldName;
 				if (item.Sensitive)
 				{
-					fieldName = string.Format("${{machine:sensitive:{0}}}", item.FieldName);
+					fieldName = string.Format("${{build:sensitive:{0}}}", item.FieldName);
 				}
 				else
 				{
-					fieldName = string.Format("${{machine:{0}}}", item.FieldName);
+					fieldName = string.Format("${{build:{0}}}", item.FieldName);
 				}
 				if (masked && item.Sensitive)
 				{
