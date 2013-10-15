@@ -1,1 +1,37 @@
-heloo!
+<h2>Build @Model.Build.DisplayValue</h2>
+
+<table class="table table-bordered">
+	<tr>
+		<th>Project</th>
+		<td>@Model.Build.ProjectName</td>
+	</tr>
+	<tr>
+		<th>Component</th>
+		<td>@Model.Build.ProjectComponentName</td>
+	</tr>
+	<tr>
+		<th>Branch</th>
+		<td>@Model.Build.ProjectBranchName</td>
+	</tr>
+	<tr>
+		<th>Version</th>
+		<td>@Model.Build.Version</td>
+	</tr>
+	<tr>
+		<th>Created By</th>
+		<td>@Model.Build.CreatedByUserName</td>
+	</tr>
+	<tr>
+		<th>Created Date</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.Build.CreatedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+	<tr>
+		<th>Updated By</th>
+		<td>@Model.Build.UpdatedByUserName</td>
+	</tr>
+	<tr>
+		<th>Updated Date</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.Build.UpdatedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+</table>
+<a href="@Model.ViewBuildUrl">Click here to view the build details</a>

@@ -88,7 +88,8 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				var dataObject = new
 				{
 					Project = project,
-					Build = build
+					Build = build,
+					ViewBuildUrl = _urlGenerator.ViewBuildUrl(build.Id)
 				};
 				var template = _razorTemplateRepository.GetTemplate("BuildPublishEmail", SrirachaResources.BuildPublishEmailView);
 				_emailQueue.QueueMessage("New Build Published", emailAddresseList, dataObject, template.ViewData);

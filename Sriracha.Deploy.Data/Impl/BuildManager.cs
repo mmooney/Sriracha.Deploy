@@ -44,7 +44,7 @@ namespace Sriracha.Deploy.Data.Impl
 			var component = _projectRepository.GetComponent(project, componentId);
 			var file = this._fileRepository.CreateFile(fileName, fileData);
 			var build = this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
-			//_projectNotifier.SendBuildPublishedNotification(project, build);
+			_projectNotifier.SendBuildPublishedNotification(project, build);
 			return build;
 		}
 

@@ -63,7 +63,7 @@ namespace Sriracha.Deploy.Data {
         /// <summary>
         ///   Looks up a localized string similar to heloo!.
         /// </summary>
-        internal static string BuildPublishEmailView {
+        public static string BuildPublishEmailView {
             get {
                 return ResourceManager.GetString("BuildPublishEmailView", resourceCulture);
             }
