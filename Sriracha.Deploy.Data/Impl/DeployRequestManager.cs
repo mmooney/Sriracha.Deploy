@@ -109,6 +109,15 @@ namespace Sriracha.Deploy.Data.Impl
 		{
 			var item = _deployRepository.GetBatchRequest(deployBatchRequestId);
 			_validator.ValidateStatusTransition(item.Status, newStatus);
+			switch(newStatus)
+			{
+				case EnumDeployStatus.Approved:
+					_projectNotifier.SendDeployApprovedNotification(item);
+					break;
+				//case EnumDeployStatus.Rejected:
+				//	_projectNotifier.SendDeployRejectedNotification(item);
+				//	break;
+			}
 			return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, newStatus, statusMessage:statusMessage);
 		}
 	}

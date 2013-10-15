@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\DeployApprovedEmail.cshtml" />
     <None Include="Resources\DeployRequestedEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -28,5 +28,7 @@ namespace Sriracha.Deploy.Data.Dto
 		{
 			this.MessageList = new List<string>();
 		}
+
+		public string Label { get; set; }
 	}
 }

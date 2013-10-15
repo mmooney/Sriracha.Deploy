@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.RazorEmail;
+using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Repository;
@@ -109,7 +110,31 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", SrirachaResources.DeployRequestedEmailView);
-				_emailQueue.QueueMessage("New Deployment Requested", emailAddresseList, dataObject, template.ViewData);
+				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.MachineName)).Distinct().ToArray());
+				string deployLabel = deployRequest.Label;
+				string subject = string.Format("New Deployment Requested: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel,string.Empty), machineNames);
+				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
+			}
+		}
+
+
+		public void SendDeployApprovedNotification(DeployBatchRequest deployRequest)
+		{
+			var projectIdList = deployRequest.ItemList.Select(i => i.Build.ProjectId).Distinct().ToList();
+			var emailAddresseList = GetNotificationEmailAddresses(projectIdList, i => i.DeployApproved);
+			if (emailAddresseList != null && emailAddresseList.Count > 0)
+			{
+				var dataObject = new
+				{
+					DeployRequest = deployRequest,
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeployApprovedEmail", SrirachaResources.DeployApprovedEmailView);
+				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
+				string deployLabel = deployRequest.Label;
+				string subject = string.Format("Deployment Approved: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
+				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
 		}
 	}

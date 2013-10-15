@@ -1,5 +1,5 @@
 <div>
-	<b>A new deployment has been requested:</b>
+	<b>The following deployment has approved:</b>
 </div>
 <table border="1" width="500">
 	<tr>
@@ -12,7 +12,20 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			<a href="@Model.DeployStatusUrl">Click here to view/approve this deployment</a>
+			<a href="@Model.DeployStatusUrl">Click here to view/begin this deployment</a>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">
+			Status Messages
+		</th>
+	</tr>
+	<tr>
+		<td colspan="2">
+				@foreach(string message in Model.DeployRequest.MessageList)
+				{
+					<pre>@message</pre>
+				}
 		</td>
 	</tr>
 	<tr>

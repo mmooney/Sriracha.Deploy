@@ -11,5 +11,7 @@ namespace Sriracha.Deploy.Data.Notifications
 		void SendBuildPublishedNotification(DeployProject project, DeployBuild build);
 
 		void SendDeployRequestedNotification(DeployBatchRequest deployRequest);
+
+		void SendDeployApprovedNotification(DeployBatchRequest deployRequest);
 	}
 }

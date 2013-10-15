@@ -61,7 +61,32 @@ namespace Sriracha.Deploy.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to heloo!.
+        ///   Looks up a localized string similar to &lt;h2&gt;Build @Model.Build.DisplayValue&lt;/h2&gt;
+        ///
+        ///&lt;table class=&quot;table table-bordered&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Project&lt;/th&gt;
+        ///		&lt;td&gt;@Model.Build.ProjectName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Component&lt;/th&gt;
+        ///		&lt;td&gt;@Model.Build.ProjectComponentName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Branch&lt;/th&gt;
+        ///		&lt;td&gt;@Model.Build.ProjectBranchName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Version&lt;/th&gt;
+        ///		&lt;td&gt;@Model.Build.Version&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Created By&lt;/th&gt;
+        ///		&lt;td&gt;@Model.Build.CreatedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Created Date&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared. [rest of string was truncated]&quot;;.
         /// </summary>
         public static string BuildPublishEmailView {
             get {
@@ -70,9 +95,52 @@ namespace Sriracha.Deploy.Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to deploy was requested 
-        ///
-        ///hello hello.
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;The following deployment has approved:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.SubmittedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;td colspan=&quot;2&quot;&gt;
+        ///			&lt;a href=&quot;@Model.DeployStatusUrl&quot;&gt;Click here to view/approve this deployment&lt;/a&gt;
+        ///		&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th colspan=&quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string DeployApprovedEmailView {
+            get {
+                return ResourceManager.GetString("DeployApprovedEmailView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;A new deployment has been requested:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.SubmittedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;td colspan=&quot;2&quot;&gt;
+        ///			&lt;a href=&quot;@Model.DeployStatusUrl&quot;&gt;Click here to view/approve this deployment&lt;/a&gt;
+        ///		&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th colspan=&quot;2&quot; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string DeployRequestedEmailView {
             get {
