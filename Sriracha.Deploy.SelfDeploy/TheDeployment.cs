@@ -146,8 +146,8 @@ namespace Sriracha.Deploy.SelfDeploy
 
 		private void ApplySettings(ProtoServer s, DeploymentSettings settings, string configPath)
 		{
-			s.XmlPoke(configPath).Set("/configuration/connectionStrings[@name='Email']/@connectionString", settings.EmailConnectionString);
-			s.XmlPoke(configPath).Set("/configuration/appSettings[@key='SiteUrl']/@value", settings.SiteUrl);
+			s.XmlPoke(configPath).Set("/configuration/connectionStrings/add[@name='Email']/@connectionString", settings.EmailConnectionString);
+			s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='SiteUrl']/@value", settings.SiteUrl);
 			if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
 			{
 				s.XmlPoke(configPath)
