@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>MMDB.RazorEmail</id>
-    <version>1.0.0.8</version>
+    <version>2.0.0.1</version>
     <title>MMDB.RazorEmail</title>
     <authors>MMDB Solutions,  LLC</authors>
     <owners>MMDB Solutions,  LLC</owners>
@@ -12,11 +12,10 @@
     <description>Razor-based SMTP email engine</description>
     <releaseNotes>Format an object into HTML with Razor and send it via email in one line of code, from any .NET app.</releaseNotes>
     <copyright>Copyright 2013</copyright>
-    <language />
     <tags>mvc razor email smtp mmdb</tags>
     <dependencies>
-      <dependency id="MMDB.Shared" version="2.0.0.15" />
-      <dependency id="RazorEngine" version="2.1" />
+      <dependency id="MMDB.Shared" version="2.0.0.19" />
+      <dependency id="RazorEngine" version="3.3.0" />
     </dependencies>
   </metadata>
 </package>
