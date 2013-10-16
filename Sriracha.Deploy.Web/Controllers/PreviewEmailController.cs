@@ -181,5 +181,32 @@ namespace Sriracha.Deploy.Web.Controllers
 				return View("ViewEmail", (object)output);
 			}
 		}
+
+		public ActionResult DeployFailed(string deployBatchRequestId)
+		{
+			try
+			{
+				var deployRequest = _deployRepository.GetBatchRequest(deployBatchRequestId);
+				var dataObject = new
+				{
+					DeployBatchStatus = new DeployBatchStatus
+					{
+						DeployBatchRequestId = deployRequest.Id,
+						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
+						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+					},
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeployFailedEmail", _notificationResourceViews.DeployFailedEmailView);
+				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
+				return View("ViewEmail", (object)output);
+			}
+			catch (RazorEngine.Templating.TemplateCompilationException err)
+			{
+				string output = "<div style='color:red'>ERROR: " + string.Join("<br/>", err.Errors) + "</div>";
+				return View("ViewEmail", (object)output);
+			}
+		}
 	}
 }

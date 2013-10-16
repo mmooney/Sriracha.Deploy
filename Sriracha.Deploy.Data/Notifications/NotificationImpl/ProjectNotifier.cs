@@ -209,5 +209,29 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			}
 		}
 
+		public void SendDeployFailedNotification(DeployBatchRequest deployRequest)
+		{
+			var projectIdList = deployRequest.ItemList.Select(i => i.Build.ProjectId).Distinct().ToList();
+			var emailAddresseList = GetNotificationEmailAddresses(projectIdList, i => i.DeployStarted);
+			if (emailAddresseList != null && emailAddresseList.Count > 0)
+			{
+				var dataObject = new
+				{
+					DeployBatchStatus = new DeployBatchStatus
+					{
+						DeployBatchRequestId = deployRequest.Id,
+						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
+						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+					},
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeployFailedEmail", _notificationResourceViews.DeployFailedEmailView);
+				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
+				string deployLabel = deployRequest.Label;
+				string subject = string.Format("Deployment Failed: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
+				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
+			}
+		}
 	}
 }

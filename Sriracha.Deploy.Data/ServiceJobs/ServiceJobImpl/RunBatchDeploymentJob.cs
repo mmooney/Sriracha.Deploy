@@ -15,16 +15,14 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 		private readonly IDeployStateManager _deployStateManager;
 		private readonly ISystemSettings _systemSettings;
 		private readonly IDeployRunner _deployRunner; 
-		private readonly IProjectNotifier _projectNotifier;
 		private static volatile bool _isRunning = false;
 
-		public RunBatchDeploymentJob(Logger logger, IDeployStateManager deployStateManager, ISystemSettings systemSettings, IDeployRunner deployRunner, IProjectNotifier projectNotifier)
+		public RunBatchDeploymentJob(Logger logger, IDeployStateManager deployStateManager, ISystemSettings systemSettings, IDeployRunner deployRunner)
 		{
 			_logger = DIHelper.VerifyParameter(logger);
 			_deployStateManager = DIHelper.VerifyParameter(deployStateManager);
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
 			_deployRunner = DIHelper.VerifyParameter(deployRunner);
-			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
 
 		public void Execute(Quartz.IJobExecutionContext context)
@@ -55,8 +53,6 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 					try
 					{
 						this._logger.Info("Found pending deployment: " + nextDeploymentBatch.Id);
-
-						_projectNotifier.SendDeployStartedNotification(nextDeploymentBatch);
 
 						string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + nextDeploymentBatch.Id;
 						string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, subDirName);
@@ -98,8 +94,6 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 						}
 	
 						_deployStateManager.MarkBatchDeploymentSuccess(nextDeploymentBatch.Id);
-
-						_projectNotifier.SendDeploySuccessNotification(nextDeploymentBatch);
 
 						this._logger.Info("Deployment complete: " + nextDeploymentBatch.Id);
 					}

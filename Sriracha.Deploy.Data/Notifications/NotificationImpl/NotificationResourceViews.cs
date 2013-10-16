@@ -38,5 +38,11 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 		{
 			get { return SrirachaResources.DeploySuccessEmailView; }
 		}
+
+
+		public string DeployFailedEmailView
+		{
+			get { return SrirachaResources.DeployFailedEmailView; }
+		}
 	}
 }

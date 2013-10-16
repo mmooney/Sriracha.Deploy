@@ -123,6 +123,29 @@ namespace Sriracha.Deploy.Data {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;The following deployment has failed:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployBatchStatus.Request.CreatedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Started Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.Sta [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DeployFailedEmailView {
+            get {
+                return ResourceManager.GetString("DeployFailedEmailView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
         ///	&lt;b&gt;The following deployment has rejected:&lt;/b&gt;
         ///&lt;/div&gt;
         ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
@@ -200,7 +223,7 @@ namespace Sriracha.Deploy.Data {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div&gt;
-        ///	&lt;b&gt;The following deployment has started:&lt;/b&gt;
+        ///	&lt;b&gt;The following deployment has completed successfully:&lt;/b&gt;
         ///&lt;/div&gt;
         ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
         ///	&lt;tr&gt;
@@ -213,7 +236,7 @@ namespace Sriracha.Deploy.Data {
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
         ///		&lt;th&gt;Started Date/Time:&lt;/th&gt;
-        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.St [rest of string was truncated]&quot;;.
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchSt [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DeploySuccessEmailView {
             get {

@@ -1,5 +1,5 @@
 <div>
-	<b>The following deployment has completed successfully:</b>
+	<b>The following deployment has failed:</b>
 </div>
 <table border="1" width="700">
 	<tr>
@@ -36,6 +36,15 @@
 				}
 		</td>
 	</tr>
+	@if(!string.IsNullOrEmpty(Model.DeployBatchStatus.Request.ErrorDetails))
+	{
+		<tr>
+			<th colspan="2">Error Details</th>
+		</tr>
+		<tr>
+			<td colspan="2"><pre>@Model.DeployBatchStatus.Request.ErrorDetails</pre></td>
+		</tr>
+	}
 </table>
 @foreach (var requestItem in Model.DeployBatchStatus.Request.ItemList)
 {

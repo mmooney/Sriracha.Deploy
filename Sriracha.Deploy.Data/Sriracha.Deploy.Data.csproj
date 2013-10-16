@@ -245,6 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\DeployFailedEmail.cshtml" />
     <None Include="Resources\DeploySuccessEmail.cshtml" />
     <None Include="Resources\DeployStartedEmail.cshtml" />
     <None Include="Resources\DeployRejectedEmail.cshtml" />

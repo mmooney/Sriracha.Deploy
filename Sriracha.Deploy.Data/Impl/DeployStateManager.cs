@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Impl
@@ -14,13 +15,15 @@ namespace Sriracha.Deploy.Data.Impl
 		private readonly IBuildRepository _buildRepository;
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeploymentValidator _validator;
+		private readonly IProjectNotifier _projectNotifier;
 
-		public DeployStateManager(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator)
+		public DeployStateManager(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator, IProjectNotifier projectNotifier)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_validator = DIHelper.VerifyParameter(deploymentValidator);
+			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
 
 		public DeployState GetDeployState(string deployStateId)
@@ -72,18 +75,25 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBatchRequest PopNextBatchDeployment()
 		{
-			return _deployRepository.PopNextBatchDeployment();
+			var deployRequest = _deployRepository.PopNextBatchDeployment();
+			if(deployRequest != null)
+			{
+				_projectNotifier.SendDeployStartedNotification(deployRequest);
+			}
+			return deployRequest;
 		}
 
 
 		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
 		{
-			_deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success);
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success);
+			_projectNotifier.SendDeploySuccessNotification(deployRequest);
 		}
 
 		public void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err)
 		{
-			_deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err);
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err);
+			_projectNotifier.SendDeployFailedNotification(deployRequest);
 		}
 	}
 }
