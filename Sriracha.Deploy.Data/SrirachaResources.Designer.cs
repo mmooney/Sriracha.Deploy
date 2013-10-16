@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Data {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class SrirachaResources {
+    internal class SrirachaResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -85,10 +85,10 @@ namespace Sriracha.Deploy.Data {
         ///		&lt;td&gt;@Model.Build.CreatedByUserName&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
-        ///		&lt;th&gt;Created Date&lt;/th&gt;
-        ///		&lt;td&gt;@MMDB.Shared. [rest of string was truncated]&quot;;.
+        ///		&lt;th&gt;Created Date/Time&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB. [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string BuildPublishEmailView {
+        internal static string BuildPublishEmailView {
             get {
                 return ResourceManager.GetString("BuildPublishEmailView", resourceCulture);
             }
@@ -101,23 +101,50 @@ namespace Sriracha.Deploy.Data {
         ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
         ///	&lt;tr&gt;
         ///		&lt;th&gt;Requested By:&lt;/th&gt;
-        ///		&lt;td&gt;@Model.DeployRequest.SubmittedByUserName&lt;/td&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.CreatedByUserName&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
-        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
         ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
         ///		&lt;td colspan=&quot;2&quot;&gt;
-        ///			&lt;a href=&quot;@Model.DeployStatusUrl&quot;&gt;Click here to view/approve this deployment&lt;/a&gt;
+        ///			&lt;a href=&quot;@Model.DeployStatusUrl&quot;&gt;Click here to view/begin this deployment&lt;/a&gt;
         ///		&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
-        ///		&lt;th colspan=&quot; [rest of string was truncated]&quot;;.
+        ///		&lt;th colspa [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string DeployApprovedEmailView {
+        internal static string DeployApprovedEmailView {
             get {
                 return ResourceManager.GetString("DeployApprovedEmailView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;The following deployment has rejected:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.CreatedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;td colspan=&quot;2&quot;&gt;
+        ///			&lt;a href=&quot;@Model.DeployStatusUrl&quot;&gt;Click here to view/begin this deployment&lt;/a&gt;
+        ///		&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th colspa [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DeployRejectedEmailView {
+            get {
+                return ResourceManager.GetString("DeployRejectedEmailView", resourceCulture);
             }
         }
         
@@ -128,10 +155,10 @@ namespace Sriracha.Deploy.Data {
         ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
         ///	&lt;tr&gt;
         ///		&lt;th&gt;Requested By:&lt;/th&gt;
-        ///		&lt;td&gt;@Model.DeployRequest.SubmittedByUserName&lt;/td&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.CreatedByUserName&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
-        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
         ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
@@ -140,11 +167,57 @@ namespace Sriracha.Deploy.Data {
         ///		&lt;/td&gt;
         ///	&lt;/tr&gt;
         ///	&lt;tr&gt;
-        ///		&lt;th colspan=&quot;2&quot; [rest of string was truncated]&quot;;.
+        ///		&lt;th colspa [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string DeployRequestedEmailView {
+        internal static string DeployRequestedEmailView {
             get {
                 return ResourceManager.GetString("DeployRequestedEmailView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;The following deployment has started:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployRequest.CreatedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Started Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployRequest.StartedDateTimeUtc, @Model.DisplayTime [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DeployStartedEmailView {
+            get {
+                return ResourceManager.GetString("DeployStartedEmailView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div&gt;
+        ///	&lt;b&gt;The following deployment has started:&lt;/b&gt;
+        ///&lt;/div&gt;
+        ///&lt;table border=&quot;1&quot; width=&quot;500&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested By:&lt;/th&gt;
+        ///		&lt;td&gt;@Model.DeployBatchStatus.Request.CreatedByUserName&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Requested Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)&lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Started Date/Time:&lt;/th&gt;
+        ///		&lt;td&gt;@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.St [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DeploySuccessEmailView {
+            get {
+                return ResourceManager.GetString("DeploySuccessEmailView", resourceCulture);
             }
         }
     }

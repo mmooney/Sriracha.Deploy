@@ -1,0 +1,68 @@
+<div>
+	<b>The following deployment has started:</b>
+</div>
+<table border="1" width="500">
+	<tr>
+		<th>Requested By:</th>
+		<td>@Model.DeployBatchStatus.Request.CreatedByUserName</td>
+	</tr>
+	<tr>
+		<th>Requested Date/Time:</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.SubmittedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+	<tr>
+		<th>Started Date/Time:</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.StartedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+	<tr>
+		<th>Completed Date/Time:</th>
+		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.DeployBatchStatus.Request.CompleteDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<a href="@Model.DeployStatusUrl">Click here to view this deployment</a>
+		</td>
+	</tr>
+	<tr>
+		<th colspan="2">
+			Status Messages
+		</th>
+	</tr>
+	<tr>
+		<td colspan="2">
+				@foreach(string message in Model.DeployBatchStatus.Request.MessageList)
+				{
+					<pre>@message</pre>
+				}
+		</td>
+	</tr>
+</table>
+@foreach (var requestItem in Model.DeployBatchStatus.Request.ItemList)
+{
+	<h3>@requestItem.Build.DisplayValue</h3>
+	<table border="1" width="600">
+		@foreach(var machine in requestItem.MachineList)
+		{
+			<tr>
+				<th>@machine.MachineName</th>
+				<td>
+					@foreach(var state in Model.DeployBatchStatus.DeployStateList)
+					{
+						if(state.Build.Id == requestItem.Build.Id)
+						{
+							foreach(var stateMachine in state.MachineList)
+							{
+								if(stateMachine.Id == machine.Id)
+								{
+									<span>@state.StatusDisplayValue</span>
+									break;
+								}
+							}
+							break;
+						}
+					}
+				</td>
+			</tr>
+		}
+	</table>
+}

@@ -81,6 +81,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();
 			builder.RegisterType<DeploymentValidator>().As<IDeploymentValidator>().SingleInstance();
 			builder.RegisterType<UrlGenerator>().As<IUrlGenerator>().SingleInstance();
+			builder.RegisterType<NotificationResourceViews>().As<INotificationResourceViews>().SingleInstance();
 
 			builder.RegisterType<DataGenerator>().As<IDataGenerator>();
 

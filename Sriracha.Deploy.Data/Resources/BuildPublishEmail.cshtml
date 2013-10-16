@@ -22,7 +22,7 @@
 		<td>@Model.Build.CreatedByUserName</td>
 	</tr>
 	<tr>
-		<th>Created Date</th>
+		<th>Created Date/Time</th>
 		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.Build.CreatedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
 	</tr>
 	<tr>
@@ -30,7 +30,7 @@
 		<td>@Model.Build.UpdatedByUserName</td>
 	</tr>
 	<tr>
-		<th>Updated Date</th>
+		<th>Updated Date/Time</th>
 		<td>@MMDB.Shared.DateTimeHelper.FormatDateTime(@Model.Build.UpdatedDateTimeUtc, @Model.DisplayTimeZoneIdentifier)</td>
 	</tr>
 </table>

@@ -114,9 +114,9 @@ namespace Sriracha.Deploy.Data.Impl
 				case EnumDeployStatus.Approved:
 					_projectNotifier.SendDeployApprovedNotification(item);
 					break;
-				//case EnumDeployStatus.Rejected:
-				//	_projectNotifier.SendDeployRejectedNotification(item);
-				//	break;
+				case EnumDeployStatus.Rejected:
+					_projectNotifier.SendDeployRejectedNotification(item);
+					break;
 			}
 			return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, newStatus, statusMessage:statusMessage);
 		}

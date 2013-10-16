@@ -128,6 +128,8 @@
     <Compile Include="Impl\BuildParameterEvaluator.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
     <Compile Include="IUrlGenerator.cs" />
+    <Compile Include="Notifications\INotificationResourceViews.cs" />
+    <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Impl\AccountSettingsManager.cs" />
     <Compile Include="Impl\BuildPurger.cs" />
@@ -243,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\DeploySuccessEmail.cshtml" />
+    <None Include="Resources\DeployStartedEmail.cshtml" />
+    <None Include="Resources\DeployRejectedEmail.cshtml" />
     <None Include="Resources\DeployApprovedEmail.cshtml" />
     <None Include="Resources\DeployRequestedEmail.cshtml" />
   </ItemGroup>

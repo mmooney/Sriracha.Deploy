@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Web.Controllers
@@ -16,8 +18,9 @@ namespace Sriracha.Deploy.Web.Controllers
 		private readonly ISystemSettings _systemSettings;
 		private readonly IUrlGenerator _urlGenerator;
 		private readonly IRazorTemplateRepository _razorTemplateRepository;
+		private readonly INotificationResourceViews _notificationResourceViews;
 
-		public PreviewEmailController(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IUrlGenerator urlGenerator, IRazorTemplateRepository razorTemplateRepository)
+		public PreviewEmailController(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IUrlGenerator urlGenerator, IRazorTemplateRepository razorTemplateRepository, INotificationResourceViews notificationResourceViews)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
@@ -25,6 +28,7 @@ namespace Sriracha.Deploy.Web.Controllers
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
 			_urlGenerator = DIHelper.VerifyParameter(urlGenerator);
 			_razorTemplateRepository = DIHelper.VerifyParameter(razorTemplateRepository);
+			_notificationResourceViews = DIHelper.VerifyParameter(notificationResourceViews);
 		}
         //
         // GET: /PreviewEmail/
@@ -47,7 +51,7 @@ namespace Sriracha.Deploy.Web.Controllers
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					ViewBuildUrl = _urlGenerator.ViewBuildUrl(build.Id)
 				};
-				var template = _razorTemplateRepository.GetTemplate("BuildPublishEmail", SrirachaResources.BuildPublishEmailView);
+				var template = _razorTemplateRepository.GetTemplate("BuildPublishEmail", _notificationResourceViews.BuildPublishEmailView);
 				var output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
 				return View("ViewEmail", (object)output);
 			}
@@ -71,7 +75,7 @@ namespace Sriracha.Deploy.Web.Controllers
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
 			
 				};
-				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", SrirachaResources.DeployRequestedEmailView);
+				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", _notificationResourceViews.DeployRequestedEmailView);
 				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
 				return View("ViewEmail", (object)output);
 			}
@@ -94,7 +98,80 @@ namespace Sriracha.Deploy.Web.Controllers
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
 
 				};
-				var template = _razorTemplateRepository.GetTemplate("DeployApprovedEmail", SrirachaResources.DeployApprovedEmailView);
+				var template = _razorTemplateRepository.GetTemplate("DeployApprovedEmail", _notificationResourceViews.DeployApprovedEmailView);
+				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
+				return View("ViewEmail", (object)output);
+			}
+			catch (RazorEngine.Templating.TemplateCompilationException err)
+			{
+				string output = "<div style='color:red'>ERROR: " + string.Join("<br/>", err.Errors) + "</div>";
+				return View("ViewEmail", (object)output);
+			}
+		}
+
+		public ActionResult DeployRejected(string deployBatchRequestId)
+		{
+			try
+			{
+				var deployRequest = _deployRepository.GetBatchRequest(deployBatchRequestId);
+				var dataObject = new
+				{
+					DeployRequest = deployRequest,
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeployRejectedEmail", _notificationResourceViews.DeployRejectedEmailView);
+				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
+				return View("ViewEmail", (object)output);
+			}
+			catch (RazorEngine.Templating.TemplateCompilationException err)
+			{
+				string output = "<div style='color:red'>ERROR: " + string.Join("<br/>", err.Errors) + "</div>";
+				return View("ViewEmail", (object)output);
+			}
+		}
+
+		public ActionResult DeployStarted(string deployBatchRequestId)
+		{
+			try
+			{
+				var deployRequest = _deployRepository.GetBatchRequest(deployBatchRequestId);
+				var dataObject = new
+				{
+					DeployRequest = deployRequest,
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeployStartedEmail", _notificationResourceViews.DeployStartedEmailView);
+				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
+				return View("ViewEmail", (object)output);
+			}
+			catch (RazorEngine.Templating.TemplateCompilationException err)
+			{
+				string output = "<div style='color:red'>ERROR: " + string.Join("<br/>", err.Errors) + "</div>";
+				return View("ViewEmail", (object)output);
+			}
+		}
+
+		public ActionResult DeploySuccess(string deployBatchRequestId)
+		{
+			try
+			{
+				var deployRequest = _deployRepository.GetBatchRequest(deployBatchRequestId);
+				var dataObject = new
+				{
+					DeployBatchStatus = new DeployBatchStatus
+					{
+						DeployBatchRequestId = deployRequest.Id,
+						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
+						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+					},
+					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
+					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
+				};
+				var template = _razorTemplateRepository.GetTemplate("DeploySuccessEmail", _notificationResourceViews.DeploySuccessEmailView);
 				string output = RazorEngine.Razor.Parse(template.ViewData, dataObject);
 				return View("ViewEmail", (object)output);
 			}
