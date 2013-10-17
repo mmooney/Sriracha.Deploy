@@ -1,0 +1,24 @@
+﻿<h2>Roles for {{project.projectName}} Project</h2>
+<div class="row">
+	<div class="span2">
+		<ul class="nav nav-list bs-docs-sidenav affix-top">
+			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}">
+				<a ng-href="{{navigator.projectRole.view.clientUrl(project.id, tempRole.id)}}">
+					{{tempRole.roleName}}
+				</a>
+			</li>
+		</ul>
+		<div ng-hide="projectRoleList.length">No Roles</div>
+		<button class="btn btn-primary" ng-click="beginAddRole()" style="margin-top:20px"><i class="icon-plus" />Add Role</button>
+	</div>
+	<div class="addRoleDialog" style="display:none">
+		<div>
+			Role Name: <input type="text" ng-model="addRoleData.roleName" />
+		</div>
+		<div>
+			<center>
+				<button class="btn btn-primary" ng-disabled="!addRoleData.roleName" ng-click="completeAddRole()">OK</button>
+			</center>
+		</div>
+	</div>
+</div>

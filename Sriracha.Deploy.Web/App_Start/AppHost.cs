@@ -60,6 +60,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployProjectBranch>("/project/{projectId}/branch/{id*}")
 				.Add<DeployEnvironment>("/project/{projectId}/environment")
 				.Add<DeployEnvironment>("/project/{projectId}/environment/{id*}")
+				.Add<DeployProjectRole>("/project/{projectId}/role")
+				.Add<DeployProjectRole>("/project/{projectId}/role/{id}")
 				.Add<DeployFileDto>("/file")
 				.Add<DeployFileDto>("/file/{id*}")
 				.Add<DeployBuild>("/build")

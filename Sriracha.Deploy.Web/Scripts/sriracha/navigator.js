@@ -166,6 +166,18 @@
 				go: function (projectId, branchId) { root.goTo(this.url, { projectId: projectId, branchId: branchId }); }
 			}
 		}
+		root.projectRole = {
+			list: {
+				url: "/project/:projectId/role",
+				clientUrl: function (projectId) { return root.getUrl(this.url, { projectId: projectId }); },
+				go: function (projectId) { root.goTo(this.url, { projectId: projectId });}
+			},
+			view: {
+				url: "/project/:projectId/role/:projectRoleId",
+				clientUrl: function (projectId, projectRoleId) { return root.getUrl(this.url, { projectId: projectId, projectRoleId: projectRoleId }); },
+				go: function (projectId, projectRoleId) { root.goTo(this.url, { projectId: projectId, projectRoleId: projectRoleId });}
+			}
+		}
 		root.build = {
 			list: {
 				url: "/build",

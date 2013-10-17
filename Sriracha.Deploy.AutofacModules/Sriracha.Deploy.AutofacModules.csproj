@@ -101,6 +101,14 @@
       <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
       <Name>MMDB.ConnectionSettings</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MMDB.Permissions.RavenDB\MMDB.Permissions.RavenDB.csproj">
+      <Project>{c7d939bb-a2de-41a1-9494-96e69ef53abf}</Project>
+      <Name>MMDB.Permissions.RavenDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMDB.Permissions\MMDB.Permissions.csproj">
+      <Project>{7025bea4-e05e-4d81-9593-4c8ff5965e05}</Project>
+      <Name>MMDB.Permissions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>

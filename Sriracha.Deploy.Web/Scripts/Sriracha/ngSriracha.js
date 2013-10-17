@@ -105,6 +105,9 @@ ngSriracha.directive("breadcrumbs",
 											};
 											scope.breadcrumbList.push(x);
 											break;
+										case "role":
+											//skip for now
+											break;
 										default:
 											console.error("Unrecognized breadcrumb URL parameter: " + item.key);
 											console.error(item.key);

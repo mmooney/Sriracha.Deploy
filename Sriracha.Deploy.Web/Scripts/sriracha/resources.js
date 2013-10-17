@@ -10,6 +10,7 @@
 			branch: $resource("/api/project/:projectId/branch"),
 			environment: $resource("/api/project/:projectId/environment"),
 			deploymentStep: $resource("/api/project/:projectId/:parentType/:parentId/step", { projectId: "@projectId", parentType: "@parentType", parentId: "@parentId" }),
+			projectRole: $resource("/api/project/:projectId/role"),
 			deployHistory: $resource("/api/deploy/history"),
 			taskMetadata: $resource("/api/taskmetadata"),
 			build: $resource("/api/build/:buildId"),

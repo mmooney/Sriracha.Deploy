@@ -258,6 +258,7 @@
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\ProjectRoleService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RequestBase.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
@@ -411,6 +412,7 @@
     <Content Include="Scripts\sriracha\project\projectController.js" />
     <Content Include="Scripts\sriracha\project\projectBranchController.js" />
     <Content Include="Scripts\sriracha\project\projectComponentController.js" />
+    <Content Include="Scripts\sriracha\project\projectRoleController.js" />
     <Content Include="Scripts\sriracha\resources.js" />
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
@@ -433,6 +435,7 @@
     <Content Include="Templates\project\configuration\configuration-delete-template.html" />
     <Content Include="Templates\project\configuration\configuration-view-template.html" />
     <Content Include="Templates\project\configuration\configuration-edit-template.html" />
+    <Content Include="Templates\project\role\role-list-template.html" />
     <Content Include="Templates\systemlog-list-template.html" />
     <Content Include="Templates\deployment\deployment-submit-template.html" />
     <Content Include="Templates\deployment\deployment-view-template.html" />

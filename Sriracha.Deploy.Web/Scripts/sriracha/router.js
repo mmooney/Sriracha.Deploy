@@ -125,6 +125,16 @@
 			controller: "ProjectEnvironmentController"
 		})
 
+		//Project Roles
+		.when(navigator.projectRole.list.url, {
+			templateUrl: "templates/project/role/role-list-template.html",
+			controller: "ProjectRoleController"
+		})
+		.when(navigator.projectRole.view.url, {
+			templateUrl: "templates/project/role/role-list-template.html",
+			controller: "ProjectRoleController"
+		})
+
 		//Builds
 		.when(navigator.build.list.url, {
 			templateUrl: "templates/builds/build-list-template.html",

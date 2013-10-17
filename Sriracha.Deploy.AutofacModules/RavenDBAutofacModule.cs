@@ -8,6 +8,8 @@ using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.RavenDB;
+using MMDB.Permissions.RavenDB;
+using MMDB.Permissions;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -36,7 +38,9 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
 			builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();
 			builder.RegisterType<RavenRazorTemplateRepository>().As<IRazorTemplateRepository>();
+
 			builder.RegisterType<RavenConnectionSettingRepository>().As<IConnectionSettingRepository>();
+			builder.RegisterType<RavenDBPermissionRepository>().As<IPermissionRepository>();
 		}
 	}
 }

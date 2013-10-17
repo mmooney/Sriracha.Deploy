@@ -18,6 +18,7 @@ using Sriracha.Deploy.Data.ServiceJobs;
 using Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Tasks.TaskImpl;
+using MMDB.Permissions;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -56,6 +57,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<AccountSettingsManager>().As<IAccountSettingsManager>();
 
 			builder.RegisterType<ProjectManager>().As<IProjectManager>();
+			builder.RegisterType<ProjectRoleManager>().As<IProjectRoleManager>();
 			builder.RegisterType<BuildManager>().As<IBuildManager>();
 			builder.RegisterType<FileManager>().As<IFileManager>();
 			builder.RegisterType<TaskManager>().As<ITaskManager>();
@@ -87,7 +89,6 @@ namespace Sriracha.Deploy.AutofacModules
 
 			builder.RegisterType<DefaultSystemSettings>().As<ISystemSettings>().SingleInstance();
 
-			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
 			builder.RegisterType<EmailSender>().As<IEmailSender>();
 			builder.RegisterType<RazorEmailEngine>().As<IRazorEmailEngine>().UsingConstructor(typeof(EmailSender));
 
@@ -97,7 +98,10 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<PurgeBuildJob>().As<IPurgeBuildJob>();
 			builder.RegisterType<EmailSenderJob>().As<IEmailSenderJob>();
 
-			if(_diMode == EnumDIMode.Service)
+			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
+			builder.RegisterType<PermissionManager>().As<IPermissionManager>();
+
+			if (_diMode == EnumDIMode.Service)
 			{
 				builder.RegisterType<JobScheduler>().As<IJobScheduler>();
 				builder.RegisterType<JobFactory>().As<IJobFactory>();

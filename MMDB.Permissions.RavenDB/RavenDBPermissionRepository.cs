@@ -10,11 +10,11 @@ namespace MMDB.Permissions.RavenDB
 {
 	public class RavenDBPermissionRepository : IPermissionRepository
 	{
-		private readonly IDocumentSession _session;
+		private readonly IDocumentSession _documentSession;
 
-		public RavenDBPermissionRepository(IDocumentSession session)
+		public RavenDBPermissionRepository(IDocumentSession documentSession)
 		{
-			_session = session;
+			_documentSession = documentSession;
 		}
 
 		public PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue)
@@ -27,7 +27,7 @@ namespace MMDB.Permissions.RavenDB
 			{
 				throw new ArgumentNullException("Missing permissionDisplayValue");
 			}
-			var existingItem = _session.Query<PermissionDefinition>().FirstOrDefault(i=>i.PermissionName == permissionName);
+			var existingItem = _documentSession.Query<PermissionDefinition>().FirstOrDefault(i=>i.PermissionName == permissionName);
 			if(existingItem != null)
 			{
 				throw new ArgumentException(string.Format("Permission with name \"{0}\" already exists", permissionName));
@@ -38,8 +38,8 @@ namespace MMDB.Permissions.RavenDB
 				PermissionName = permissionName,
 				PermissionDisplayValue = permissionDisplayValue
 			};
-			_session.Store(item);
-			_session.SaveChanges();
+			_documentSession.Store(item);
+			_documentSession.SaveChanges();
 			return item;
 		}
 
@@ -49,7 +49,7 @@ namespace MMDB.Permissions.RavenDB
 			{
 				throw new ArgumentNullException("Missing id");
 			}
-			var item = _session.Load<PermissionDefinition>(id);
+			var item = _documentSession.Load<PermissionDefinition>(id);
 			if(item == null)
 			{
 				throw new RecordNotFoundException(typeof(PermissionDefinition), "Id", id);
@@ -77,25 +77,25 @@ namespace MMDB.Permissions.RavenDB
 			{
 				throw new ArgumentNullException("Missing permissionName");
 			}
-			return _session.Query<PermissionDefinition>().FirstOrDefault(i=>i.PermissionName == permissionName);
+			return _documentSession.Query<PermissionDefinition>().FirstOrDefault(i=>i.PermissionName == permissionName);
 		}
 
 		public List<PermissionDefinition> GetPermissionDefinitionList()
 		{
-			return this._session.Query<PermissionDefinition>().ToList();
+			return this._documentSession.Query<PermissionDefinition>().ToList();
 		}
 
 		public PermissionDefinition DeletePermissionDefinition(string id)
 		{
 			var item = this.GetPermissionDefinition(id);
-			_session.Delete(item);
-			_session.SaveChanges();
+			_documentSession.Delete(item);
+			_documentSession.SaveChanges();
 			return item;
 		}
 
 		public List<PermissionGroup> GetGroupList()
 		{
-			return _session.Query<PermissionGroup>().ToList();
+			return _documentSession.Query<PermissionGroup>().ToList();
 		}
 
 		public PermissionGroup CreateGroup(string groupName, string parentGroupId)
@@ -104,14 +104,14 @@ namespace MMDB.Permissions.RavenDB
 			{
 				throw new ArgumentNullException("Missing groupName");
 			}
-			var existingItem = _session.Query<PermissionGroup>().FirstOrDefault(i=>i.GroupName == groupName);
+			var existingItem = _documentSession.Query<PermissionGroup>().FirstOrDefault(i=>i.GroupName == groupName);
 			if(existingItem != null)
 			{
 				throw new ArgumentException(string.Format("Permission Group with name \"{0}\" already exists", groupName));
 			}
 			if(!string.IsNullOrEmpty(parentGroupId))
 			{
-				var parent = _session.Load<PermissionGroup>(parentGroupId);
+				var parent = _documentSession.Load<PermissionGroup>(parentGroupId);
 				if(parent == null)
 				{
 					throw new ArgumentException("No parent group found for parentGroupId " + parentGroupId);
@@ -123,13 +123,13 @@ namespace MMDB.Permissions.RavenDB
 				GroupName = groupName,
 				ParentGroupId = parentGroupId,
 			};
-			_session.Store(item);
-			_session.SaveChanges();
+			_documentSession.Store(item);
+			_documentSession.SaveChanges();
 			return item;
 		}
 		public PermissionGroup GetGroup(string id)
 		{
-			var item = _session.Load<PermissionGroup>(id);
+			var item = _documentSession.Load<PermissionGroup>(id);
 			if(item == null)
 			{
 				throw new RecordNotFoundException(typeof(PermissionGroup), "Id", id);
@@ -140,8 +140,8 @@ namespace MMDB.Permissions.RavenDB
 		public PermissionGroup DeleteGroup(string groupId)
 		{
 			var item = this.GetGroup(groupId);
-			_session.Delete(item);
-			_session.SaveChanges();
+			_documentSession.Delete(item);
+			_documentSession.SaveChanges();
 			return item;
 		}
 
@@ -149,7 +149,7 @@ namespace MMDB.Permissions.RavenDB
 		public List<PermissionGroup> GetUserGroupList(string userId, bool includeParents)
 		{
 			var returnList = new List<PermissionGroup>();
-			var userGroupAssignmentList = _session.Query<UserGroupAssignment>().Where(i=>i.UserId == userId).ToList();
+			var userGroupAssignmentList = _documentSession.Query<UserGroupAssignment>().Where(i=>i.UserId == userId).ToList();
 			foreach(var userGroupAssignment in userGroupAssignmentList)
 			{
 				var group = this.GetGroup(userGroupAssignment.GroupId);
@@ -181,8 +181,8 @@ namespace MMDB.Permissions.RavenDB
 				GroupId = groupId,
 				UserId = userId
 			};
-			_session.Store(item);
-			_session.SaveChanges();
+			_documentSession.Store(item);
+			_documentSession.SaveChanges();
 			return item;
 		}
 
@@ -194,19 +194,64 @@ namespace MMDB.Permissions.RavenDB
 
 		public UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId)
 		{
-			return _session.Query<UserGroupAssignment>().FirstOrDefault(i=>i.UserId == userId && i.GroupId == groupId);
+			return _documentSession.Query<UserGroupAssignment>().FirstOrDefault(i=>i.UserId == userId && i.GroupId == groupId);
 		}
 
+
+		public List<PermissionRole> GetRoleList(PermissionDataAssignment assignment)
+		{
+			var query = _documentSession.Query<PermissionRole>().AsQueryable();
+			if (assignment != null)
+			{
+				query = query.Where(i => i.DataAssignmentList.Any(j => j.DataObjectId == assignment.DataObjectId
+																	&& j.DataObjectName == assignment.DataObjectName));
+			}
+			return query.ToList();
+		}
 
 		public PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems = null)
 		{
-			throw new NotImplementedException();
+			var item = new PermissionRole
+			{
+				Id = Guid.NewGuid().ToString(),
+				RoleName = roleName,
+				DataAssignmentList = roleDataItems
+			};
+			_documentSession.Store(item);
+			_documentSession.SaveChanges();
+			return item;
 		}
-
 
 		public PermissionRole GetRole(string roleId)
 		{
-			throw new NotImplementedException();
+			if(string.IsNullOrEmpty(roleId))
+			{
+				throw new ArgumentNullException("roleId is missing");
+			}
+			var role = _documentSession.Load<PermissionRole>(roleId);
+			if(role == null)
+			{
+				throw new RecordNotFoundException(typeof(PermissionRole), "Id", roleId);
+			}
+			return role;
+		}
+
+
+		public PermissionRole UpdateRole(string roleId, string roleName, List<PermissionDataAssignment> list)
+		{
+			if(string.IsNullOrEmpty(roleId))
+			{
+				throw new ArgumentNullException("Missing roleId");
+			}
+			if (string.IsNullOrEmpty(roleName))
+			{
+				throw new ArgumentNullException("Missing roleName");
+			}
+			var role = this.GetRole(roleId);
+			role.RoleName = roleName;
+			role.DataAssignmentList = list;
+			_documentSession.SaveChanges();
+			return role;
 		}
 
 		public RoleGroupAssignment AssignGroupToRole(string roleId, string groupId)

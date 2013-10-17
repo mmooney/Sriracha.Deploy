@@ -114,6 +114,7 @@
     <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Dto\DeployStateSummary.cs" />
     <Compile Include="Dto\MembershipRepositoryFilters.cs" />
+    <Compile Include="Dto\DeployProjectRole.cs" />
     <Compile Include="Dto\SrirachaEmailMessage.cs" />
     <Compile Include="Dto\ListOptions.cs" />
     <Compile Include="Dto\RazorTemplate.cs" />
@@ -126,8 +127,11 @@
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Impl\BuildParameterEvaluator.cs" />
+    <Compile Include="Impl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
+    <Compile Include="IProjectRoleManager.cs" />
     <Compile Include="IUrlGenerator.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
@@ -265,6 +269,10 @@
     <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
       <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
       <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMDB.Permissions\MMDB.Permissions.csproj">
+      <Project>{7025bea4-e05e-4d81-9593-4c8ff5965e05}</Project>
+      <Name>MMDB.Permissions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -90,3 +90,21 @@
 	<em>No Environments</em>
 </div>
 <a class="btn btn-primary" ng-href="{{navigator.environment.create.clientUrl(project.id)}}">Create Environment</a>
+
+<h3>Project Roles</h3>
+<table class="table table-bordered table-striped" ng-show="project.environmentList.length">
+    <thead>
+        <tr>
+            <th>Role Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="role in projectRoleList">
+            <td><a ng-href="{{navigator.projectRole.edit.clientUrl(role.projectId, role.id)}}">{{role.roleName}}</a></td>
+        </tr>
+    </tbody>
+</table>
+<div ng-hide="projectRoleList">
+    <em>No Roles</em>
+</div>
+<a class="btn btn-primary" ng-href="{{navigator.projectRole.list.clientUrl(project.id)}}">Edit Project Roles</a>
