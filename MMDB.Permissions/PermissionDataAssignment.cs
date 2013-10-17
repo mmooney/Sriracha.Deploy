@@ -9,7 +9,7 @@ namespace MMDB.Permissions
 	public class PermissionDataAssignment
 	{
 		public string Id { get; set; }
-		public string DataObjectName { get; set; }
-		public string DataObjectId { get; set; }
+		public string DataPropertyName { get; set; }
+		public string DataPropertyValue { get; set; }
 	}
 }

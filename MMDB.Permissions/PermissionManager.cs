@@ -53,6 +53,10 @@ namespace MMDB.Permissions
 			return _repository.DeleteGroup(groupId);
 		}
 
+		public List<PermissionRole> GetRoleList(PermissionDataAssignment assignment)
+		{
+			return _repository.GetRoleList(assignment);
+		}
 
 		public PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems=null)
 		{
@@ -69,9 +73,9 @@ namespace MMDB.Permissions
 			return _repository.GetRole(roleId);
 		}
 
-		public List<PermissionRole> GetRoleList(PermissionDataAssignment assignment)
+		public List<RolePermission> GetRolePermissionList(string roleId)
 		{
-			return _repository.GetRoleList(assignment);
+			return _repository.GetRolePermissionList(roleId);
 		}
 
 		public RoleGroupAssignment AssignGroupToRole(string roleId, string groupId)
@@ -83,6 +87,5 @@ namespace MMDB.Permissions
 		{
 			return _repository.TryGetRoleGroupAssignment(roleId, groupId);
 		}
-
 	}
 }

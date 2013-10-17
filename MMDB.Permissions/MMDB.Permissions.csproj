@@ -55,6 +55,7 @@
     <Compile Include="PermissionRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleGroupAssignment.cs" />
+    <Compile Include="RolePermission.cs" />
     <Compile Include="UserGroupAssignment.cs" />
   </ItemGroup>
   <ItemGroup>

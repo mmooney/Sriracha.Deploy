@@ -40,7 +40,7 @@ namespace MMDB.Permissions.RavenDB.Tests
 
 				var roleDataItems = new List<PermissionDataAssignment>
 				{
-					new PermissionDataAssignment { Id = fixture.Create<string>(), DataObjectName="Project", DataObjectId = fixture.Create<string>() }
+					new PermissionDataAssignment { Id = fixture.Create<string>(), DataPropertyName="Project", DataPropertyValue = fixture.Create<string>() }
 				};
 				var role = sut.CreateRole("QA Approvers", roleDataItems);
 				RoleGroupAssignment roleGroupAssignment = sut.AssignGroupToRole(role.Id, group.Id);

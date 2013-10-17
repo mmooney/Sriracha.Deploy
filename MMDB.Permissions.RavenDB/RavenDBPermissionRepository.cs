@@ -127,6 +127,7 @@ namespace MMDB.Permissions.RavenDB
 			_documentSession.SaveChanges();
 			return item;
 		}
+
 		public PermissionGroup GetGroup(string id)
 		{
 			var item = _documentSession.Load<PermissionGroup>(id);
@@ -203,8 +204,8 @@ namespace MMDB.Permissions.RavenDB
 			var query = _documentSession.Query<PermissionRole>().AsQueryable();
 			if (assignment != null)
 			{
-				query = query.Where(i => i.DataAssignmentList.Any(j => j.DataObjectId == assignment.DataObjectId
-																	&& j.DataObjectName == assignment.DataObjectName));
+				query = query.Where(i => i.DataAssignmentList.Any(j => j.DataPropertyValue == assignment.DataPropertyValue
+																	&& j.DataPropertyName == assignment.DataPropertyName));
 			}
 			return query.ToList();
 		}
@@ -236,6 +237,10 @@ namespace MMDB.Permissions.RavenDB
 			return role;
 		}
 
+		public List<RolePermission> GetRolePermissionList(string roleId)
+		{
+			return _documentSession.Query<RolePermission>().Where(i=>i.RoleId == roleId).ToList();
+		}
 
 		public PermissionRole UpdateRole(string roleId, string roleName, List<PermissionDataAssignment> list)
 		{
@@ -263,5 +268,7 @@ namespace MMDB.Permissions.RavenDB
 		{
 			throw new NotImplementedException();
 		}
+
+
 	}
 }

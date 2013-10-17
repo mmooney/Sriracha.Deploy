@@ -31,9 +31,11 @@ namespace MMDB.Permissions
 		List<PermissionRole> GetRoleList(PermissionDataAssignment assignment);
 		PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems = null);
 		PermissionRole GetRole(string roleId);
+		List<RolePermission> GetRolePermissionList(string roleId);
 		PermissionRole UpdateRole(string roleId, string roleName, List<PermissionDataAssignment> list);
 		RoleGroupAssignment AssignGroupToRole(string roleId, string groupId);
 		RoleGroupAssignment TryGetRoleGroupAssignment(string roleId, string groupId);
+
 
 
 	}

@@ -20,8 +20,16 @@
 					{ projectId: $routeParams.projectId },
 					function () {
 						if ($routeParams.projectRoleId) {
-							$scope.projectRole = _.findWhere($scope.projectRoleList, { id: $routeParams.projectRoleId});
-							console.log($scope.projectRole);
+							$scope.projectRole = SrirachaResource.projectRole.get(
+								{projectId: $routeParams.projectId, id: $routeParams.projectRoleId},
+								function () {
+									console.log($scope.projectRole);
+									//ok
+								},
+								function (err) {
+									ErrorReporter.handleResourceError(err);
+								}
+							)
 						}
 					},
 					function (err) {

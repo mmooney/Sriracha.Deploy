@@ -19,6 +19,7 @@ using Sriracha.Deploy.Web.Services.SystemLog;
 using System.Web;
 using ServiceStack.ServiceHost;
 using Elmah;
+using Sriracha.Deploy.Data.Dto.Project.Roles;
 
 //[assembly: WebActivator.PreApplicationStartMethod(typeof(Sriracha.Deploy.Web.App_Start.AppHost), "Start")]
 

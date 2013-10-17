@@ -114,7 +114,9 @@
     <Compile Include="Dto\DeployStateMessage.cs" />
     <Compile Include="Dto\DeployStateSummary.cs" />
     <Compile Include="Dto\MembershipRepositoryFilters.cs" />
-    <Compile Include="Dto\DeployProjectRole.cs" />
+    <Compile Include="Dto\Project\Roles\DeployProjectRole.cs" />
+    <Compile Include="Dto\Project\Roles\DeployProjectRoleEnvironmentPermission.cs" />
+    <Compile Include="Dto\Project\Roles\DeployProjectRolePermissions.cs" />
     <Compile Include="Dto\SrirachaEmailMessage.cs" />
     <Compile Include="Dto\ListOptions.cs" />
     <Compile Include="Dto\RazorTemplate.cs" />

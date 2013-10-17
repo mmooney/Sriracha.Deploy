@@ -3,43 +3,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MMDB.Permissions
 {
-	public class PermissionRole
+	public class RolePermission
 	{
 		public string Id { get; set; }
-		public string RoleName { get; set; }
+		public string PermissionName { get; set; }
+		public string RoleId { get; set; }
 		public List<PermissionDataAssignment> DataAssignmentList { get; set; }
+		public EnumPermissionAccess Access { get; set; }
 
-		public PermissionRole()
+		public RolePermission()
 		{
 			this.DataAssignmentList = new List<PermissionDataAssignment>();
 		}
 
 		public string GetAssignmentValue(string dataPropertyName)
 		{
-			if(dataPropertyName == null)
+			if (dataPropertyName == null)
 			{
-				throw new ArgumentNullException("dataObjectName is missing");
+				throw new ArgumentNullException("dataPropertyName is missing");
 			}
 			var returnValue = this.TryGetAssignmentValue(dataPropertyName);
-			if(string.IsNullOrEmpty(returnValue))
+			if (string.IsNullOrEmpty(returnValue))
 			{
 				throw new RecordNotFoundException(typeof(PermissionRole), "DataPropertyName", dataPropertyName);
 			}
 			return returnValue;
 		}
 
-		private string TryGetAssignmentValue(string dataPropertyName)
+		private string TryGetAssignmentValue(string dataObjectName)
 		{
-			var item = this.DataAssignmentList.FirstOrDefault(i=>i.DataPropertyName == dataPropertyName);
-			if(item == null)
+			var item = this.DataAssignmentList.FirstOrDefault(i => i.DataPropertyName == dataObjectName);
+			if (item == null)
 			{
 				return null;
 			}
-			else 
+			else
 			{
 				return item.DataPropertyValue;
 			}
