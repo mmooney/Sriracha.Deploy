@@ -9,9 +9,14 @@ namespace MMDB.Permissions
 	public interface IPermissionManager
 	{
 		List<PermissionDefinition> GetPermissionDefinitionList();
-		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList);
+		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue);
 
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
 		PermissionGroup DeleteGroup(string groupId);
+
+		PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems=null);
+		RoleGroupAssignment AssignGroupToRole(string roleId, string groupId);
+		RoleGroupAssignment TryGetRoleGroupAssignment(string roleId, string groupId);
+
 	}
 }

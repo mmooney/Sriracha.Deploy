@@ -17,7 +17,7 @@ namespace MMDB.Permissions.RavenDB
 			_session = session;
 		}
 
-		public PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList)
+		public PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue)
 		{
 			if(string.IsNullOrEmpty(permissionName))
 			{
@@ -36,16 +36,8 @@ namespace MMDB.Permissions.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				PermissionName = permissionName,
-				PermissionDisplayValue = permissionDisplayValue,
-				FilterDefinitionList = filterDefinitionList
+				PermissionDisplayValue = permissionDisplayValue
 			};
-			if(filterDefinitionList != null)
-			{
-				foreach(var filter in filterDefinitionList)
-				{
-					filter.Id = Guid.NewGuid().ToString();
-				}
-			}
 			_session.Store(item);
 			_session.SaveChanges();
 			return item;
@@ -203,6 +195,28 @@ namespace MMDB.Permissions.RavenDB
 		public UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId)
 		{
 			return _session.Query<UserGroupAssignment>().FirstOrDefault(i=>i.UserId == userId && i.GroupId == groupId);
+		}
+
+
+		public PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems = null)
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public PermissionRole GetRole(string roleId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public RoleGroupAssignment AssignGroupToRole(string roleId, string groupId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public RoleGroupAssignment TryGetRoleGroupAssignment(string roleId, string groupId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

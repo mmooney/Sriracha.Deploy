@@ -21,7 +21,7 @@ namespace MMDB.Permissions
 			return _repository.GetPermissionDefinitionList();
 		}
 
-		public PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList)
+		public PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue)
 		{
 			if(String.IsNullOrEmpty(permissionName))
 			{ 
@@ -31,7 +31,7 @@ namespace MMDB.Permissions
 			{
 				throw new ArgumentNullException("Missing permissionDisplayValue");
 			}
-			return _repository.CreatePermissionDefinition(permissionName, permissionDisplayValue, filterDefinitionList);
+			return _repository.CreatePermissionDefinition(permissionName, permissionDisplayValue);
 		}
 
 
@@ -51,6 +51,23 @@ namespace MMDB.Permissions
 				throw new ArgumentNullException("Missing groupId");
 			}
 			return _repository.DeleteGroup(groupId);
+		}
+
+
+		public PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems=null)
+		{
+			return _repository.CreateRole(roleName, roleDataItems);
+		}
+
+
+		public RoleGroupAssignment AssignGroupToRole(string roleId, string groupId)
+		{
+			return _repository.AssignGroupToRole(roleId, groupId);
+		}
+
+		public RoleGroupAssignment TryGetRoleGroupAssignment(string roleId, string groupId)
+		{
+			return _repository.TryGetRoleGroupAssignment(roleId, groupId);
 		}
 	}
 }

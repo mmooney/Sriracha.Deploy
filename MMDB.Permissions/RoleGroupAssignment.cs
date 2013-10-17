@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MMDB.Permissions
 {
-	public class PermissionDefinition
+	public class RoleGroupAssignment
 	{
 		public string Id { get; set; }
-		public string PermissionName { get; set; }
-		public string PermissionDisplayValue { get; set; }
+		public string RoleId { get; set; }
+		public string GroupId { get; set; }
 	}
 }

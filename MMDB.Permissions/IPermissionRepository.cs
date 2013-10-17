@@ -8,7 +8,7 @@ namespace MMDB.Permissions
 {
 	public interface IPermissionRepository
 	{
-		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList);
+		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue);
 
 		PermissionDefinition GetPermissionDefinition(string id);
 
@@ -27,5 +27,10 @@ namespace MMDB.Permissions
 		UserGroupAssignment CreateUserGroupAssignment(string userId, string groupId);
 		UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId);
 
+
+		PermissionRole CreateRole(string roleName, List<PermissionDataAssignment> roleDataItems = null);
+		PermissionRole GetRole(string roleId);
+		RoleGroupAssignment AssignGroupToRole(string roleId, string groupId);
+		RoleGroupAssignment TryGetRoleGroupAssignment(string roleId, string groupId);
 	}
 }
