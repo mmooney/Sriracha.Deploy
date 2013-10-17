@@ -8,35 +8,24 @@ namespace MMDB.Permissions
 {
 	public interface IPermissionRepository
 	{
-		PermissionItem CreatePermission(string permissionName, string permissionDisplayValue);
+		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList);
 
-		PermissionItem GetPermission(string id);
+		PermissionDefinition GetPermissionDefinition(string id);
 
-		PermissionItem GetPermissionByName(string permissionName);
-		PermissionItem TryGetPermissionByName(string permissionName);
-		PermissionItem DeletePermission(string id);
+		PermissionDefinition GetPermissionDefinitionByName(string permissionName);
+		PermissionDefinition TryGetPermissionDefinitionByName(string permissionName);
+		PermissionDefinition DeletePermissionDefinition(string id);
 
-		UserPermissionAssignment TryGetUserPermissionAssignment(string permissionId, string userId);
-
-		List<PermissionItem> GetPermissionList();
-
-		UserPermissionAssignment CreateUserPermissionAssignment(string permissionId, string userId, EnumPermissionAccess enumPermissionAccess);
-		UserPermissionAssignment UpdateUserPermissionAssignment(string userPermissionAssignmentId, EnumPermissionAccess access);
-		UserPermissionAssignment DeleteUserPermissionAssignment(string userPermissionAssignmentId);
+		List<PermissionDefinition> GetPermissionDefinitionList();
 
 		List<PermissionGroup> GetGroupList();
 		PermissionGroup GetGroup(string id);
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
 		PermissionGroup DeleteGroup(string groupId);
-		GroupPermissionAssignment CreateGroupPermissionAssignment(string permissionId, string groupId, EnumPermissionAccess enumPermissionAccess);
-		GroupPermissionAssignment TryGetGroupPermissionAssignment(string permissionId, string groupId);
-		GroupPermissionAssignment UpdateGroupPermissionAssignment(string groupPermissionAssignmentId, EnumPermissionAccess access);
-
-		GroupPermissionAssignment DeleteGroupPermissionAssignment(string groupPermissionAssignmentId);
 
 		List<PermissionGroup> GetUserGroupList(string userId, bool includeParents);
-
 		UserGroupAssignment CreateUserGroupAssignment(string userId, string groupId);
 		UserGroupAssignment TryGetUserGroupAssignment(string userId, string groupId);
+
 	}
 }

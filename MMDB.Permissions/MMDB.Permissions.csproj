@@ -44,17 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EffectivePermissionAssignment.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IPermissionManager.cs" />
     <Compile Include="IPermissionRepository.cs" />
+    <Compile Include="PermissionFilterDefinition.cs" />
     <Compile Include="PermissionGroup.cs" />
-    <Compile Include="GroupPermissionAssignment.cs" />
-    <Compile Include="PermissionItem.cs" />
+    <Compile Include="PermissionDefinition.cs" />
     <Compile Include="PermissionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserGroupAssignment.cs" />
-    <Compile Include="UserPermissionAssignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

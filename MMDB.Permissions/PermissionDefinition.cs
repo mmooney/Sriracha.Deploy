@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MMDB.Permissions
 {
-	public class PermissionItem
+	public class PermissionDefinition
 	{
 		public string Id { get; set; }
 		public string PermissionName { get; set; }
 		public string PermissionDisplayValue { get; set; }
+		public List<PermissionFilterDefinition> FilterDefinitionList { get; set; }
 	}
 }

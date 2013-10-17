@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace MMDB.Permissions
 {
-	public class UserPermissionAssignment
+	public class PermissionFilterDefinition
 	{
 		public string Id { get; set; }
-		public string PermissionId { get; set; }
-		public string UserId { get; set; }
-		public EnumPermissionAccess Access { get; set; }
+		public string DefinitionName { get; set; }
+		public string DisplayValue { get; set; }
 	}
 }

@@ -8,20 +8,10 @@ namespace MMDB.Permissions
 {
 	public interface IPermissionManager
 	{
-		List<PermissionItem> GetPermissionList();
-		PermissionItem CreatePermission(string permissionName, string permissionDisplayValue);
-
-		UserPermissionAssignment AssignPermissionToUser(string permissionId, string userId, EnumPermissionAccess access);
-		UserPermissionAssignment AssignPermissionToUser(PermissionItem permissionItem, string userId, EnumPermissionAccess access);
-		UserPermissionAssignment DeletePermissionForUser(string permissionId, string userId);
+		List<PermissionDefinition> GetPermissionDefinitionList();
+		PermissionDefinition CreatePermissionDefinition(string permissionName, string permissionDisplayValue, List<PermissionFilterDefinition> filterDefinitionList);
 
 		PermissionGroup CreateGroup(string groupName, string parentGroupId);
 		PermissionGroup DeleteGroup(string groupId);
-		GroupPermissionAssignment AssignPermissionToGroup(string permissionId, string groupId, EnumPermissionAccess access);
-		GroupPermissionAssignment DeletePermissionForGroup(string permissionId, string groupId);
-
-		bool HasPermission(string userId, string permissionId);
-
-		List<EffectivePermissionAssignment> GetEffectiveUserPermissionList(string userId);
 	}
 }
