@@ -8,6 +8,10 @@
 		environmentId: $routeParams.environmentId
 	};
 
+	$scope.$on("$destroy", function () {
+		angular.element(".promoteBuildDialog").dialog("destroy").remove();
+		angular.element(".editBuildDialog").dialog("destroy").remove();
+	});
 
 	if ($routeParams.sourceDeployBatchRequestId) {
 		$scope.sourceDeployBatchRequest = SrirachaResource.deployBatchRequest.get({ id: $routeParams.sourceDeployBatchRequestId },
@@ -44,7 +48,7 @@
 				}
 			});
 		});
-		$(".promoteBuildDialog").dialog({
+		angular.element(".promoteBuildDialog").dialog({
 			width: 'auto',
 			height: 'auto',
 			modal: true
@@ -146,7 +150,8 @@
 				item.machineList = environmentComponent.machineList.slice(0);
 			}
 		});
-		$(".promoteBuildDialog").dialog("close");
+		//$(".promoteBuildDialog").dialog("close");
+		angular.element(".promoteBuildDialog").dialog("destroy");
 	}
 
 	$scope.takeLatestBuilds = function () {
@@ -171,7 +176,7 @@
 
 	$scope.displayAddBuildScreen = function () {
 		$scope.resetAddEditBuildForm();
-		$(".editBuildDialog").dialog({
+		angular.element(".editBuildDialog").dialog({
 			width: 'auto',
 			height: 'auto',
 			modal: true
@@ -295,7 +300,8 @@
 			$scope.selectedItems.push(deploymentItem);
 
 		}
-		angular.element(".editBuildDialog").dialog("close");
+		//angular.element(".editBuildDialog").dialog("close");
+		angular.element(".editBuildDialog").dialog("destroy");
 		$scope.resetAddEditBuildForm();
 	}
 
@@ -339,7 +345,7 @@
 		}
 		$scope.refreshBuildAndEnvironmentList(item.build.id, environmentId, selectedMachineIds);
 		$scope.editingItem = item;
-		$(".editBuildDialog").dialog({
+		angular.element(".editBuildDialog").dialog({
 			width: 'auto',
 			height: 'auto',
 			modal: true

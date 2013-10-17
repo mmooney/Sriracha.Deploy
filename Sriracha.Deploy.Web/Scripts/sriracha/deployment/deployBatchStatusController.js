@@ -8,6 +8,7 @@
 			clearInterval($scope.refreshInterval);
 			$scope.refreshInterval = null;
 		}
+		$(".statusChangeDialog").dialog("destroy").remove();
 	});
 
 	$scope.refreshData = function () {
@@ -119,11 +120,13 @@
 				ErrorReporter.handleResourceError(err);
 			}
 		)
-		$(".statusChangeDialog").dialog("close");
+		//$(".statusChangeDialog").dialog("close");
+		$(".statusChangeDialog").dialog("destroy");
 		$scope.statusChangeNotes = {};
 	}
 	$scope.cancelStatusChange = function () {
-		$(".statusChangeDialog").dialog("close");
+		//$(".statusChangeDialog").dialog("close");
+		$(".statusChangeDialog").dialog("destroy");
 		$scope.statusChange = {};
 	}
 }]);
