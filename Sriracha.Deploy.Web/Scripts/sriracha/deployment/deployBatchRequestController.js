@@ -3,10 +3,10 @@
 		function ($scope, $routeParams, $rootElement, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.selection = {};
-	$scope.idValues = {
-		buildId: $routeParams.buildId,
-		environmentId: $routeParams.environmentId
-	};
+	$scope.idValues = {}
+	//	buildId: $routeParams.buildId,
+	//	environmentId: $routeParams.environmentId
+	//};
 
 	$scope.$on("$destroy", function () {
 		angular.element(".promoteBuildDialog").dialog("destroy").remove();
@@ -192,6 +192,7 @@
 	$scope.isLatestBuild = function (item) {
 		return false;
 	}
+
 	$scope.refreshBuildAndEnvironmentList = function (selectedBuildId, selectedEnvironmentId, selectedMachineIds) {
 		queryParameters = {};
 		if($scope.project) {
@@ -311,6 +312,7 @@
 		$scope.environment = null;
 		$scope.build = null;
 		$scope.branch = null;
+		$scope.idValues = {};
 	}
 
 	$scope.moveItemUp = function (item) {
