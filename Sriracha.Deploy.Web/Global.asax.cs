@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Security;
 
 namespace Sriracha.Deploy.Web
 {
@@ -14,6 +15,20 @@ namespace Sriracha.Deploy.Web
 
 	public class MvcApplication : System.Web.HttpApplication
 	{
+		public MvcApplication()
+		{
+			this.AuthenticateRequest += MvcApplication_AuthenticateRequest;
+		}
+
+		void MvcApplication_AuthenticateRequest(object sender, EventArgs e)
+		{
+			if(this.Request.IsAuthenticated)
+			{
+				//For NT auth, ensure that the membership provider creates the user if they don't already exist
+				var currentUser = Membership.GetUser();	
+			}
+		}
+
 		protected void Application_Start()
 		{
 			AreaRegistration.RegisterAllAreas();
@@ -22,5 +37,6 @@ namespace Sriracha.Deploy.Web
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
 			BundleConfig.RegisterBundles(BundleTable.Bundles);
 		}
+
 	}
 }
