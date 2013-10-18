@@ -1,6 +1,6 @@
 ﻿<h2>Roles for {{project.projectName}} Project</h2>
 <div class="row projectPermissions">
-	<div class="span2">
+	<div class="span2" style="height:500px">
 		<ul class="nav nav-list bs-docs-sidenav affix-top">
 			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}">
 				<a ng-href="{{navigator.projectRole.edit.clientUrl(project.id, tempRole.id)}}">
@@ -25,7 +25,7 @@
 			</select>
 		</label>
 		<h4>Request Deployment</h4>
-		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList">
+		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList" >
 			{{permission.environmentName}}:
 			<select ng-model="permission.access">
 				<option>None</option>
