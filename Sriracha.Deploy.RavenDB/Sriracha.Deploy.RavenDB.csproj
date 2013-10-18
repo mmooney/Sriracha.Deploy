@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="DocumentSessionExtensions.cs" />
     <Compile Include="RavenConnectionSettingRepository.cs" />
+    <Compile Include="RavenDBPermissionRepository.cs" />
     <Compile Include="RavenDeployRepository.cs" />
     <Compile Include="FileStorageDto.cs" />
     <Compile Include="IRavenAttachmentManager.cs" />

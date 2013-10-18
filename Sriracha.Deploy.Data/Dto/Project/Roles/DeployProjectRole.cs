@@ -11,6 +11,11 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 		public string ProjectId { get; set; }
 		public string RoleName { get; set; }
 
+		public string CreatedByUserName { get; set; }
+		public DateTime CreatedDateTimeUtc { get; set; }
+		public string UpdatedByUserName { get; set; }
+		public DateTime UpdateDateTimeUtc { get; set; }
+
 		public DeployProjectRolePermissions Permissions { get; set; }
 
 		public DeployProjectRole()

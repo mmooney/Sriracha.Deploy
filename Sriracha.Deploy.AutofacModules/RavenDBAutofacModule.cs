@@ -8,8 +8,6 @@ using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.RavenDB;
-using MMDB.Permissions.RavenDB;
-using MMDB.Permissions;
 
 namespace Sriracha.Deploy.AutofacModules
 {

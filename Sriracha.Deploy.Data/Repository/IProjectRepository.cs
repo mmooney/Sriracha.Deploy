@@ -73,6 +73,5 @@ namespace Sriracha.Deploy.Data.Repository
 
 		DeployMachine GetMachine(string machineId);
 		DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configurationList);
-
 	}
 }

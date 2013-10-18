@@ -18,7 +18,6 @@ using Sriracha.Deploy.Data.ServiceJobs;
 using Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Tasks.TaskImpl;
-using MMDB.Permissions;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -99,8 +98,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<EmailSenderJob>().As<IEmailSenderJob>();
 
 			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
-			builder.RegisterType<PermissionManager>().As<IPermissionManager>();
-
+			
 			if (_diMode == EnumDIMode.Service)
 			{
 				builder.RegisterType<JobScheduler>().As<IJobScheduler>();

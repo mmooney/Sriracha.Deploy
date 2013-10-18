@@ -42,6 +42,30 @@
 			}
 		);
 
+	    $scope.saveRole = function() {
+	    	var saveParams = {
+				id: $routeParams.projectRoleId,
+	    		projectId: $routeParams.projectId
+	    	};
+	    	$scope.projectRole.$save(
+				saveParams,
+				function (response) {
+					$scope.projectRole = response;
+					$scope.projectRoleList = SrirachaResource.projectRole.query(
+						{ projectId: $routeParams.projectId },
+						function () {
+							//ok
+						},
+						function (err) {
+							ErrorReporter.handleResourceError(err);
+						});
+					},
+				function (error) {
+					ErrorReporter.handleResourceError(error);
+				}
+			);
+	    }
+
 	    $scope.beginAddRole = function () {
 	    	$scope.addRoleData = {};
 	    	angular.element(".addRoleDialog").dialog({
@@ -60,7 +84,7 @@
 	    	var result = newRole.$save(
 				saveParams,
 				function (response) {
-					$scope.navigator.projectRole.view.go($scope.project.id, response.id);
+					$scope.navigator.projectRole.edit.go($scope.project.id, response.id);
 				},
 				function (error) {
 					ErrorReporter.handleResourceError(error);

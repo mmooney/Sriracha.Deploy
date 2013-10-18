@@ -1,10 +1,20 @@
 ﻿ngSriracha.controller("ProjectController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator',
-		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.projectId) {
 		$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId },
-			function () { },
+			function () {
+				$scope.projectRoleList = SrirachaResource.projectRole.query(
+					{projectId: $routeParams.projectId},
+					function () {
+						//merry christmas
+					},
+					function (err) {
+						ErrorReporter.handleResourceError(err)
+					}
+				)
+			},
 			function (error) { ErrorReporter.handleResourceError(error); }
 		);
 	}

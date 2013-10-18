@@ -183,6 +183,7 @@
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Repository\IEmailQueueRepository.cs" />
+    <Compile Include="Repository\IPermissionRepository.cs" />
     <Compile Include="Repository\IRazorTemplateRepository.cs" />
     <Compile Include="Repository\ISystemLogRepository.cs" />
     <Compile Include="ServiceJobs\IEmailSenderJob.cs" />
@@ -271,10 +272,6 @@
     <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
       <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
       <Name>MMDB.ConnectionSettings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MMDB.Permissions\MMDB.Permissions.csproj">
-      <Project>{7025bea4-e05e-4d81-9593-4c8ff5965e05}</Project>
-      <Name>MMDB.Permissions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

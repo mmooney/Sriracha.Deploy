@@ -130,7 +130,7 @@
 			templateUrl: "templates/project/role/role-list-template.html",
 			controller: "ProjectRoleController"
 		})
-		.when(navigator.projectRole.view.url, {
+		.when(navigator.projectRole.edit.url, {
 			templateUrl: "templates/project/role/role-list-template.html",
 			controller: "ProjectRoleController"
 		})

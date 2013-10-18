@@ -1,9 +1,9 @@
 ﻿<h2>Roles for {{project.projectName}} Project</h2>
-<div class="row">
+<div class="row projectPermissions">
 	<div class="span2">
 		<ul class="nav nav-list bs-docs-sidenav affix-top">
 			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}">
-				<a ng-href="{{navigator.projectRole.view.clientUrl(project.id, tempRole.id)}}">
+				<a ng-href="{{navigator.projectRole.edit.clientUrl(project.id, tempRole.id)}}">
 					{{tempRole.roleName}}
 				</a>
 			</li>
@@ -11,8 +11,64 @@
 		<div ng-hide="projectRoleList.length">No Roles</div>
 		<button class="btn btn-primary" ng-click="beginAddRole()" style="margin-top:20px"><i class="icon-plus" />Add Role</button>
 	</div>
-	<div class="span6 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
+	<div class="span5 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
 		<h3>Permissions for <input type="text" ng-model="projectRole.roleName"/></h3>
+		<h4>Edit Components/Configurations</h4>
+		<label class="checkbox">
+			<select ng-model="projectRole.permissions.editComponentConfigurationAccess">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</label>
+		<h4>Request Deployment</h4>
+		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList">
+			{{permission.environmentName}}:
+			<select ng-model="permission.access">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</span>
+		<h4>Approve/Reject Deployment</h4>
+		<span ng-repeat="permission in projectRole.permissions.approveRejectDeployPermissionList">
+			{{permission.environmentName}}:
+			<select ng-model="permission.access">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</span>
+		<h4>Run Deployment</h4>
+		<span ng-repeat="permission in projectRole.permissions.runDeploymentPermissionList">
+			{{permission.environmentName}}:
+			<select ng-model="permission.access">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</span>
+		<h4>Edit Environments</h4>
+		<span ng-repeat="permission in projectRole.permissions.editEnvironmentPermissionList">
+			{{permission.environmentName}}:
+			<select ng-model="permission.access">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</span>
+		<h4>Manage Permissions</h4>
+		<span ng-repeat="permission in projectRole.permissions.managePermissionsPermissionList">
+			{{permission.environmentName}}:
+			<select ng-model="permission.access">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</span>
+		<center>
+			<button class="btn btn-primary" ng-click="saveRole()">Save Role</button>
+		</center>
 	</div>
 
 
