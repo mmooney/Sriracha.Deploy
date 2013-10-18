@@ -69,13 +69,10 @@
 				<option>Deny</option>
 			</select>
 		</span>
-		<center>
-			<button class="btn btn-primary" ng-click="saveRole()">Save Role</button>
-		</center>
 	</div>
 
 	<div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px; margin-left:5px" ng-show="projectRole">
-		<h3>User/Group Assignment</h3>
+		<h3>User Assignment</h3>
 		<h4>Users</h4>
 		<div class="span3" style="height:200px; overflow:auto">
 			<table class="table table-striped">
@@ -93,6 +90,11 @@
 			</div>
 			<p><button class="btn" ng-click="editAssignedUsers()">Edit Users</button></p>
 		</div>
+	</div>
+	<div class="span12" ng-show="projectRole" style="padding-top:20px">
+		<center>
+			<button class="btn btn-primary" ng-click="saveRole()">Save Role</button>
+		</center>
 	</div>
 
 
