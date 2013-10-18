@@ -19,7 +19,8 @@
 			deployBatchRequest: $resource("/api/deploybatchRequest/:deployBatchRequestId"),
 			deployBatchStatus: $resource("/api/deploybatchStatus/:id"),
 			validateEnvironment: $resource("/api/validateEnvironment"),
-			systemLog: $resource("/api/systemLog")
+			systemLog: $resource("/api/systemLog"),
+			user: $resource("/api/user")
 		}
 	}
 ]);

@@ -5,25 +5,22 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Dto.Project.Roles
 {
-	public class DeployProjectRole
+	public class DeployProjectRoleAssignments
 	{
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
-		public string RoleName { get; set; }
+		public string ProjectRoleId { get; set; }
+		
+		public List<string> UserNameList { get; set; }
 
 		public string CreatedByUserName { get; set; }
 		public DateTime CreatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
 		public DateTime UpdateDateTimeUtc { get; set; }
 
-		public DeployProjectRolePermissions Permissions { get; set; }
-
-		public DeployProjectRoleAssignments Assignments { get; set; }
-
-		public DeployProjectRole()
+		public DeployProjectRoleAssignments()
 		{
-			this.Permissions = new DeployProjectRolePermissions();
-			this.Assignments = new DeployProjectRoleAssignments();
+			this.UserNameList = new List<string>();
 		}
 	}
 }

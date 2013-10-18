@@ -11,8 +11,11 @@
 		<div ng-hide="projectRoleList.length">No Roles</div>
 		<button class="btn btn-primary" ng-click="beginAddRole()" style="margin-top:20px"><i class="icon-plus" />Add Role</button>
 	</div>
-	<div class="span5 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
-		<h3>Permissions for <input type="text" ng-model="projectRole.roleName"/></h3>
+	<div class="span8 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
+		<h3>Project Role: <input type="text" ng-model="projectRole.roleName" /></h3>
+	</div>
+	<div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
+		<h3>Permissions</h3>
 		<h4>Edit Components/Configurations</h4>
 		<label class="checkbox">
 			<select ng-model="projectRole.permissions.editComponentConfigurationAccess">
@@ -71,6 +74,27 @@
 		</center>
 	</div>
 
+	<div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px; margin-left:5px" ng-show="projectRole">
+		<h3>User/Group Assignment</h3>
+		<h4>Users</h4>
+		<div class="span3" style="height:200px; overflow:auto">
+			<table class="table table-striped">
+				<tr>
+					<th>User Name</th>
+					<th></th>
+				</tr>
+				<tr ng-repeat="userName in projectRole.assignments.userNameList">
+					<td>{{userName}}</td>
+					<td><button class="btn btn-danger"><i class="icon-trash"></i></button></td>
+				</tr>
+			</table>
+			<div ng-hide="projectRole.assignments.userNameList.length">
+				No users assigned
+			</div>
+			<p><button class="btn" ng-click="editAssignedUsers()">Edit Users</button></p>
+		</div>
+	</div>
+
 
 	<div class="addRoleDialog" style="display:none">
 		<div>
@@ -81,5 +105,16 @@
 				<button class="btn btn-primary" ng-disabled="!addRoleData.roleName" ng-click="completeAddRole()">OK</button>
 			</center>
 		</div>
+	</div>
+	<div class="editAssignedUsers" style="display:none">
+		<div ng-repeat="item in editAssignedUsersData.userAssignList">
+			<label typeof="checkbox">
+				<input type="checkbox" ng-model="item.selected">
+				{{item.userName}}
+			</label>
+		</div>
+		<center>
+			<button class="btn btn-primary" ng-click="completeEditAssignedUsers()">OK</button>
+		</center>
 	</div>
 </div>

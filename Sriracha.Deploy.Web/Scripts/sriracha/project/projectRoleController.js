@@ -10,7 +10,8 @@
 	    }
 
 	    $scope.$on("$destroy", function () {
-	    	
+	    	angular.element(".addRoleDialog").dialog("destroy").remove();
+	    	angular.element(".editAssignedUsers").dialog("destroy").remove();
 	    });
 
 	    $scope.project = SrirachaResource.project.get(
@@ -64,6 +65,49 @@
 					ErrorReporter.handleResourceError(error);
 				}
 			);
+	    }
+
+	    $scope.editAssignedUsers = function () {
+	    	$scope.editAssignedUsersData = {
+	    		userAssignList: []
+	    	};
+			console.log("test")
+	    	var response = SrirachaResource.user.get(
+				{},
+				function () {
+					console.log(response);
+					_.each(response.userNameList, function (userName) {
+						var item = {
+							userName: userName,
+							selected: false
+						}
+						if ($scope.projectRole && $scope.projectRole.assignments && $scope.projectRole.assignments.userNameList) {
+							console.log($scope.projectRole.assignments.userNameList);
+							console.log(userName);
+							item.selected = _.contains($scope.projectRole.assignments.userNameList, userName);
+							console.log(item);
+						}
+						$scope.editAssignedUsersData.userAssignList.push(item);
+					});
+					angular.element(".editAssignedUsers").dialog({
+						width: 'auto',
+						height: 'auto',
+						modal: true
+					});
+				},
+				function (err) {
+					ErrorReporter.handleResourceError(err);
+				}
+			)
+	    }
+
+	    $scope.completeEditAssignedUsers = function () {
+	    	if ($scope.projectRole) {
+	    		$scope.projectRole.assignments = $scope.projectRole.assignments || {};
+	    		$scope.projectRole.assignments.userNameList = _.pluck(_.filter($scope.editAssignedUsersData.userAssignList, function (x) { return x.selected; }), "userName");
+	    	}
+	    	console.log($scope.projectRole.assignments);
+	    	angular.element(".editAssignedUsers").dialog("destroy");
 	    }
 
 	    $scope.beginAddRole = function () {

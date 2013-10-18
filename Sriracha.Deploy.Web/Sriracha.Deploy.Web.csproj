@@ -261,6 +261,8 @@
     <Compile Include="Services\ProjectRoleService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\RequestBase.cs" />
+    <Compile Include="Services\Security\User\UserRequest.cs" />
+    <Compile Include="Services\Security\User\UserService.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
