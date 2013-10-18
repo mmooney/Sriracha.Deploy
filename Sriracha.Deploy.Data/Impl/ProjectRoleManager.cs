@@ -12,11 +12,13 @@ namespace Sriracha.Deploy.Data.Impl
 	{
 		private readonly IPermissionRepository _permissionRepository;
 		private readonly IProjectRepository _projectRepository;
+		private readonly IMembershipRepository _membershipRepository;
 
-		public ProjectRoleManager(IPermissionRepository permissionRepository, IProjectRepository projectRepository)
+		public ProjectRoleManager(IPermissionRepository permissionRepository, IProjectRepository projectRepository, IMembershipRepository membershipRepository)
 		{
 			_permissionRepository = DIHelper.VerifyParameter(permissionRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_membershipRepository = DIHelper.VerifyParameter(membershipRepository);
 		}
 
 		private DeployProjectRolePermissions ValidatePermissions(DeployProjectRolePermissions permissions, string projectRoleId, DeployProject project)
@@ -40,6 +42,29 @@ namespace Sriracha.Deploy.Data.Impl
 
 			return permissions;
 		}
+
+		private DeployProjectRoleAssignments ValidateAssignments(DeployProjectRoleAssignments assignments)
+		{
+			assignments = assignments ?? new DeployProjectRoleAssignments();
+
+			var userNamesToRemove = new List<string>();
+			if(assignments.UserNameList != null)
+			{
+				foreach(var userName in assignments.UserNameList)
+				{
+					if(!_membershipRepository.UserNameExists(userName))
+					{
+						assignments.UserNameList.Remove(userName);
+					}
+				}	
+			}
+			foreach(var userName in userNamesToRemove)
+			{
+				assignments.UserNameList.Remove(userName);
+			}
+			return assignments;
+		}
+
 
 		private void ValidateEnvironmentPermissions(List<DeployProjectRoleEnvironmentPermission> permissionList, string projectRoleId, DeployProject project)
 		{
@@ -100,18 +125,20 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions)
+		public DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, null, project);
-			return _permissionRepository.CreateProjectRole(projectId, roleName, permissions);
+			assignments = this.ValidateAssignments(assignments);
+			return _permissionRepository.CreateProjectRole(projectId, roleName, permissions, assignments);
 		}
 
-		public DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions)
+		public DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, roleId, project);
-			return _permissionRepository.UpdateProjectRole(roleId, projectId, roleName, permissions);
+			assignments = this.ValidateAssignments(assignments);
+			return _permissionRepository.UpdateProjectRole(roleId, projectId, roleName, permissions, assignments);
 		}
 	}
 }

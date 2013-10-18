@@ -46,11 +46,11 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			if(!string.IsNullOrEmpty(role.Id))
 			{
-				return _projectRoleManager.UpdateRole(role.Id, role.ProjectId, role.RoleName, role.Permissions);
+				return _projectRoleManager.UpdateRole(role.Id, role.ProjectId, role.RoleName, role.Permissions, role.Assignments);
 			}
 			else if(!string.IsNullOrEmpty(role.ProjectId))
 			{
-				return _projectRoleManager.CreateRole(role.ProjectId, role.RoleName, role.Permissions);
+				return _projectRoleManager.CreateRole(role.ProjectId, role.RoleName, role.Permissions, role.Assignments);
 			}
 			else 
 			{

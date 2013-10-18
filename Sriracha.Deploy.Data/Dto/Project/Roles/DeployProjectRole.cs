@@ -17,7 +17,6 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 		public DateTime UpdateDateTimeUtc { get; set; }
 
 		public DeployProjectRolePermissions Permissions { get; set; }
-
 		public DeployProjectRoleAssignments Assignments { get; set; }
 
 		public DeployProjectRole()

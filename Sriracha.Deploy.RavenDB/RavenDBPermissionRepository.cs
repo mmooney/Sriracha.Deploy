@@ -21,6 +21,22 @@ namespace Sriracha.Deploy.RavenDB
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
+		private DeployProjectRoleAssignments UpdateAssignments(DeployProjectRoleAssignments assignments, DeployProjectRole role)
+		{
+			assignments = assignments??new DeployProjectRoleAssignments();
+			if(string.IsNullOrEmpty(assignments.Id))
+			{
+				assignments.Id = Guid.NewGuid().ToString();
+				assignments.CreatedByUserName = _userIdentity.UserName;
+				assignments.CreatedDateTimeUtc = DateTime.UtcNow;
+			}
+			assignments.ProjectId = role.ProjectId;
+			assignments.ProjectRoleId = role.Id;
+			assignments.UpdatedByUserName = _userIdentity.UserName;
+			assignments.UpdateDateTimeUtc = DateTime.UtcNow;
+			return assignments;
+		}
+
 		private DeployProjectRolePermissions UpdatePermissions(DeployProjectRolePermissions permissions, DeployProjectRole role)
 		{
 			if(permissions == null)
@@ -85,7 +101,7 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<DeployProjectRole>().Where(i=>i.ProjectId == projectId).ToList();
 		}
 
-		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions)
+		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -111,16 +127,18 @@ namespace Sriracha.Deploy.RavenDB
 				UpdateDateTimeUtc = DateTime.UtcNow
 			};
 			newItem.Permissions = this.UpdatePermissions(permissions, newItem);
+			newItem.Assignments = this.UpdateAssignments(assignments, newItem);
 			_documentSession.Store(newItem);
 			_documentSession.SaveChanges();
 			return newItem;
 		}
 
-		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions)
+		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
 		{
 			var item = this.GetProjectRole(roleId);
 			item.RoleName = roleName;
 			item.Permissions = this.UpdatePermissions(permissions, item);
+			item.Assignments = this.UpdateAssignments(assignments, item);
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdateDateTimeUtc = DateTime.UtcNow;
 			_documentSession.SaveChanges();

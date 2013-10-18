@@ -10,7 +10,7 @@ namespace Sriracha.Deploy.Data.Repository
 	{
 		DeployProjectRole GetProjectRole(string projectRoleId);
 		List<DeployProjectRole> GetProjectRoleList(string projectId);
-		DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions);
-		DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions);
+		DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments);
+		DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments);
 	}
 }
