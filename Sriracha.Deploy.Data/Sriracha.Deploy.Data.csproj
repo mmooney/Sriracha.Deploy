@@ -123,6 +123,7 @@
     <Compile Include="Dto\RazorTemplate.cs" />
     <Compile Include="Dto\SrirachaUser.cs" />
     <Compile Include="Dto\SystemLog.cs" />
+    <Compile Include="Dto\UserEffectivePermissions.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IAccountSettingsManager.cs" />
     <Compile Include="IBuildParameterEvaluator.cs" />
@@ -130,8 +131,10 @@
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Impl\BuildParameterEvaluator.cs" />
+    <Compile Include="Impl\PermissionValidator.cs" />
     <Compile Include="Impl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
+    <Compile Include="IPermissionValidator.cs" />
     <Compile Include="IProjectRoleManager.cs" />
     <Compile Include="IUrlGenerator.cs" />
     <Compile Include="ListExtensions.cs" />

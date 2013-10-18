@@ -67,6 +67,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
 			builder.RegisterType<ProjectNotifier>().As<IProjectNotifier>();
 			builder.RegisterType<EmailQueue>().As<IEmailQueue>();
+			builder.RegisterType<PermissionValidator>().As<IPermissionValidator>();
 
 			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
 			builder.RegisterType<ModuleInspector>().As<IModuleInspector>().SingleInstance();
