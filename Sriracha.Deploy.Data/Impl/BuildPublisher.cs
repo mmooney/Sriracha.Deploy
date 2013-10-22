@@ -120,7 +120,8 @@ namespace Sriracha.Deploy.Data.Impl
 			var taskList = new  List<System.Threading.Tasks.Task>();
 			foreach(var filePath in fileList)
 			{
-				_logger.Info("- {0}", string.Join(",", filePath));
+				string x = filePath;
+				_logger.Info("- {0}", x);
 				var task = Task.Factory.StartNew(() =>
 				{
 					//var fileOptions = AutoMapper.Mapper.Map(options, new BuildPublishOptions());
@@ -128,7 +129,7 @@ namespace Sriracha.Deploy.Data.Impl
 					//	it to pollute values between threads.  Not sure why, but ouch ouch ouch
 					var fileOptions = new BuildPublishOptions
 					{
-						File = filePath,
+						File = x,
 						ApiUrl = options.ApiUrl,
 						BranchId = options.BranchId,
 						ComponentId = options.ComponentId,
@@ -138,7 +139,6 @@ namespace Sriracha.Deploy.Data.Impl
 						ProjectId = options.ProjectId,
 						Version = options.Version
 					};
-					fileOptions.File = filePath;
 					fileOptions.FilePattern = null;
 					this.PublishFile(fileOptions);
 				});
