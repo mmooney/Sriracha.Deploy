@@ -118,35 +118,61 @@ namespace Sriracha.Deploy.Data.Impl
 										   .ToList();
 			_logger.Info("Publishing file pattern {0}, the following {1} files were found:", options.FilePattern, fileList.Count());
 			var taskList = new  List<System.Threading.Tasks.Task>();
-			foreach(var fileBatch in batchedFileListList)
+			foreach(var filePath in fileList)
 			{
-				_logger.Info("- {0}", string.Join(",", fileBatch));
-				var task = Task.Factory.StartNew(()=>
+				_logger.Info("- {0}", string.Join(",", filePath));
+				var task = Task.Factory.StartNew(() =>
 				{
-					foreach(var filePath in fileBatch)
+					//var fileOptions = AutoMapper.Mapper.Map(options, new BuildPublishOptions());
+					// Don't try to use automapper here.  Something about it evaluating it later during the task causes
+					//	it to pollute values between threads.  Not sure why, but ouch ouch ouch
+					var fileOptions = new BuildPublishOptions
 					{
-						//var fileOptions = AutoMapper.Mapper.Map(options, new BuildPublishOptions());
-						// Don't try to use automapper here.  Something about it evaluating it later during the task causes
-						//	it to pollute values between threads.  Not sure why, but ouch ouch ouch
-						var fileOptions = new BuildPublishOptions
-						{
-							File = filePath,
-							ApiUrl = options.ApiUrl,
-							BranchId = options.BranchId,
-							ComponentId = options.ComponentId,
-							Directory = options.Directory,
-							FilePattern = null,
-							NewFileName = options.NewFileName,
-							ProjectId = options.ProjectId,
-							Version = options.Version
-						};
-						fileOptions.File = filePath;
-						fileOptions.FilePattern = null;
-						this.PublishFile(fileOptions);
-					}
+						File = filePath,
+						ApiUrl = options.ApiUrl,
+						BranchId = options.BranchId,
+						ComponentId = options.ComponentId,
+						Directory = options.Directory,
+						FilePattern = null,
+						NewFileName = options.NewFileName,
+						ProjectId = options.ProjectId,
+						Version = options.Version
+					};
+					fileOptions.File = filePath;
+					fileOptions.FilePattern = null;
+					this.PublishFile(fileOptions);
 				});
 				taskList.Add(task);
 			}
+			//foreach(var fileBatch in batchedFileListList)
+			//{
+			//	_logger.Info("- {0}", string.Join(",", fileBatch));
+			//	var task = Task.Factory.StartNew(()=>
+			//	{
+			//		foreach(var filePath in fileBatch)
+			//		{
+			//			//var fileOptions = AutoMapper.Mapper.Map(options, new BuildPublishOptions());
+			//			// Don't try to use automapper here.  Something about it evaluating it later during the task causes
+			//			//	it to pollute values between threads.  Not sure why, but ouch ouch ouch
+			//			var fileOptions = new BuildPublishOptions
+			//			{
+			//				File = filePath,
+			//				ApiUrl = options.ApiUrl,
+			//				BranchId = options.BranchId,
+			//				ComponentId = options.ComponentId,
+			//				Directory = options.Directory,
+			//				FilePattern = null,
+			//				NewFileName = options.NewFileName,
+			//				ProjectId = options.ProjectId,
+			//				Version = options.Version
+			//			};
+			//			fileOptions.File = filePath;
+			//			fileOptions.FilePattern = null;
+			//			this.PublishFile(fileOptions);
+			//		}
+			//	});
+			//	taskList.Add(task);
+			//}
 			Task.WaitAll(taskList.ToArray());
 			var exceptionList = taskList.Where(i=>i.Exception != null).Select(i=>i.Exception);
 			foreach(var exception in exceptionList)
