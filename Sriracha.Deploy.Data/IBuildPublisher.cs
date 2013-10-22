@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data
 {
 	public interface IBuildPublisher
 	{
-		void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version);
-		void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName);
+		void PublishDirectory(BuildPublishOptions options);
+		void PublishFile(BuildPublishOptions options);
+		void PublishFilePattern(BuildPublishOptions options);
 	}
 }

@@ -55,33 +55,9 @@ namespace Sriracha.Deploy.Data.Impl
 
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileId, string version)
 		{
-			var project = _projectRepository.TryGetProject(projectId);
-			if (project == null)
-			{
-				project = _projectRepository.TryGetProjectByName(projectId);
-			}
-			if(project == null)
-			{
-				project = _projectRepository.CreateProject(projectId, false);
-			}
-			var branch = _projectRepository.TryGetBranch(project, branchId);
-			if(branch == null)
-			{
-				branch = _projectRepository.TryGetBranchByName(project, branchId);
-			}
-			if(branch == null)
-			{
-				branch = _projectRepository.CreateBranch(project.Id, branchId);
-			}
-			var component = _projectRepository.TryGetComponent(project, componentId);
-			if(component == null)
-			{
-				component = _projectRepository.TryGetComponentByName(project, componentId);
-			}
-			if(component == null)
-			{
-				component = _projectRepository.CreateComponent(project.Id, componentId, false, null);
-			}
+			var project = _projectRepository.GetOrCreateProject(projectId, projectId);
+			var branch = _projectRepository.GetOrCreateBranch(project.Id, branchId, branchId);
+			var component = _projectRepository.GetOrCreateComponent(project.Id, componentId, componentId);
 			return this._buildRepository.CreateBuild(project.Id, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
 		}
 

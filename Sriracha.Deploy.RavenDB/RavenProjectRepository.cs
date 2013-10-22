@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using MMDB.Shared;
 using NLog;
 using Raven.Client;
@@ -69,6 +70,55 @@ namespace Sriracha.Deploy.RavenDB
 				throw new RecordNotFoundException(typeof(DeployProject), "Id", projectId);
 			}
 			return item;
+		}
+
+		public DeployProject GetOrCreateProject(string projectId, string projectName)
+		{
+			int retryCounter = 5;
+			while(true)
+			{
+				try 
+				{
+					string itemId;
+					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable} ))
+					{
+						var item = _documentSession.Load<DeployProject>(projectId);
+						if(item != null)
+						{
+							itemId = item.Id;
+						}
+						else 
+						{
+							item = _documentSession.Query<DeployProject>()
+												.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
+												.FirstOrDefault(i=>i.ProjectName == projectName);
+							if(item != null)
+							{
+								itemId = item.Id;
+							}
+							else 
+							{
+								item = CreateProject(projectName, false);
+								itemId = item.Id;
+								transaction.Complete();
+							}
+						}
+						return this.GetProject(itemId);
+					}
+				}
+				catch (Raven.Abstractions.Exceptions.ConcurrencyException exception)
+				{
+					retryCounter--;
+					if (retryCounter <= 0)
+					{
+						throw;
+					}
+					else
+					{
+						_logger.WarnException(string.Format("GetOrCreateProject concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+					}
+				}
+			}
 		}
 
 		public DeployProject TryGetProject(string projectId)
@@ -263,13 +313,13 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponent GetComponent(string componentId)
+		public DeployComponent GetComponent(string componentId, string projectId=null)
 		{
 			if(string.IsNullOrEmpty(componentId))
 			{
 				throw new ArgumentNullException("Missing Component ID");
 			}
-			var item = this.TryGetComponent(componentId);
+			var item = this.TryGetComponent(componentId, projectId);
 			if(item == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
@@ -277,12 +327,20 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponent TryGetComponent(string componentId)
+		public DeployComponent TryGetComponent(string componentId, string projectId=null)
 		{
-			var project = _documentSession.Query<DeployProject>()
+			DeployProject project;
+			if(!string.IsNullOrEmpty(projectId))
+			{
+				project = GetProject(projectId);
+			}
+			else 
+			{
+				project = _documentSession.Query<DeployProject>()
 								.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
 								.ToList()
 								.FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
+			}
 			if(project == null)
 			{
 				return null;
@@ -341,6 +399,54 @@ namespace Sriracha.Deploy.RavenDB
 				throw new ArgumentException("Unable to find component " + componentId + " in project " + project.Id);
 			}
 			return component;	
+		}
+
+		public DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName)
+		{
+			int retryCounter = 5;
+			while(true)
+			{
+				try 
+				{
+					string itemId;
+					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable }))
+					{
+						var project = GetProject(projectId);
+						var component = project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
+						if(component != null)
+						{
+							itemId = component.Id;
+						}
+						else 
+						{
+							component = project.ComponentList.FirstOrDefault(i=>i.ComponentName == componentName);
+							if(component != null)
+							{
+								itemId = component.Id;
+							}
+							else 
+							{
+								component = CreateComponent(projectId, componentName, false, null);
+								transaction.Complete();
+								itemId = component.Id;
+							}
+						}
+					}
+					return GetComponent(itemId, projectId);
+				}
+				catch (Raven.Abstractions.Exceptions.ConcurrencyException exception)
+				{
+					retryCounter--;
+					if (retryCounter <= 0)
+					{
+						throw;
+					}
+					else
+					{
+						_logger.WarnException(string.Format("GetOrCreateComponent concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+					}
+				}
+			}
 		}
 
 		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
@@ -593,13 +699,13 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployProjectBranch GetBranch(string branchId)
+		public DeployProjectBranch GetBranch(string branchId, string projectId=null)
 		{
 			if(string.IsNullOrEmpty(branchId))
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			var branch = this.TryGetBranch(branchId);
+			var branch = this.TryGetBranch(branchId, projectId);
 			if(branch == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
@@ -607,13 +713,21 @@ namespace Sriracha.Deploy.RavenDB
 			return branch;
 		}
 
-		public DeployProjectBranch TryGetBranch(string branchId)
+		public DeployProjectBranch TryGetBranch(string branchId, string projectId=null)
 		{
 			if (string.IsNullOrEmpty(branchId))
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			var project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
+			DeployProject project;
+			if(projectId != null)
+			{
+				project = GetProject(projectId);
+			}
+			else 
+			{
+				project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
+			}
 			if (project != null)
 			{
 				return project.BranchList.First(i => i.Id == branchId);
@@ -695,6 +809,54 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName)
 		{
 			return project.BranchList.FirstOrDefault(i=>i.BranchName == branchName);
+		}
+
+		public DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName)
+		{
+			int retryCounter = 5;
+			while(true)
+			{
+				try 
+				{
+					string itemId;
+					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable }))
+					{
+						var project = GetProject(projectId);
+						var item = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
+						if(item != null)
+						{
+							itemId = item.Id;
+						}
+						else 
+						{
+							item = project.BranchList.FirstOrDefault(i=>i.BranchName == branchName);
+							if(item != null)
+							{
+								itemId = item.Id;
+							}
+							else 
+							{
+								item = CreateBranch(projectId, branchName);
+								itemId = item.Id;
+								transaction.Complete();
+							}
+						}
+					}
+					return GetBranch(itemId, projectId);
+				}
+				catch(Raven.Abstractions.Exceptions.ConcurrencyException exception)
+				{
+					retryCounter--;
+					if(retryCounter <= 0)
+					{
+						throw;
+					}
+					else 
+					{
+						_logger.WarnException(string.Format("GetOrCreateBranch concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+					}
+				}
+			}
 		}
 
 		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
@@ -902,7 +1064,5 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 			return item;
 		}
-
-
 	}
 }

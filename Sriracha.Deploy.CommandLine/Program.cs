@@ -11,6 +11,7 @@ using System.IO;
 using MMDB.Shared;
 using Autofac;
 using Sriracha.Deploy.AutofacModules;
+using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.CommandLine
 {
@@ -62,6 +63,9 @@ namespace Sriracha.Deploy.CommandLine
 
 		[CommandLineParser.Option('f',"file")]
 		public string File { get; set; }
+
+		[CommandLineParser.Option("filePattern")]
+		public string FilePattern { get; set; }
 
 		[CommandLineParser.Option("newfilename")]
 		public string NewFileName { get; set; }
@@ -119,8 +123,6 @@ namespace Sriracha.Deploy.CommandLine
 				{
 					throw new Exception(options.GetUsage());
 				}
-				var regexResolver = _diFactory.CreateInjectedObject<IRegexResolver>();
-				regexResolver.ResolveValues(options);
 				pause = options.Pause;
 				switch(options.Action)
 				{
@@ -171,17 +173,29 @@ namespace Sriracha.Deploy.CommandLine
 						{
 							if (!string.IsNullOrWhiteSpace(options.Directory))
 							{
-								throw new Exception("File (--file|-f) Directory (--directory|-f) cannot be both be used together for Publish");
+								throw new Exception("File (--file|-f) and Directory (--directory|-f) cannot be both be used together for Publish");
+							}
+							if(!string.IsNullOrWhiteSpace(options.FilePattern))
+							{
+								throw new Exception("File (--file|-f) and FilePattern (--filePattern) cannot be both be used together for Publish");
 							}
 							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName);
 						}
 						else if (!string.IsNullOrWhiteSpace(options.Directory))
 						{
+							if (!string.IsNullOrWhiteSpace(options.FilePattern))
+							{
+								throw new Exception("Directory (--directory|-d) and FilePattern (--filePattern) cannot be both be used together for Publish");
+							}
 							PublishDirectory(options.Directory, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version);
+						}
+						else if (!string.IsNullOrWhiteSpace(options.FilePattern))
+						{
+							PublishFilePattern(options.FilePattern, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName);
 						}
 						else 
 						{
-							throw new Exception("Either File (--file|-f) Directory (--directory|-f) required for Publish");
+							throw new Exception("Either File (--file|-f), Directory (--directory|-f), or FilePattern (--filePattern) required for Publish");
 						}
 						break;
 					default:
@@ -228,13 +242,48 @@ namespace Sriracha.Deploy.CommandLine
 		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
-			publisher.PublishFile(filePath, apiUrl, projectId, componentId, branchId, version, newFileName);
+			var options = new BuildPublishOptions
+			{
+				File = filePath,
+				ApiUrl = apiUrl,
+				ProjectId = projectId,
+				ComponentId = componentId,
+				BranchId = branchId, 
+				Version = version,
+				NewFileName = newFileName
+			};
+			publisher.PublishFile(options);
+		}
+
+		private static void PublishFilePattern(string filePattern, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
+		{
+			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
+			var options = new BuildPublishOptions
+			{
+				FilePattern = filePattern,
+				ApiUrl = apiUrl,
+				ProjectId = projectId,
+				ComponentId = componentId,
+				BranchId = branchId,
+				Version = version,
+				NewFileName = newFileName
+			};
+			publisher.PublishFilePattern(options);
 		}
 
 		private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
-			publisher.PublishDirectory(directoryPath, apiUrl, projectId, componentId, branchId, version);
+			var options = new BuildPublishOptions
+			{
+				Directory = directoryPath,
+				ApiUrl = apiUrl,
+				ProjectId = projectId,
+				ComponentId = componentId,
+				BranchId = branchId,
+				Version = version
+			};
+			publisher.PublishDirectory(options);
 		}
 
 		private static void ConfigureMachine(string machineId, string configName, string configValue)

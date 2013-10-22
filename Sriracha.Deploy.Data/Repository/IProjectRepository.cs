@@ -12,6 +12,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration);
 		DeployProject TryGetProject(string projectId);
 		DeployProject GetProject(string projectId);
+		DeployProject GetOrCreateProject(string projectId, string projectName);
 		DeployProject TryGetProjectByName(string projectName);
 		DeployProject GetProjectByName(string projectName);
 		DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration);
@@ -28,12 +29,13 @@ namespace Sriracha.Deploy.Data.Repository
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
 		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
 		DeployComponent CreateComponent(DeployProject project, string componentName, bool useConfigurationGroup, string configurationId);
-		DeployComponent GetComponent(string componentId);
-		DeployComponent TryGetComponent(string componentId);
+		DeployComponent GetComponent(string componentId, string projectId=null);
+		DeployComponent TryGetComponent(string componentId, string projectId = null);
 		DeployComponent GetComponent(DeployProject project, string componentId);
 		DeployComponent TryGetComponent(DeployProject project, string componentId);
 		DeployComponent GetComponentByName(DeployProject project, string componentName);
 		DeployComponent TryGetComponentByName(DeployProject project, string componentName);
+		DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName);
 		DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId);
 		void DeleteComponent(string componentId);
 
@@ -54,14 +56,15 @@ namespace Sriracha.Deploy.Data.Repository
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
-		DeployProjectBranch GetBranch(string branchId);
-		DeployProjectBranch TryGetBranch(string branchId);
+		DeployProjectBranch GetBranch(string branchId, string projectId=null);
+		DeployProjectBranch TryGetBranch(string branchId, string projectId = null);
 		DeployProjectBranch GetBranch(DeployProject project, string branchId);
 		DeployProjectBranch TryGetBranch(DeployProject project, string branchId);
 		DeployProjectBranch GetBranchByName(string projectId, string branchName);
 		DeployProjectBranch TryGetBranchByName(string projectId, string branchName);
 		DeployProjectBranch GetBranchByName(DeployProject project, string branchName);
 		DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName);
+		DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId);
 

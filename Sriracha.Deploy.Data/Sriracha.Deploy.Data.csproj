@@ -96,6 +96,7 @@
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
     <Compile Include="Dto\Account\ProjectNotificationItem.cs" />
+    <Compile Include="Dto\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
