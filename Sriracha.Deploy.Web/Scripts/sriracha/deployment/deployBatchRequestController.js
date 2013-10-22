@@ -168,7 +168,7 @@
 						item.build = latest;
 					},
 					function (error) {
-						Error.handleResourceError(error);
+						ErrorReporter.handleResourceError(error);
 					});
 			})
 		}
@@ -212,8 +212,8 @@
 					$scope.updateEnvironmentMachines();
 				}
 			},
-			function(error) {
-				Error.handleResourceError(error);
+			function (error) {
+				ErrorReporter.handleResourceError(error);
 			});
 		$scope.environmentList = null;
 		if ($scope.project && $scope.component) {
