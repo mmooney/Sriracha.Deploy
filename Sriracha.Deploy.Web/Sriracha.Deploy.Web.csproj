@@ -17,9 +17,9 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -239,6 +239,7 @@
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\sriracha\account\accountController.js" />
+    <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
     <Content Include="Scripts\sriracha\project\projectConfigurationController.js" />
     <Content Include="Scripts\sriracha\project\projectDeploymentStepControlller.js" />
     <Content Include="Scripts\sriracha\project\projectEnvironmentController.js" />
@@ -425,6 +426,7 @@
     <Content Include="Scripts\angular\_references.js" />
     <Content Include="Templates\account\account-edit-template.html" />
     <Content Include="Templates\directives\breadcrumbs.html" />
+    <Content Include="Templates\directives\pager.html" />
     <Content Include="Templates\project\branch\branch-edit-template.html" />
     <Content Include="Templates\project\branch\branch-delete-template.html" />
     <Content Include="Templates\builds\build-delete-template.html" />

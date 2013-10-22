@@ -162,23 +162,7 @@
 			templateUrl: "templates/deployment/deployment-batchRequest-template.html",
 			controller: "deployBatchRequestController"
 		})
-		.when(navigator.deployment.batchList.urlList[0], {
-			templateUrl: "templates/deployment/deployment-batchList-template.html",
-			controller: "deployBatchListController"
-		})
-		.when(navigator.deployment.batchList.urlList[1], {
-			templateUrl: "templates/deployment/deployment-batchList-template.html",
-			controller: "deployBatchListController"
-		})
-		.when(navigator.deployment.batchList.urlList[2], {
-			templateUrl: "templates/deployment/deployment-batchList-template.html",
-			controller: "deployBatchListController"
-		})
-		.when(navigator.deployment.batchList.urlList[3], {
-			templateUrl: "templates/deployment/deployment-batchList-template.html",
-			controller: "deployBatchListController"
-		})
-		.when(navigator.deployment.batchList.urlList[4], {
+		.when(navigator.deployment.batchList.url, {
 			templateUrl: "templates/deployment/deployment-batchList-template.html",
 			controller: "deployBatchListController"
 		})

@@ -58,5 +58,10 @@
 		}
 	}
 
+	$scope.goToPage = function (pageNumber) {
+		$scope.navigator.deployment.batchList.go(pageNumber, $scope.deploymentList.pageSize, $scope.deploymentList.sortField, $scope.deploymentList.sortAscending);
+		//alert(pageNumber);
+	}
+
 
 }]);

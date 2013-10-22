@@ -1,17 +1,32 @@
 ﻿ngSriracha.provider("SrirachaNavigator", function () {
 	this.$get = function () {
 		var root = {
-			getUrl: function (clientUrl, parameters) {
+			getUrl: function (clientUrl, routeParams, queryParams) {
 				var url = clientUrl;
-				if (parameters) {
-					for (var paramName in parameters) {
-						url = url.replace(":" + paramName, parameters[paramName]);
+				if (routeParams) {
+					for (var paramName in routeParams) {
+						url = url.replace(":" + paramName, encodeURIComponent(routeParams[paramName]));
+					}
+				}
+				if (queryParams) {
+					var queryUrl = "";
+					for (var paramName in queryParams) {
+						if (queryParams[paramName]) {
+							if (queryUrl) {
+								queryUrl += "&";
+							}
+							queryUrl += encodeURIComponent(paramName) + "=" + encodeURIComponent(queryParams[paramName]);
+						}
+					}
+					if (queryUrl) {
+						url += "?" + queryUrl;
 					}
 				}
 				return "/#" + url;
 			},
-			goTo: function (clientUrl, parameters) {
-				var url = this.getUrl(clientUrl, parameters);
+			goTo: function (clientUrl, routeParams, queryParams) {
+				var url = this.getUrl(clientUrl, routeParams, queryParams);
+				console.log(url);
 				window.location.href = url;
 			}
 		};
@@ -212,21 +227,14 @@
 				go: function (sourceDeployBatchRequestId) { root.goTo(this.url, { sourceDeployBatchRequestId: sourceDeployBatchRequestId }) }
 			},
 			batchList: {
-				urlList: [
-					"/deploy/batchList",
-					"/deploy/batchList/:pageNumber",
-					"/deploy/batchList/:pageNumber/:pageSize",
-					"/deploy/batchList/:pageNumber/:pageSize/:sortField",
-					"/deploy/batchList/:pageNumber/:pageSize/:sortField/:sortAscending"
-				],
-				url: "/deploy/batchList/:pageNumber/:pageSize/:sortField/:sortAscending",
+				url: "/deploy/batchList",
 				clientUrl: function (pageNumber, pageSize, sortField, sortAscending) 
 				{ 
-					return root.getUrl(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+					return root.getUrl(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
 				},
 				go: function (pageNumber, pageSize, sortField, sortAscending)  
 				{ 
-					root.goTo(this.url, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
+					root.goTo(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending}); 
 				}
 			},
 			batchStatus: {

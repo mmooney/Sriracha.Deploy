@@ -41,7 +41,7 @@ namespace Sriracha.Deploy.RavenDB
 						.Skip((pageNumber - 1) * pageSize)
 						.Take(pageSize);
 			var resultList = resultQuery.ToList();
-			return new StaticPagedList<T>(resultList, pageSize, pageNumber, stats.TotalResults);
+			return new StaticPagedList<T>(resultList, pageNumber, pageSize, stats.TotalResults);
 		}
 	}
 }
