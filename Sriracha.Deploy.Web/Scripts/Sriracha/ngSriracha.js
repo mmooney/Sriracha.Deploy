@@ -165,10 +165,8 @@ ngSriracha.directive("selectEnvironmentMachines",
 					scope.build = null;
 					scope.environment = null;
 					scope.environmentSelector = null;
-					console.log("nulls");
 				}
 				else {
-					console.log("not nulls");
 					scope.build = SrirachaResource.build.get({ id: scope.buildid },
 						function () {
 							scope.project = SrirachaResource.project.get({ id: scope.build.projectId },

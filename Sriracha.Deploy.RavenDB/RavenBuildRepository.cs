@@ -8,6 +8,9 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Repository;
+using MMDB.Shared;
+using PagedList;
+using Raven.Client.Linq;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -23,27 +26,32 @@ namespace Sriracha.Deploy.RavenDB
 			_logger = DIHelper.VerifyParameter(logger);
 		}
 
-		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
+		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions, string projectId = null, string branchId = null, string componentId = null)
 		{
-			var query = this._documentSession.Query<DeployBuild>().AsQueryable();
+			var query = this._documentSession.Query<DeployBuild>();
 			if(!string.IsNullOrEmpty(projectId))
 			{
-				query = query.Where(i=>i.ProjectId == projectId);
+				query = (IRavenQueryable<DeployBuild>)query.Where(i=>i.ProjectId == projectId);
 			}
 			if(!string.IsNullOrEmpty(branchId)) 
 			{
-				query = query.Where(i=>i.ProjectBranchId == branchId);
+				query = (IRavenQueryable<DeployBuild>)query.Where(i => i.ProjectBranchId == branchId);
 			}
 			if(!string.IsNullOrEmpty(componentId))
 			{
-				query = query.Where(i=>i.ProjectComponentId == componentId);
+				query = (IRavenQueryable<DeployBuild>)query.Where(i => i.ProjectComponentId == componentId);
 			}
-			return query.ToList();
-		}
-
-		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions)
-		{
-			var pagedList = _documentSession.QueryPageAndSort<DeployBuild>(listOptions, "UpdatedDateTimeUtc", false);
+			IPagedList<DeployBuild> pagedList;
+			listOptions = listOptions ?? new ListOptions();
+			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, "UpdatedDateTimeUtc");
+			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
+			switch(listOptions.SortField)
+			{
+				case "UpdatedDateTimeUtc":
+				default:
+					pagedList = query.PageAndSort(listOptions, i=>i.UpdatedDateTimeUtc);
+					break;
+			}
 			return new PagedSortedList<DeployBuild>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
 
@@ -151,5 +159,7 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 
 		}
+
+		public Raven.Client.Linq.IRavenQueryable<DeployBuild> IRavenQueryable { get; set; }
 	}
 }

@@ -26,7 +26,6 @@
 			},
 			goTo: function (clientUrl, routeParams, queryParams) {
 				var url = this.getUrl(clientUrl, routeParams, queryParams);
-				console.log(url);
 				window.location.href = url;
 			}
 		};
@@ -196,8 +195,8 @@
 		root.build = {
 			list: {
 				url: "/build",
-				clientUrl: function() { return root.getUrl(this.url) },
-				go: function() { root.goTo(this.url) }
+				clientUrl: function (pageNumber, pageSize, sortField, sortAscending) { return root.getUrl(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) },
+				go: function (pageNumber, pageSize, sortField, sortAscending) { root.goTo(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) }
 			},
 			submit: {
 				url: "/build/submit",

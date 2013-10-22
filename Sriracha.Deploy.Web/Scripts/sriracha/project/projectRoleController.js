@@ -24,7 +24,7 @@
 							$scope.projectRole = SrirachaResource.projectRole.get(
 								{projectId: $routeParams.projectId, id: $routeParams.projectRoleId},
 								function () {
-									console.log($scope.projectRole);
+									//console.log($scope.projectRole);
 									//ok
 								},
 								function (err) {
@@ -71,21 +71,16 @@
 	    	$scope.editAssignedUsersData = {
 	    		userAssignList: []
 	    	};
-			console.log("test")
 	    	var response = SrirachaResource.user.get(
 				{},
 				function () {
-					console.log(response);
 					_.each(response.userNameList, function (userName) {
 						var item = {
 							userName: userName,
 							selected: false
 						}
 						if ($scope.projectRole && $scope.projectRole.assignments && $scope.projectRole.assignments.userNameList) {
-							console.log($scope.projectRole.assignments.userNameList);
-							console.log(userName);
 							item.selected = _.contains($scope.projectRole.assignments.userNameList, userName);
-							console.log(item);
 						}
 						$scope.editAssignedUsersData.userAssignList.push(item);
 					});
@@ -106,7 +101,6 @@
 	    		$scope.projectRole.assignments = $scope.projectRole.assignments || {};
 	    		$scope.projectRole.assignments.userNameList = _.pluck(_.filter($scope.editAssignedUsersData.userAssignList, function (x) { return x.selected; }), "userName");
 	    	}
-	    	console.log($scope.projectRole.assignments);
 	    	angular.element(".editAssignedUsers").dialog("destroy");
 	    }
 

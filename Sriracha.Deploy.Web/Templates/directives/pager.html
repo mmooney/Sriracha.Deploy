@@ -1,8 +1,10 @@
 ﻿<button ng-disabled="pagedList.isFirstPage" ng-click="goToPage(1)"><i class="icon-fast-backward"></i></button>
 <button ng-disabled="!pagedList.hasPreviousPage" ng-click="goToPage(pagedList.pageNumber-1)"><i class="icon-backward"></i></button>
+<span ng-show="morePreviousPages">...</span>
 <span ng-repeat="item in pageLinks">
 	<span ng-show="item.currentPage"><b>{{item.pageNumber}}</b></span>
 	<span ng-hide="item.currentPage"><a ng-click="goToPage(item.pageNumber)">{{item.pageNumber}}</a></span>
 </span>
+<span ng-show="moreNextPages">...</span>
 <button ng-disabled="!pagedList.hasNextPage" ng-click="goToPage(pagedList.pageNumber+1)"><i class="icon-forward"></i></button>
 <button ng-disabled="pagedList.isLastPage" ng-click="goToPage(pagedList.pageCount)"><i class="icon-fast-forward"></i></button>

@@ -138,7 +138,7 @@
 		//Builds
 		.when(navigator.build.list.url, {
 			templateUrl: "templates/builds/build-list-template.html",
-			controller: "BuildController"
+			controller: "BuildListController"
 		})
 		.when(navigator.build.submit.url, {
 			templateUrl: "templates/builds/build-submit-template.html",
