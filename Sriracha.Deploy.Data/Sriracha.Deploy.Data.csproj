@@ -139,6 +139,7 @@
     <Compile Include="IProjectRoleManager.cs" />
     <Compile Include="IUrlGenerator.cs" />
     <Compile Include="ListExtensions.cs" />
+    <Compile Include="Notifications\FakeProjectNofifier.cs" />
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />

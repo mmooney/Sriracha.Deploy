@@ -141,6 +141,7 @@ namespace Sriracha.Deploy.RavenDB
 			switch(listOptions.SortField)
 			{
 				case "UserName":
+					var temp = query.OrderBy(i=>i.UserName);
 					pagedList = query.PageAndSort(listOptions, i=>i.UserName);
 					break;
 				case "EmailAddress":
