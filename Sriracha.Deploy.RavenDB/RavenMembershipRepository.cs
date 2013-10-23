@@ -161,7 +161,6 @@ namespace Sriracha.Deploy.RavenDB
 		private IRavenQueryable<SrirachaUser> GetQuery(Expression<Func<SrirachaUser, bool>> filter)
 		{
 			var query = _documentSession.Query<SrirachaUser>();
-			var tempQuery = query.Where(i=>i.ProjectNotificationItemList.Any(j=>j.ProjectId == "6a6c40ce-f8bc-4c84-b327-e0417b7ad571" && j.Flags.DeployRequested));
 			if (filter != null)
 			{
 				return query.Where(filter);
