@@ -1,0 +1,24 @@
+﻿<h2>Build {{build.projectName}} - {{build.projectBranchName}} - {{build.projectComponentName}} - {{build.version}} 
+
+<hr />
+
+<h3>History</h3>
+<table class="table table-border table-striped" ng-show="project.componentList.length">
+	<thead>
+		<tr>
+			<th>Environment</th>
+			<th>Deploy History Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="environment in project.environmentList">
+			<td>{{environment.environmentName}}</td>
+			<td>
+				{{getDeployHistoryStatus(build, environment)}}
+				<div ng-show="!anyDeployment(build, environment)">
+					<a class="btn btn-primary" ng-href="{{navigator.deployment.submit.clientUrl(build.id, environment.id)}}">Deploy Now</a>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>

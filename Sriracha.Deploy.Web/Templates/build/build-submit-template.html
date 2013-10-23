@@ -1,0 +1,29 @@
+﻿<h2>Submit Build</h2>
+<div>
+	<b>Project:</b>
+	<select ng-model="project" ng-options="item as item.projectName for item in projectList"></select>
+</div>
+<div>
+	<b>Component:</b>
+	<select ng-model="component" ng-options="item as item.componentName for item in project.componentList"></select>
+</div>
+<div>
+	<b>Branch:</b>
+	<select ng-model="branch" ng-options="item as item.branchName for item in project.branchList"></select>
+</div>
+<div>
+	<b>Version #:</b>
+	<input type="text" ng-model="build.version" />
+</div>
+<div>
+    <form ng-upload="uploadComplete" action="/api/file/upload?format=json" method="post">
+		<div>
+			Build Package:
+            <input type="file" name="fileName" />
+            <input type="submit" class="btn upload-submit" value="Upload"/>
+		</div>
+		<div><i>{{uploadMessage}}</i></div>
+    </form>
+</div>
+<button class="btn btn-action" ng-click="navigator.build.list.go()">Cancel</button>
+<button class="btn btn-action" ng-click="saveBuild()" ng-disabled="!build.fileId">Save</button>
