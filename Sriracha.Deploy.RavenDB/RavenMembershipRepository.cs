@@ -57,6 +57,18 @@ namespace Sriracha.Deploy.RavenDB
 			return dbUser;
 		}
 
+		public SrirachaUser TryUpdateUser(SrirachaUser user)
+		{
+			try 
+			{
+				return this.UpdateUser(user);
+			}
+			catch(Raven.Abstractions.Exceptions.ConcurrencyException)
+			{
+				return null;
+			}
+		}
+
 		public SrirachaUser DeleteUser(SrirachaUser user)
 		{
 			var dbUser = this.LoadUserByUserName(user.UserName);

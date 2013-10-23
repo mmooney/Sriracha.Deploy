@@ -12,6 +12,7 @@ namespace Sriracha.Deploy.Data.Repository
 	{
 		SrirachaUser CreateUser(SrirachaUser user);
 		SrirachaUser UpdateUser(SrirachaUser user);
+		SrirachaUser TryUpdateUser(SrirachaUser user);
 		SrirachaUser DeleteUser(SrirachaUser user);
 
 		SrirachaUser LoadUserByUserName(string userName);

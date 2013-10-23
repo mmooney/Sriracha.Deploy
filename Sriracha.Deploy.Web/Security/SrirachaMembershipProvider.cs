@@ -309,7 +309,7 @@ namespace Sriracha.Deploy.Web.Security
 				if(userIsOnline)
 				{
 					user.LastActivityDateTimeUtc = DateTime.UtcNow;
-					repository.UpdateUser(user);
+					repository.TryUpdateUser(user);
 				}
 				var membershipUser = CreateMembershipUser(user);
 				return membershipUser;
