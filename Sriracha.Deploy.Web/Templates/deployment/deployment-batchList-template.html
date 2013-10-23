@@ -2,6 +2,15 @@
 
 <a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
 
+<div ng-show="false" ng-repeat="deployment in deploymentList.items" style="border: 1px solid grey; border-radius: 5px; padding: 10px 10px 10px 10px; margin: 10px 10px 10px 10px">
+	<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}"><h3>{{deployment.request.deploymentLabel}}</h3></a>
+	<div>
+		<b>Status:</b> {{deployment.request.statusDisplayValue}}
+	</div>
+	<div style="font-style:italic">
+		{{deployment.request.lastStatusMessage}}
+	</div>
+</div>
 
 <table class="table table-bordered table-striped">
 	<thead>

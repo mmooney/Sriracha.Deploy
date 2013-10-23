@@ -234,6 +234,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				item.Id = Guid.NewGuid().ToString();
 			}
+			string message = string.Format("{0} created deployment request with status of {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
 			var request = new DeployBatchRequest
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -241,6 +242,7 @@ namespace Sriracha.Deploy.RavenDB
 				SubmittedByUserName = _userIdentity.UserName,
 				DeploymentLabel = deploymentLabel,
 				ItemList = itemList,
+				LastStatusMessage = message,
 				Status = status,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				CreatedByUserName = _userIdentity.UserName,
@@ -248,6 +250,7 @@ namespace Sriracha.Deploy.RavenDB
 				UpdatedByUserName = _userIdentity.UserName
 
 			};
+			request.MessageList.Add(message);
 			_documentSession.Store(request);
 			_documentSession.SaveChanges();
 			return request;
@@ -339,6 +342,7 @@ namespace Sriracha.Deploy.RavenDB
 				message += "  Notes: " + statusMessage;
 			}
 			batchRequest.MessageList.Add(message);
+			batchRequest.LastStatusMessage = message;
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
