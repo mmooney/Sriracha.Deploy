@@ -13,7 +13,7 @@ namespace Sriracha.Deploy.Data
 		DeployState SubmitDeployRequest(string projectId, string buildId, string environmentId, IEnumerable<string> machineIdList);
 
 		List<DeployBatchRequest> GetDeployBatchRequestList();
-		DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus);
+		DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus, string deploymentLabel);
 		DeployBatchRequest GetDeployBatchRequest(string id);
 
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);

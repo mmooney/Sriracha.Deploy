@@ -43,7 +43,7 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 
 		private DeployBatchRequest Save(DeployBatchRequest request)
 		{
-			var item = _deployRequestManager.CreateDeployBatchRequest(request.ItemList, request.Status);
+			var item = _deployRequestManager.CreateDeployBatchRequest(request.ItemList, request.Status, request.DeploymentLabel);
 			return item;
 		}
 	}

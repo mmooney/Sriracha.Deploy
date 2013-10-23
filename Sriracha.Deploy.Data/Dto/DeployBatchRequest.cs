@@ -21,6 +21,8 @@ namespace Sriracha.Deploy.Data.Dto
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
+		public string LastStatusMessage { get; set; }
+		public string DeploymentLabel { get; set; }
 
 		public List<string> MessageList { get; set; }
 

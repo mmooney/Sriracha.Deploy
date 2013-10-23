@@ -7,6 +7,7 @@
 	<thead>
 		<tr>
 			<th>Status</th>
+			<th>Label</th>
 			<th>Submitted Date</th>
 			<th>Started Date</th>
 			<th>Completed Date</th>
@@ -21,6 +22,7 @@
                 </div>
                 {{getDeployStatusDescription(deployment.request.status)}}
 			</td>
+			<td>{{deployment.request.deploymentLabel}}</td>
 			<td>{{deployment.request.submittedDateTimeUtc | displayDate}}</td>
 -			<td>{{deployment.request.startedDateTimeUtc | displayDate}}</td>
 			<td>{{deployment.request.completeDateTimeUtc | displayDate}}</td>

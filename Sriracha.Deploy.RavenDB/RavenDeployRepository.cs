@@ -211,7 +211,7 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Load<DeployBatchRequest>(id);
 		}
 
-		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status)
+		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
 		{
 			switch(status)
 			{
@@ -239,6 +239,7 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				SubmittedDateTimeUtc = submittedDateTimeUtc,
 				SubmittedByUserName = _userIdentity.UserName,
+				DeploymentLabel = deploymentLabel,
 				ItemList = itemList,
 				Status = status,
 				CreatedDateTimeUtc = DateTime.UtcNow,

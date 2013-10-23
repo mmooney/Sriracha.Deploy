@@ -73,9 +73,9 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus)
+		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus, string deploymentLabel)
 		{
-			var request = _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus);
+			var request = _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus, deploymentLabel);
 			_projectNotifier.SendDeployRequestedNotification(request);
 			return request;
 		}

@@ -355,9 +355,14 @@
 	}
 
 	$scope.submitBuildRequest = function () {
+		if (!$scope.deploymentLabel) {
+			alert("Please enter a deployment label");
+			return;
+		}
 		var request = new SrirachaResource.deployBatchRequest();
 		request.itemList = $scope.selectedItems;
 		request.status = "Requested";
+		request.deploymentLabel = $scope.deploymentLabel;
 		request.$save(null,
 			function () {
 				$scope.navigator.deployment.batchStatus.go(request.id);
