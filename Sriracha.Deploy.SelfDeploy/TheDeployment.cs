@@ -137,7 +137,7 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										this.ValidateSettings(settings);
-									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").DeleteDestinationBeforeDeploying();
+									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").ClearDestinationBeforeDeploying();
 
 									   this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
 								   });
