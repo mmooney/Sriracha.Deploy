@@ -1,6 +1,6 @@
 ﻿angular.module("ngSriracha").directive("pager",
-		['$location', '$rootScope', 'SrirachaResource', 'ErrorReporter', 'SrirachaNavigator',
-		function ($location, $rootScope, SrirachaResource, ErrorReporter, SrirachaNavigator) {
+		[
+		function () {
 			return {
 				restrict: "E",
 				templateUrl: "templates/directives/pager.html",
@@ -17,7 +17,6 @@
 								startLink = scope.pagedList.pageNumber - 5;
 								scope.morePreviousPages = true;
 							}
-							console.log(startLink);
 							var endLink = scope.pagedList.pageCount;
 							if (scope.pagedList.pageNumber < scope.pagedList.pageCount - 5) {
 								endLink = scope.pagedList.pageNumber + 5;
@@ -32,7 +31,6 @@
 								}
 								scope.pageLinks.push(pageLink);
 							}
-							console.log(scope)
 						}
 					});
 				}

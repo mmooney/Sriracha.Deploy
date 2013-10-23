@@ -45,12 +45,20 @@ namespace Sriracha.Deploy.RavenDB
 			listOptions = listOptions ?? new ListOptions();
 			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, "UpdatedDateTimeUtc");
 			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
-			switch(listOptions.SortField)
+			switch(listOptions.SortField.ToLower())
 			{
-				case "UpdatedDateTimeUtc":
-				default:
+				case "updateddatetimeutc":
 					pagedList = query.PageAndSort(listOptions, i=>i.UpdatedDateTimeUtc);
 					break;
+				case "branchname":
+				case "projectbranchname":
+					pagedList = query.PageAndSort(listOptions, i => i.ProjectBranchName);
+					break;
+				case "projectname":
+					pagedList = query.PageAndSort(listOptions, i=>i.ProjectName);
+					break;
+				default:
+					throw new Exception("Unrecognized sort field " + listOptions.SortField);
 			}
 			return new PagedSortedList<DeployBuild>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}

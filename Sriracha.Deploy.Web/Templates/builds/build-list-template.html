@@ -3,8 +3,9 @@
 <table class="table table-striped" ng-show="buildList.items.length">
 	<thead>
 		<tr>
-			<th>Project</th>
-			<th>Branch</th>
+			<th sort-header sort-field="ProjectName" apply-sort="applySort" paged-list="buildList">Project</th>
+			<th sort-header sort-field="BranchName" apply-sort="applySort" paged-list="buildList">Branch</th>
+			<th sort-header sort-field="UpdatedDateTimeUtc" apply-sort="applySort" paged-list="buildList">Updated</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -12,6 +13,7 @@
 		<tr ng-repeat="build in buildList.items">
 			<td><a ng-href="{{navigator.build.view.clientUrl(build.id)}}">{{build.displayValue}}</a></td>
 			<td>{{build.projectBranchName}}</td>
+			<td>{{build.updatedDateTimeUtc | displayDate}}</td>
 			<td><a class="btn btn-danger" ng-href="{{navigator.build.remove.clientUrl(build.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
