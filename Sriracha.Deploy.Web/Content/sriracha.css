@@ -40,3 +40,10 @@
 	margin: 10px 10px 10px 10px;
 	border-radius: 5px
 }
+
+.sortHeader {
+	cursor:pointer;
+}
+.sortHeader.active {
+	font-style: italic;
+}

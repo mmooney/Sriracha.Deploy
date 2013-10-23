@@ -1,6 +1,6 @@
 ﻿ngSriracha.controller("BuildController", 
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator',
-		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
 	$scope.navigator = SrirachaNavigator;
 	if ($routeParams.buildId) {
 		$scope.build = SrirachaResource.build.get({ id: $routeParams.buildId }, function () {
@@ -9,7 +9,15 @@
 		$scope.deployHistory = SrirachaResource.deployHistory.query({ buildId: $routeParams.buildId });
 	}
 	else {
-		$scope.buildList = SrirachaResource.build.query({});
+		$scope.buildList = SrirachaResource.build.get(
+			{},
+			function() {
+				//console.log($scope.buildList);
+			},
+			function(err) {
+				ErrorHandler.handleResourceError(err);
+			}
+		);
 		$scope.projectList = SrirachaResource.project.query({});
 		$scope.uploadMessage = "Please upload the deploy package file first";
 		$scope.build = new SrirachaResource.build({});

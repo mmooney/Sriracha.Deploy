@@ -1,22 +1,25 @@
 ﻿<h2><a ng-href="{{navigator.build.list.clientUrl()}}">Build List</a></h2>
 
-<table class="table table-striped" ng-show="buildList.length">
+<table class="table table-striped" ng-show="buildList.items.length">
 	<thead>
 		<tr>
-			<th>Project</th>
-			<th>Branch</th>
+			<th sort-header sort-field="ProjectName" apply-sort="applySort" paged-list="buildList">Project</th>
+			<th sort-header sort-field="BranchName" apply-sort="applySort" paged-list="buildList">Branch</th>
+			<th sort-header sort-field="UpdatedDateTimeUtc" apply-sort="applySort" paged-list="buildList">Updated</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="build in buildList">
+		<tr ng-repeat="build in buildList.items">
 			<td><a ng-href="{{navigator.build.view.clientUrl(build.id)}}">{{build.displayValue}}</a></td>
 			<td>{{build.projectBranchName}}</td>
+			<td>{{build.updatedDateTimeUtc | displayDate}}</td>
 			<td><a class="btn btn-danger" ng-href="{{navigator.build.remove.clientUrl(build.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
-<div ng-hide="buildList.length">
+<div ng-hide="buildList.items.length">
 	No builds yet
 </div>
-<a ng-href="{{navigator.build.submit.clientUrl()}}">Submit Build</a>
+<pager paged-list="buildList" go-to-page="goToPage"></pager>
+<!--<a ng-href="{{navigator.build.submit.clientUrl()}}">Submit Build</a>-->

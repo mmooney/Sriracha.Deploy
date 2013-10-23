@@ -162,9 +162,9 @@
 					projectBranchId: item.build.projectBranchId,
 					projectComponentId: item.build.projectComponentId
 				};
-				var buildList = SrirachaResource.build.query(queryParameters,
+				var buildList = SrirachaResource.build.get(queryParameters,
 					function (data) {
-						var latest = _.first(_.sortBy(data, function (build) { return build.version; }).reverse());
+						var latest = _.first(_.sortBy(data.items, function (build) { return build.version; }).reverse());
 						item.build = latest;
 					},
 					function (error) {
@@ -204,10 +204,10 @@
 		if($scope.component) {
 			queryParameters.projectComponentId = $scope.component.id;
 		}
-		$scope.buildList = SrirachaResource.build.query(queryParameters,
+		$scope.buildList = SrirachaResource.build.get(queryParameters,
 			function () {
 				if (selectedBuildId) {
-					$scope.build = _.findWhere($scope.buildList, { id: selectedBuildId });
+					$scope.build = _.findWhere($scope.buildList.items, { id: selectedBuildId });
 					$scope.selection.preselectedMachineIds = selectedMachineIds;
 					$scope.updateEnvironmentMachines();
 				}

@@ -23,14 +23,9 @@ namespace Sriracha.Deploy.Data.Impl
 			this._projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
 
-		public IEnumerable<DeployBuild> GetBuildList(string projectId = null, string branchId = null, string componentId = null)
+		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions, string projectId = null, string branchId = null, string componentId = null)
 		{
-			return this._buildRepository.GetBuildList(projectId, branchId, componentId);
-		}
-
-		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions)
-		{
-			return this._buildRepository.GetBuildList(listOptions);
+			return this._buildRepository.GetBuildList(listOptions, projectId, branchId, componentId);
 		}
 
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileName, byte[] fileData, string version)
