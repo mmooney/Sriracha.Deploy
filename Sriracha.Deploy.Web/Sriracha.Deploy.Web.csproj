@@ -241,6 +241,7 @@
     <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\build\buildListController.js" />
     <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
+    <Content Include="Scripts\sriracha\directives\selectEnvironmentMachinesDirective.js" />
     <Content Include="Scripts\sriracha\directives\sortHeaderDirective.js" />
     <Content Include="Scripts\sriracha\project\projectConfigurationController.js" />
     <Content Include="Scripts\sriracha\project\projectDeploymentStepControlller.js" />
