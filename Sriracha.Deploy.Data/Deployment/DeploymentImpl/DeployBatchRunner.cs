@@ -13,16 +13,18 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly NLog.Logger _logger;
 		private readonly ISystemSettings _systemSettings;
 		private readonly IDeployStateManager _deployStateManager;
+		private readonly IDeployRequestManager _deployRequestManager;
 		private IDeployRunner _deployRunner;
 		private IDeployQueueManager _deployQueueManager;
 
-		public DeployBatchRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployRunner deployRunner, IDeployQueueManager deployQueueManager)
+		public DeployBatchRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployRunner deployRunner, IDeployQueueManager deployQueueManager, IDeployRequestManager deployRequestManager)
 		{
 			_logger = DIHelper.VerifyParameter(logger);
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
 			_deployStateManager = DIHelper.VerifyParameter(deployStateManager);
 			_deployRunner = DIHelper.VerifyParameter(deployRunner);
 			_deployQueueManager = DIHelper.VerifyParameter(deployQueueManager);
+			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 		}
 
 		public void TryRunNextDeployment()
@@ -39,17 +41,25 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				{
 					this._logger.Info("Found pending deployment: " + nextDeploymentBatch.Id);
 
-					List<string> environmentIds = nextDeploymentBatch.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.EnvironmentId)).ToList();
-					var existingDeployments = _deployQueueManager.GetQueue(null, EnumDeployStatus.InProcess.ListMe(), environmentIds);
-					if(existingDeployments.Items.Any())
+					if(nextDeploymentBatch.CancelRequested)
 					{
-						var existingDeploymentEnvironmentIds = existingDeployments.Items.SelectMany(i=>i.ItemList.SelectMany(j=>j.MachineList.Select(k=>k.EnvironmentId)));
+						_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
+						return;
+					}
+					List<string> environmentIds = nextDeploymentBatch.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.EnvironmentId)).ToList();
+					var existingDeployments = _deployQueueManager
+												.GetQueue(null, EnumDeployStatus.InProcess.ListMe(), environmentIds)
+												.Items.Where(i=>i.Id != nextDeploymentBatch.Id);
+					if(existingDeployments.Any())
+					{
+						var existingDeploymentEnvironmentIds = existingDeployments.SelectMany(i=>i.ItemList.SelectMany(j=>j.MachineList.Select(k=>k.EnvironmentId)));
 						var environmentNames = nextDeploymentBatch.ItemList
 													.SelectMany(i => i.MachineList	
 																	.Where(j=>existingDeploymentEnvironmentIds.Contains(j.EnvironmentId))
-																	.Select(j=>StringHelper.IsNullOrEmpty(j.EnvironmentName, j.EnvironmentId))).ToList();
-						string message = "Waiting to start deployment, other deploymetns in process to the following environments: " + string.Join(", ",environmentNames);
+																	.Select(j=>StringHelper.IsNullOrEmpty(j.EnvironmentName, j.EnvironmentId))).Distinct().ToList();
+						string message = "Waiting to start deployment, other deployments in process to the following environments: " + string.Join(", ",environmentNames);
 						_deployQueueManager.RequeueDeployment(nextDeploymentBatch.Id, message);
+						return;
 					}
 
 					string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + nextDeploymentBatch.Id;
@@ -75,7 +85,13 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					{
 						foreach (var machine in item.MachineList)
 						{
-							var deployState = _deployStateManager.CreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
+							var cancelCheckRequest = _deployRequestManager.GetDeployBatchRequest(nextDeploymentBatch.Id);
+							if(cancelCheckRequest.CancelRequested)
+							{
+								_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
+								return;
+							}
+							var deployState = _deployStateManager.GetOrCreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
 							try
 							{
 								_deployStateManager.MarkDeploymentInProcess(deployState.Id);

@@ -52,6 +52,38 @@ namespace Sriracha.Deploy.RavenDB
 			return deployState;
 		}
 
+		public DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
+		{
+			if(string.IsNullOrEmpty(projectId))
+			{
+				throw new ArgumentNullException("Missing project ID");
+			}
+			if(string.IsNullOrEmpty(buildId))
+			{
+				throw new ArgumentNullException("Missing build ID");
+			}
+			if(string.IsNullOrEmpty(environmentId))
+			{
+				throw new ArgumentNullException("Missing environment ID");
+			}
+			if(string.IsNullOrEmpty(machineId))
+			{
+				throw new ArgumentNullException("Missing machine ID");
+			}
+			if(string.IsNullOrEmpty(deployBatchRequestItemId))
+			{
+				throw new ArgumentNullException("Missing deploy batch request item ID");
+			}
+			return (from i in _documentSession.Query<DeployState>()
+						where i.ProjectId == projectId
+							&& i.Build.Id == buildId
+							&& i.Environment.Id == environmentId
+							&& i.MachineList.Any(j=>j.Id == machineId)
+							&& i.DeployBatchRequestItemId == deployBatchRequestItemId
+							select i)
+					.FirstOrDefault();
+		}
+
 		public DeployState GetDeployState(string deployStateId)
 		{
 			if (string.IsNullOrWhiteSpace(deployStateId))
@@ -332,6 +364,9 @@ namespace Sriracha.Deploy.RavenDB
 				case EnumDeployStatus.Error:
 					batchRequest.CompleteDateTimeUtc = DateTime.UtcNow;
 					break;
+				case EnumDeployStatus.Cancelled:
+					batchRequest.CancelRequested = false;
+					break;
 			}
 			if (err != null)
 			{
@@ -378,7 +413,7 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage)
 		{
 			var request = GetBatchRequest(deployBatchRequestId);
-			request.CancelledRequested = true;
+			request.CancelRequested = true;
 			string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
 			if(!string.IsNullOrEmpty(userMessage))
 			{

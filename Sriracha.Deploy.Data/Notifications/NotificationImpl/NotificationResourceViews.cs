@@ -27,22 +27,24 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			get { return SrirachaResources.DeployRejectedEmailView; }
 		}
 
-
 		public string DeployStartedEmailView
 		{
 			get { return SrirachaResources.DeployStartedEmailView; }
 		}
-
 
 		public string DeploySuccessEmailView
 		{
 			get { return SrirachaResources.DeploySuccessEmailView; }
 		}
 
-
 		public string DeployFailedEmailView
 		{
 			get { return SrirachaResources.DeployFailedEmailView; }
+		}
+
+		public string DeployCancelledEmailView
+		{
+			get { return SrirachaResources.DeployCancelledEmailView; }
 		}
 	}
 }

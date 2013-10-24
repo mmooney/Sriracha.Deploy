@@ -14,5 +14,6 @@ namespace Sriracha.Deploy.Data.Notifications
 		string DeployStartedEmailView { get; }
 		string DeploySuccessEmailView { get; }
 		string DeployFailedEmailView { get; }
+		string DeployCancelledEmailView { get; }
 	}
 }

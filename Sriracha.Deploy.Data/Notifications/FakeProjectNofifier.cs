@@ -34,5 +34,9 @@ namespace Sriracha.Deploy.Data.Notifications
 		public void SendDeployFailedNotification(Dto.DeployBatchRequest deployRequest)
 		{
 		}
+
+		public void SendDeployCancelledNotification(Dto.DeployBatchRequest deployRequest)
+		{
+		}
 	}
 }

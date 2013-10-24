@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Deployment
 	{
 		DeployState GetDeployState(string deployStateId);
 		DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
+		DeployState GetOrCreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
 
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
@@ -19,5 +20,7 @@ namespace Sriracha.Deploy.Data.Deployment
 
 		void MarkBatchDeploymentSuccess(string deployBatchRequestId);
 		void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err);
+		void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage);
+
 	}
 }

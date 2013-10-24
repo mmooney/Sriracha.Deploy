@@ -124,6 +124,9 @@
   <data name="DeployApprovedEmailView" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\DeployApprovedEmail.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="DeployCancelledEmailView" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\deploycancelledemail.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="DeployFailedEmailView" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\deployfailedemail.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

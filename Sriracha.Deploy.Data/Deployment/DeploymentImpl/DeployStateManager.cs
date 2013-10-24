@@ -46,6 +46,18 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			return _deployRepository.CreateDeployment(build, branch, environment, component, machineList, deployBatchRequestItemId);
 		}
 
+		public DeployState GetOrCreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
+		{
+			var state = _deployRepository.TryGetDeployState(projectId, buildId, environmentId, machineId, deployBatchRequestItemId);
+			if(state != null)
+			{
+				return state;
+			}
+			else 
+			{
+				return this.CreateDeployState(projectId, buildId, environmentId, machineId, deployBatchRequestItemId);
+			}
+		}
 
 		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
 		{
@@ -77,6 +89,17 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		{
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err, "Deployment error");
 			_projectNotifier.SendDeployFailedNotification(deployRequest);
+		}
+
+		public void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage)
+		{
+			string statusMessage = string.Format("Deployment was cancelled at {0} UTC", DateTime.UtcNow);
+			if(!string.IsNullOrEmpty(cancelMessage) && cancelMessage  != "null")
+			{
+				statusMessage += ", Notes: " + cancelMessage;
+			}
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Cancelled, statusMessage: statusMessage);
+			_projectNotifier.SendDeployCancelledNotification(deployRequest);
 		}
 	}
 }

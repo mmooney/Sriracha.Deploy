@@ -17,5 +17,6 @@ namespace Sriracha.Deploy.Data.Notifications
 		void SendDeployStartedNotification(DeployBatchRequest deployRequest);
 		void SendDeploySuccessNotification(DeployBatchRequest deployRequest);
 		void SendDeployFailedNotification(DeployBatchRequest deployRequest);
+		void SendDeployCancelledNotification(DeployBatchRequest deployRequest);
 	}
 }

@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Repository
 	public interface IDeployRepository
 	{
 		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId);
+		DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
 		DeployBatchRequest PopNextBatchDeployment();
 		DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
 
