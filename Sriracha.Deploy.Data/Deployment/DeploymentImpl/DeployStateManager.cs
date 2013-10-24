@@ -67,26 +67,15 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
 		}
 
-		public DeployBatchRequest PopNextBatchDeployment()
-		{
-			var deployRequest = _deployRepository.PopNextBatchDeployment();
-			if(deployRequest != null)
-			{
-				_projectNotifier.SendDeployStartedNotification(deployRequest);
-			}
-			return deployRequest;
-		}
-
-
 		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
 		{
-			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success);
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success, statusMessage:"Deployment completed successfully");
 			_projectNotifier.SendDeploySuccessNotification(deployRequest);
 		}
 
 		public void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err)
 		{
-			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err);
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err, "Deployment error");
 			_projectNotifier.SendDeployFailedNotification(deployRequest);
 		}
 	}

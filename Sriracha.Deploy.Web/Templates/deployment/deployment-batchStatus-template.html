@@ -40,6 +40,7 @@
 </div>
 <div ng-show="deployBatchStatus.request.messageList.length">
 	<h3>Status Messages</h3>
+	<b><i>{{deployBatchStatus.request.lastStatusMessage}}</i></b>
 	<pre ng-repeat="message in deployBatchStatus.request.messageList">{{message}}</pre>
 </div>
 <div ng-repeat="item in deployBatchStatus.request.itemList">

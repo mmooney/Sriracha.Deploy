@@ -92,6 +92,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
+    <Compile Include="Deployment\IDeployBatchRunner.cs" />
     <Compile Include="Dto\AccountSettings.cs" />
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />

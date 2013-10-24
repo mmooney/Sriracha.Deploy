@@ -8,6 +8,10 @@ namespace Sriracha.Deploy.Data.Deployment
 {
 	public interface IDeployQueueManager
 	{
-		PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions);
+		PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions, List<EnumDeployStatus> statusList=null, List<string> environmentIds=null);
+
+		DeployBatchRequest PopNextBatchDeployment();
+
+		DeployBatchRequest RequeueDeployment(string deployBatchRequestId, string message);
 	}
 }

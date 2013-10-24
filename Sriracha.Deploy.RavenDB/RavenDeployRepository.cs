@@ -321,7 +321,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null)
+		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null, bool addToMessageHistory=true)
 		{
 			var batchRequest = GetBatchRequest(deployBatchRequestId);
 			var oldStatus = batchRequest.Status;
@@ -337,13 +337,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				batchRequest.ErrorDetails = err.ToString();
 			}
-			string message = string.Format("{0} changed status from {1} to {2} at {3} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(oldStatus), EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
-			if(!string.IsNullOrEmpty(statusMessage))
+			if(addToMessageHistory)
 			{
-				message += "  Notes: " + statusMessage;
+				batchRequest.MessageList.Add(statusMessage);
 			}
-			batchRequest.MessageList.Add(message);
-			batchRequest.LastStatusMessage = message;
+			batchRequest.LastStatusMessage = statusMessage;
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
@@ -351,14 +349,25 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions)
+		public PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null)
 		{
+			if(statusList == null || statusList.Count == 0)
+			{
+				statusList = new List<EnumDeployStatus> { EnumDeployStatus.NotStarted, EnumDeployStatus.InProcess };
+			}
 			var query = (IRavenQueryable<DeployBatchRequest>)_documentSession.Query<DeployBatchRequest>()
 										.OrderBy(i => i.SubmittedDateTimeUtc)
-										.Where(i => i.Status == EnumDeployStatus.NotStarted || i.Status == EnumDeployStatus.InProcess);
+										.Where(i => i.Status.In(statusList));
+			if(environmentIds != null && environmentIds.Count != 0)
+			{
+				query = (IRavenQueryable<DeployBatchRequest>)query
+								.Where(i=>i.ItemList
+											.Any(j=>j.MachineList
+												.Any(k=>k.EnvironmentId.In(environmentIds))));
+			}
 			listOptions = listOptions ?? new ListOptions();
-			listOptions.SortField = "SubmittedDateTimeUtc";
-			listOptions.SortAscending = false;
+			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField,"SubmittedDateTimeUtc");
+			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
 			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(5);
 			listOptions.PageNumber = listOptions.PageNumber.GetValueOrDefault(1);
 			var pagedList = query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
@@ -379,6 +388,19 @@ namespace Sriracha.Deploy.RavenDB
 			request.MessageList.Add(statusMessage);
 			_documentSession.SaveChanges();
 			return request;
+		}
+
+
+		public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage)
+		{
+			var batchRequest = GetBatchRequest(deployBatchRequestId);
+			batchRequest.Status = newStatus;
+			batchRequest.StartedDateTimeUtc = null;
+			batchRequest.LastStatusMessage = statusMessage;
+			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
+			batchRequest.UpdatedByUserName = _userIdentity.UserName;
+			this._documentSession.SaveChanges();
+			return batchRequest;
 		}
 	}
 }

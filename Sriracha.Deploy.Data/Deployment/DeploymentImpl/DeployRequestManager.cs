@@ -18,14 +18,16 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly IDeployRepository _deployRepository;
 		private readonly IDeploymentValidator _validator;
 		private readonly IProjectNotifier _projectNotifier;
+		private readonly IUserIdentity _userIdentity;
 
-		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator, IProjectNotifier projectNotifier)
+		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator, IProjectNotifier projectNotifier, IUserIdentity userIdentity)
 		{
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
 			_validator = DIHelper.VerifyParameter(validator);
 			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
 		public List<DeployBatchRequest> GetDeployBatchRequestList()
@@ -71,7 +73,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		}
 
 
-		public DeployBatchRequest UpdateDeployBatchStatus(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage)
+		public DeployBatchRequest UpdateDeployBatchStatus(string deployBatchRequestId, EnumDeployStatus newStatus, string userMessage)
 		{
 			var item = _deployRepository.GetBatchRequest(deployBatchRequestId);
 			_validator.ValidateStatusTransition(item.Status, newStatus);
@@ -84,7 +86,18 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					_projectNotifier.SendDeployRejectedNotification(item);
 					break;
 			}
+			string statusMessage = BuildStatusChangeMessage(newStatus, userMessage);
 			return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, newStatus, statusMessage:statusMessage);
+		}
+
+		private string BuildStatusChangeMessage(EnumDeployStatus newStatus, string userMessage)
+		{
+			string message = string.Format("{0} changed status to {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(newStatus), DateTime.UtcNow);
+			if (!string.IsNullOrEmpty(userMessage) && userMessage != "null")
+			{
+				message += "  Notes: " + userMessage;
+			}
+			return message;
 		}
 
 
