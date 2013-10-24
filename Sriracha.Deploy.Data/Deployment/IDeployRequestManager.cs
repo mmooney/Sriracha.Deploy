@@ -18,5 +18,7 @@ namespace Sriracha.Deploy.Data.Deployment
 		DeployBatchRequest UpdateDeployBatchStatus(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage);
 
 		DeployBatchRequest PerformAction(string deployBatchRequestId, EnumDeployBatchAction action, string userMessage);
+
+		bool HasCancelRequested(string deployBatchRequestId);
 	}
 }

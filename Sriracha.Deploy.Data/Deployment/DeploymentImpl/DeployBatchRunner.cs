@@ -85,11 +85,13 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					{
 						foreach (var machine in item.MachineList)
 						{
-							var cancelCheckRequest = _deployRequestManager.GetDeployBatchRequest(nextDeploymentBatch.Id);
-							if(cancelCheckRequest.CancelRequested)
+							if(_deployRequestManager.HasCancelRequested(nextDeploymentBatch.Id))
 							{
 								_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
 								return;
+							}
+							else 
+							{
 							}
 							var deployState = _deployStateManager.GetOrCreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
 							try

@@ -30,5 +30,7 @@ namespace Sriracha.Deploy.Data.Repository
 		List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId);
 		PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null);
 		DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus enumDeployStatus, string statusMessage);
+
+		bool HasCancelRequested(string deployBatchRequestId);
 	}
 }

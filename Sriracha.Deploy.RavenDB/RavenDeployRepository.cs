@@ -437,5 +437,14 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 			return batchRequest;
 		}
+
+
+		public bool HasCancelRequested(string deployBatchRequestId)
+		{
+			var item = _documentSession.Load<DeployBatchRequest>(deployBatchRequestId);
+			bool returnValue = item.CancelRequested;
+			_documentSession.Advanced.Evict(item);
+			return returnValue;
+		}
 	}
 }

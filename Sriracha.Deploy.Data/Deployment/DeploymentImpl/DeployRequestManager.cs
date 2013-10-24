@@ -111,5 +111,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					throw new UnknownEnumValueException(action);
 			}
 		}
+
+
+		public bool HasCancelRequested(string deployBatchRequestId)
+		{
+			return _deployRepository.HasCancelRequested(deployBatchRequestId);
+		}
 	}
 }
