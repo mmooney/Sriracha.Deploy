@@ -13,7 +13,6 @@ namespace Sriracha.Deploy.Data.Dto
 		public string SubmittedByUserName { get; set; }
 		public List<DeployBatchRequestItem> ItemList { get; set; }
 		public EnumDeployStatus Status { get; set; }
-		public string StatusDisplayValue { get {  return EnumHelper.GetDisplayValue(this.Status); } }
 		public DateTime? StartedDateTimeUtc { get; set; }
 		public DateTime? CompleteDateTimeUtc { get; set; }
 		public string ErrorDetails { get; set; }
@@ -26,11 +25,26 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public List<string> MessageList { get; set; }
 
+		public string StatusDisplayValue 
+		{ 
+			get 
+			{ 
+				string displayValue = EnumHelper.GetDisplayValue(this.Status); 
+				if(this.CancelledRequested)
+				{
+					displayValue += " (Cancel Requested)";
+				}
+				return displayValue;
+			} 
+		}
+
 		public DeployBatchRequest()
 		{
 			this.MessageList = new List<string>();
 		}
 
 		public string Label { get; set; }
+
+		public bool CancelledRequested { get; set; }
 	}
 }

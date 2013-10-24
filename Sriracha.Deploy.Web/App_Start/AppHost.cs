@@ -50,6 +50,8 @@ namespace Sriracha.Deploy.Web.App_Start
 
 			//Configure User Defined REST Paths
 			Routes
+				.Add<DeployProject>("/project")
+				.Add<DeployProject>("/project/{id*}")
 				.Add<DeployStep>("/project/{projectId}/{parentType}/{parentId}/step")
 				.Add<DeployStep>("/project/{projectId}/{parentType}/{parentId}/step/{id*}")
 				.Add<DeployConfiguration>("/project/{projectId}/configuration")
@@ -63,22 +65,15 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployEnvironment>("/project/{projectId}/environment/{id*}")
 				.Add<DeployProjectRole>("/project/{projectId}/role")
 				.Add<DeployProjectRole>("/project/{projectId}/role/{id}")
+
 				.Add<DeployFileDto>("/file")
 				.Add<DeployFileDto>("/file/{id*}")
-				//.Add<DeployBuild>("/build")
-				//.Add<DeployBuild>("/build/{id*}")
-				.Add<DeployHistory>("/deploy/history")
-				.Add<DeployHistory>("/deploy/history{id*}")
-				.Add<DeployRequest>("/deployrequest")
-				.Add<DeployRequest>("/deployrequest/{id}")
-				.Add<DeployBatchRequest>("/deployBatchRequest")
-				.Add<DeployBatchRequest>("/deployBatchRequest/{id}")
-				//.Add<DeployBatchStatus>("/deployBatchStatus")
-				//.Add<DeployBatchStatus>("/deployBatchStatus/{deployBatchRequestId}")
-				.Add<DeployState>("/deployState")
-				.Add<DeployState>("/deployState/{id}")
-				.Add<DeployProject>("/project")
-				.Add<DeployProject>("/project/{id*}")
+
+				.Add<DeployBatchRequest>("/deploy/batchRequest")
+				.Add<DeployBatchRequest>("/deploy/batchRequest/{id}")
+				.Add<DeployState>("/deploy/state")
+				.Add<DeployState>("/deploy/state/{id}")
+
 				.Add<TaskMetadata>("/taskMetadata")
 				.Add<SystemLogRequest>("/systemlog");
 

@@ -29,6 +29,10 @@
 		<th>Completed:</th>
 		<td>{{deployBatchStatus.request.completeDateTimeUtc | displayDate}}</td>
 	</tr>
+	<tr>
+		<th>Actions:</th>
+		<td><deploy-action-links deploy-batch-request="deployBatchStatus.request"></deploy-action-links></td>
+	</tr>
 </table>
 <div ng-show="deployBatchStatus.request.errorDetails" class="error">
 	<h3>Error Details: </h3> 

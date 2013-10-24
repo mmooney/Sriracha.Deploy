@@ -41,7 +41,7 @@ namespace Sriracha.Deploy.Web.Services.Build
 			}
 		}
 
-		public void Delete(DeployBuild build)  
+		public void Delete(BuildRequest build)  
 		{
 			this._buildManager.DeleteBuild(build.Id);
 		}

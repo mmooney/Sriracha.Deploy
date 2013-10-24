@@ -364,5 +364,21 @@ namespace Sriracha.Deploy.RavenDB
 			var pagedList = query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
 			return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
 		}
+
+
+		public DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage)
+		{
+			var request = GetBatchRequest(deployBatchRequestId);
+			request.CancelledRequested = true;
+			string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
+			if(!string.IsNullOrEmpty(userMessage))
+			{
+				statusMessage += ". Notes: " + userMessage;
+			}
+			request.LastStatusMessage = statusMessage;
+			request.MessageList.Add(statusMessage);
+			_documentSession.SaveChanges();
+			return request;
+		}
 	}
 }

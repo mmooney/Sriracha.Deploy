@@ -79,7 +79,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RavenAttachmentManager.cs" />
     <Compile Include="RavenBuildRepository.cs" />
-    <Compile Include="RavenDeployHistoryRepository.cs" />
     <Compile Include="RavenFileRepository.cs" />
     <Compile Include="RavenFileStorage_Attachment.cs" />
     <Compile Include="RavenFileStorage_Collection.cs" />

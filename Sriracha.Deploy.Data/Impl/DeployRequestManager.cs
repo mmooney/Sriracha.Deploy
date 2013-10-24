@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.Data.Impl
 {
@@ -26,41 +27,6 @@ namespace Sriracha.Deploy.Data.Impl
 			_validator = DIHelper.VerifyParameter(validator);
 			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
-
-		public DeployRequestTemplate InitializeDeployRequest(string buildId, string environmentId)
-		{
-			var build = _buildRepository.GetBuild(buildId);
-			var project = _projectRepository.GetProject(build.ProjectId);
-			var environment = project.GetEnvironment(environmentId);
-			var component = project.GetComponent(build.ProjectComponentId);
-			var returnValue = new DeployRequestTemplate
-			{
-				Build = build,
-				Environment = environment,
-				Component = component,
-				ValidationResult = _validator.ValidateDeployment(project, component, environment)
-			};
-			return returnValue;
-		}
-
-
-		public DeployState SubmitDeployRequest(string projectId, string buildId, string environmentId, IEnumerable<string> machineIdList)
-		{
-			var build = _buildRepository.GetBuild(buildId);
-			var project = _projectRepository.GetProject(projectId);
-			var environment = project.GetEnvironment(environmentId);
-			var component = project.GetComponent(build.ProjectComponentId);
-			var branch = project.GetBranch(build.ProjectBranchId);
-			var validationResult = _validator.ValidateDeployment(project, component, environment);
-			var machineList = new List<DeployMachine>();
-			foreach(string id in machineIdList)
-			{
-				var machine = _projectRepository.GetMachine(id);
-				machineList.Add(machine);
-			}
-			return  _deployRepository.CreateDeployment(build, branch, environment, component, machineList, null);
-		}
-
 
 		public List<DeployBatchRequest> GetDeployBatchRequestList()
 		{
@@ -119,6 +85,19 @@ namespace Sriracha.Deploy.Data.Impl
 					break;
 			}
 			return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, newStatus, statusMessage:statusMessage);
+		}
+
+
+		public DeployBatchRequest PerformAction(string deployBatchRequestId, EnumDeployBatchAction action, string userMessage)
+		{
+			switch(action)
+			{
+				case EnumDeployBatchAction.Cancel:
+					return _deployRepository.SetCancelRequested(deployBatchRequestId, userMessage);
+					break;
+				default:
+					throw new UnknownEnumValueException(action);
+			}
 		}
 	}
 }

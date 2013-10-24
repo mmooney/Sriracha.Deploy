@@ -61,7 +61,6 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<FileManager>().As<IFileManager>();
 			builder.RegisterType<TaskManager>().As<ITaskManager>();
 			builder.RegisterType<DeployQueueManager>().As<IDeployQueueManager>();
-			builder.RegisterType<DeployHistoryManager>().As<IDeployHistoryManager>();
 			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();

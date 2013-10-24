@@ -170,10 +170,6 @@
 			templateUrl: "templates/deployment/deployment-batchStatus-template.html",
 			controller: "deployBatchStatusController"
 		})
-		.when(navigator.deployment.submit.url, {
-			templateUrl: "templates/deployment/deployment-submit-template.html",
-			controller: "DeployController"
-		})
 		.when(navigator.deployment.view.url, {
 			templateUrl: "templates/deployment/deployment-view-template.html",
 			controller: "DeployController"

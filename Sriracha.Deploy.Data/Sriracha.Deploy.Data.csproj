@@ -110,7 +110,6 @@
     <Compile Include="Dto\DeployMachine.cs" />
     <Compile Include="Dto\DeploymentValidationResult.cs" />
     <Compile Include="Dto\DeployQueueItem.cs" />
-    <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Dto\DeployRequestTemplate.cs" />
     <Compile Include="Dto\DeployState.cs" />
     <Compile Include="Dto\DeployStateMessage.cs" />
@@ -159,8 +158,6 @@
     <Compile Include="Dto\PagedSortedList.cs" />
     <Compile Include="NLogDBLogTarget.cs" />
     <Compile Include="IDeployComponentRunner.cs" />
-    <Compile Include="IDeployHistoryManager.cs" />
-    <Compile Include="Dto\DeployHistory.cs" />
     <Compile Include="IDeploymentValidator.cs" />
     <Compile Include="IDeployRequestManager.cs" />
     <Compile Include="IDeployRunner.cs" />
@@ -173,7 +170,6 @@
     <Compile Include="Impl\BuildPublisher.cs" />
     <Compile Include="Impl\DefaultSystemSettings.cs" />
     <Compile Include="Impl\DeployComponentRunner.cs" />
-    <Compile Include="Impl\DeployHistoryManager.cs" />
     <Compile Include="Impl\DeploymentValidator.cs" />
     <Compile Include="Impl\DeployRequestManager.cs" />
     <Compile Include="Impl\DeployRunner.cs" />
@@ -189,7 +185,6 @@
     <Compile Include="ISystemSettings.cs" />
     <Compile Include="IZipper.cs" />
     <Compile Include="JsonExtensions.cs" />
-    <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />
     <Compile Include="Repository\IEmailQueueRepository.cs" />
     <Compile Include="Repository\IPermissionRepository.cs" />

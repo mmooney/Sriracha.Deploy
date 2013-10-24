@@ -241,6 +241,7 @@
     <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\build\buildListController.js" />
     <Content Include="Scripts\sriracha\dataAccess\deployQueueDataAccess.js" />
+    <Content Include="Scripts\sriracha\directives\deployActionLinksDirective.js" />
     <Content Include="Scripts\sriracha\directives\deployQueueDirective.js" />
     <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
     <Content Include="Scripts\sriracha\directives\selectEnvironmentMachinesDirective.js" />
@@ -256,14 +257,14 @@
     <Compile Include="Services\ComponentService.cs" />
     <Compile Include="Services\ComponentConfigurationService.cs" />
     <Compile Include="Services\DeployConfigurationService.cs" />
-    <Compile Include="Services\DeployHistoryService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
+    <Compile Include="Services\Deployment\DeployBatchActionRequest.cs" />
+    <Compile Include="Services\Deployment\DeployBatchActionService.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
     <Compile Include="Services\Deployment\DeployQueueRequest.cs" />
     <Compile Include="Services\Deployment\DeployQueueService.cs" />
-    <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
@@ -434,6 +435,7 @@
     <Content Include="Scripts\angular\_references.js" />
     <Content Include="Templates\account\account-edit-template.html" />
     <Content Include="Templates\directives\breadcrumbs.html" />
+    <Content Include="Templates\directives\deployActionLinks.html" />
     <Content Include="Templates\directives\deployQueue.html" />
     <Content Include="Templates\directives\pager.html" />
     <Content Include="Templates\project\branch\branch-edit-template.html" />
@@ -451,7 +453,6 @@
     <Content Include="Templates\project\configuration\configuration-edit-template.html" />
     <Content Include="Templates\project\role\role-list-template.html" />
     <Content Include="Templates\systemlog-list-template.html" />
-    <Content Include="Templates\deployment\deployment-submit-template.html" />
     <Content Include="Templates\deployment\deployment-view-template.html" />
     <Content Include="Templates\project\environment\environment-delete-template.html" />
     <Content Include="Templates\project\environment\environment-edit-template.html" />

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Web;
 using ServiceStack.ServiceHost;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data;
 
 namespace Sriracha.Deploy.Web.Services.Deployment
 {
-	[Route("/deployBatchStatus")]
-	[Route("/deployBatchStatus/{id}")]
+	[Route("/deploy/batch/status")]
+	[Route("/deploy/batch/{id}/status")]
 	public class DeployBatchStatusRequest : RequestBase<DeployBatchStatus>
 	{
 		public EnumDeployStatus? NewStatus { get; set; }
