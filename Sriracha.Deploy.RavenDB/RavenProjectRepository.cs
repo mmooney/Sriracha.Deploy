@@ -964,8 +964,10 @@ namespace Sriracha.Deploy.RavenDB
 							machine.Id = Guid.NewGuid().ToString();
 						}
 						machine.ProjectId = project.Id;
+						machine.ProjectName = project.ProjectName;
 						machine.ParentId = component.Id;
 						machine.EnvironmentId = environment.Id;
+						machine.EnvironmentName = environment.EnvironmentName;
 					}
 				}
 			}

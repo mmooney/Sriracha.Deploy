@@ -8,6 +8,35 @@ ngSriracha.filter("displayDate", function () {
 		}
 	}
 });
+
+ngSriracha.filter("displayDateTimeShort", function () {
+	return function (input) {
+		if (input) {
+			var date = new Date(input);
+			var amPm;
+			var twelveHourHour;
+			if (date.getHours() > 12) {
+				amPm = "PM";
+				twelveHourHour = date.getHours() - 12;
+			}
+			else {
+				amPm = "AM";
+				twelveHourHour = date.getHours();
+			}
+			return date.getFullYear() + "-" + lpad(date.getMonth(),2) + "-" + lpad(date.getDay(),2) + " " + lpad(twelveHourHour,2) + ":" + lpad(date.getMinutes(),2) + ":" + lpad(date.getSeconds(),2) + " " + amPm;
+			return date.toString();
+		}
+
+		function lpad(data, size, padChar) {
+			padChar = padChar || "0";
+			var returnValue = data.toString() || "";
+			while (returnValue.length < size) {
+				returnValue = padChar + returnValue;
+			}
+			return returnValue;
+		}
+	}
+});
 ngSriracha.directive("breadcrumbs",
 		['$location','$rootScope','SrirachaResource', 'ErrorReporter', 'SrirachaNavigator',
 		function ($location, $rootScope, SrirachaResource, ErrorReporter, SrirachaNavigator) {

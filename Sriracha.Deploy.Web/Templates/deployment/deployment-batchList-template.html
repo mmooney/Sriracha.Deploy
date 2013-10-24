@@ -1,17 +1,43 @@
 ﻿<h1>Deployments</h1>
 
 <a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
-
-<div ng-show="false" ng-repeat="deployment in deploymentList.items" style="border: 1px solid grey; border-radius: 5px; padding: 10px 10px 10px 10px; margin: 10px 10px 10px 10px">
-	<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}"><h3>{{deployment.request.deploymentLabel}}</h3></a>
+<div>
+	<pager paged-list="deploymentList" go-to-page="goToPage"></pager>
+</div>
+<div ng-show="true" ng-repeat="deployment in deploymentList.items" style="border: 1px solid grey; border-radius: 5px; padding: 10px 10px 10px 10px; margin: 10px 10px 10px 10px">
+	<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">
+		<h3 ng-show="deployment.request.deploymentLabel">{{deployment.request.deploymentLabel}}</h3>
+		<h3 ng-hide="deployment.request.deploymentLabel">(No Deployment Label)</h3>
+	</a>
 	<div>
 		<b>Status:</b> {{deployment.request.statusDisplayValue}}
 	</div>
 	<div style="font-style:italic">
 		{{deployment.request.lastStatusMessage}}
 	</div>
+	<div>
+		<b>Component(s):</b> {{getComponentList(deployment.request)}}
+	</div>
+	<div>
+		<b>Environment(s):</b> {{getEnvironmentList(deployment.request)}}
+	</div>
+	<div>
+		<b>Submitted:</b> {{deployment.request.submittedDateTimeUtc | displayDateTimeShort}} by {{deployment.request.submittedByUserName}}
+	</div>
+	<div ng-show="deployment.request.startedDateTimeUtc">
+		<b>Started:</b> {{deployment.request.startedDateTimeUtc | displayDateTimeShort}}
+	</div>
+	<div ng-show="deployment.request.completeDateTimeUtc">
+		<b>Completed:</b> {{deployment.request.completeDateTimeUtc | displayDateTimeShort}}
+	</div>
+	<div style="text-align:center;">
+		<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a ng-href="{{navigator.deployment.batchCopy.clientUrl(deployment.request.id)}}">Copy</a>
+	</div>
+	<pre ng-show="false">{{deployment}}</pre>
 </div>
-
+<pager paged-list="deploymentList" go-to-page="goToPage"></pager>
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>

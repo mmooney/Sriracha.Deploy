@@ -194,6 +194,12 @@
 	}
 
 	$scope.refreshBuildAndEnvironmentList = function (selectedBuildId, selectedEnvironmentId, selectedMachineIds) {
+		$scope.refreshBuildList(selectedBuildId, selectedMachineIds);
+		$scope.refreshEnvironmentList(selectedEnvironmentId);
+	}
+
+	$scope.refreshBuildList = function (selectedBuildId, selectedMachineIds) {
+
 		queryParameters = {};
 		if($scope.project) {
 			queryParameters.projectId = $scope.project.id;
@@ -215,6 +221,8 @@
 			function (error) {
 				ErrorReporter.handleResourceError(error);
 			});
+	}
+	$scope.refreshEnvironmentList = function(selectedEnvironmentId) {
 		$scope.environmentList = null;
 		if ($scope.project && $scope.component) {
 			if ($scope.component.useConfigurationGroup && $scope.component.configurationId) {
@@ -252,6 +260,10 @@
 	}
 
 	$scope.buildSelected = function () {
+		if ($scope.build && $scope.project && !$scope.component) {
+			$scope.component = _.findWhere($scope.project.componentList, { id: $scope.build.projectComponentId });
+			$scope.refreshEnvironmentList();
+		}
 		$scope.updateEnvironmentMachines();
 	}
 
