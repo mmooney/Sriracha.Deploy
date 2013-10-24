@@ -93,7 +93,6 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<EmailSender>().As<IEmailSender>();
 			builder.RegisterType<RazorEmailEngine>().As<IRazorEmailEngine>().UsingConstructor(typeof(EmailSender));
 
-			builder.RegisterType<RunDeploymentJob>().As<IRunDeploymentJob>();
 			builder.RegisterType<RunBatchDeploymentJob>().As<IRunBatchDeploymentJob>();
 			builder.RegisterType<PurgeSystemLogJob>().As<IPurgeSystemLogJob>();
 			builder.RegisterType<PurgeBuildJob>().As<IPurgeBuildJob>();

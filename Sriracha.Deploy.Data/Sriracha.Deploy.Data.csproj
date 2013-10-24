@@ -195,7 +195,6 @@
     <Compile Include="ServiceJobs\IPurgeBuildJob.cs" />
     <Compile Include="ServiceJobs\IPurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\IRunBatchDeploymentJob.cs" />
-    <Compile Include="ServiceJobs\IRunDeploymentJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\BaseSingletonJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\EmailSenderJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\JobFactory.cs" />
@@ -203,7 +202,6 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\PurgeBuildJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\PurgeSystemLogJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\RunBatchDeploymentJob.cs" />
-    <Compile Include="ServiceJobs\ServiceJobImpl\RunDeploymentJob.cs" />
     <Compile Include="SrirachaResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
