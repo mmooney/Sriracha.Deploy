@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NLog;
+using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Notifications;
+using Sriracha.Deploy.Data.Repository;
+
+namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
+{
+	public class DeployStateManager : IDeployStateManager
+	{
+		private readonly IDeployRepository _deployRepository;
+		private readonly IBuildRepository _buildRepository;
+		private readonly IProjectRepository _projectRepository;
+		private readonly IDeploymentValidator _validator;
+		private readonly IProjectNotifier _projectNotifier;
+
+		public DeployStateManager(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator, IProjectNotifier projectNotifier)
+		{
+			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+			_buildRepository = DIHelper.VerifyParameter(buildRepository);
+			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_validator = DIHelper.VerifyParameter(deploymentValidator);
+			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
+		}
+
+		public DeployState GetDeployState(string deployStateId)
+		{
+			return _deployRepository.GetDeployState(deployStateId);
+		}
+
+		public DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
+		{
+			var build = _buildRepository.GetBuild(buildId);
+			var project = _projectRepository.GetProject(projectId);
+			var environment = project.GetEnvironment(environmentId);
+			var component = project.GetComponent(build.ProjectComponentId);
+			var branch = project.GetBranch(build.ProjectBranchId);
+			var validationResult = _validator.ValidateDeployment(project, component, environment);
+			var machineList = new List<DeployMachine>()
+			{
+				project.GetMachine(machineId)
+			};
+			return _deployRepository.CreateDeployment(build, branch, environment, component, machineList, deployBatchRequestItemId);
+		}
+
+
+		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+		{
+			return _deployRepository.AddDeploymentMessage(deployStateId, message);
+		}
+
+		public void MarkDeploymentInProcess(string deployStateId)
+		{
+			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.InProcess);
+		}
+
+		public void MarkDeploymentSuccess(string deployStateId)
+		{
+			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Success);
+		}
+
+		public void MarkDeploymentFailed(string deployStateId, Exception err)
+		{
+			_deployRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
+		}
+
+		public DeployBatchRequest PopNextBatchDeployment()
+		{
+			var deployRequest = _deployRepository.PopNextBatchDeployment();
+			if(deployRequest != null)
+			{
+				_projectNotifier.SendDeployStartedNotification(deployRequest);
+			}
+			return deployRequest;
+		}
+
+
+		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
+		{
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success);
+			_projectNotifier.SendDeploySuccessNotification(deployRequest);
+		}
+
+		public void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err)
+		{
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err);
+			_projectNotifier.SendDeployFailedNotification(deployRequest);
+		}
+	}
+}

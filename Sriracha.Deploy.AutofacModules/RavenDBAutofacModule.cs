@@ -8,6 +8,7 @@ using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.RavenDB;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.AutofacModules
 {

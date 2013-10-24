@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 {

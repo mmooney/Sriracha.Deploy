@@ -6,6 +6,7 @@ using Moq;
 using NLog;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {

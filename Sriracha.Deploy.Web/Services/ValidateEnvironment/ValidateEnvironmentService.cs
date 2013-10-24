@@ -5,6 +5,9 @@ using System.Web;
 using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Project;
 
 namespace Sriracha.Deploy.Web.Services.ValidateEnvironment
 {

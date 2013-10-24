@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.RavenDB
 {

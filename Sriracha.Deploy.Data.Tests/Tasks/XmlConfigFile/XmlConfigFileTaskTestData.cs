@@ -7,6 +7,9 @@ using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Tasks.XmlConfigFile;
+using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Utility;
 
 namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 {

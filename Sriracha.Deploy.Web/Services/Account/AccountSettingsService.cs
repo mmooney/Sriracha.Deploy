@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Account;
 
 namespace Sriracha.Deploy.Web.Services.Account
 {

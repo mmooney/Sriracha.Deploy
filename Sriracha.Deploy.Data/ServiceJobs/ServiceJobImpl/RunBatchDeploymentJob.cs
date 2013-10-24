@@ -6,6 +6,7 @@ using System.Text;
 using NLog;
 using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 {

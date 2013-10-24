@@ -5,6 +5,7 @@ using System.Web;
 using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Web.Services.Deployment
 {

@@ -12,6 +12,9 @@ using MMDB.Shared;
 using Autofac;
 using Sriracha.Deploy.AutofacModules;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Project;
 
 namespace Sriracha.Deploy.CommandLine
 {

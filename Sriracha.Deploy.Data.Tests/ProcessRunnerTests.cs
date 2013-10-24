@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {

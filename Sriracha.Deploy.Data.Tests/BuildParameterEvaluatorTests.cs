@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Build.BuildImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {

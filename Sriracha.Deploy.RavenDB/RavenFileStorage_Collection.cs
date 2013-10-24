@@ -5,6 +5,7 @@ using System.Text;
 using MMDB.Shared;
 using Raven.Client;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.RavenDB
 {

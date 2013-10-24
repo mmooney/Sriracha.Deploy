@@ -8,6 +8,7 @@ using NLog;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Impl;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {

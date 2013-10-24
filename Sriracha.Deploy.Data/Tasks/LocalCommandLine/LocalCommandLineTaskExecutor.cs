@@ -6,6 +6,9 @@ using System.Text;
 using MMDB.Shared;
 using Newtonsoft.Json;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Utility;
 
 namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 {

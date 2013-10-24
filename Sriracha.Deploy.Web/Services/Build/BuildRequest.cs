@@ -11,7 +11,6 @@ namespace Sriracha.Deploy.Web.Services.Build
 	[Route("/build/{id*}")]
 	public class BuildRequest : RequestBase<DeployBuild>
 	{
-		public string Id { get; set; }
 		public string ProjectId { get; set; }
 		public string ProjectBranchId { get; set; }
 		public string ProjectComponentId { get; set; }

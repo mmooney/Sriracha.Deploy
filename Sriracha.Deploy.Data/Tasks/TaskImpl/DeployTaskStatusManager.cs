@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NLog;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 {

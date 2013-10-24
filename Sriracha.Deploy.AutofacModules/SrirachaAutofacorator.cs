@@ -18,6 +18,16 @@ using Sriracha.Deploy.Data.ServiceJobs;
 using Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Tasks.TaskImpl;
+using Sriracha.Deploy.Data.Build.BuildImpl;
+using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Account.AccountImpl;
+using Sriracha.Deploy.Data.Account;
+using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
+using Sriracha.Deploy.Data.Utility;
+using Sriracha.Deploy.Data.Project.ProjectImpl;
+using Sriracha.Deploy.Data.Project;
 
 namespace Sriracha.Deploy.AutofacModules
 {

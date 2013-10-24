@@ -8,6 +8,8 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Project.ProjectImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {

@@ -7,6 +7,7 @@ using MMDB.Shared;
 using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.Web.Services
 {
