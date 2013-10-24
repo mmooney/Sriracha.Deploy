@@ -109,6 +109,7 @@
     <Compile Include="Dto\DeployFileDto.cs" />
     <Compile Include="Dto\DeployMachine.cs" />
     <Compile Include="Dto\DeploymentValidationResult.cs" />
+    <Compile Include="Dto\DeployQueueItem.cs" />
     <Compile Include="Dto\DeployRequest.cs" />
     <Compile Include="Dto\DeployRequestTemplate.cs" />
     <Compile Include="Dto\DeployState.cs" />
@@ -131,7 +132,9 @@
     <Compile Include="IBuildPublisher.cs" />
     <Compile Include="IBuildPurger.cs" />
     <Compile Include="IDataGenerator.cs" />
+    <Compile Include="IDeployQueueManager.cs" />
     <Compile Include="Impl\BuildParameterEvaluator.cs" />
+    <Compile Include="Impl\DeployQueueManager.cs" />
     <Compile Include="Impl\PermissionValidator.cs" />
     <Compile Include="Impl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />

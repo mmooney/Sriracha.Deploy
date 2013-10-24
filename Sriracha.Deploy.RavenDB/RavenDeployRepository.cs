@@ -11,6 +11,7 @@ using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Raven.Client.Linq;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -347,6 +348,21 @@ namespace Sriracha.Deploy.RavenDB
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
 			this._documentSession.SaveChanges();
 			return batchRequest;
+		}
+
+
+		public PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions)
+		{
+			var query = (IRavenQueryable<DeployBatchRequest>)_documentSession.Query<DeployBatchRequest>()
+										.OrderBy(i => i.SubmittedDateTimeUtc)
+										.Where(i => i.Status == EnumDeployStatus.NotStarted || i.Status == EnumDeployStatus.InProcess);
+			listOptions = listOptions ?? new ListOptions();
+			listOptions.SortField = "SubmittedDateTimeUtc";
+			listOptions.SortAscending = false;
+			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(5);
+			listOptions.PageNumber = listOptions.PageNumber.GetValueOrDefault(1);
+			var pagedList = query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
+			return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
 		}
 	}
 }

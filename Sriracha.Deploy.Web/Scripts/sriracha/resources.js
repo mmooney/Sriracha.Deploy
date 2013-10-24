@@ -12,6 +12,7 @@
 			deploymentStep: $resource("/api/project/:projectId/:parentType/:parentId/step", { projectId: "@projectId", parentType: "@parentType", parentId: "@parentId" }),
 			projectRole: $resource("/api/project/:projectId/role"),
 			deployHistory: $resource("/api/deploy/history"),
+			deployQueue: $resource("/api/deploy/queue"),
 			taskMetadata: $resource("/api/taskmetadata"),
 			build: $resource("/api/build/:buildId"),
 			deployRequest: $resource("/api/deployRequest/:deployRequestId"),

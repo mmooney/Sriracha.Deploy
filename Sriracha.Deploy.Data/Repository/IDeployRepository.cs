@@ -28,5 +28,7 @@ namespace Sriracha.Deploy.Data.Repository
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId);
 
+
+		PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions);
 	}
 }

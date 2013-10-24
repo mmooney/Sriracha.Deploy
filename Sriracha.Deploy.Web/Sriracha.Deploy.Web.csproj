@@ -240,6 +240,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\build\buildListController.js" />
+    <Content Include="Scripts\sriracha\dataAccess\deployQueueDataAccess.js" />
+    <Content Include="Scripts\sriracha\directives\deployQueueDirective.js" />
     <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
     <Content Include="Scripts\sriracha\directives\selectEnvironmentMachinesDirective.js" />
     <Content Include="Scripts\sriracha\directives\sortHeaderDirective.js" />
@@ -259,6 +261,8 @@
     <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
+    <Compile Include="Services\Deployment\DeployQueueRequest.cs" />
+    <Compile Include="Services\Deployment\DeployQueueService.cs" />
     <Compile Include="Services\DeployRequestService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
@@ -430,6 +434,7 @@
     <Content Include="Scripts\angular\_references.js" />
     <Content Include="Templates\account\account-edit-template.html" />
     <Content Include="Templates\directives\breadcrumbs.html" />
+    <Content Include="Templates\directives\deployQueue.html" />
     <Content Include="Templates\directives\pager.html" />
     <Content Include="Templates\project\branch\branch-edit-template.html" />
     <Content Include="Templates\project\branch\branch-delete-template.html" />
