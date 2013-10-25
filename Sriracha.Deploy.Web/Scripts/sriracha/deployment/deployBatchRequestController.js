@@ -167,7 +167,7 @@
 				};
 				var buildList = SrirachaResource.build.get(queryParameters,
 					function (data) {
-						var latest = _.first(_.sortBy(data.items, function (build) { return build.version; }).reverse());
+						var latest = _.first(_.sortBy(data.items, function (build) { return build.sortableVersion; }).reverse());
 						item.build = latest;
 					},
 					function (error) {
