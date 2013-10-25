@@ -14,7 +14,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 	{
 		private readonly Logger _logger;
 		private static IDeployBatchRunner _deployBatchRunner;
-		private static volatile bool _isRunning = false;
+		//private static volatile bool _isRunning = false;
 		
 		public RunBatchDeploymentJob(Logger logger, IDeployBatchRunner deployBatchRunner)
 		{
@@ -24,19 +24,19 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 
 		public void Execute(Quartz.IJobExecutionContext context)
 		{
-			this._logger.Trace("Starting RunDeploymentJob.Execute");
-			lock (typeof(RunBatchDeploymentJob))
-			{
-				if (_isRunning)
-				{
-					this._logger.Info("RunDeploymentJob already running");
-					return;
-				}
-				else
-				{
-					_isRunning = true;
-				}
-			}
+			//this._logger.Trace("Starting RunDeploymentJob.Execute");
+			//lock (typeof(RunBatchDeploymentJob))
+			//{
+			//	if (_isRunning)
+			//	{
+			//		this._logger.Info("RunDeploymentJob already running");
+			//		return;
+			//	}
+			//	else
+			//	{
+			//		_isRunning = true;
+			//	}
+			//}
 			try
 			{
 				_deployBatchRunner.TryRunNextDeployment();
@@ -45,10 +45,10 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			{
 				this._logger.ErrorException("RunDeploymentJob failed: " + err.ToString(), err);
 			}
-			finally
-			{
-				_isRunning = false;
-			}
+			//finally
+			//{
+			//	_isRunning = false;
+			//}
 			this._logger.Trace("Done RunDeploymentJob.Execute");
 		}
 	}
