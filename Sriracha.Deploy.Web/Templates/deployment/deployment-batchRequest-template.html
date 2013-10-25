@@ -76,7 +76,7 @@
 					</div>
 					<div>
 						<b>Build:</b>
-						<select ng-model="build" ng-options="item as item.displayValue for item in buildList.items | orderBy:'-displayValue'" ng-change="buildSelected()" >
+						<select ng-model="build" ng-options="item as item.displayValue for item in buildList.items | orderBy:'-sortableDisplayValue'" ng-change="buildSelected()" >
 							<option value="">[Please Select]</option>
 						</select>
 					</div>

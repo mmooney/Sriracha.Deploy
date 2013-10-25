@@ -160,7 +160,10 @@
 				var queryParameters = {
 					projectId: item.build.projectId,
 					projectBranchId: item.build.projectBranchId,
-					projectComponentId: item.build.projectComponentId
+					projectComponentId: item.build.projectComponentId,
+					sortField: "UpdatedDateTimeUtc",
+					sortAscending: false,
+					pageSize: 10
 				};
 				var buildList = SrirachaResource.build.get(queryParameters,
 					function (data) {
@@ -200,7 +203,11 @@
 
 	$scope.refreshBuildList = function (selectedBuildId, selectedMachineIds) {
 
-		queryParameters = {};
+		queryParameters = {
+			pageSize: 100,
+			sortField: "UpdatedDateTimeUtc",
+			sortAscending: false
+		};
 		if($scope.project) {
 			queryParameters.projectId = $scope.project.id;
 		}
@@ -263,6 +270,7 @@
 		if ($scope.build && $scope.project && !$scope.component) {
 			$scope.component = _.findWhere($scope.project.componentList, { id: $scope.build.projectComponentId });
 			$scope.refreshEnvironmentList();
+			console.log($scope.build);
 		}
 		$scope.updateEnvironmentMachines();
 	}

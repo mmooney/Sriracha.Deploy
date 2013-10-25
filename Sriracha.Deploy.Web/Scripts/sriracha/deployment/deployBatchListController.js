@@ -22,49 +22,6 @@
 			ErrorReporter.handleResourceError(err);
 		});
 
-	$scope.getDeployStatusDescription = function (status) {
-		var description;
-		switch (status) {
-			case "Requested":
-				description = "Requested";
-				break;
-			case "NotStarted":
-				description = "Not Started";
-				break;
-			case "InProcess":
-				description = "In Process";
-				break;
-			case "Warning":
-				description = "Warning";
-				break;
-			case "Success":
-				description = "Success";
-				break;
-			case "Error":
-				description = "Error";
-				break;
-			default:
-				description = status;
-				break;
-		}
-		return description;
-	}
-
-	$scope.getDeployStatusIconClass = function (status) {
-		switch (status) {
-			case "InProcess":
-				return "deployStatus-icon in-process";
-			case "Warning":
-				return "deployStatus-icon warning";
-			case "Success":
-				return "deployStatus-icon ok";
-			case "Error":
-				return "deployStatus-icon error";
-			default:
-				return "deployStatus-icon";
-		}
-	}
-
 	$scope.goToPage = function (pageNumber) {
 		$scope.navigator.deployment.batchList.go(pageNumber, $scope.deployBatchRequestList.pageSize, $scope.deployBatchRequestList.sortField, $scope.deployBatchRequestList.sortAscending);
 		//alert(pageNumber);
