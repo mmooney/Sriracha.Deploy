@@ -31,7 +31,7 @@
 	</tr>
 	<tr>
 		<th>Actions:</th>
-		<td><deploy-action-links deploy-batch-request="deployBatchStatus.request"></deploy-action-links></td>
+		<td><deploy-action-links deploy-batch-request="deployBatchStatus.request" refresh-data-callback="refreshData"></deploy-action-links></td>
 	</tr>
 </table>
 <div ng-show="deployBatchStatus.request.errorDetails" class="error">

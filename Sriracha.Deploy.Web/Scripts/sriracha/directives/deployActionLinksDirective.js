@@ -5,7 +5,8 @@
 				restrict: "E",
 				templateUrl: "templates/directives/deployActionLinks.html",
 				scope: {
-					deployBatchRequest: '='
+					deployBatchRequest: '=',
+					refreshDataCallback: '='
 				},
 				link: function postLink(scope, element, attrs) {
 					scope.navigator = SrirachaNavigator;
@@ -21,7 +22,12 @@
 								resourceItem.$save(
 									saveParams,
 									function () {
-										scope.navigator.deployment.batchStatus.go(scope.deployBatchRequest.id);
+										if (scope.refreshDataCallback) {
+											scope.refreshDataCallback();
+										}
+										else {
+											scope.navigator.deployment.batchStatus.go(scope.deployBatchRequest.id);
+										}
 									},
 									function (err) {
 										ErrorReporter.handleResourceError(err);
