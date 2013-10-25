@@ -551,7 +551,7 @@ namespace Sriracha.Deploy.Web.Tests
 				var membershipUser = provider.GetUser(testData.SrirachaUser.UserName, true);
 
 				Assert.IsNotNull(membershipUser);
-				testData.Repository.Verify(i => i.UpdateUser(testData.SrirachaUser), Times.Once());
+				testData.Repository.Verify(i => i.TryUpdateUser(testData.SrirachaUser), Times.Once());
 				Assert.Greater(testData.SrirachaUser.LastActivityDateTimeUtc, DateTime.UtcNow.AddMinutes(-1));
 			}
 
