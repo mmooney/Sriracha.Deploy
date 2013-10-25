@@ -41,8 +41,6 @@ namespace Sriracha.Deploy.Data
 		Success,
 		[EnumDisplayValue("Error")]
 		Error,
-		[EnumDisplayValue("Cancelling")]
-		Cancelling,
 		[EnumDisplayValue("Cancelled")]
 		Cancelled
 	}

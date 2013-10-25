@@ -19,9 +19,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 		}
 
-		public PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions, List<EnumDeployStatus> statusList=null, List<string> environmentIds=null)
+		public PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions, List<EnumDeployStatus> statusList=null, List<string> environmentIds=null, bool includeResumeRequested=true)
 		{
-			return _deployRepository.GetDeployQueue(listOptions, statusList, environmentIds);
+			return _deployRepository.GetDeployQueue(listOptions, statusList, environmentIds, includeResumeRequested);
 		}
 
 		public DeployBatchRequest PopNextBatchDeployment()

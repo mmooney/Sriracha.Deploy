@@ -36,7 +36,32 @@
 							}
 						}
 					}
-
+					scope.startResumeDeployment = function () {
+						if (scope.deployBatchRequest) {
+							if (confirm("Are you sure you want to resume this deployment?")) {
+								var saveParams = {
+									id: scope.deployBatchRequest.id,
+									action: "Resume"//,
+									//statusMessage: $scope.statusChange.statusMessage
+								};
+								var resourceItem = new SrirachaResource.deployBatchAction();
+								resourceItem.$save(
+									saveParams,
+									function () {
+										if (scope.refreshDataCallback) {
+											scope.refreshDataCallback();
+										}
+										else {
+											scope.navigator.deployment.batchStatus.go(scope.deployBatchRequest.id);
+										}
+									},
+									function (err) {
+										ErrorReporter.handleResourceError(err);
+									}
+								)
+							}
+						}
+					}
 				}
 			};
 		}]);

@@ -21,6 +21,6 @@ namespace Sriracha.Deploy.Data.Deployment
 		void MarkBatchDeploymentSuccess(string deployBatchRequestId);
 		void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err);
 		void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage);
-
+		void MarkBatchDeploymentResumed(string deployBatchRequestId, string resumeMessage);
 	}
 }

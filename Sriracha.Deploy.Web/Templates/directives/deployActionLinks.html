@@ -1,2 +1,2 @@
-﻿<span ng-show="(deployBatchRequest.status=='NotStarted' || deployBatchRequest.status=='InProcess') && !deployBatchRequest.cancelRequested"><button ng-click="startCancelDeployment()">Cancel</button></span>
-<!--<span ng-show="deployBatchRequest.status=='Cancelling' || deployBatchRequestStatus=='Cancelled'"><button ng-click="startResumeDeployment()">Resume</button></span>-->
+﻿<span ng-show="(deployBatchRequest.status=='NotStarted' || deployBatchRequest.status=='InProcess') && !deployBatchRequest.cancelRequested"><button class="btn btn-danger" ng-click="startCancelDeployment()">Cancel</button></span>
+<span ng-show="(deployBatchRequest.status=='Cancelled' || deployBatchRequest.status=='Error') && !deployBatchRequest.resumeRequested"><button class="btn btn-success" ng-click="startResumeDeployment()">Resume</button></span>

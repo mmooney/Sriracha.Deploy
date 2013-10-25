@@ -39,6 +39,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				try
 				{
+					bool isResume = false;
 					this._logger.Info("Found pending deployment: " + nextDeploymentBatch.Id);
 
 					if(nextDeploymentBatch.CancelRequested)
@@ -46,9 +47,14 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 						_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
 						return;
 					}
+					else if (nextDeploymentBatch.ResumeRequested)
+					{
+						_deployStateManager.MarkBatchDeploymentResumed(nextDeploymentBatch.Id, nextDeploymentBatch.ResumeMessage);
+						isResume = true;
+					}
 					List<string> environmentIds = nextDeploymentBatch.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.EnvironmentId)).ToList();
 					var existingDeployments = _deployQueueManager
-												.GetQueue(null, EnumDeployStatus.InProcess.ListMe(), environmentIds)
+												.GetQueue(null, EnumDeployStatus.InProcess.ListMe(), environmentIds, includeResumeRequested:false)
 												.Items.Where(i=>i.Id != nextDeploymentBatch.Id);
 					if(existingDeployments.Any())
 					{
@@ -90,21 +96,21 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 								_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
 								return;
 							}
-							else 
-							{
-							}
 							var deployState = _deployStateManager.GetOrCreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
-							try
+							if(deployState.Status != EnumDeployStatus.Success)
 							{
-								_deployStateManager.MarkDeploymentInProcess(deployState.Id);
-								var machineIdList = new List<string> { machine.Id };
-								_deployRunner.Deploy(deployState.Id, machine.EnvironmentId, item.Build.Id, machineIdList, runtimeSettings);
-								_deployStateManager.MarkDeploymentSuccess(deployState.Id);
-							}
-							catch (Exception err)
-							{
-								_deployStateManager.MarkDeploymentFailed(deployState.Id, err);
-								throw;
+								try
+								{
+									_deployStateManager.MarkDeploymentInProcess(deployState.Id);
+									var machineIdList = new List<string> { machine.Id };
+									_deployRunner.Deploy(deployState.Id, machine.EnvironmentId, item.Build.Id, machineIdList, runtimeSettings);
+									_deployStateManager.MarkDeploymentSuccess(deployState.Id);
+								}
+								catch (Exception err)
+								{
+									_deployStateManager.MarkDeploymentFailed(deployState.Id, err);
+									throw;
+								}
 							}
 						}
 					}

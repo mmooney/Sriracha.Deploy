@@ -101,5 +101,16 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Cancelled, statusMessage: statusMessage);
 			_projectNotifier.SendDeployCancelledNotification(deployRequest);
 		}
+
+
+		public void MarkBatchDeploymentResumed(string deployBatchRequestId, string resumeMessage)
+		{
+			string statusMessage = string.Format("Deployment was resumed at {0} UTC", DateTime.UtcNow);
+			if (!string.IsNullOrEmpty(resumeMessage) && resumeMessage != "null")
+			{
+				statusMessage += ", Notes: " + resumeMessage;
+			}
+			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
+		}
 	}
 }

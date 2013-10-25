@@ -107,6 +107,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				case EnumDeployBatchAction.Cancel:
 					return _deployRepository.SetCancelRequested(deployBatchRequestId, userMessage);
+				case EnumDeployBatchAction.Resume:
+					return _deployRepository.SetResumeRequested(deployBatchRequestId, userMessage);
 				default:
 					throw new UnknownEnumValueException(action);
 			}

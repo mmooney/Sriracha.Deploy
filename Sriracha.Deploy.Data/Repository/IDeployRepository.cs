@@ -24,13 +24,13 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest GetBatchRequest(string id);
 		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage = null, bool addToMessageHistory=true);
 
-		DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage);
-
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
 		List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId);
-		PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null);
+		PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null, bool includeResumeRequested=true);
 		DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus enumDeployStatus, string statusMessage);
 
+		DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage);
 		bool HasCancelRequested(string deployBatchRequestId);
+		DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage);
 	}
 }

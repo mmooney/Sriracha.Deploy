@@ -37,6 +37,10 @@ namespace Sriracha.Deploy.Data.Dto
 				{
 					displayValue += " (Cancel Requested)";
 				}
+				if(this.ResumeRequested)
+				{
+					displayValue += " (Resume Requested)";
+				}
 				return displayValue;
 			} 
 		}
@@ -46,5 +50,8 @@ namespace Sriracha.Deploy.Data.Dto
 			this.MessageList = new List<string>();
 		}
 
+
+		public bool ResumeRequested { get; set; }
+		public string ResumeMessage { get; set; }
 	}
 }

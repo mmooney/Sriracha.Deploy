@@ -8,7 +8,7 @@ namespace Sriracha.Deploy.Data.Deployment
 {
 	public interface IDeployQueueManager
 	{
-		PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions, List<EnumDeployStatus> statusList=null, List<string> environmentIds=null);
+		PagedSortedList<DeployBatchRequest> GetQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null, bool includeResumeRequested = true);
 
 		DeployBatchRequest PopNextBatchDeployment();
 
