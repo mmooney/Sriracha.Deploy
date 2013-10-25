@@ -30,9 +30,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		public List<DeployBatchRequest> GetDeployBatchRequestList()
+		public PagedSortedList<DeployBatchRequest> GetDeployBatchRequestList(ListOptions listOptions)
 		{
-			return _deployRepository.GetBatchRequestList();
+			return _deployRepository.GetBatchRequestList(listOptions);
 		}
 
 		public DeployBatchRequest GetDeployBatchRequest(string id)

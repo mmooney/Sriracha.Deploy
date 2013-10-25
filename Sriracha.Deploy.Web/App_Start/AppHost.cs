@@ -69,8 +69,8 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployFileDto>("/file")
 				.Add<DeployFileDto>("/file/{id*}")
 
-				.Add<DeployBatchRequest>("/deploy/batchRequest")
-				.Add<DeployBatchRequest>("/deploy/batchRequest/{id}")
+				//.Add<DeployBatchRequest>("/deploy/batchRequest")
+				//.Add<DeployBatchRequest>("/deploy/batchRequest/{id}")
 				.Add<DeployState>("/deploy/state")
 				.Add<DeployState>("/deploy/state/{id}")
 

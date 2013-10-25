@@ -2,83 +2,42 @@
 
 <a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
 <div>
-	<pager paged-list="deploymentList" go-to-page="goToPage"></pager>
+	<pager paged-list="deployBatchRequestList" go-to-page="goToPage"></pager>
 </div>
-<div ng-show="true" ng-repeat="deployment in deploymentList.items" style="border: 1px solid grey; border-radius: 5px; padding: 10px 10px 10px 10px; margin: 10px 10px 10px 10px">
-	<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">
-		<h3 ng-show="deployment.request.deploymentLabel">{{deployment.request.deploymentLabel}}</h3>
-		<h3 ng-hide="deployment.request.deploymentLabel">(No Deployment Label)</h3>
+<div ng-hide="deployBatchRequestList">
+<i>Loading...</i>
+</div>
+<div ng-show="true" ng-repeat="request in deployBatchRequestList.items" style="border: 1px solid grey; border-radius: 5px; padding: 10px 10px 10px 10px; margin: 10px 10px 10px 10px">
+	<a ng-href="{{navigator.deployment.batchStatus.clientUrl(request.id)}}">
+		<h3 ng-show="request.deploymentLabel">{{request.deploymentLabel}}</h3>
+		<h3 ng-hide="request.deploymentLabel">(No Deployment Label)</h3>
 	</a>
 	<div>
-		<b>Status:</b> {{deployment.request.statusDisplayValue}}
+		<b>Status:</b> {{request.statusDisplayValue}}
 	</div>
 	<div style="font-style:italic">
-		{{deployment.request.lastStatusMessage}}
+		{{request.lastStatusMessage}}
 	</div>
 	<div>
-		<b>Component(s):</b> {{getComponentList(deployment.request)}}
+		<b>Component(s):</b> {{getComponentList(request)}}
 	</div>
 	<div>
-		<b>Environment(s):</b> {{getEnvironmentList(deployment.request)}}
+		<b>Environment(s):</b> {{getEnvironmentList(request)}}
 	</div>
 	<div>
-		<b>Submitted:</b> {{deployment.request.submittedDateTimeUtc | displayDateTimeShort}} by {{deployment.request.submittedByUserName}}
+		<b>Submitted:</b> {{request.submittedDateTimeUtc | displayDateTimeShort}} by {{request.submittedByUserName}}
 	</div>
-	<div ng-show="deployment.request.startedDateTimeUtc">
-		<b>Started:</b> {{deployment.request.startedDateTimeUtc | displayDateTimeShort}}
+	<div ng-show="request.startedDateTimeUtc">
+		<b>Started:</b> {{request.startedDateTimeUtc | displayDateTimeShort}}
 	</div>
-	<div ng-show="deployment.request.completeDateTimeUtc">
-		<b>Completed:</b> {{deployment.request.completeDateTimeUtc | displayDateTimeShort}}
+	<div ng-show="request.completeDateTimeUtc">
+		<b>Completed:</b> {{request.completeDateTimeUtc | displayDateTimeShort}}
 	</div>
 	<div style="text-align:center;">
-		<a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
+		<a ng-href="{{navigator.deployment.batchStatus.clientUrl(request.id)}}">View</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<a ng-href="{{navigator.deployment.batchCopy.clientUrl(deployment.request.id)}}">Copy</a>
+		<a ng-href="{{navigator.deployment.batchCopy.clientUrl(request.id)}}">Copy</a>
 	</div>
 	<pre ng-show="false">{{deployment}}</pre>
 </div>
-<pager paged-list="deploymentList" go-to-page="goToPage"></pager>
-<table class="table table-bordered table-striped">
-	<thead>
-		<tr>
-			<th>Status</th>
-			<th>Label</th>
-			<th>Submitted Date</th>
-			<th>Started Date</th>
-			<th>Completed Date</th>
-			<th>Details</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="deployment in deploymentList.items">
-			<td>
-                <div class="{{getDeployStatusIconClass(deployment.request.status)}}">
-                </div>
-                {{getDeployStatusDescription(deployment.request.status)}}
-			</td>
-			<td>{{deployment.request.deploymentLabel}}</td>
-			<td>{{deployment.request.submittedDateTimeUtc | displayDate}}</td>
--			<td>{{deployment.request.startedDateTimeUtc | displayDate}}</td>
-			<td>{{deployment.request.completeDateTimeUtc | displayDate}}</td>
-			<td>
-				<div ng-repeat="item in deployment.request.itemList">
-					<b>{{item.build.displayValue}}-></b>
-					<ul>
-						<li ng-repeat="machine in item.machineList">{{machine.machineName}}</li>
-					</ul>
-				</div>
-			</td>
-			<td>
-                <div>
-                    <a ng-href="{{navigator.deployment.batchStatus.clientUrl(deployment.request.id)}}">View</a>
-                </div>
-                <div>
-                    <a ng-href="{{navigator.deployment.batchCopy.clientUrl(deployment.request.id)}}">Re-deploy</a>
-                </div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-<pager paged-list="deploymentList" go-to-page="goToPage"></pager>
+<pager paged-list="deployBatchRequestList" go-to-page="goToPage"></pager>

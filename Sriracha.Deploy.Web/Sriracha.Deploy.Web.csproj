@@ -258,6 +258,7 @@
     <Compile Include="Services\ComponentConfigurationService.cs" />
     <Compile Include="Services\DeployConfigurationService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
+    <Compile Include="Services\Deployment\BatchRequestRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchActionRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchActionService.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />

@@ -20,7 +20,7 @@
 
 			//Deploy
 			deployQueue: $resource("/api/deploy/queue"),
-			deployBatchRequest: $resource("/api/deploy/batchRequest/:deployBatchRequestId"),
+			deployBatchRequest: $resource("/api/deploy/batch/request/:deployBatchRequestId"),
 			deployState: $resource("/api/deploy/state/:deployState"),
 			deployBatchStatus: $resource("/api/deploy/batch/:id/status"),
 			deployBatchAction: $resource("/api/deploy/batch/:id/action"),

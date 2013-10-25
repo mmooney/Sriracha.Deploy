@@ -8,13 +8,20 @@
 	if ($routeParams.sortField) $scope.listOptions.sortField = $routeParams.sortField;
 	if ($routeParams.sortAscending) $scope.listOptions.sortAscending = $routeParams.sortAscending;
 
-	$scope.deploymentList = SrirachaResource.deployBatchStatus.get($scope.listOptions,
+	//$scope.deploymentList = SrirachaResource.deployBatchStatus.get($scope.listOptions,
+	//	function () {
+	//	},
+	//	function (err) {
+	//		ErrorReporter.handleResourceError(err);
+	//	});
+	$scope.deployBatchRequestList = SrirachaResource.deployBatchRequest.get($scope.listOptions,
 		function () {
+			console.log($scope.deployBatchRequestList)
 		},
 		function (err) {
 			ErrorReporter.handleResourceError(err);
 		});
-	
+
 	$scope.getDeployStatusDescription = function (status) {
 		var description;
 		switch (status) {
@@ -59,7 +66,7 @@
 	}
 
 	$scope.goToPage = function (pageNumber) {
-		$scope.navigator.deployment.batchList.go(pageNumber, $scope.deploymentList.pageSize, $scope.deploymentList.sortField, $scope.deploymentList.sortAscending);
+		$scope.navigator.deployment.batchList.go(pageNumber, $scope.deployBatchRequestList.pageSize, $scope.deployBatchRequestList.sortField, $scope.deployBatchRequestList.sortAscending);
 		//alert(pageNumber);
 	}
 

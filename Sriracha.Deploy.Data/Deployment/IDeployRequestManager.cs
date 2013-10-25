@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Deployment
 {
 	public interface IDeployRequestManager
 	{
-		List<DeployBatchRequest> GetDeployBatchRequestList();
+		PagedSortedList<DeployBatchRequest> GetDeployBatchRequestList(ListOptions listOptions);
 		DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus, string deploymentLabel);
 		DeployBatchRequest GetDeployBatchRequest(string id);
 

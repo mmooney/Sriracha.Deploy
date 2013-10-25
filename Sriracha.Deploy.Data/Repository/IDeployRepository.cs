@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Repository
 		List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId);
 		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
 
-		List<DeployBatchRequest> GetBatchRequestList();
+		PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions);
 		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel);
 		DeployBatchRequest GetBatchRequest(string id);
 		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage = null, bool addToMessageHistory=true);

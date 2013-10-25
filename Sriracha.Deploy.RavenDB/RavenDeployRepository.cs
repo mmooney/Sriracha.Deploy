@@ -234,9 +234,11 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public List<DeployBatchRequest> GetBatchRequestList()
+		public PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions)
 		{
-			return _documentSession.Query<DeployBatchRequest>().ToList();
+			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(10);
+			var pagedList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
+			return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
 
 		public DeployBatchRequest GetBatchRequest(string id)

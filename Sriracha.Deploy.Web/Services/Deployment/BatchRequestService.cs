@@ -18,11 +18,11 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 		}
 
-		public object Get(DeployBatchRequest request)
+		public object Get(BatchRequestRequest request)
 		{
 			if(request == null || string.IsNullOrWhiteSpace(request.Id))
 			{
-				return _deployRequestManager.GetDeployBatchRequestList();
+				return _deployRequestManager.GetDeployBatchRequestList(request.BuildListOptions());
 			}
 			else 
 			{
@@ -30,19 +30,19 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 			}
 		}
 
-		public object Post(DeployBatchRequest request)
+		public object Post(BatchRequestRequest request)
 		{
 			var returnValue = Save(request);
 			return returnValue;
 		}
 
-		public object Put(DeployBatchRequest request)
+		public object Put(BatchRequestRequest request)
 		{
 			return this.Save(request);
 		}
 
 
-		private DeployBatchRequest Save(DeployBatchRequest request)
+		private DeployBatchRequest Save(BatchRequestRequest request)
 		{
 			var item = _deployRequestManager.CreateDeployBatchRequest(request.ItemList, request.Status, request.DeploymentLabel);
 			return item;
