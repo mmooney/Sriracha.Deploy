@@ -1,7 +1,8 @@
 ﻿ngSriracha.controller("ProjectDeploymentStepController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
-	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
+	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 	$scope.navigator = SrirachaNavigator;
+	$scope.permissionVerifier = PermissionVerifier;
 	if (!$routeParams.projectId) {
 		console.error("Missing $routeParams.projectId");
 		return;
@@ -53,6 +54,17 @@
 		}
 	});
 
+	$scope.goBack = function () {
+		if ($routeParams.componentId) {
+			$scope.navigator.component.view.go($scope.project.id, $routeParams.componentId);
+		}
+		else if ($routeParams.configurationId) {
+			$scope.navigator.configuration.view.go($scope.project.id, $routeParams.configurationId);
+		}
+		else {
+			$scope.navigator.project.view.go($scope.project.id);
+		}
+	}
 	//Deployment Steps
 	$scope.saveDeploymentStep = function () {
 		$scope.deploymentStep.taskOptionsJson = JSON.stringify($scope.deploymentStep.taskOptions);

@@ -1,8 +1,9 @@
 ﻿ngSriracha.controller("ProjectBranchController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
-	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
+	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 
 	$scope.navigator = SrirachaNavigator;
+	$scope.permissionVerifier = PermissionVerifier;
 	if (!$routeParams.projectId) {
 		console.error("Missing $routeParams.projectId");
 		return;

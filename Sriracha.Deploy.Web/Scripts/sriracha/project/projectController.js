@@ -1,7 +1,8 @@
 ﻿ngSriracha.controller("ProjectController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
-		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 	$scope.navigator = SrirachaNavigator;
+	$scope.permissionVerifier = PermissionVerifier;
 	if ($routeParams.projectId) {
 		$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId },
 			function () {

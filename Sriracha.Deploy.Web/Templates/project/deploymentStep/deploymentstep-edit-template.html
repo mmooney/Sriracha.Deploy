@@ -3,19 +3,19 @@
 <table class="table table-bordered">
 	<tr>
 		<th>Step Name:</th>
-		<td><input type="text" required ng-model="deploymentStep.stepName" /></td>
+		<td><input type="text" required ng-model="deploymentStep.stepName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
 	</tr>
 	<tr>
 		<th>Step Type:</th>
 		<td>
-			<select ng-model="deploymentStep.taskTypeName" ng-options="item.taskTypeName as item.taskDisplayName for item in taskMetadataList"></select>
+			<select ng-model="deploymentStep.taskTypeName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" ng-options="item.taskTypeName as item.taskDisplayName for item in taskMetadataList"></select>
 		</td>
 	</tr>
 	<tr>
 		<th>Task Configuration:</th>
-		<td><div task-config taskTypeName="{{deploymentStep.taskTypeName}}"></div></td>
+		<td><div task-config tasktypename="{{deploymentStep.taskTypeName}}"></div></td>
 	</tr>
 </table>
---{{deploymentStep.taskTypeName}}--
-<button class="btn" ng-click="navigator.component.view.go(component.projectId, component.id)">Cancel</button>
-<button class="btn" ng-click="saveDeploymentStep()">Save</button>
+<button class="btn" ng-click="goBack()" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">Back</button>
+<button class="btn" ng-click="navigator.component.view.go(component.projectId, component.id)" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Cancel</button>
+<button class="btn btn-primary" ng-click="saveDeploymentStep()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Save</button>

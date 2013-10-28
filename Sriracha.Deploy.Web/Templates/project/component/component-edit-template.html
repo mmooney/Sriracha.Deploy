@@ -3,7 +3,9 @@
 <h2>Project {{project.ProjectName}} - Component</h2>
 <div>
 	<b>Component Name:</b>
-	<input type="text" ng-model="component.componentName" />
+	<input type="text" ng-model="component.componentName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
 </div>
-<button class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Cancel</button>
-<button class="btn btn-action" ng-click="saveComponent()">Save</button>
+<button ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Cancel</button>
+<button ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" class="btn btn-action" ng-click="saveComponent()">Save</button>
+
+<button ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)" class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Back</button>

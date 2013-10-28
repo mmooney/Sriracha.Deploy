@@ -2,7 +2,8 @@
 <h2 ng-show="branch.id">Edit Branch: {{branch.branchName}} in project {{project.projectName}}</h2>
 <div>
 	<b>Branch Name:</b>
-	<input type="text" ng-model="branch.branchName" />
+	<input type="text" ng-model="branch.branchName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
 </div>
-<button class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Cancel</button>
-<button class="btn btn-action" ng-click="saveBranch()">Save</button>
+<button class="btn btn-action" ng-click="navigator.project.view.go(project.id)" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">Back</button>
+<button class="btn btn-action" ng-click="navigator.project.view.go(project.id)" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Cancel</button>
+<button class="btn btn-action" ng-click="saveBranch()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Save</button>

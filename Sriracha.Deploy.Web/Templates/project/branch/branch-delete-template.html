@@ -1,5 +1,8 @@
-﻿<div class="alert alert-error">
+﻿<div class="alert alert-error" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">
 	Are you sure you want to delete this branch?  This cannot be undone!
+</div>
+<div class="alert alert-error" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">
+	You do not have permission to delete this branch!
 </div>
 <div>
 	<b>Project Name:</b>
@@ -10,5 +13,6 @@
 	{{branch.branchName}}
 </div>
 
-<button class="btn" ng-click="navigator.project.view.go(project.id)">Cancel</button>
-<button class="btn btn-danger" ng-click="deleteBranch()">Delete</button>
+<button class="btn" ng-click="navigator.project.view.go(project.id)" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">Back</button>
+<button class="btn" ng-click="navigator.project.view.go(project.id)" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Cancel</button>
+<button class="btn btn-danger" ng-click="deleteBranch()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Delete</button>

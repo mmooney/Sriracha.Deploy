@@ -1,4 +1,4 @@
-﻿<h2>Project {{project.projectName}} <a ng-href="{{navigator.project.edit.clientUrl(project.id)}}">(edit)</a></h2> 
+﻿<h2>Project {{project.projectName}} <a ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" ng-href="{{navigator.project.edit.clientUrl(project.id)}}">(edit)</a></h2> 
 
 <hr />
 
@@ -19,15 +19,15 @@
 	<tbody>
 		<tr ng-repeat="component in project.componentList">
 			<td><a ng-href="{{navigator.component.view.clientUrl(component.projectId, component.id)}}">{{component.componentName}}</a></td>
-			<td><a class="btn btn-primary" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">Edit</a></td>
-			<td><a class="btn btn-danger" ng-href="{{navigator.component.remove.clientUrl(component.projectId, component.id)}}">Delete</a></td>
+			<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-primary" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">Edit</a></td>
+			<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-danger" ng-href="{{navigator.component.remove.clientUrl(component.projectId, component.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.componentList">
 	<em>No Components</em>
 </div>
-<a class="btn btn-primary" ng-href="{{navigator.component.create.clientUrl(project.id)}}">Create Component</a>
+<a class="btn btn-primary" ng-href="{{navigator.component.create.clientUrl(project.id)}}" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Create Component</a>
 <hr />
 
 <h3>Configurations</h3>
@@ -40,15 +40,15 @@
 	<tbody>
 		<tr ng-repeat="configuration in project.configurationList">
 			<td><a ng-href="{{navigator.configuration.view.clientUrl(configuration.projectId, configuration.id)}}">{{configuration.configurationName}}</a></td>
-			<td><a class="btn btn-primary" ng-href="{{navigator.configuration.edit.clientUrl(configuration.projectId, configuration.id)}}">Edit</a></td>
-			<td><a class="btn btn-danger" ng-href="{{navigator.configuration.remove.clientUrl(configuration.projectId, configuration.id)}}">Delete</a></td>
+			<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-primary" ng-href="{{navigator.configuration.edit.clientUrl(configuration.projectId, configuration.id)}}">Edit</a></td>
+			<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-danger" ng-href="{{navigator.configuration.remove.clientUrl(configuration.projectId, configuration.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.configurationList.length">
 	<em>No Configurations</em>
 </div>
-<a class="btn btn-primary" ng-href="{{navigator.configuration.create.clientUrl(project.id)}}">Create Configuration</a>
+<a class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" ng-href="{{navigator.configuration.create.clientUrl(project.id)}}">Create Configuration</a>
 <hr/>
 
 <h3>Branches</h3>
@@ -61,14 +61,14 @@
 	<tbody>
 		<tr ng-repeat="branch in project.branchList">
 			<td><a ng-href="{{navigator.branch.edit.clientUrl(project.id, branch.id)}}">{{branch.branchName}}</a></td>
-			<td><a class="btn btn-danger" ng-href="{{navigator.branch.remove.clientUrl(project.id, branch.id)}}">Delete</a></td>
+			<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-danger" ng-href="{{navigator.branch.remove.clientUrl(project.id, branch.id)}}">Delete</a></td>
 		</tr>
 	</tbody>
 </table>
 <div ng-hide="project.branchList">
 	<em>No Branches</em>
 </div>
-<a class="btn btn-primary" ng-href="{{navigator.branch.create.clientUrl(project.id)}}">Create Branch</a>
+<a class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" ng-href="{{navigator.branch.create.clientUrl(project.id)}}">Create Branch</a>
 
 <hr />
 
