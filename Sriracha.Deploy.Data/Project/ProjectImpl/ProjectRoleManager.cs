@@ -127,6 +127,15 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				}
 				role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
 			}
+			foreach(var cachePair in projectCache)
+			{
+				var everyoneRole = _permissionRepository.TryGetProjectEveryoneRole(cachePair.Key);
+				if(everyoneRole == null)
+				{
+					everyoneRole = CreateEveryoneRole(cachePair.Value);
+				}
+				roleList.Add(everyoneRole);
+			}
 			return roleList;
 		}
 

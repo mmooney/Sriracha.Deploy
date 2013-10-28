@@ -271,7 +271,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				[Test]
-				public void ApproveAndDenyApproveRejectPermissionToRole_DeniesAccess()
+				public void GrantAndDenyApproveRejectPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -332,7 +332,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				[Test]
-				public void ApproveAndDenyRequestDeployPermissionToRole_DeniesAccess()
+				public void GrantAndDenyRequestDeployPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -393,7 +393,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				[Test]
-				public void ApproveAndDenyRunDeploymentPermissionToRole_DeniesAccess()
+				public void GrantAndDenyRunDeploymentPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -454,7 +454,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				[Test]
-				public void ApproveAndDenyEditEnvironmentPermissionToRole_DeniesAccess()
+				public void GrantAndDenyEditEnvironmentPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -515,7 +515,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 
 				[Test]
-				public void ApproveAndDenyManagePermissionsPermissionToRole_DeniesAccess()
+				public void GrantAndDenyManagePermissionsPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
