@@ -66,6 +66,7 @@
     <Compile Include="DeployComponentRunnerTests.cs" />
     <Compile Include="ModuleInspectorTests.cs" />
     <Compile Include="ParameterParserTests.cs" />
+    <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexResolverTests.cs" />

@@ -113,6 +113,22 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return role;
 		}
 
+		public List<DeployProjectRole> GetProjectRoleListForUser(string userName)
+		{
+			Dictionary<string, DeployProject> projectCache = new Dictionary<string,DeployProject>();
+			var roleList = _permissionRepository.GetProjectRoleListForUser(userName);
+			foreach(var role in roleList)
+			{
+				DeployProject project;
+				if(!projectCache.TryGetValue(role.ProjectId, out project))
+				{
+					project = _projectRepository.GetProject(role.ProjectId);
+					projectCache.Add(role.ProjectId, project);
+				}
+				role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+			}
+			return roleList;
+		}
 
 		public List<DeployProjectRole> GetProjectRoleList(string projectId)
 		{

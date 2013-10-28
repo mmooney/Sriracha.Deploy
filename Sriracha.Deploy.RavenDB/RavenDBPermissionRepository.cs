@@ -1,5 +1,6 @@
 ﻿using MMDB.Shared;
 using Raven.Client;
+using Raven.Client.Linq;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto.Project.Roles;
 using Sriracha.Deploy.Data.Repository;
@@ -99,6 +100,11 @@ namespace Sriracha.Deploy.RavenDB
 		public List<DeployProjectRole> GetProjectRoleList(string projectId)
 		{
 			return _documentSession.Query<DeployProjectRole>().Where(i=>i.ProjectId == projectId).ToList();
+		}
+
+		public List<DeployProjectRole> GetProjectRoleListForUser(string userName)
+		{
+			return _documentSession.Query<DeployProjectRole>().Where(i => i.Assignments.UserNameList.Any(j=>j == userName)).ToList();
 		}
 
 		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)

@@ -9,6 +9,11 @@ namespace Sriracha.Deploy.Data.Dto
 	public class UserEffectivePermissions
 	{
 		public string UserName { get; set;  }
-		public DeployProjectRolePermissions PropertyPermission { get; set; }
+		public List<DeployProjectRolePermissions> ProjectPermissionList { get; set; }
+
+		public UserEffectivePermissions()
+		{
+			this.ProjectPermissionList = new List<DeployProjectRolePermissions>();
+		}
 	}
 }
