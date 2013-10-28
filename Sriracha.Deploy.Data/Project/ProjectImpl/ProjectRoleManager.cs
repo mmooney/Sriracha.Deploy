@@ -136,13 +136,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			var roleList = _permissionRepository.GetProjectRoleList(projectId);
 			if(!roleList.Any(i=>i.EveryoneRoleIndicator))
 			{
-				var everyoneRole = new DeployProjectRole
-				{
-					Id = "Everyone",
-					ProjectId = projectId,
-					RoleName = "Everyone",
-					EveryoneRoleIndicator = true
-				};
+				var everyoneRole = CreateEveryoneRole(project);
 				roleList.Add(everyoneRole);
 			}
 			foreach(var role in roleList)
@@ -152,19 +146,47 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return roleList;
 		}
 
+		private DeployProjectRole CreateEveryoneRole(DeployProject project)
+		{
+			var role = new DeployProjectRole
+			{
+				Id = "Everyone",
+				ProjectId = project.Id,
+				RoleName = "Everyone",
+				EveryoneRoleIndicator = true
+			};
+			role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+			role.Permissions.EditComponentConfigurationAccess = EnumPermissionAccess.Grant;
+			foreach (var item in role.Permissions.RequestDeployPermissionList)
+			{
+				item.Access = EnumPermissionAccess.Grant;
+			}
+			foreach(var item in role.Permissions.RunDeploymentPermissionList)
+			{
+				item.Access = EnumPermissionAccess.Grant;
+			}
+			foreach(var item in role.Permissions.ApproveRejectDeployPermissionList)
+			{
+				item.Access = EnumPermissionAccess.Grant;
+			}
+			foreach(var item in role.Permissions.EditEnvironmentPermissionList)
+			{
+				item.Access = EnumPermissionAccess.Grant;
+			}
+			foreach(var item in role.Permissions.ManagePermissionsPermissionList)
+			{
+				item.Access = EnumPermissionAccess.Grant;
+			}
+			return role;
+		}
+
 		public DeployProjectRole GetProjectEveryoneRole(string projectId)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			var role = _permissionRepository.TryGetProjectEveryoneRole(projectId);
 			if(role == null)
 			{
-				role = new DeployProjectRole
-				{
-					Id = "Everyone",
-					ProjectId = projectId,
-					RoleName = "Everyone",
-					EveryoneRoleIndicator = true
-				};
+				role = CreateEveryoneRole(project);
 			}
 			role.Permissions = this.ValidatePermissions(role.Permissions, "Everyone", project);
 			return role;
