@@ -101,7 +101,7 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<DeployProjectRole>().Where(i=>i.ProjectId == projectId).ToList();
 		}
 
-		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
+		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -121,6 +121,7 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
 				RoleName = roleName,
+				EveryoneRoleIndicator = everyoneRoleIndicator,
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
@@ -133,7 +134,7 @@ namespace Sriracha.Deploy.RavenDB
 			return newItem;
 		}
 
-		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
+		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			var item = this.GetProjectRole(roleId);
 			item.RoleName = roleName;
@@ -141,8 +142,15 @@ namespace Sriracha.Deploy.RavenDB
 			item.Assignments = this.UpdateAssignments(assignments, item);
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdateDateTimeUtc = DateTime.UtcNow;
+			item.EveryoneRoleIndicator = everyoneRoleIndicator;
 			_documentSession.SaveChanges();
 			return item;
+		}
+
+
+		public DeployProjectRole TryGetProjectEveryoneRole(string projectId)
+		{
+			return _documentSession.Query<DeployProjectRole>().FirstOrDefault(i=>i.ProjectId == projectId && i.EveryoneRoleIndicator);
 		}
 	}
 }

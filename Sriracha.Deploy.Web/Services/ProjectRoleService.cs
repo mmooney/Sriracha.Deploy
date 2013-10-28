@@ -27,7 +27,18 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			if(!string.IsNullOrEmpty(request.Id))
 			{
-				return _projectRoleManager.GetProjectRole(request.Id);
+				if(request.Id.Equals("Everyone", StringComparison.CurrentCultureIgnoreCase))
+				{
+					if(string.IsNullOrEmpty(request.ProjectId))
+					{
+						throw new ArgumentNullException("project id is null");
+					}
+					return _projectRoleManager.GetProjectEveryoneRole(request.ProjectId);
+				}
+				else 
+				{
+					return _projectRoleManager.GetProjectRole(request.Id);
+				}
 			}
 			else if (!string.IsNullOrEmpty(request.ProjectId))
 			{
@@ -45,13 +56,30 @@ namespace Sriracha.Deploy.Web.Services
 			{
 				throw new ArgumentNullException("role is null");
 			}
+			if(!string.IsNullOrEmpty(role.Id) && role.Id.Equals("Everyone", StringComparison.CurrentCultureIgnoreCase))
+			{
+				if(string.IsNullOrEmpty(role.ProjectId))
+				{
+					throw new ArgumentNullException("Missing project ID");
+				}
+				var existingRole = _projectRoleManager.TryGetProjectEveryoneRole(role.ProjectId);
+				if(existingRole != null)
+				{
+					role.Id = existingRole.Id;
+					role.EveryoneRoleIndicator = true;
+				}
+				else 
+				{
+					role.Id = null;
+				}
+			}
 			if(!string.IsNullOrEmpty(role.Id))
 			{
-				return _projectRoleManager.UpdateRole(role.Id, role.ProjectId, role.RoleName, role.Permissions, role.Assignments);
+				return _projectRoleManager.UpdateRole(role.Id, role.ProjectId, role.RoleName, role.Permissions, role.Assignments, role.EveryoneRoleIndicator);
 			}
 			else if(!string.IsNullOrEmpty(role.ProjectId))
 			{
-				return _projectRoleManager.CreateRole(role.ProjectId, role.RoleName, role.Permissions, role.Assignments);
+				return _projectRoleManager.CreateRole(role.ProjectId, role.RoleName, role.Permissions, role.Assignments, role.EveryoneRoleIndicator);
 			}
 			else 
 			{

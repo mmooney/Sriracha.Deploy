@@ -118,6 +118,17 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		{
 			var project = _projectRepository.GetProject(projectId);
 			var roleList = _permissionRepository.GetProjectRoleList(projectId);
+			if(!roleList.Any(i=>i.EveryoneRoleIndicator))
+			{
+				var everyoneRole = new DeployProjectRole
+				{
+					Id = "Everyone",
+					ProjectId = projectId,
+					RoleName = "Everyone",
+					EveryoneRoleIndicator = true
+				};
+				roleList.Add(everyoneRole);
+			}
 			foreach(var role in roleList)
 			{
 				role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
@@ -125,21 +136,43 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return roleList;
 		}
 
+		public DeployProjectRole GetProjectEveryoneRole(string projectId)
+		{
+			var project = _projectRepository.GetProject(projectId);
+			var role = _permissionRepository.TryGetProjectEveryoneRole(projectId);
+			if(role == null)
+			{
+				role = new DeployProjectRole
+				{
+					Id = "Everyone",
+					ProjectId = projectId,
+					RoleName = "Everyone",
+					EveryoneRoleIndicator = true
+				};
+			}
+			role.Permissions = this.ValidatePermissions(role.Permissions, "Everyone", project);
+			return role;
+		}
 
-		public DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
+		public DeployProjectRole TryGetProjectEveryoneRole(string projectId)
+		{
+			return _permissionRepository.TryGetProjectEveryoneRole(projectId);
+		}
+
+		public DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, null, project);
 			assignments = this.ValidateAssignments(assignments);
-			return _permissionRepository.CreateProjectRole(projectId, roleName, permissions, assignments);
+			return _permissionRepository.CreateProjectRole(projectId, roleName, permissions, assignments, everyoneRoleIndicator);
 		}
 
-		public DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments)
+		public DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, roleId, project);
 			assignments = this.ValidateAssignments(assignments);
-			return _permissionRepository.UpdateProjectRole(roleId, projectId, roleName, permissions, assignments);
+			return _permissionRepository.UpdateProjectRole(roleId, projectId, roleName, permissions, assignments, everyoneRoleIndicator);
 		}
 	}
 }

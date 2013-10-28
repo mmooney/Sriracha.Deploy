@@ -12,7 +12,10 @@ namespace Sriracha.Deploy.Data.Project
 		DeployProjectRole GetProjectRole(string projectRoleId);
 		List<DeployProjectRole> GetProjectRoleList(string projectId);
 
-		DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments);
-		DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments);
+		DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator);
+		DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator);
+
+		DeployProjectRole GetProjectEveryoneRole(string projectId);
+		DeployProjectRole TryGetProjectEveryoneRole(string projectId);
 	}
 }
