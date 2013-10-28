@@ -1,5 +1,8 @@
-﻿<div class="alert alert-error">
+﻿<div class="alert alert-error" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">
 	Are you sure you want to delete this environment?  This cannot be undone!
+</div>
+<div class="alert alert-error" ng-hide="permissionVerifier.canEditEnvironment(project.id, environment.id)">
+	You do not have permission to delete this environment!
 </div>
 <div>
 	<b>Project Name:</b>
@@ -10,5 +13,6 @@
 	{{environment.environmentName}}
 </div>
 
-<button class="btn" ng-click="navigator.project.view.go(environment.projectId)">Cancel</button>
-<button class="btn btn-danger" ng-click="deleteEnvironment()">Delete</button>
+<button class="btn" ng-click="navigator.project.view.go(environment.projectId)" ng-hide="permissionVerifier.canEditEnvironment(project.id, environment.id)">Back</button>
+<button class="btn" ng-click="navigator.project.view.go(environment.projectId)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Cancel</button>
+<button class="btn btn-danger" ng-click="deleteEnvironment()" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Delete</button>

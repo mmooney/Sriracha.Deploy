@@ -17,6 +17,17 @@
 			}
 		};
 
+		this.canEditEnvironment = function (projectId, environmentId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				var environmentPermission = _.findWhere(projectPermissions.editEnvironmentPermissionList, { environmentId: environmentId });
+				if (environmentPermission) {
+					return (environmentPermission.access == "Grant");
+				}
+			}
+
+		}
+
 		this.getUserProjectPermissions = function (projectId) {
 			if (accountData && accountData.effectivePermissions) {
 				return _.findWhere(accountData.effectivePermissions.projectPermissionList, { projectId: projectId });
