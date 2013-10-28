@@ -19,3 +19,40 @@
 </table>
 <div class="alert" ng-hide="accountSettings.emailAddress">Warning: You won't get any email notifications without an email address</div>
 <button class="btn btn-primary" ng-click="saveSettings()">Save</button>
+<h2>Permissions</h2>
+<div ng-repeat="projectPermission in effectivePermissions.projectPermissionList" style="border:1px solid grey; border-radius:5px; padding:10px 10px 10px 10px">
+	<h3>{{projectPermission.projectName}}</h3>
+	Edit Components/Configurations: {{projectPermission.editComponentConfigurationAccess}}
+	<table class="table table-bordered table-striped" style="width:auto">
+		<tr>
+			<th></th>
+			<th style="width:50px" ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{environment}}
+			</th>
+		</tr>
+		<tr>
+			<td>Request Deployment</td>
+			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{getEnvironmentPermission(projectPermission.requestDeployPermissionList, environment)}}
+			</td>
+		</tr>
+		<tr>
+			<td>Approve/Reject Deployment</td>
+			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{getEnvironmentPermission(projectPermission.approveRejectDeployPermissionList, environment)}}
+			</td>
+		</tr>
+		<tr>
+			<td>Edit Environment</td>
+			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{getEnvironmentPermission(projectPermission.editEnvironmentPermissionList, environment)}}
+			</td>
+		</tr>
+		<tr>
+			<td>Manage Permissions Deployment</td>
+			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{getEnvironmentPermission(projectPermission.managePermissionsPermissionList, environment)}}
+			</td>
+		</tr>
+	</table>
+</div>

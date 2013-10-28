@@ -7,7 +7,8 @@
 	$scope.serviceData = SrirachaResource.account.get(
 		{},
 		function() {
-			$scope.accountSettings = $scope.serviceData.accountSettings;
+			$scope.accountSettings = $scope.serviceData.accountSettings,
+			$scope.effectivePermissions = $scope.serviceData.effectivePermissions
 		},
 		function (err) {
 			ErrorReporter.handleResourceException(err);
@@ -36,6 +37,29 @@
 				ErrorReporter.handleResourceError(err);
 			}
 		)
+	}
+
+	$scope.getProjectPermissionEnvironmentList = function (projectPermission) {
+		if (projectPermission) {
+			var list = _.union(
+				_.pluck(projectPermission.requestDeployPermissionList, 'environmentName'),
+				_.pluck(projectPermission.approveRejectDeployPermissionList, 'environmentName'),
+				_.pluck(projectPermission.runDeploymentPermissionList, 'environmentName'),
+				_.pluck(projectPermission.editEnvironmentPermissionList, 'environmentName'),
+				_.pluck(projectPermission.managePermissionsPermissionList, 'environmentName')
+			);
+			return list;
+		}
+	}
+
+	$scope.getEnvironmentPermission = function (permissionList, environment) {
+		var item = _.findWhere(permissionList, { environmentName: environment });
+		if (item) {
+			return item.access;
+		}
+		else {
+			return "None";
+		}
 	}
 }]);
 

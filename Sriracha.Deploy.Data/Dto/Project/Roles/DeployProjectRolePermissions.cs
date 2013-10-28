@@ -31,5 +31,7 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 			this.EditEnvironmentPermissionList = new List<DeployProjectRoleEnvironmentPermission>();
 			this.ManagePermissionsPermissionList = new List<DeployProjectRoleEnvironmentPermission>();
 		}
+
+		public string ProjectName { get; set; }
 	}
 }

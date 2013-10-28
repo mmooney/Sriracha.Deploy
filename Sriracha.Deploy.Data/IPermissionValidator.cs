@@ -9,5 +9,6 @@ namespace Sriracha.Deploy.Data
 	public interface IPermissionValidator
 	{
 		UserEffectivePermissions GetUserEffectivePermissions(string userName);
+		UserEffectivePermissions GetCurrentUserEffectivePermissions();
 	}
 }

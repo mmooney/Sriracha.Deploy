@@ -53,6 +53,7 @@ namespace Sriracha.Deploy.Data.Tests
 				public Fixture Fixture { get; set; }
 				public string UserName { get; set; }
 				public Mock<IProjectRoleManager> ProjectRoleManager { get; set; }
+				public Mock<IUserIdentity> UserIdentity { get; set; }
 				public List<DeployProjectRole> DeployProjectRoleList { get; set; }
 				public List<DeployProject> ProjectList { get; set; }
 				public IPermissionValidator Sut { get; set; }
@@ -65,7 +66,8 @@ namespace Sriracha.Deploy.Data.Tests
 						Fixture = fixture,
 						UserName = fixture.Create<string>("UserName"),
 						ProjectList = fixture.CreateMany<DeployProject>(projectCount).ToList(),
-						ProjectRoleManager = new Mock<IProjectRoleManager>()
+						ProjectRoleManager = new Mock<IProjectRoleManager>(),
+						UserIdentity = new Mock<IUserIdentity>()
 					};
 					returnValue.DeployProjectRoleList = 
 						(from i in returnValue.ProjectList
@@ -77,7 +79,9 @@ namespace Sriracha.Deploy.Data.Tests
 						).ToList();
 					returnValue.ProjectRoleManager.Setup(i=>i.GetProjectRoleListForUser(returnValue.UserName)).Returns(returnValue.DeployProjectRoleList);
 
-					returnValue.Sut = new PermissionValidator(returnValue.ProjectRoleManager.Object);
+					returnValue.UserIdentity.Setup(i=>i.UserName).Returns(returnValue.UserName);
+
+					returnValue.Sut = new PermissionValidator(returnValue.ProjectRoleManager.Object, returnValue.UserIdentity.Object);
 
 					return returnValue;
 				}

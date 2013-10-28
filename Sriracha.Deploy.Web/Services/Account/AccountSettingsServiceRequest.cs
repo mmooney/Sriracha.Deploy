@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using ServiceStack.ServiceHost;
 using Sriracha.Deploy.Data.Dto.Account;
+using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Web.Services.Account
 {
@@ -11,5 +12,6 @@ namespace Sriracha.Deploy.Web.Services.Account
 	public class AccountSettingsServiceRequest
 	{
 		public AccountSettings AccountSettings { get; set; }
+		public UserEffectivePermissions EffectivePermissions { get; set; }
 	}
 }

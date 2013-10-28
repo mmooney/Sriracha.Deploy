@@ -9,6 +9,7 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 	{
 		public string Id { get; set; }
 		public string ProjectId { get; set; }
+		public string ProjectName { get; set; }
 		public string RoleName { get; set; }
 		public bool EveryoneRoleIndicator { get; set; }
 
@@ -25,6 +26,5 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 			this.Permissions = new DeployProjectRolePermissions();
 			this.Assignments = new DeployProjectRoleAssignments();
 		}
-
 	}
 }

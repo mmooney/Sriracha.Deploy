@@ -22,6 +22,13 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			_membershipRepository = DIHelper.VerifyParameter(membershipRepository);
 		}
 
+		private DeployProjectRole ValidateRole(DeployProjectRole role, DeployProject project)
+		{
+			role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+			role.ProjectName = project.ProjectName;
+			return role;
+		}
+
 		private DeployProjectRolePermissions ValidatePermissions(DeployProjectRolePermissions permissions, string projectRoleId, DeployProject project)
 		{
 			permissions = permissions ?? new DeployProjectRolePermissions();
@@ -109,30 +116,26 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		{
 			var role = _permissionRepository.GetProjectRole(projectRoleId);
 			var project = _projectRepository.GetProject(role.ProjectId);
-			role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+			this.ValidateRole(role, project);
 			return role;
 		}
 
+
 		public List<DeployProjectRole> GetProjectRoleListForUser(string userName)
 		{
-			Dictionary<string, DeployProject> projectCache = new Dictionary<string,DeployProject>();
+			var projectList = _projectRepository.GetProjectList();
 			var roleList = _permissionRepository.GetProjectRoleListForUser(userName);
 			foreach(var role in roleList)
 			{
-				DeployProject project;
-				if(!projectCache.TryGetValue(role.ProjectId, out project))
-				{
-					project = _projectRepository.GetProject(role.ProjectId);
-					projectCache.Add(role.ProjectId, project);
-				}
-				role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+				DeployProject project = projectList.Single(i=>i.Id == role.ProjectId);
+				this.ValidateRole(role, project);
 			}
-			foreach(var cachePair in projectCache)
+			foreach(var project in projectList)
 			{
-				var everyoneRole = _permissionRepository.TryGetProjectEveryoneRole(cachePair.Key);
+				var everyoneRole = _permissionRepository.TryGetProjectEveryoneRole(project.Id);
 				if(everyoneRole == null)
 				{
-					everyoneRole = CreateEveryoneRole(cachePair.Value);
+					everyoneRole = CreateEveryoneRole(project);
 				}
 				roleList.Add(everyoneRole);
 			}
@@ -150,7 +153,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			}
 			foreach(var role in roleList)
 			{
-				role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
+				this.ValidateRole(role, project);
 			}
 			return roleList;
 		}
@@ -161,6 +164,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			{
 				Id = "Everyone",
 				ProjectId = project.Id,
+				ProjectName = project.ProjectName,
 				RoleName = "Everyone",
 				EveryoneRoleIndicator = true
 			};
@@ -211,7 +215,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, null, project);
 			assignments = this.ValidateAssignments(assignments);
-			return _permissionRepository.CreateProjectRole(projectId, roleName, permissions, assignments, everyoneRoleIndicator);
+			return _permissionRepository.CreateProjectRole(projectId, project.ProjectName, roleName, permissions, assignments, everyoneRoleIndicator);
 		}
 
 		public DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
@@ -219,7 +223,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			var project = _projectRepository.GetProject(projectId);
 			permissions = this.ValidatePermissions(permissions, roleId, project);
 			assignments = this.ValidateAssignments(assignments);
-			return _permissionRepository.UpdateProjectRole(roleId, projectId, roleName, permissions, assignments, everyoneRoleIndicator);
+			return _permissionRepository.UpdateProjectRole(roleId, projectId, project.ProjectName, roleName, permissions, assignments, everyoneRoleIndicator);
 		}
 	}
 }

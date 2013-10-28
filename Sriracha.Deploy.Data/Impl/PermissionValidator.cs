@@ -12,10 +12,17 @@ namespace Sriracha.Deploy.Data.Impl
 	public class PermissionValidator : IPermissionValidator
 	{
 		private readonly IProjectRoleManager _projectRoleManager;
+		private readonly IUserIdentity _userIdentity;
 
-		public PermissionValidator(IProjectRoleManager projectRoleManager)
+		public PermissionValidator(IProjectRoleManager projectRoleManager, IUserIdentity userIdentity)
 		{
 			_projectRoleManager = DIHelper.VerifyParameter(projectRoleManager);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
+		}
+
+		public UserEffectivePermissions GetCurrentUserEffectivePermissions()
+		{
+			return this.GetUserEffectivePermissions(this._userIdentity.UserName);
 		}
 
 		public UserEffectivePermissions GetUserEffectivePermissions(string userName)
@@ -33,6 +40,7 @@ namespace Sriracha.Deploy.Data.Impl
 				var effectiveProjectPermissions = new DeployProjectRolePermissions
 				{
 					ProjectId = projectId,
+					ProjectName = StringHelper.IsNullOrEmpty(projectRoleList.Select(i=>i.ProjectName).FirstOrDefault(), "(No Project Name)"),
 					EditComponentConfigurationAccess = projectRoleList.Any(i=>i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
 														: projectRoleList.Any(i=>i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
 														: EnumPermissionAccess.None,
@@ -68,5 +76,7 @@ namespace Sriracha.Deploy.Data.Impl
 			}
 			return returnList;
 		}
+
+
 	}
 }

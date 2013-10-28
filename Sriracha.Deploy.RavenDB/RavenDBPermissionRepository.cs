@@ -107,7 +107,7 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<DeployProjectRole>().Where(i => i.Assignments.UserNameList.Any(j=>j == userName)).ToList();
 		}
 
-		public DeployProjectRole CreateProjectRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
+		public DeployProjectRole CreateProjectRole(string projectId, string projectName, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -126,6 +126,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
+				ProjectName = projectName,
 				RoleName = roleName,
 				EveryoneRoleIndicator = everyoneRoleIndicator,
 				CreatedByUserName = _userIdentity.UserName,
@@ -140,9 +141,10 @@ namespace Sriracha.Deploy.RavenDB
 			return newItem;
 		}
 
-		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
+		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string projectName, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
 			var item = this.GetProjectRole(roleId);
+			item.ProjectName = projectName;
 			item.RoleName = roleName;
 			item.Permissions = this.UpdatePermissions(permissions, item);
 			item.Assignments = this.UpdateAssignments(assignments, item);

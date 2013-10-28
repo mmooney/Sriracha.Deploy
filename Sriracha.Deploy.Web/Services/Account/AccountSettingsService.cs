@@ -11,9 +11,12 @@ namespace Sriracha.Deploy.Web.Services.Account
 	public class AccountSettingsService : Service
 	{
 		private readonly IAccountSettingsManager _accountSettingsManager;
-		public AccountSettingsService(IAccountSettingsManager accountSettingsManager)
+		private readonly IPermissionValidator _permissionValidator;
+
+		public AccountSettingsService(IAccountSettingsManager accountSettingsManager, IPermissionValidator permissionValidator)
 		{
 			_accountSettingsManager = DIHelper.VerifyParameter(accountSettingsManager);
+			_permissionValidator = DIHelper.VerifyParameter(permissionValidator);
 		}
 
 		public object Get(AccountSettingsServiceRequest request)
@@ -24,7 +27,8 @@ namespace Sriracha.Deploy.Web.Services.Account
 			}
 			return new AccountSettingsServiceRequest 
 			{
-				AccountSettings = _accountSettingsManager.GetCurrentUserSettings()
+				AccountSettings = _accountSettingsManager.GetCurrentUserSettings(),
+				EffectivePermissions = _permissionValidator.GetCurrentUserEffectivePermissions()
 			};
 		}
 
