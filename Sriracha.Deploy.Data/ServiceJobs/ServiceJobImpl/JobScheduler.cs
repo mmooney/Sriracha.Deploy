@@ -30,6 +30,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
 			this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
 			this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds);
+			this.ScheduleJob("GCFlushJob", typeof(IGCFlushJob), _systemSettings.GCFlushJobIntervalSeconds, 5*60);
 
 			this._quartzScheduler.Start();
 
@@ -44,10 +45,10 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 
 			this._logger.Info("Done stopping jobs");
 		}
-		private void ScheduleJob(string jobName, Type jobType, int intervalSeconds)
+		private void ScheduleJob(string jobName, Type jobType, int intervalSeconds, int delayStartSeconds=0)
 		{
 			var jobDetail = new JobDetailImpl(jobName, jobType);
-			var trigger = new SimpleTriggerImpl(jobName + "Trigger", SimpleTriggerImpl.RepeatIndefinitely, TimeSpan.FromSeconds(intervalSeconds));
+			var trigger = new SimpleTriggerImpl(jobName + "Trigger", DateBuilder.FutureDate(delayStartSeconds, IntervalUnit.Second), null,  SimpleTriggerImpl.RepeatIndefinitely, TimeSpan.FromSeconds(intervalSeconds));
 			this._quartzScheduler.ScheduleJob(jobDetail, trigger);
 		}
 	}

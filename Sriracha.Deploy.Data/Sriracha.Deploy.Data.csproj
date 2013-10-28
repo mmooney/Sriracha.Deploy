@@ -153,6 +153,8 @@
     <Compile Include="Notifications\IEmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
+    <Compile Include="ServiceJobs\IGCFlushJob.cs" />
+    <Compile Include="ServiceJobs\ServiceJobImpl\GCFlushJob.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="Utility\IRegexResolver.cs" />

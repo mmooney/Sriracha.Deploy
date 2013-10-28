@@ -28,5 +28,6 @@ namespace Sriracha.Deploy.Data
 		int? DefaultBuildRetentionMinutes { get; set; }
 		List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList { get; set; }
 
+		int GCFlushJobIntervalSeconds { get; set; }
 	}
 }

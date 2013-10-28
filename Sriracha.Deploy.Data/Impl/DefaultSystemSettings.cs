@@ -161,5 +161,13 @@ namespace Sriracha.Deploy.Data.Impl
 				_buildPurgeRetentionRuleList = value;
 			}
 		}
+
+		private int? _gcFlushJobIntervalSeconds;
+
+		public int GCFlushJobIntervalSeconds
+		{
+			get { return _gcFlushJobIntervalSeconds.GetValueOrDefault(60*60); }
+			set { _gcFlushJobIntervalSeconds = value; }
+		}
 	}
 }
