@@ -6,7 +6,7 @@
 			function () {
 			},
 			function (err) {
-				ErrorReporter.handleResourceException(err);
+				ErrorReporter.handleResourceError(err);
 			}
 		);
 
@@ -16,6 +16,13 @@
 				return (projectPermissions.editComponentConfigurationAccess == "Grant")
 			}
 		};
+
+		this.canCreateEnvironment = function (projectId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				return (projectPermissions.createEnvironmentAccess == "Grant")
+			}
+		}
 
 		this.canEditEnvironment = function (projectId, environmentId) {
 			var projectPermissions = this.getUserProjectPermissions(projectId);
@@ -35,5 +42,17 @@
 		}
 		this.getUserPermissions = function () {
 			return this.effectivePermissions;
+		}
+
+		this.reload = function () {
+			accountData = SrirachaResource.account.get(
+				{},
+				function () {
+					console.log("reloaded");
+				},
+				function (err) {
+					ErrorReporter.handleResourceError(err);
+				}
+			);
 		}
 }]);

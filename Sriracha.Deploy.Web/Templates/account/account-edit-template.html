@@ -22,7 +22,12 @@
 <h2>Permissions</h2>
 <div ng-repeat="projectPermission in effectivePermissions.projectPermissionList" style="border:1px solid grey; border-radius:5px; padding:10px 10px 10px 10px">
 	<h3>{{projectPermission.projectName}}</h3>
-	Edit Components/Configurations: {{projectPermission.editComponentConfigurationAccess}}
+	<div>
+		Edit Components/Configurations: {{projectPermission.editComponentConfigurationAccess}}
+	</div>
+	<div>
+		Create Environment: {{projectPermission.createEnvironmentAccess}}
+	</div>
 	<table class="table table-bordered table-striped" style="width:auto">
 		<tr>
 			<th></th>

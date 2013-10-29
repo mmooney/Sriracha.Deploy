@@ -104,7 +104,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 						EnvironmentName = environment.EnvironmentName,
 						ProjectId = project.Id,
 						ProjectRoleId = projectRoleId,
-						Access = EnumPermissionAccess.None
+						Access = EnumPermissionAccess.Grant
 					};
 					permissionList.Add(item);
 				}
@@ -137,6 +137,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				{
 					everyoneRole = CreateEveryoneRole(project);
 				}
+				this.ValidateRole(everyoneRole, project);
 				roleList.Add(everyoneRole);
 			}
 			return roleList;
@@ -170,6 +171,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			};
 			role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
 			role.Permissions.EditComponentConfigurationAccess = EnumPermissionAccess.Grant;
+			role.Permissions.CreateEnvironmentAccess = EnumPermissionAccess.Grant;
 			foreach (var item in role.Permissions.RequestDeployPermissionList)
 			{
 				item.Access = EnumPermissionAccess.Grant;

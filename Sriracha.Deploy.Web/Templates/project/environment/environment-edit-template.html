@@ -2,7 +2,7 @@
 <h2 ng-show="environment.id">Edit Environment: {{environment.environmentName}} in project {{project.projectName}}</h2>
 <div>
 	<b>Environment Name:</b>
-	<input type="text" ng-model="environment.environmentName" ng-disabled="!permissionVerifier.canEditEnvironment(project.id, environment.id)" />
+	<input type="text" ng-model="environment.environmentName" ng-disabled="!isEditable()" />
 </div>
 <div ng-show="project.usesSharedComponentConfiguration">
 	Note: All components in this project use same deployment and environment configuration.  Any changes here will affect all components in the project.
@@ -20,14 +20,14 @@
 					<tr>
 						<th>Setting Name:</th>
 						<th>Setting Value:</th>
-						<th ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"></th>
+						<th ng-show="isEditable()"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="configItem in configDefinitionList[configuration.parentId].environmentTaskParameterList">
 						<td>{{configItem.fieldName}}</td>
 						<td>{{configuration.configurationValueList[configItem.fieldName]}}</td>
-						<td ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"><button class="btn" ng-click="editConfigurationItem(configItem, configuration.configurationValueList)">Edit</button></td>
+						<td ng-show="isEditable()"><button class="btn" ng-click="editConfigurationItem(configItem, configuration.configurationValueList)">Edit</button></td>
 					</tr>
 					<tr ng-show="!configDefinitionList[configuration.parentId].environmentTaskParameterList.length">
 						<td colspan="3">No Configuration Values</td>
@@ -41,21 +41,21 @@
 			</div>
 			<div ng-repeat="machine in configuration.machineList" class="environment-component-machine">
 				Machine: {{machine.machineName}} 
-				<button class="btn" ng-click="editMachine(machine)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Edit</button>
-				<button class="btn" ng-click="deleteMachine(configuration,machine)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Delete</button>
+				<button class="btn" ng-click="editMachine(machine)" ng-show="isEditable()">Edit</button>
+				<button class="btn" ng-click="deleteMachine(configuration,machine)" ng-show="isEditable()">Delete</button>
 				<table class="table table-striped table-bordered">
 					<thead>
 						<tr>
 							<th>Setting Name:</th>
 							<th>Setting Value:</th>
-							<th ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"></th>
+							<th ng-show="isEditable()"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="configItem in configDefinitionList[configuration.parentId].machineTaskParameterList">
 							<td>{{configItem.fieldName}}</td>
 							<td>{{machine.configurationValueList[configItem.fieldName]}}</td>
-							<td ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
+							<td ng-show="isEditable()"><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
 						</tr>
 						<tr ng-show="!configDefinitionList[configuration.parentId].machineTaskParameterList.length">
 							<td colspan="3">No Configuration Values</td>
@@ -63,7 +63,7 @@
 					</tbody>
 				</table>
 			</div>
-			<button class="btn" ng-click="addMachine(configuration)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Add Machine</button>
+			<button class="btn" ng-click="addMachine(configuration)" ng-show="isEditable()">Add Machine</button>
 		</div>
 	</div>
 	<div ng-show="environment.componentList.length">
@@ -81,14 +81,14 @@
 						<tr>
 							<th>Setting Name:</th>
 							<th>Setting Value:</th>
-							<th ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"></th>
+							<th ng-show="isEditable()"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="configItem in configDefinitionList[component.parentId].environmentTaskParameterList">
 							<td>{{configItem.fieldName}}</td>
 							<td>{{component.configurationValueList[configItem.fieldName]}}</td>
-							<td ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"><button class="btn" ng-click="editConfigurationItem(configItem, component.configurationValueList)">Edit</button></td>
+							<td ng-show="isEditable()"><button class="btn" ng-click="editConfigurationItem(configItem, component.configurationValueList)">Edit</button></td>
 						</tr>
 						<tr ng-show="!configDefinitionList[component.parentId].environmentTaskParameterList.length">
 							<td colspan="3">No Configuration Values</td>
@@ -102,21 +102,21 @@
 				</div>
 				<div ng-repeat="machine in component.machineList" class="environment-component-machine">
 					Machine: {{machine.machineName}} 
-					<button class="btn" ng-click="editMachine(machine)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Edit</button> 
-					<button class="btn" ng-click="deleteMachine(component,machine)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Delete</button>
+					<button class="btn" ng-click="editMachine(machine)" ng-show="isEditable()">Edit</button> 
+					<button class="btn" ng-click="deleteMachine(component,machine)" ng-show="isEditable()">Delete</button>
 					<table class="table table-striped table-bordered ">
 						<thead>
 							<tr>
 								<th>Setting Name:</th>
 								<th>Setting Value:</th>
-								<th ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"></th>
+								<th ng-show="isEditable()"></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="configItem in configDefinitionList[component.parentId].machineTaskParameterList">
 								<td>{{configItem.fieldName}}</td>
 								<td>{{machine.configurationValueList[configItem.fieldName]}}</td>
-								<td ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)"><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
+								<td ng-show="isEditable()"><button class="btn" ng-click="editConfigurationItem(configItem, machine.configurationValueList, machine.machineName)">Edit</button></td>
 							</tr>
 							<tr ng-show="!configDefinitionList[component.parentId].machineTaskParameterList.length">
 								<td colspan="3">No Configuration Values</td>
@@ -124,7 +124,7 @@
 						</tbody>
 					</table>
 				</div>
-				<button class="btn" ng-click="addMachine(component)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Add Machine</button>
+				<button class="btn" ng-click="addMachine(component)" ng-show="isEditable()">Add Machine</button>
 			</div>
 		</div>
 	</div>
@@ -133,6 +133,6 @@
 
 </div>
 <hr />
-<button class="btn btn-action" ng-click="navigator.project.view.go(environment.projectId)" ng-hide="permissionVerifier.canEditEnvironment(project.id, environment.id)">Back</button>
-<button class="btn btn-action" ng-click="navigator.project.view.go(environment.projectId)" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Cancel</button>
-<button class="btn btn-action" ng-click="saveEnvironment()" ng-show="permissionVerifier.canEditEnvironment(project.id, environment.id)">Save</button>
+<button class="btn btn-action" ng-click="navigator.project.view.go(environment.projectId)" ng-hide="isEditable()">Back</button>
+<button class="btn btn-action" ng-click="navigator.project.view.go(environment.projectId)" ng-show="isEditable()">Cancel</button>
+<button class="btn btn-action" ng-click="saveEnvironment()" ng-show="isEditable()">Save</button>

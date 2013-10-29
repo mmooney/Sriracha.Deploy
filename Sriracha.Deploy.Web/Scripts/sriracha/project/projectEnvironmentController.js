@@ -24,6 +24,15 @@
 		}
 	});
 
+	$scope.isEditable = function () {
+		if ($routeParams.environmentId) {
+			return $scope.permissionVerifier.canEditEnvironment($routeParams.projectId, $routeParams.environmentId);
+		}
+		else  {
+			return $scope.permissionVerifier.canCreateEnvironment($routeParams.projectId);
+		}
+	}
+
 	$scope.getConfigurationName = function (configurationId) {
 		if(configurationId && $scope.project) {
 			var configuration = _.findWhere($scope.project.configurationList, { id: configurationId });
@@ -181,6 +190,7 @@
 		$scope.environment.$save(
 			saveParams,
 			function () {
+				$scope.permissionVerifier.reload();
 				if (saveParams.id) {
 					$scope.navigator.project.view.go($scope.project.id);
 				}

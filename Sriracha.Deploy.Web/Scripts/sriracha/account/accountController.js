@@ -11,7 +11,7 @@
 			$scope.effectivePermissions = $scope.serviceData.effectivePermissions
 		},
 		function (err) {
-			ErrorReporter.handleResourceException(err);
+			ErrorReporter.handleResourceError(err);
 		}
 	);
 

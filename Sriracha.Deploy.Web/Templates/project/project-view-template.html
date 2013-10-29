@@ -89,7 +89,7 @@
 <div ng-hide="project.environmentList">
 	<em>No Environments</em>
 </div>
-<a class="btn btn-primary" ng-href="{{navigator.environment.create.clientUrl(project.id)}}">Create Environment</a>
+<a class="btn btn-primary" ng-href="{{navigator.environment.create.clientUrl(project.id)}}" ng-show="permissionVerifier.canCreateEnvironment(project.id)">Create Environment</a>
 
 <h3>Project Roles</h3>
 <table class="table table-bordered table-striped" ng-show="project.environmentList.length">

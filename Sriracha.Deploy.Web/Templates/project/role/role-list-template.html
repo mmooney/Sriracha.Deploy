@@ -27,6 +27,14 @@
 				<option>Deny</option>
 			</select>
 		</label>
+		<h4>Create Environment</h4>
+		<label class="checkbox">
+			<select ng-model="projectRole.permissions.createEnvironmentAccess">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</label>
 		<h4>Request Deployment</h4>
 		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList" >
 			{{permission.environmentName}}:

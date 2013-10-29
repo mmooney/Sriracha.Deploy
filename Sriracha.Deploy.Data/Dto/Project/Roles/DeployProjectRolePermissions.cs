@@ -17,6 +17,7 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 		public List<DeployProjectRoleEnvironmentPermission> EditEnvironmentPermissionList { get; set; }
 		public List<DeployProjectRoleEnvironmentPermission> ManagePermissionsPermissionList { get; set; }
 		public EnumPermissionAccess EditComponentConfigurationAccess { get; set; }
+		public EnumPermissionAccess CreateEnvironmentAccess { get; set; }
 
 		public string CreatedByUserName { get; set; }
 		public DateTime CreatedDateTimeUtc { get; set; }

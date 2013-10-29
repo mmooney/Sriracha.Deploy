@@ -41,8 +41,11 @@ namespace Sriracha.Deploy.Data.Impl
 				{
 					ProjectId = projectId,
 					ProjectName = StringHelper.IsNullOrEmpty(projectRoleList.Select(i=>i.ProjectName).FirstOrDefault(), "(No Project Name)"),
-					EditComponentConfigurationAccess = projectRoleList.Any(i=>i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
-														: projectRoleList.Any(i=>i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+					EditComponentConfigurationAccess = projectRoleList.Any(i => i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+														: projectRoleList.Any(i => i.Permissions.EditComponentConfigurationAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+														: EnumPermissionAccess.None,
+					CreateEnvironmentAccess = projectRoleList.Any(i => i.Permissions.CreateEnvironmentAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+														: projectRoleList.Any(i => i.Permissions.CreateEnvironmentAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
 														: EnumPermissionAccess.None,
 					ApproveRejectDeployPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.ApproveRejectDeployPermissionList)),
 					RequestDeployPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.RequestDeployPermissionList)),
