@@ -105,7 +105,7 @@
 				</tr>
 				<tr ng-repeat="userName in projectRole.assignments.userNameList">
 					<td>{{userName}}</td>
-					<td ng-show="isProjectEditable()"><button class="btn btn-danger"><i class="icon-trash"></i></button></td>
+					<td ng-show="isProjectEditable()"><button class="btn btn-danger" ng-click="deleteUserAssignment(userName)"><i class="icon-trash"></i></button></td>
 				</tr>
 			</table>
 			<div ng-hide="projectRole.assignments.userNameList.length || projectRole.everyoneRoleIndicator">

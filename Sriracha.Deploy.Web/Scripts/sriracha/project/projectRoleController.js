@@ -119,6 +119,14 @@
 	    	angular.element(".editAssignedUsers").dialog("destroy");
 	    }
 
+	    $scope.deleteUserAssignment = function (userName) {
+	    	if ($scope.projectRole) {
+	    		if (_.contains($scope.projectRole.assignments.userNameList, userName)) {
+	    			$scope.projectRole.assignments.userNameList = _.without($scope.projectRole.assignments.userNameList, userName);
+	    		}
+	    	}
+	    }
+
 	    $scope.beginAddRole = function () {
 	    	$scope.addRoleData = {};
 	    	angular.element(".addRoleDialog").dialog({
