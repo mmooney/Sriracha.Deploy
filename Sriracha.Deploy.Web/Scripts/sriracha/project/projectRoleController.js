@@ -9,11 +9,6 @@
 	        return;
 	    }
 
-	    $scope.$on("$destroy", function () {
-	    	angular.element(".addRoleDialog").dialog("destroy").remove();
-	    	angular.element(".editAssignedUsers").dialog("destroy").remove();
-	    });
-
 	    $scope.project = SrirachaResource.project.get(
 			{ id: $routeParams.projectId }, 
 			function () {
