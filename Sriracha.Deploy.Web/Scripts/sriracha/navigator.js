@@ -268,6 +268,11 @@
 					url: "/systemSettings/credentials/create",
 					clientUrl: function () { return root.getUrl(this.url); },
 					go: function () { root.goTo(this.url); }
+				},
+				edit: {
+					url: "/systemSettings/credentials/edit/:credentialsId",
+					clientUrl: function (credentialsId) { return root.getUrl(this.url, { credentialsId: credentialsId }) },
+					go: function (credentialsId) { root.goTo(this.url, { credentialsId: credentialsId });}
 				}
 			}
 		};

@@ -6,15 +6,28 @@
 		$scope.permissionVerifier = PermissionVerifier;
 		$scope.editForm = {};
 		console.log(SrirachaResource)
-		$scope.credentials = SrirachaResource.credentials.get(
-			{},
-			function (data) {
-				console.log(data);
-			},
-			function (err) {
-				ErrorReporter.handleResourceError(err);
-			}
-		)
+		if ($routeParams.credentialsId) {
+			$scope.credentialsItem = SrirachaResource.credentials.get(
+				{id: $routeParams.credentialsId},
+				function (data) {
+					$scope.editForm.userName = data.userName;
+				},
+				function (err) {
+					ErrorReporter.handleResourceError(err);
+				}
+			);
+		}
+		else  {
+			$scope.credentialsList = SrirachaResource.credentials.get(
+				{},
+				function (data) {
+					console.log(data);
+				},
+				function (err) {
+					ErrorReporter.handleResourceError(err);
+				}
+			)
+		}
 
 		$scope.saveCredentials = function () {
 			if (!$scope.editForm) {

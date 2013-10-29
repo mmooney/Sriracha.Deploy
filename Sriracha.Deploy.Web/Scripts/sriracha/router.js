@@ -194,6 +194,10 @@
 			templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
 			controller: "CredentialsController"
 		})
+		.when(navigator.systemSettings.credentials.edit.url, {
+			templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
+			controller: "CredentialsController"
+		})
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"
