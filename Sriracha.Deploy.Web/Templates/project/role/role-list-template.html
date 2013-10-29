@@ -9,19 +9,19 @@
 			</li>
 		</ul>
 		<div ng-hide="projectRoleList.length">No Roles</div>
-		<button class="btn btn-primary" ng-click="beginAddRole()" style="margin-top:20px"><i class="icon-plus" />Add Role</button>
+		<button class="btn btn-primary" ng-click="beginAddRole()" ng-show="isProjectEditable()" style="margin-top:20px"><i class="icon-plus" />Add Role</button>
 	</div>
 	<div class="span8 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
 		<h3>
-			Project Role: <input type="text" ng-model="projectRole.roleName" ng-disabled="projectRole.everyoneRoleIndicator"/>
-			<button class="btn btn-primary" ng-click="saveRole()">Save Role</button>
+			Project Role: <input type="text" ng-model="projectRole.roleName" ng-disabled="projectRole.everyoneRoleIndicator || !isProjectEditable()"/>
+			<button class="btn btn-primary" ng-click="saveRole()" ng-show="isAnythingEditable()">Save Role</button>
 		</h3>
 	</div>
 	<div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px" ng-show="projectRole">
 		<h3>Permissions</h3>
 		<h4>Edit Components/Configurations</h4>
 		<label class="checkbox">
-			<select ng-model="projectRole.permissions.editComponentConfigurationAccess">
+			<select ng-model="projectRole.permissions.editComponentConfigurationAccess" ng-disabled="!isProjectEditable()">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
@@ -29,16 +29,24 @@
 		</label>
 		<h4>Create Environment</h4>
 		<label class="checkbox">
-			<select ng-model="projectRole.permissions.createEnvironmentAccess">
+			<select ng-model="projectRole.permissions.createEnvironmentAccess" ng-disabled="!isProjectEditable()">
+				<option>None</option>
+				<option>Grant</option>
+				<option>Deny</option>
+			</select>
+		</label>
+		<h4>Edit Project Permissions</h4>
+		<label class="checkbox">
+			<select ng-model="projectRole.permissions.editProjectPermissionsAccess" ng-disabled="!isProjectEditable()">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
 			</select>
 		</label>
 		<h4>Request Deployment</h4>
-		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList" >
+		<span ng-repeat="permission in projectRole.permissions.requestDeployPermissionList">
 			{{permission.environmentName}}:
-			<select ng-model="permission.access">
+			<select ng-model="permission.access" ng-disabled="!isEnvironmentEditable(permission.environmentId)">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
@@ -47,7 +55,7 @@
 		<h4>Approve/Reject Deployment</h4>
 		<span ng-repeat="permission in projectRole.permissions.approveRejectDeployPermissionList">
 			{{permission.environmentName}}:
-			<select ng-model="permission.access">
+			<select ng-model="permission.access" ng-disabled="!isEnvironmentEditable(permission.environmentId)">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
@@ -56,7 +64,7 @@
 		<h4>Run Deployment</h4>
 		<span ng-repeat="permission in projectRole.permissions.runDeploymentPermissionList">
 			{{permission.environmentName}}:
-			<select ng-model="permission.access">
+			<select ng-model="permission.access" ng-disabled="!isEnvironmentEditable(permission.environmentId)">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
@@ -65,16 +73,16 @@
 		<h4>Edit Environments</h4>
 		<span ng-repeat="permission in projectRole.permissions.editEnvironmentPermissionList">
 			{{permission.environmentName}}:
-			<select ng-model="permission.access">
+			<select ng-model="permission.access" ng-disabled="!isEnvironmentEditable(permission.environmentId)">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
 			</select>
 		</span>
-		<h4>Manage Permissions</h4>
-		<span ng-repeat="permission in projectRole.permissions.managePermissionsPermissionList">
+		<h4>Edit Environment Permissions</h4>
+		<span ng-repeat="permission in projectRole.permissions.editEnvironmentPermissionsPermissionList">
 			{{permission.environmentName}}:
-			<select ng-model="permission.access">
+			<select ng-model="permission.access" ng-disabled="!isEnvironmentEditable(permission.environmentId)">
 				<option>None</option>
 				<option>Grant</option>
 				<option>Deny</option>
@@ -97,18 +105,18 @@
 				</tr>
 				<tr ng-repeat="userName in projectRole.assignments.userNameList">
 					<td>{{userName}}</td>
-					<td><button class="btn btn-danger"><i class="icon-trash"></i></button></td>
+					<td ng-show="isProjectEditable()"><button class="btn btn-danger"><i class="icon-trash"></i></button></td>
 				</tr>
 			</table>
 			<div ng-hide="projectRole.assignments.userNameList.length || projectRole.everyoneRoleIndicator">
 				No users assigned
 			</div>
-			<p><button class="btn" ng-click="editAssignedUsers()" ng-disabled="projectRole.everyoneRoleIndicator">Edit Users</button></p>
+			<p><button class="btn" ng-click="editAssignedUsers()" ng-hide="projectRole.everyoneRoleIndicator || !isProjectEditable()">Edit Users</button></p>
 		</div>
 	</div>
 	<div class="span12" ng-show="projectRole" style="padding-top:20px">
 		<center>
-			<button class="btn btn-primary" ng-click="saveRole()">Save Role</button>
+			<button class="btn btn-primary" ng-click="saveRole()" ng-show="isAnythingEditable()">Save Role</button>
 		</center>
 	</div>
 

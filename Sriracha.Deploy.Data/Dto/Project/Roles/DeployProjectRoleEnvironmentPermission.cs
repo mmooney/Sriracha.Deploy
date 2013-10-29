@@ -7,8 +7,8 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 {
 	public enum EnumPermissionAccess
 	{
-		None,
 		Grant,
+		None,
 		Deny
 	}
 

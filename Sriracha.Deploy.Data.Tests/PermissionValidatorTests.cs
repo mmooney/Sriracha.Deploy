@@ -28,10 +28,11 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Assert.AreEqual(access, projectPermissions.EditComponentConfigurationAccess);
 				Assert.AreEqual(access, projectPermissions.CreateEnvironmentAccess);
+				Assert.AreEqual(access, projectPermissions.EditProjectPermissionsAccess);
 
 				AssertPermission(projectPermissions.ApproveRejectDeployPermissionList, access);
 				AssertPermission(projectPermissions.EditEnvironmentPermissionList, access);
-				AssertPermission(projectPermissions.ManagePermissionsPermissionList, access);
+				AssertPermission(projectPermissions.EditEnvironmentPermissionsPermissionList, access);
 				AssertPermission(projectPermissions.RequestDeployPermissionList, access);
 				AssertPermission(projectPermissions.RunDeploymentPermissionList, access);
 			}
@@ -90,11 +91,12 @@ namespace Sriracha.Deploy.Data.Tests
 				public DeployProjectRole AddRoleAssignment(DeployProject project, DeployEnvironment environment, 
 							EnumPermissionAccess createEnvironmentAccess=EnumPermissionAccess.None,
 							EnumPermissionAccess editComponentConfigurationAccess=EnumPermissionAccess.None, 
+							EnumPermissionAccess editProjectPermissionsAccess=EnumPermissionAccess.None,
 							EnumPermissionAccess approveRejectDeployAccess=EnumPermissionAccess.None, 
 							EnumPermissionAccess requestDeploymentAccess=EnumPermissionAccess.None,
 							EnumPermissionAccess runDeploymentmentAccess=EnumPermissionAccess.None,
 							EnumPermissionAccess editEnvironmentAccess=EnumPermissionAccess.None,
-							EnumPermissionAccess managePermissionsAccess=EnumPermissionAccess.None)
+							EnumPermissionAccess editEnvironmentPermissionsAccess = EnumPermissionAccess.None)
 				{
 					string roleId = this.Fixture.Create<string>();
 					var role = new DeployProjectRole
@@ -110,11 +112,12 @@ namespace Sriracha.Deploy.Data.Tests
 					};
 					role.Permissions.EditComponentConfigurationAccess = editComponentConfigurationAccess;
 					role.Permissions.CreateEnvironmentAccess = createEnvironmentAccess;
+					role.Permissions.EditProjectPermissionsAccess = editProjectPermissionsAccess;
 					this.SetPermission(project, environment, role.Permissions.ApproveRejectDeployPermissionList, approveRejectDeployAccess);
 					this.SetPermission(project, environment, role.Permissions.RequestDeployPermissionList, requestDeploymentAccess);
 					this.SetPermission(project, environment, role.Permissions.RunDeploymentPermissionList, runDeploymentmentAccess);
 					this.SetPermission(project, environment, role.Permissions.EditEnvironmentPermissionList, editEnvironmentAccess);
-					this.SetPermission(project, environment, role.Permissions.ManagePermissionsPermissionList, managePermissionsAccess);
+					this.SetPermission(project, environment, role.Permissions.EditEnvironmentPermissionsPermissionList, editEnvironmentPermissionsAccess);
 
 					this.DeployProjectRoleList.Add(role);
 
@@ -144,7 +147,7 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 
 			[Test]
-			public void NoRoles_DefaultsToNone()
+			public void NoRoles_DefaultsToGrant()
 			{
 				var testData = TestData.Create();
 
@@ -154,13 +157,13 @@ namespace Sriracha.Deploy.Data.Tests
 				Assert.AreEqual(testData.UserName, result.UserName);
 				Assert.IsNotNull(result.ProjectPermissionList);
 				Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
-				AssertPermission(result.ProjectPermissionList, EnumPermissionAccess.None);
+				AssertPermission(result.ProjectPermissionList, EnumPermissionAccess.Grant);
 			}
 
-			public class CreateEnvironment
+			public class EditProjectPermissions
 			{
 				[Test]
-				public void CreateEnvironmentToRole_DefaultsNone()
+				public void EditProjectPermissionsToRole_DefaultsGrant()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -174,7 +177,87 @@ namespace Sriracha.Deploy.Data.Tests
 					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
 					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
 					Assert.IsNotNull(projectPermissionItem);
-					Assert.AreEqual(EnumPermissionAccess.None, projectPermissionItem.CreateEnvironmentAccess);
+					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.EditProjectPermissionsAccess);
+				}
+
+
+				[Test]
+				public void GrantEditProjectPermissionsToRole_GrantsAccess()
+				{
+					var testData = TestData.Create();
+					var project = testData.ProjectList[testData.ProjectList.Count / 2];
+					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
+					testData.AddRoleAssignment(project, environment, editProjectPermissionsAccess: EnumPermissionAccess.Grant);
+
+					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
+
+					Assert.IsNotNull(result);
+					Assert.AreEqual(testData.UserName, result.UserName);
+					Assert.IsNotNull(result.ProjectPermissionList);
+					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
+					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
+					Assert.IsNotNull(projectPermissionItem);
+					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.EditProjectPermissionsAccess);
+				}
+
+				[Test]
+				public void DenyEditProjectPermissionsToRole_GrantsAccess()
+				{
+					var testData = TestData.Create();
+					var project = testData.ProjectList[testData.ProjectList.Count / 2];
+					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
+					testData.AddRoleAssignment(project, environment, editProjectPermissionsAccess: EnumPermissionAccess.Deny);
+
+					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
+
+					Assert.IsNotNull(result);
+					Assert.AreEqual(testData.UserName, result.UserName);
+					Assert.IsNotNull(result.ProjectPermissionList);
+					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
+					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
+					Assert.IsNotNull(projectPermissionItem);
+					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.EditProjectPermissionsAccess);
+				}
+
+				[Test]
+				public void GrantAndDenyEditProjectPermissionsToRole_GrantsAccess()
+				{
+					var testData = TestData.Create();
+					var project = testData.ProjectList[testData.ProjectList.Count / 2];
+					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
+					testData.AddRoleAssignment(project, environment, editProjectPermissionsAccess: EnumPermissionAccess.Deny);
+					testData.AddRoleAssignment(project, environment, editProjectPermissionsAccess: EnumPermissionAccess.Grant);
+
+					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
+
+					Assert.IsNotNull(result);
+					Assert.AreEqual(testData.UserName, result.UserName);
+					Assert.IsNotNull(result.ProjectPermissionList);
+					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
+					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
+					Assert.IsNotNull(projectPermissionItem);
+					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.EditProjectPermissionsAccess);
+				}
+			}
+
+			public class CreateEnvironment
+			{
+				[Test]
+				public void CreateEnvironmentToRole_DefaultsGrant()
+				{
+					var testData = TestData.Create();
+					var project = testData.ProjectList[testData.ProjectList.Count / 2];
+					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
+
+					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
+
+					Assert.IsNotNull(result);
+					Assert.AreEqual(testData.UserName, result.UserName);
+					Assert.IsNotNull(result.ProjectPermissionList);
+					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
+					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
+					Assert.IsNotNull(projectPermissionItem);
+					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.CreateEnvironmentAccess);
 				}
 
 
@@ -240,7 +323,7 @@ namespace Sriracha.Deploy.Data.Tests
 			public class EditComponentConfiguration
 			{ 
 				[Test]
-				public void EditComponentConfigurationToRole_DefaultsNone()
+				public void EditComponentConfigurationToRole_DefaultsGrant()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
@@ -254,7 +337,7 @@ namespace Sriracha.Deploy.Data.Tests
 					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
 					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
 					Assert.IsNotNull(projectPermissionItem);
-					Assert.AreEqual(EnumPermissionAccess.None, projectPermissionItem.EditComponentConfigurationAccess);
+					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.EditComponentConfigurationAccess);
 				}
 
 
@@ -561,15 +644,15 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 			}
 
-			public class ManagePermissionsPermission
+			public class EditEnvironmentPermissionsPermission
 			{
 				[Test]
-				public void GrantManagePermissionsPermissionToRole_GrantsAccess()
+				public void GrantEditEnvironmentPermissionsPermissionToRole_GrantsAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
 					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
-					testData.AddRoleAssignment(project, environment, managePermissionsAccess: EnumPermissionAccess.Grant);
+					testData.AddRoleAssignment(project, environment, editEnvironmentPermissionsAccess: EnumPermissionAccess.Grant);
 
 					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
 
@@ -579,16 +662,16 @@ namespace Sriracha.Deploy.Data.Tests
 					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
 					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
 					Assert.IsNotNull(projectPermissionItem);
-					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.ManagePermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
+					Assert.AreEqual(EnumPermissionAccess.Grant, projectPermissionItem.EditEnvironmentPermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
 				}
 
 				[Test]
-				public void DenyManagePermissionsPermissionToRole_DeniesAccess()
+				public void DenyEditEnvironmentPermissionsPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
 					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
-					testData.AddRoleAssignment(project, environment, managePermissionsAccess: EnumPermissionAccess.Deny);
+					testData.AddRoleAssignment(project, environment, editEnvironmentPermissionsAccess: EnumPermissionAccess.Deny);
 
 					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
 
@@ -598,17 +681,17 @@ namespace Sriracha.Deploy.Data.Tests
 					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
 					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
 					Assert.IsNotNull(projectPermissionItem);
-					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.ManagePermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
+					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.EditEnvironmentPermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
 				}
 
 				[Test]
-				public void GrantAndDenyManagePermissionsPermissionToRole_DeniesAccess()
+				public void GrantAndDenyEnvironmentEditPermissionsPermissionToRole_DeniesAccess()
 				{
 					var testData = TestData.Create();
 					var project = testData.ProjectList[testData.ProjectList.Count / 2];
 					var environment = project.EnvironmentList[project.EnvironmentList.Count / 2];
-					testData.AddRoleAssignment(project, environment, managePermissionsAccess: EnumPermissionAccess.Deny);
-					testData.AddRoleAssignment(project, environment, managePermissionsAccess: EnumPermissionAccess.Grant);
+					testData.AddRoleAssignment(project, environment, editEnvironmentPermissionsAccess: EnumPermissionAccess.Deny);
+					testData.AddRoleAssignment(project, environment, editEnvironmentPermissionsAccess: EnumPermissionAccess.Grant);
 
 					var result = testData.Sut.GetUserEffectivePermissions(testData.UserName);
 
@@ -618,7 +701,7 @@ namespace Sriracha.Deploy.Data.Tests
 					Assert.AreEqual(testData.ProjectList.Count, result.ProjectPermissionList.Count);
 					var projectPermissionItem = result.ProjectPermissionList.SingleOrDefault(i => i.ProjectId == project.Id);
 					Assert.IsNotNull(projectPermissionItem);
-					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.ManagePermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
+					Assert.AreEqual(EnumPermissionAccess.Deny, projectPermissionItem.EditEnvironmentPermissionsPermissionList.Single(i => i.EnvironmentId == environment.Id).Access);
 				}
 			}
 		}

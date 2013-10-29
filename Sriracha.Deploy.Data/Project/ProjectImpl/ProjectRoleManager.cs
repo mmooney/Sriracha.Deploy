@@ -45,8 +45,8 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			permissions.EditEnvironmentPermissionList = permissions.EditEnvironmentPermissionList ?? new List<DeployProjectRoleEnvironmentPermission>();
 			this.ValidateEnvironmentPermissions(permissions.EditEnvironmentPermissionList, projectRoleId, project);
 
-			permissions.ManagePermissionsPermissionList = permissions.ManagePermissionsPermissionList ?? new List<DeployProjectRoleEnvironmentPermission>();
-			this.ValidateEnvironmentPermissions(permissions.ManagePermissionsPermissionList, projectRoleId, project);
+			permissions.EditEnvironmentPermissionsPermissionList = permissions.EditEnvironmentPermissionsPermissionList ?? new List<DeployProjectRoleEnvironmentPermission>();
+			this.ValidateEnvironmentPermissions(permissions.EditEnvironmentPermissionsPermissionList, projectRoleId, project);
 
 			return permissions;
 		}
@@ -172,6 +172,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			role.Permissions = this.ValidatePermissions(role.Permissions, role.Id, project);
 			role.Permissions.EditComponentConfigurationAccess = EnumPermissionAccess.Grant;
 			role.Permissions.CreateEnvironmentAccess = EnumPermissionAccess.Grant;
+			role.Permissions.EditProjectPermissionsAccess = EnumPermissionAccess.Grant;
 			foreach (var item in role.Permissions.RequestDeployPermissionList)
 			{
 				item.Access = EnumPermissionAccess.Grant;
@@ -188,7 +189,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			{
 				item.Access = EnumPermissionAccess.Grant;
 			}
-			foreach(var item in role.Permissions.ManagePermissionsPermissionList)
+			foreach(var item in role.Permissions.EditEnvironmentPermissionsPermissionList)
 			{
 				item.Access = EnumPermissionAccess.Grant;
 			}

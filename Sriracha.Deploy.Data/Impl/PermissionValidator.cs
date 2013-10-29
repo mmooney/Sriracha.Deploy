@@ -47,11 +47,14 @@ namespace Sriracha.Deploy.Data.Impl
 					CreateEnvironmentAccess = projectRoleList.Any(i => i.Permissions.CreateEnvironmentAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
 														: projectRoleList.Any(i => i.Permissions.CreateEnvironmentAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
 														: EnumPermissionAccess.None,
+					EditProjectPermissionsAccess = projectRoleList.Any(i => i.Permissions.EditProjectPermissionsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+														: projectRoleList.Any(i => i.Permissions.EditProjectPermissionsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+														: EnumPermissionAccess.None,
 					ApproveRejectDeployPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.ApproveRejectDeployPermissionList)),
 					RequestDeployPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.RequestDeployPermissionList)),
 					RunDeploymentPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.RunDeploymentPermissionList)),
 					EditEnvironmentPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.EditEnvironmentPermissionList)),
-					ManagePermissionsPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.ManagePermissionsPermissionList))
+					EditEnvironmentPermissionsPermissionList = MergePermissions(projectRoleList.SelectMany(i => i.Permissions.EditEnvironmentPermissionsPermissionList))
 				};
 				returnValue.ProjectPermissionList.Add(effectiveProjectPermissions);
 			}

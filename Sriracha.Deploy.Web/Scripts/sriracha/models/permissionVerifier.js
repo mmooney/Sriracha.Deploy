@@ -24,6 +24,13 @@
 			}
 		}
 
+		this.canEditProjectPermissions = function (projectId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				return (projectPermissions.editProjectPermissionsAccess == "Grant")
+			}
+		}
+
 		this.canEditEnvironment = function (projectId, environmentId) {
 			var projectPermissions = this.getUserProjectPermissions(projectId);
 			if (projectPermissions) {
@@ -32,7 +39,16 @@
 					return (environmentPermission.access == "Grant");
 				}
 			}
+		}
 
+		this.canEditEnvironmentPermissions = function (projectId, environmentId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				var environmentPermission = _.findWhere(projectPermissions.editEnvironmentPermissionsPermissionList, { environmentId: environmentId });
+				if (environmentPermission) {
+					return (environmentPermission.access == "Grant");
+				}
+			}
 		}
 
 		this.getUserProjectPermissions = function (projectId) {

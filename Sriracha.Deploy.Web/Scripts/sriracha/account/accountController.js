@@ -46,7 +46,7 @@
 				_.pluck(projectPermission.approveRejectDeployPermissionList, 'environmentName'),
 				_.pluck(projectPermission.runDeploymentPermissionList, 'environmentName'),
 				_.pluck(projectPermission.editEnvironmentPermissionList, 'environmentName'),
-				_.pluck(projectPermission.managePermissionsPermissionList, 'environmentName')
+				_.pluck(projectPermission.editEnvironmentPermissionsPermissionList, 'environmentName')
 			);
 			return list;
 		}

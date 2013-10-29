@@ -59,7 +59,7 @@ namespace Sriracha.Deploy.RavenDB
 			UpdateEnvironmentPermissions(role, permissions.ApproveRejectDeployPermissionList);
 			UpdateEnvironmentPermissions(role, permissions.RunDeploymentPermissionList);
 			UpdateEnvironmentPermissions(role, permissions.EditEnvironmentPermissionList);
-			UpdateEnvironmentPermissions(role, permissions.ManagePermissionsPermissionList);
+			UpdateEnvironmentPermissions(role, permissions.EditEnvironmentPermissionsPermissionList);
 			return permissions;
 		}
 

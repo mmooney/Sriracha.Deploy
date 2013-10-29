@@ -28,6 +28,9 @@
 	<div>
 		Create Environment: {{projectPermission.createEnvironmentAccess}}
 	</div>
+	<div>
+		Edit Project Permissions: {{projectPermission.editProjectPermissionsAccess}}
+	</div>
 	<table class="table table-bordered table-striped" style="width:auto">
 		<tr>
 			<th></th>
@@ -54,9 +57,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Manage Permissions Deployment</td>
+			<td>Manage Environment Permissions</td>
 			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
-				{{getEnvironmentPermission(projectPermission.managePermissionsPermissionList, environment)}}
+				{{getEnvironmentPermission(projectPermission.editEnvironmentPermissionsPermissionList, environment)}}
 			</td>
 		</tr>
 	</table>

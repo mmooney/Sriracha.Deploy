@@ -1,9 +1,9 @@
 ﻿ngSriracha.controller("ProjectRoleController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter',
-	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
-
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
+	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 
 		$scope.navigator = SrirachaNavigator;
+		$scope.permissionVerifier = PermissionVerifier;
 	    if (!$routeParams.projectId) {
 	        console.error("Missing $routeParams.projectId");
 	        return;
@@ -37,6 +37,26 @@
 				ErrorReporter.handleResourceError(err);
 			}
 		);
+
+	    $scope.isProjectEditable = function () {
+	    	return $scope.permissionVerifier.canEditProjectPermissions($routeParams.projectId);
+	    }
+
+	    $scope.isEnvironmentEditable = function (environmentId) {
+	    	return $scope.permissionVerifier.canEditEnvironmentPermissions($routeParams.projectId, environmentId);
+	    }
+
+	    $scope.isAnythingEditable = function () {
+	    	if ($scope.isProjectEditable()) {
+	    		return true;
+	    	}
+	    	else {
+	    		return _.any($scope.project.environmentList,
+							function (x) {
+								return $scope.isEnvironmentEditable(x.id);
+							});
+	    	}
+    	}
 
 	    $scope.saveRole = function() {
 	    	var saveParams = {
