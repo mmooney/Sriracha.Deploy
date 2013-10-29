@@ -278,6 +278,8 @@
     <Compile Include="Services\Security\User\UserService.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
+    <Compile Include="Services\SystemSettings\CredentialsRequest.cs" />
+    <Compile Include="Services\SystemSettings\CredentialsService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentRequest.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />
@@ -432,6 +434,8 @@
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
     <Content Include="Scripts\sriracha\systemLogController.js" />
+    <Content Include="Scripts\sriracha\systemSettings\credentialsController.js" />
+    <Content Include="Scripts\sriracha\systemSettings\systemSettingsController.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
@@ -469,6 +473,9 @@
     <Content Include="Templates\project\project-edit-template.html" />
     <Content Include="Templates\project\project-list-template.html" />
     <Content Include="Templates\project\project-view-template.html" />
+    <Content Include="Templates\systemSettings\systemSettings-credentials-create.html" />
+    <Content Include="Templates\systemSettings\systemSettings-credentials-list.html" />
+    <Content Include="Templates\systemSettings\systemSettings-list.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -35,6 +35,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
@@ -92,6 +95,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
+    <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
+    <Compile Include="Credentials\CredentialsImpl\MachineKeyEncrypterator.cs" />
+    <Compile Include="Credentials\ICredentialsManager.cs" />
+    <Compile Include="Credentials\IEncrypterator.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />
     <Compile Include="Dto\AccountSettings.cs" />
@@ -103,6 +111,8 @@
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
     <Compile Include="Dto\ComponentConfigurationDefinition.cs" />
+    <Compile Include="Dto\Credentials\DeployCredentials.cs" />
+    <Compile Include="Dto\Credentials\DeployCredentialsMasked.cs" />
     <Compile Include="Dto\DeployBatchRequest.cs" />
     <Compile Include="Dto\DeployBatchRequestItem.cs" />
     <Compile Include="Dto\DeployBatchStatus.cs" />
@@ -146,6 +156,7 @@
     <Compile Include="Notifications\FakeProjectNofifier.cs" />
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
+    <Compile Include="Repository\ICredentialsRepository.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Account\AccountImpl\AccountSettingsManager.cs" />
     <Compile Include="Build\BuildImpl\BuildPurger.cs" />

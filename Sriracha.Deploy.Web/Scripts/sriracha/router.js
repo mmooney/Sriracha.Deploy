@@ -181,6 +181,20 @@
 			controller: "SystemLogController"
 		})
 
+		//System Settings
+		.when(navigator.systemSettings.list.url, {
+			templateUrl: "templates/systemSettings/systemSettings-list.html",
+			controller: "SystemSettingsController"
+		})
+		.when(navigator.systemSettings.credentials.list.url, {
+			templateUrl: "templates/systemSettings/systemSettings-credentials-list.html",
+			controller: "CredentialsController"
+		})
+		.when(navigator.systemSettings.credentials.create.url, {
+			templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
+			controller: "CredentialsController"
+		})
+
 		.otherwise({
 			template: "<h1>Not Found</h1>"
 		})

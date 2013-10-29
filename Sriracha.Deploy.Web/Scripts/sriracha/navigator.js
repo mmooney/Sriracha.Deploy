@@ -252,6 +252,25 @@
 				go: function (deployStateId) { root.goTo(this.url, { deployStateId: deployStateId }) }
 			}
 		};
+		root.systemSettings = {
+			list: {
+				url: "/systemSettings",
+				clientUrl: function () { return root.getUrl(this.url); },
+				go: function () { root.goTo(this.url); }
+			},
+			credentials: {
+				list: {
+					url: "/systemSettings/credentials",
+					clientUrl: function () { return root.getUrl(this.url); },
+					go: function () { root.goTo(this.url); }
+				},
+				create: {
+					url: "/systemSettings/credentials/create",
+					clientUrl: function () { return root.getUrl(this.url); },
+					go: function () { root.goTo(this.url); }
+				}
+			}
+		};
 		return root;
 	}
 });

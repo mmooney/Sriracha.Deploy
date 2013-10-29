@@ -30,7 +30,10 @@
 			//Other
 			systemLog: $resource("/api/systemLog"),
 			taskMetadata: $resource("/api/taskmetadata"),
-			user: $resource("/api/user")
+			user: $resource("/api/user"),
+
+			//System settings
+			credentials: $resource("/api/systemSettings/credentials")
 		}
 	}
 ]);

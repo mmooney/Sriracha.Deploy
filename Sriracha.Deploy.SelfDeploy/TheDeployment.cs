@@ -95,7 +95,6 @@ namespace Sriracha.Deploy.SelfDeploy
 										ValidateSettings(settings);
 										var serviceName = settings.ServiceName;
 										s.WinService(serviceName).Stop();
-
 										s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
 
 										ApplySettings(s, settings, @"{{ServiceTargetPath}}\{{ServiceExeName}}.config");

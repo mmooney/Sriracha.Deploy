@@ -28,6 +28,8 @@ using Sriracha.Deploy.Data.Utility.UtilityImpl;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Project.ProjectImpl;
 using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
+using Sriracha.Deploy.Data.Credentials;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -72,6 +74,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<TaskManager>().As<ITaskManager>();
 			builder.RegisterType<DeployQueueManager>().As<IDeployQueueManager>();
 			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
+			builder.RegisterType<CredentialsManager>().As<ICredentialsManager>();
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
@@ -80,6 +83,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<EmailQueue>().As<IEmailQueue>();
 			builder.RegisterType<PermissionValidator>().As<IPermissionValidator>();
 
+			builder.RegisterType<MachineKeyEncrypterator>().As<IEncrypterator>();
 			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();
 			builder.RegisterType<ModuleInspector>().As<IModuleInspector>().SingleInstance();
 			builder.RegisterType<ParameterParser>().As<IParameterParser>().SingleInstance();
