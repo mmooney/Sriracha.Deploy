@@ -86,5 +86,18 @@ namespace Sriracha.Deploy.Web.Services
 				throw new ArgumentNullException("role.id and role.projectId are null");
 			}
 		}
+
+		public object Delete(DeployProjectRole role) 
+		{
+			if(role == null)
+			{
+				throw new ArgumentNullException("role is null");
+			}
+			if(string.IsNullOrEmpty(role.Id))
+			{
+				throw new ArgumentNullException("role is null");
+			}
+			return _projectRoleManager.DeleteRole(role.Id);
+		}
 	}
 }

@@ -1,9 +1,15 @@
 ﻿<h2>Roles for {{project.projectName}} Project</h2>
 <div class="row projectPermissions">
-	<div class="span2" style="height:500px">
+	<div class="span3" style="height:500px">
 		<ul class="nav nav-list bs-docs-sidenav affix-top">
-			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}">
-				<a ng-href="{{navigator.projectRole.edit.clientUrl(project.id, tempRole.id)}}">
+			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}" ng-show="!tempRole.everyoneRoleIndicator">
+				<a ng-href="{{navigator.projectRole.edit.clientUrl(project.id, tempRole.id)}}" class="span2">
+					{{tempRole.roleName}}
+				</a>
+				<button class="btn btn-danger" title="Delete Role {{tempRole.roleName}}" ng-show="isProjectEditable()" ng-click="beginDeleteRole(tempRole)" style="margin-left:15px"><i class=" icon-trash"></i></button>
+			</li>
+			<li ng-repeat="tempRole in projectRoleList" ng-class="{active:projectRole.id == tempRole.id}" ng-show="tempRole.everyoneRoleIndicator">
+				<a ng-href="{{navigator.projectRole.edit.clientUrl(project.id, tempRole.id)}}" class="span2">
 					{{tempRole.roleName}}
 				</a>
 			</li>

@@ -160,5 +160,14 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			return _documentSession.Query<DeployProjectRole>().FirstOrDefault(i=>i.ProjectId == projectId && i.EveryoneRoleIndicator);
 		}
+
+
+		public DeployProjectRole DeleteProjectRole(string roleId)
+		{
+			var role = GetProjectRole(roleId);
+			_documentSession.Delete(role);
+			_documentSession.SaveChanges();
+			return role;
+		}
 	}
 }

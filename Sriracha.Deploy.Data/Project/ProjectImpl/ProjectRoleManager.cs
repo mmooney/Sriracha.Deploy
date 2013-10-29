@@ -228,5 +228,15 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			assignments = this.ValidateAssignments(assignments);
 			return _permissionRepository.UpdateProjectRole(roleId, projectId, project.ProjectName, roleName, permissions, assignments, everyoneRoleIndicator);
 		}
+
+		public DeployProjectRole DeleteRole(string roleId)
+		{
+			var role = _permissionRepository.GetProjectRole(roleId);
+			if(role.EveryoneRoleIndicator)
+			{
+				throw new ArgumentException("Cannot delete Everyone role");
+			}
+			return _permissionRepository.DeleteProjectRole(roleId);
+		}
 	}
 }

@@ -30,7 +30,32 @@
 			alert("Error: " + errorMessage);
 		};
 		this.handleResourceError = function (response) {
-			alert("Error: " + JSON.stringify(response.data.responseStatus.message));
+			var displayMessage;
+			if (!response.data) {
+				displayMessage = "<b>Unknown Error</b><br/>" + JSON.stringify(response);
+			}
+			else if (response.data.responseStatus && response.data.responseStatus.message) {
+				displayMessage = "<b>Error: " + response.data.responseStatus.message + "</b><pre>" + JSON.stringify(response.data.responseStatus,null,4);
+			}
+			else if(typeof(response.data == "string")) {
+				displayMessage = "<b>Error</b><br/>" + response.data;
+			}
+			else  {
+				displayMessage = "<b>Error</b><br/>" + JSON.stringify(response.data);
+			}
+			console.log(displayMessage);
+			var dialogHtml = "<div style='display:none'>" + displayMessage + "</div>";
+			var dialogElement = $(dialogHtml);
+			$("body").append(dialogElement);
+			dialogElement.dialog({
+				height: 'auto',
+				width: "800",
+				fluid:true,
+				modal: true,
+				close: function (x) {
+					dialogElement.dialog("destroy").remove();
+				}
+			});
 		}
 	});
 

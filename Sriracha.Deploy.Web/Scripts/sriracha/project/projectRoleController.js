@@ -155,4 +155,42 @@
 	    	angular.element(".addRoleDialog").dialog("destroy");
 	    	$scope.addRoleData = {};
 	    }
+
+	    $scope.beginDeleteRole = function (role) {
+	    	if (role && confirm("Are you sure you want to delete the role \"" + role.roleName + "\"?  This cannot be undone!")) {
+	    		SrirachaResource.projectRole.delete(
+					{ id:role.id, projectId: $routeParams.projectId },
+					function () {
+						if (role.id == $routeParams.projectRoleId) {
+							$scope.navigator.projectRole.edit.go($scope.project.id);
+						}
+						else {
+							$scope.projectRoleList = SrirachaResource.projectRole.query(
+								{ projectId: $routeParams.projectId },
+								function () {
+									if ($routeParams.projectRoleId) {
+										$scope.projectRole = SrirachaResource.projectRole.get(
+											{ projectId: $routeParams.projectId, id: $routeParams.projectRoleId },
+											function () {
+												//console.log($scope.projectRole);
+												//ok
+											},
+											function (err) {
+												ErrorReporter.handleResourceError(err);
+											}
+										)
+									}
+								},
+								function (err) {
+									ErrorReporter.handleResourceError(err);
+								}
+							)
+						}
+					},
+					function (error) {
+						ErrorReporter.handleResourceError(error);
+					}
+				);
+	    	}
+	    }
 }]);

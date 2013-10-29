@@ -15,6 +15,7 @@ namespace Sriracha.Deploy.Data.Project
 
 		DeployProjectRole CreateRole(string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator);
 		DeployProjectRole UpdateRole(string roleId, string projectId, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator);
+		DeployProjectRole DeleteRole(string roleId);
 
 		DeployProjectRole GetProjectEveryoneRole(string projectId);
 		DeployProjectRole TryGetProjectEveryoneRole(string projectId);
