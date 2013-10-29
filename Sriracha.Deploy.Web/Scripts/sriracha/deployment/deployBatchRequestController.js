@@ -1,7 +1,8 @@
 ﻿ngSriracha.controller("deployBatchRequestController",
-		['$scope', '$routeParams', '$rootElement', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
-		function ($scope, $routeParams, $rootElement, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', '$rootElement', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter','PermissionVerifier',
+		function ($scope, $routeParams, $rootElement, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 	$scope.navigator = SrirachaNavigator;
+	$scope.permissionVerifier = PermissionVerifier;
 	$scope.selection = {};
 	$scope.idValues = {}
 	//	buildId: $routeParams.buildId,
@@ -270,7 +271,6 @@
 		if ($scope.build && $scope.project && !$scope.component) {
 			$scope.component = _.findWhere($scope.project.componentList, { id: $scope.build.projectComponentId });
 			$scope.refreshEnvironmentList();
-			console.log($scope.build);
 		}
 		$scope.updateEnvironmentMachines();
 	}
@@ -392,4 +392,40 @@
 			});
 	}
 
+	$scope.getPermissionMessages = function () {
+		var messageList = [];
+		if ($scope.selectedItems) {
+			if (!$scope.projectList || !$scope.projectList.length) {
+				return ["Permissions could not be loaded"];
+			}
+			var projectIdList = (_.uniq(_.pluck(_.pluck($scope.selectedItems, "build"), "projectId")));
+			_.each(projectIdList, function (projectId) {
+				var projectItems = _.filter($scope.selectedItems, function (x) { return x.build.projectId == projectId });
+				var environmentIDList = [];
+				_.each(projectItems, function (deploymentItem) {
+					var machineEnvironmentIdList = _.uniq(_.pluck(deploymentItem.machineList, "environmentId"));
+					_.each(machineEnvironmentIdList, function (machineEnvironmentId) {
+						if (!_.contains(environmentIDList, machineEnvironmentId)) {
+							environmentIDList.push(machineEnvironmentId);
+						}
+					});
+				});
+				_.each(environmentIDList, function (environmentId) {
+					if(!$scope.permissionVerifier.canRequestDeployment(projectId, environmentId)) {
+						var project = _.findWhere($scope.projectList, { id: projectId });
+						var environment = _.filter(project.environmentList, function(x) { return x.id == environmentId })[0];
+						var message = "You do not have permission to request a deployment of the project \"" + project.projectName + "\" to the environment \"" + environment.environmentName + "\"";
+						messageList.push(message);
+					}
+				});
+			});
+		}
+		return messageList;
+	}
+
+	$scope.canSubmitDeployRequest = function () {
+		if ($scope.selectedItems) {
+			return ($scope.selectedItems.length && !$scope.getPermissionMessages().length);
+		}
+	}
 }]);

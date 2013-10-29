@@ -1,6 +1,6 @@
 ﻿angular.module("ngSriracha").directive("deployActionLinks",
-		['SrirachaResource','SrirachaNavigator','ErrorReporter',
-		function (SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['SrirachaResource','SrirachaNavigator','ErrorReporter','PermissionVerifier',
+		function (SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 			return {
 				restrict: "E",
 				templateUrl: "templates/directives/deployActionLinks.html",
@@ -61,6 +61,41 @@
 								)
 							}
 						}
+					}
+					scope.canCancel = function () {
+						if (scope.deployBatchRequest) {
+							if((scope.deployBatchRequest.status == 'NotStarted' || scope.deployBatchRequest.status == 'InProcess') && !scope.deployBatchRequest.cancelRequested) {
+								var isValid = scope.validateEnvironmentPermission(scope.deployBatchRequest, function (projectId, environmentId) {
+									return PermissionVerifier.canRunDeployment(projectId, environmentId)
+								});
+								return isValid;
+							}
+						}
+					}
+					scope.canResume = function () {
+						if (scope.deployBatchRequest) {
+							if ((scope.deployBatchRequest.status == 'Cancelled' || scope.deployBatchRequest.status == 'Error') && !scope.deployBatchRequest.resumeRequested) {
+								var isValid = scope.validateEnvironmentPermission(scope.deployBatchRequest, function (projectId, environmentId) {
+									return PermissionVerifier.canRunDeployment(projectId, environmentId)
+								});
+								return isValid;
+							}
+						}
+					}
+					scope.validateEnvironmentPermission = function (request, callback) {
+						var isValid = true;
+						_.each(request.itemList, function (item) {
+							_.each(item.machineList, function (machine) {
+								if (!callback(item.build.projectId, machine.environmentId)) {
+									isValid = false;
+									return false;
+								}
+							})
+							if (!isValid) {
+								return false;
+							}
+						});
+						return isValid;
 					}
 				}
 			};

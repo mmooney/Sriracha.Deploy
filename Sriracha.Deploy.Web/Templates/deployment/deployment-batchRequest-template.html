@@ -102,14 +102,23 @@
 		</tbody>
 	</table>
 </div>
-<div>
-	<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
-</div>
-<div>
-	<button class="btn" ng-click="displayPromoteBuildScreen()">Promote Deployment to Different Environment</button>
-</div>
-<div>
-	<button class="btn" ng-click="takeLatestBuilds()">Take Latest Build Of All Components</button>
+<div class="row">
+	<div class="span4">
+		<div>
+			<button class="btn" ng-click="displayAddBuildScreen()">Add Build</button>
+		</div>
+		<div>
+			<button class="btn" ng-click="displayPromoteBuildScreen()">Promote Deployment to Different Environment</button>
+		</div>
+		<div>
+			<button class="btn" ng-click="takeLatestBuilds()">Take Latest Build Of All Components</button>
+		</div>
+	</div>
+	<div class="span8">
+		<ul>
+			<li ng-repeat="message in getPermissionMessages()">{{message}}</li>
+		</ul>
+	</div>
 </div>
 <div style="display:none" class="promoteBuildDialog">
 	Environments:<select ng-model="promoteDeployment.environmentName" ng-options="item for item in promoteDeployment.allEnvironmentNameList" ng-change="promoteEnvironmentSelected()" />
@@ -130,5 +139,5 @@
 	</center>
 </div>
 <center>
-	<button class="btn btn-primary" ng-click="submitBuildRequest()" ng-disabled="!selectedItems.length">Submit Deployment Request</button>
+	<button class="btn btn-primary" ng-click="submitBuildRequest()" ng-disabled="!canSubmitDeployRequest()">Submit Deployment Request</button>
 </center>

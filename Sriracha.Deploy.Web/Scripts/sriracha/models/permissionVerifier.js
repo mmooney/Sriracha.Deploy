@@ -51,6 +51,36 @@
 			}
 		}
 
+		this.canRequestDeployment = function (projectId, environmentId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				var environmentPermission = _.findWhere(projectPermissions.requestDeployPermissionList, { environmentId: environmentId });
+				if (environmentPermission) {
+					return (environmentPermission.access == "Grant");
+				}
+			}
+		}
+
+		this.canApproveRejectDeployment = function (projectId, environmentId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				var environmentPermission = _.findWhere(projectPermissions.approveRejectDeployPermissionList, { environmentId: environmentId });
+				if (environmentPermission) {
+					return (environmentPermission.access == "Grant");
+				}
+			}
+		}
+
+		this.canRunDeployment = function (projectId, environmentId) {
+			var projectPermissions = this.getUserProjectPermissions(projectId);
+			if (projectPermissions) {
+				var environmentPermission = _.findWhere(projectPermissions.runDeploymentPermissionList, { environmentId: environmentId });
+				if (environmentPermission) {
+					return (environmentPermission.access == "Grant");
+				}
+			}
+		}
+
 		this.getUserProjectPermissions = function (projectId) {
 			if (accountData && accountData.effectivePermissions) {
 				return _.findWhere(accountData.effectivePermissions.projectPermissionList, { projectId: projectId });
@@ -64,7 +94,6 @@
 			accountData = SrirachaResource.account.get(
 				{},
 				function () {
-					console.log("reloaded");
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);

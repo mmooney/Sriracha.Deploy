@@ -51,13 +51,19 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Run Deployment</td>
+			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
+				{{getEnvironmentPermission(projectPermission.runDeploymentPermissionList, environment)}}
+			</td>
+		</tr>
+		<tr>
 			<td>Edit Environment</td>
 			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
 				{{getEnvironmentPermission(projectPermission.editEnvironmentPermissionList, environment)}}
 			</td>
 		</tr>
 		<tr>
-			<td>Manage Environment Permissions</td>
+			<td>Edit Environment Permissions</td>
 			<td ng-repeat="environment in getProjectPermissionEnvironmentList(projectPermission)">
 				{{getEnvironmentPermission(projectPermission.editEnvironmentPermissionsPermissionList, environment)}}
 			</td>

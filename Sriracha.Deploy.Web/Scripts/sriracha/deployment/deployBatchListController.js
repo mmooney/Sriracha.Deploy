@@ -16,7 +16,6 @@
 	//	});
 	$scope.deployBatchRequestList = SrirachaResource.deployBatchRequest.get($scope.listOptions,
 		function () {
-			console.log($scope.deployBatchRequestList)
 		},
 		function (err) {
 			ErrorReporter.handleResourceError(err);

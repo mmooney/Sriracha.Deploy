@@ -8,11 +8,11 @@
 		<th>Status:</th>
 		<td>
 			{{deployBatchStatus.request.statusDisplayValue}}
-			<span ng-show="deployBatchStatus.request.status=='Requested' || deployBatchStatus.request.status=='Rejected'">
+			<span ng-show="canApproveReject()">
 				<button class="btn btn-primary" ng-click="startApproval()">Approve</button>
 				<button class="btn btn-danger" ng-click="startRejection()">Reject</button>
 			</span>
-			<span ng-show="deployBatchStatus.request.status=='Approved'">
+			<span ng-show="canBeginDeployment()">
 				<button class="btn btn-primary" ng-click="startBeginDeployment()">Begin Deployment</button>
 			</span>
 		</td>

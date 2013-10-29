@@ -11,7 +11,6 @@
 		$scope.buildList = SrirachaResource.build.get(
 			{},
 			function() {
-				//console.log($scope.buildList);
 			},
 			function(err) {
 				ErrorHandler.handleResourceError(err);

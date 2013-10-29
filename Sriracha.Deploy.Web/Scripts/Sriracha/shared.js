@@ -43,7 +43,6 @@
 			else  {
 				displayMessage = "<b>Error</b><br/>" + JSON.stringify(response.data);
 			}
-			console.log(displayMessage);
 			var dialogHtml = "<div style='display:none'>" + displayMessage + "</div>";
 			var dialogElement = $(dialogHtml);
 			$("body").append(dialogElement);

@@ -1,8 +1,8 @@
 ﻿ngSriracha.controller("deployBatchStatusController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter',
-		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter) {
+		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter','PermissionVerifier',
+		function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 	$scope.navigator = SrirachaNavigator;
-
+	$scope.permissionVerifier = PermissionVerifier;
 	$scope.$on("$destroy", function () {
 		if ($scope.refreshInterval) {
 			clearInterval($scope.refreshInterval);
@@ -128,5 +128,43 @@
 		//$(".statusChangeDialog").dialog("close");
 		$(".statusChangeDialog").dialog("destroy");
 		$scope.statusChange = {};
+	}
+
+	$scope.canApproveReject = function () {
+		if ($scope.deployBatchStatus && $scope.deployBatchStatus.request && $scope.permissionVerifier) {
+			if ($scope.deployBatchStatus.request.status == 'Requested' || $scope.deployBatchStatus.request.status == 'Rejected') {
+				var isValid = $scope.validateEnvironmentPermission($scope.deployBatchStatus.request, function (projectId, environmentId) {
+					return $scope.permissionVerifier.canApproveRejectDeployment(projectId, environmentId)
+				});
+				return isValid;
+			}
+		}
+	}
+
+	$scope.canBeginDeployment = function () {
+		if ($scope.deployBatchStatus && $scope.deployBatchStatus.request && $scope.permissionVerifier) {
+			if ($scope.deployBatchStatus.request.status == 'Approved') {
+				var isValid = $scope.validateEnvironmentPermission($scope.deployBatchStatus.request, function (projectId, environmentId) {
+					return $scope.permissionVerifier.canRunDeployment(projectId, environmentId)
+				});
+				return isValid;
+			}
+		}
+	}
+
+	$scope.validateEnvironmentPermission = function (request, callback) {
+		var isValid = true;
+		_.each(request.itemList, function (item) {
+			_.each(item.machineList, function (machine) {
+				if (!callback(item.build.projectId, machine.environmentId)) {
+					isValid = false;
+					return false;
+				}
+			})
+			if (!isValid) {
+				return false;
+			}
+		});
+		return isValid;
 	}
 }]);

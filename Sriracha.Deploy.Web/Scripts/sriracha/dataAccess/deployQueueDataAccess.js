@@ -6,7 +6,6 @@
 				return SrirachaResource.deployQueue.get(
 					{},
 					function (x) {
-						console.log(x);
 					},
 					function (err) {
 						ErrorReporter.handleResourceError(err);

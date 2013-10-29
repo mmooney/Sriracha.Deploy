@@ -19,7 +19,6 @@
 							$scope.projectRole = SrirachaResource.projectRole.get(
 								{projectId: $routeParams.projectId, id: $routeParams.projectRoleId},
 								function () {
-									//console.log($scope.projectRole);
 									//ok
 								},
 								function (err) {
@@ -172,7 +171,6 @@
 										$scope.projectRole = SrirachaResource.projectRole.get(
 											{ projectId: $routeParams.projectId, id: $routeParams.projectRoleId },
 											function () {
-												//console.log($scope.projectRole);
 												//ok
 											},
 											function (err) {
