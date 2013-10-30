@@ -30,6 +30,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				DeployTaskExecutionResult result;
 				using (var impersontator = BeginImpersonation(deployStateId, statusManager, environmentComponent))
 				{
+					var executor = _deployTaskFactory.CreateTaskExecutor(taskDefinition.GetTaskExecutorType());
 					result = executor.Execute(deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, build, runtimeSystemSettings);
 				}
 				switch(result.Status)
