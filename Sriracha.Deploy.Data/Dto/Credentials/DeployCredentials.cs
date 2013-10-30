@@ -8,6 +8,7 @@ namespace Sriracha.Deploy.Data.Dto.Credentials
 	public class DeployCredentials
 	{
 		public string Id { get; set; }
+		public string Domain { get; set; }
 		public string UserName { get; set; }
 		public string EncryptedPassword { get; set; }
 
@@ -15,5 +16,6 @@ namespace Sriracha.Deploy.Data.Dto.Credentials
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
+
 	}
 }

@@ -11,6 +11,7 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 	[Route("/systemSettings/credentials/{id}")]
 	public class CredentialsRequest : RequestBase<DeployCredentials>
 	{
+		public string Domain { get; set; }
 		public string UserName { get; set; }
 		public string Password { get; set; }
 	}

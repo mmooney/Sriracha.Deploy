@@ -22,9 +22,14 @@ namespace Sriracha.Deploy.RavenDB
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		private string FormatId(string userName)
+		private string FormatId(string domain, string userName)
 		{
-			return "DeployCredentials_" + userName.Replace("\\", "_");
+			string returnValue = "DeployCredentials_" + userName.Replace("\\", "_");
+			if(!string.IsNullOrEmpty(domain))
+			{
+				returnValue += "_" + domain.Replace("\\","_");
+			}
+			return returnValue;
 		}
 
 		public PagedSortedList<DeployCredentials> GetCredentialsList(ListOptions listOptions)
@@ -45,9 +50,9 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployCredentials CreateCredentials(string userName, string encrytpedPassword)
+		public DeployCredentials CreateCredentials(string domain, string userName, string encrytpedPassword)
 		{
-			string id = FormatId(userName);
+			string id = FormatId(userName, domain);
 			var existingItem = _documentSession.Load<DeployCredentials>(id);
 			if(existingItem != null)
 			{
@@ -56,6 +61,7 @@ namespace Sriracha.Deploy.RavenDB
 			var item = new DeployCredentials
 			{
 				Id = id,
+				Domain = domain,
 				UserName = userName,
 				EncryptedPassword = encrytpedPassword,
 				CreatedByUserName = _userIdentity.UserName,
@@ -68,9 +74,10 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployCredentials UpdateCredentials(string credentialsId, string userName, string encrytpedPassword)
+		public DeployCredentials UpdateCredentials(string domain, string credentialsId, string userName, string encrytpedPassword)
 		{
 			var item = GetCredentials(credentialsId);
+			item.Domain = domain;
 			item.UserName = userName;
 			item.EncryptedPassword = encrytpedPassword;
 			item.UpdatedByUserName = _userIdentity.UserName;

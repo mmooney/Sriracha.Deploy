@@ -367,7 +367,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				component.ConfigurationValueList = new Dictionary<string, string>();
 			}
 			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList, environment.DeploymentCredentialsUserName);
+			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList, environment.DeployCredentialsId);
 		}
 
 

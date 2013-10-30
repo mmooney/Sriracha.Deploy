@@ -40,17 +40,17 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 			return new PagedSortedList<DeployCredentialsMasked>(pagedList, list.SortField, list.SortAscending);
 		}
 
-		public DeployCredentialsMasked CreateCredentials(string userName, string password)
+		public DeployCredentialsMasked CreateCredentials(string domain, string userName, string password)
 		{
 			var encrytpedPassword = EncryptPassword(userName, password);
-			var item = _credentialsRepository.CreateCredentials(userName, encrytpedPassword);
+			var item = _credentialsRepository.CreateCredentials(domain, userName, encrytpedPassword);
 			return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
 		}
 
-		public DeployCredentialsMasked UpdateCredentials(string credentialsId, string userName, string password)
+		public DeployCredentialsMasked UpdateCredentials(string domain, string credentialsId, string userName, string password)
 		{
 			var encrytpedPassword = EncryptPassword(userName, password);
-			var item = _credentialsRepository.UpdateCredentials(credentialsId, userName, encrytpedPassword);
+			var item = _credentialsRepository.UpdateCredentials(domain, credentialsId, userName, encrytpedPassword);
 			return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
 		}
 

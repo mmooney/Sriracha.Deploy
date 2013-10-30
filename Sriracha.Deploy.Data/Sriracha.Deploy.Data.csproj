@@ -97,9 +97,11 @@
   <ItemGroup>
     <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
     <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
+    <Compile Include="Credentials\Impersonatator.cs" />
     <Compile Include="Credentials\CredentialsImpl\MachineKeyEncrypterator.cs" />
     <Compile Include="Credentials\ICredentialsManager.cs" />
     <Compile Include="Credentials\IEncrypterator.cs" />
+    <Compile Include="Credentials\ImpersonationContext.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />
     <Compile Include="Dto\AccountSettings.cs" />

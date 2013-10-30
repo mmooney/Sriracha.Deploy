@@ -77,7 +77,7 @@
 			<div ng-hide="component.useConfigurationGroup">
 				<strong>Run As:</strong>
 				<div>
-					<select ng-model="environment.deploymentCredentialsUserName" ng-options="item.userName as item.userName for item in credentials.items">
+					<select ng-model="environment.deployCredentialsId" ng-options="item.id as item.displayValue for item in credentials.items">
 						<option value="">[User Account Of Deployment Service]</option>
 					</select>
 				</div>

@@ -10,6 +10,7 @@
 				{id: $routeParams.credentialsId},
 				function (data) {
 					$scope.editForm.userName = data.userName;
+					$scope.editForm.domain = data.domain;
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);
@@ -53,6 +54,7 @@
 				var item = new SrirachaResource.credentials();
 				item.userName = $scope.editForm.userName;
 				item.password = $scope.editForm.password;
+				item.domain = $scope.editForm.domain;
 				var saveParams = {};
 				if ($routeParams.credentialsId) {
 					saveParams.id = $routeParams.credentialsId;

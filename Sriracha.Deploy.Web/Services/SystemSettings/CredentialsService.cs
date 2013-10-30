@@ -49,11 +49,11 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 			}
 			if(string.IsNullOrEmpty(request.Id))
 			{
-				return _credentialsManager.CreateCredentials(request.UserName, request.Password);
+				return _credentialsManager.CreateCredentials(request.Domain, request.UserName, request.Password);
 			}
 			else 
 			{
-				return _credentialsManager.UpdateCredentials(request.Id, request.UserName, request.Password);
+				return _credentialsManager.UpdateCredentials(request.Id, request.Domain, request.UserName, request.Password);
 			}
 		}
 	}

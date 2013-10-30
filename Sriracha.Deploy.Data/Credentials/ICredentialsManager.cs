@@ -12,7 +12,7 @@ namespace Sriracha.Deploy.Data.Credentials
 		DeployCredentialsMasked GetMaskedCredentials(string credentialsId);
 		PagedSortedList<DeployCredentialsMasked> GetMaskedCredentialList(ListOptions listOptions);
 
-		DeployCredentialsMasked CreateCredentials(string userName, string password);
-		DeployCredentialsMasked UpdateCredentials(string credentialsId, string userName, string password);
+		DeployCredentialsMasked CreateCredentials(string domain, string userName, string password);
+		DeployCredentialsMasked UpdateCredentials(string domain, string credentialsId, string userName, string password);
 	}
 }

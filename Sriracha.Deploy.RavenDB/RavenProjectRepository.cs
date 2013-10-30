@@ -932,7 +932,7 @@ namespace Sriracha.Deploy.RavenDB
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
-				DeploymentCredentialsUserName = deploymentCredentialsUserName
+				DeployCredentialsId = deploymentCredentialsUserName
 			};
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
@@ -1018,7 +1018,7 @@ namespace Sriracha.Deploy.RavenDB
 			environment.ConfigurationList = configurationList.ToList();
 			environment.UpdatedByUserName = _userIdentity.UserName;
 			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
-			environment.DeploymentCredentialsUserName = deploymentCredentialsUserName;
+			environment.DeployCredentialsId = deploymentCredentialsUserName;
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
 			this._documentSession.SaveChanges();
