@@ -27,6 +27,7 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string RavenDBConnectionString { get; set; }
 		public string EmailConnectionString { get; set; }
 		public string SiteUrl { get; set; }
+		public string EncryptionKey { get; set; }
 
 		//Web
 		public string SourceWebsitePath { get; set; }

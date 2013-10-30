@@ -14,7 +14,7 @@ namespace Sriracha.Deploy.Data.Credentials
 
 		DeployCredentials  GetCredentials(string credentialsId);
 		DeployCredentialsMasked CreateCredentials(string domain, string userName, string password);
-		DeployCredentialsMasked UpdateCredentials(string domain, string credentialsId, string userName, string password);
+		DeployCredentialsMasked UpdateCredentials(string credentialsId, string domain, string userName, string password);
 
 		string DecryptPassword(DeployCredentials credentials);
 	}

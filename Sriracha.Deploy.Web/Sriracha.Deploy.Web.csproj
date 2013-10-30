@@ -280,6 +280,8 @@
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
     <Compile Include="Services\SystemSettings\CredentialsRequest.cs" />
     <Compile Include="Services\SystemSettings\CredentialsService.cs" />
+    <Compile Include="Services\SystemSettings\CredentialsTestRequest.cs" />
+    <Compile Include="Services\SystemSettings\CredentialsTestService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentRequest.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />

@@ -33,7 +33,8 @@
 			user: $resource("/api/user"),
 
 			//System settings
-			credentials: $resource("/api/systemSettings/credentials")
+			credentials: $resource("/api/systemSettings/credentials"),
+			credentialsTest: $resource("/api/systemSettings/credentials/test/:id"),
 		}
 	}
 ]);

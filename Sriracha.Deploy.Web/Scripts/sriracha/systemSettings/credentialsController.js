@@ -29,6 +29,20 @@
 			)
 		}
 
+		$scope.testCredentials = function (item) {
+			if (item) {
+				SrirachaResource.credentialsTest.get(
+					{id: item.id},
+					function () {
+						alert("Success");
+					},
+					function (err) {
+						ErrorReporter.handleResourceError(err);
+					}
+				)
+			}
+		}
+
 		$scope.saveCredentials = function () {
 			if (!$scope.editForm) {
 				alert("Error: scope.editForm is null")

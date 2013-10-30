@@ -47,10 +47,10 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 			return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
 		}
 
-		public DeployCredentialsMasked UpdateCredentials(string domain, string credentialsId, string userName, string password)
+		public DeployCredentialsMasked UpdateCredentials(string credentialsId, string domain, string userName, string password)
 		{
 			var encrytpedPassword = EncryptPassword(userName, password);
-			var item = _credentialsRepository.UpdateCredentials(domain, credentialsId, userName, encrytpedPassword);
+			var item = _credentialsRepository.UpdateCredentials(credentialsId, domain, userName, encrytpedPassword);
 			return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
 		}
 

@@ -74,7 +74,7 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployCredentials UpdateCredentials(string domain, string credentialsId, string userName, string encrytpedPassword)
+		public DeployCredentials UpdateCredentials(string credentialsId, string domain, string userName, string encrytpedPassword)
 		{
 			var item = GetCredentials(credentialsId);
 			item.Domain = domain;

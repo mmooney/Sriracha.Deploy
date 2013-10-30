@@ -147,6 +147,7 @@ namespace Sriracha.Deploy.SelfDeploy
 		{
 			s.XmlPoke(configPath).Set("/configuration/connectionStrings/add[@name='Email']/@connectionString", settings.EmailConnectionString);
 			s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='SiteUrl']/@value", settings.SiteUrl);
+			s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='EncryptionKey']/@value", settings.EncryptionKey);
 			if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
 			{
 				s.XmlPoke(configPath)
@@ -170,6 +171,10 @@ namespace Sriracha.Deploy.SelfDeploy
 			if (string.IsNullOrEmpty(settings.SiteUrl))
 			{
 				throw new Exception("Missing SiteUrl");
+			}
+			if(string.IsNullOrEmpty(settings.EncryptionKey))
+			{
+				throw new Exception("Missing EncryptionKey");
 			}
 		}
 

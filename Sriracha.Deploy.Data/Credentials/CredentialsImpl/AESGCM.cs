@@ -132,6 +132,10 @@ namespace Encryption
 
 			var cipherText = Convert.FromBase64String(encryptedMessage);
 			var plaintext = SimpleDecryptWithPassword(cipherText, password, nonSecretPayloadLength);
+			if(plaintext == null || plaintext.Length == 0)
+			{
+				throw new ArgumentException("Password Decryption Failed");
+			}
 			return Encoding.UTF8.GetString(plaintext);
 		}
 

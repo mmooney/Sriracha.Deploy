@@ -13,6 +13,6 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployCredentials GetCredentials(string credentialsId);
 
 		DeployCredentials CreateCredentials(string domain, string userName, string encrytpedPassword);
-		DeployCredentials UpdateCredentials(string domain, string credentialsId, string userName, string encrytpedPassword);
+		DeployCredentials UpdateCredentials(string credentialsId, string domain, string userName, string encrytpedPassword);
 	}
 }
