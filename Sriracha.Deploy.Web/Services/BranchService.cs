@@ -49,7 +49,7 @@ namespace Sriracha.Deploy.Web.Services
 
 		public void Delete(DeployProjectBranch branch)
 		{
-			_projectManager.DeleteBranch(branch.Id);
+			_projectManager.DeleteBranch(branch.Id, branch.ProjectId);
 		}
 	}
 }

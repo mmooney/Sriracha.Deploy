@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Data.Project
 		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
 		DeployComponent GetComponent(string componentId);
 		DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId);
-		void DeleteComponent(string componentId);
+		void DeleteComponent(string projectId, string componentId);
 
 		List<DeployStep> GetComponentDeploymentStepList(string componentId);
 		List<DeployStep> GetConfigurationDeploymentStepList(string configurationId);
@@ -42,7 +42,7 @@ namespace Sriracha.Deploy.Data.Project
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		DeployProjectBranch GetBranch(string branchId);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
-		void DeleteBranch(string branchId);
+		void DeleteBranch(string branchId, string projectId);
 
 		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
 		DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);

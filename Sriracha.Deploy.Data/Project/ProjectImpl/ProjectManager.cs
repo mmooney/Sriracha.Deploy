@@ -78,7 +78,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId)
 		{
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponent(project, componentName, useConfigurationGroup, configurationId);
+			var returnValue = this._projectRepository.CreateComponent(projectId, componentName, useConfigurationGroup, configurationId);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				var someOtherComponent = project.ComponentList.FirstOrDefault(i=>i.Id != returnValue.Id);
@@ -86,7 +86,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				{
 					foreach(var deploymentStep in someOtherComponent.DeploymentStepList)
 					{
-						this._projectRepository.CreateComponentDeploymentStep(project, returnValue.Id, deploymentStep.StepName, deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson, deploymentStep.SharedDeploymentStepId);
+						this._projectRepository.CreateComponentDeploymentStep(project.Id, returnValue.Id, deploymentStep.StepName, deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson, deploymentStep.SharedDeploymentStepId);
 					}
 				}
 			}
@@ -98,9 +98,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.GetComponent(componentId);
 		}
 
-		public void DeleteComponent(string componentId)
+		public void DeleteComponent(string projectId, string componentId)
 		{
-			_projectRepository.DeleteComponent(componentId);
+			_projectRepository.DeleteComponent(projectId, componentId);
 		}
 
 		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
@@ -140,14 +140,14 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				throw new ArgumentNullException("Missing Task Options");
 			}
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponentDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			var returnValue = this._projectRepository.CreateComponentDeploymentStep(project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				foreach(var component in project.ComponentList)
 				{
 					if(component.Id != componentId)
 					{
-						this._projectRepository.CreateComponentDeploymentStep(project, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
+						this._projectRepository.CreateComponentDeploymentStep(project.Id, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
 					}
 				}
 			}
@@ -215,7 +215,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				throw new ArgumentNullException("Missing Task Options");
 			}
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson, null);
 			if(project.UsesSharedComponentConfiguration)
 			{ 
 				foreach(var component in project.ComponentList)
@@ -293,9 +293,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.UpdateBranch(branchId, projectId, branchName);
 		}
 
-		public void DeleteBranch(string branchId)
+		public void DeleteBranch(string branchId, string projectId)
 		{
-			this._projectRepository.DeleteBranch(branchId);
+			this._projectRepository.DeleteBranch(branchId, projectId);
 		}
 
 

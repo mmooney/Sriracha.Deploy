@@ -28,6 +28,9 @@ namespace Sriracha.Deploy.Server
 			[Option("workingDirectory")]
 			public string WorkingDirectory { get; set; }
 
+			[Option("thrashmode")]
+			public bool ThrashMode { get; set; }
+
 			[ParserState]
 			public IParserState LastParserState { get; set; }
 
@@ -88,7 +91,7 @@ namespace Sriracha.Deploy.Server
 				try 
 				{
 					var service = _diFactory.CreateInjectedObject<WinService>();
-					service.DebugStart();
+					service.DebugStart(options.ThrashMode);
 				}
 				catch(Exception err)
 				{

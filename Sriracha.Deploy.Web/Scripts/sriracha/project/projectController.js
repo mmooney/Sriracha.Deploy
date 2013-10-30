@@ -81,6 +81,7 @@
 		$scope.project.$save(
 			saveParams,
 			function (item) {
+				$scope.permissionVerifier.reload();
 				$scope.navigator.project.view.go(item.id);
 			},
 			function (error) {
@@ -88,6 +89,15 @@
 			}
 		);
 	};
+
+	$scope.canEditProject = function () {
+		if ($scope.projectId) {
+			permissionVerifier.canEditComponentConfiguration(project.id)
+		}
+		else {
+			return true;
+		}
+	}
 	//End Projects
 }]);
 

@@ -49,7 +49,7 @@ namespace Sriracha.Deploy.Web.Services
 
 		public void Delete(DeployComponent component)
 		{
-			_projectManager.DeleteComponent(component.Id);
+			_projectManager.DeleteComponent(component.ProjectId, component.Id);
 		}
 	}
 }

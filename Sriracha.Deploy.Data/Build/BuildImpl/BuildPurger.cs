@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			{
 				foreach(var rule in ruleList)
 				{
-					if(rule.MatchesRule(build, _diFactory))
+					if (rule.MatchesRule(build, _diFactory))
 					{
 						if(!rule.BuildRetentionMinutes.HasValue)
 						{
@@ -53,7 +53,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 					}
 				}
 			}
-			if(keepForever)
+			if (keepForever)
 			{
 				_logger.Trace("Per rules, keeping build {0} forever", build.DisplayValue);
 			}
@@ -63,7 +63,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			else 
 			{
-				DateTime cutoffDate = DateTime.UtcNow.AddMinutes(0-maxRetentionMinutes);
+				DateTime cutoffDate = DateTime.UtcNow.AddMinutes(0 - maxRetentionMinutes);
 				if(build.UpdatedDateTimeUtc < cutoffDate)
 				{
 					_logger.Info("Build \"{0}\" updated date {1} is less than cutoff date {2}, purging build", build.DisplayValue, build.UpdatedDateTimeUtc, cutoffDate);

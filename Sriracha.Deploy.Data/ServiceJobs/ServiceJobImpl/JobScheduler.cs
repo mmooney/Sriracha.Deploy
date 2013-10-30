@@ -22,15 +22,33 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			this._systemSettings = DIHelper.VerifyParameter(systemSettings);
 
 		}
-		public void StartJobs()
+		public void StartJobs(bool thrashMode=false)
 		{
-			this._logger.Info("Starting jobs");
+			if(thrashMode)
+			{
+				this._logger.Info("Starting jobs in thrash mode, running jobs every 10 seconds");
+				_systemSettings.EmailSenderPollingIntervalSeconds
+					= _systemSettings.RunDeploymentPollingIntervalSeconds
+					= _systemSettings.LogPurgeJobIntervalSeconds
+					= _systemSettings.BuildPurgeJobIntervalSeconds = 10;
+				_systemSettings.GCFlushJobIntervalSeconds = 60*60*25;
 
-			this.ScheduleJob("EmailSender", typeof(IEmailSenderJob), _systemSettings.EmailSenderPollingIntervalSeconds);
-			this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
-			this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
-			this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds);
-			this.ScheduleJob("GCFlushJob", typeof(IGCFlushJob), _systemSettings.GCFlushJobIntervalSeconds, 5*60);
+				//this.ScheduleJob("EmailSender", typeof(IEmailSenderJob), _systemSettings.EmailSenderPollingIntervalSeconds);
+				//this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
+				//this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
+				this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds);
+				//this.ScheduleJob("GCFlushJob", typeof(IGCFlushJob), _systemSettings.GCFlushJobIntervalSeconds, 5 * 60);
+			}
+			else 
+			{
+				this._logger.Info("Starting jobs");
+				this.ScheduleJob("EmailSender", typeof(IEmailSenderJob), _systemSettings.EmailSenderPollingIntervalSeconds);
+				this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
+				this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds);
+				this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds);
+				this.ScheduleJob("GCFlushJob", typeof(IGCFlushJob), _systemSettings.GCFlushJobIntervalSeconds, 5 * 60);
+			}
+
 
 			this._quartzScheduler.Start();
 

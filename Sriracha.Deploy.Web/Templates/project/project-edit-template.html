@@ -3,17 +3,17 @@
 <table class="table table-bordered">
 	<tr>
 		<th>Project Name:</th>
-		<td><input type="text" required ng-model="project.projectName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
+		<td><input type="text" required ng-model="project.projectName" ng-disabled="!canEditProject()" /></td>
 	</tr>
     <tr>
         <td colspan="2">    
             <label class="checkbox">
-				<input type="checkbox" ng-model="project.usesSharedComponentConfiguration" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+				<input type="checkbox" ng-model="project.usesSharedComponentConfiguration" ng-disabled="!canEditProject()" />
                 All components in this project use same deployment and environment configuration?
             </label>
         </td>
     </tr>
 </table>
-<button class="btn" ng-click="navigator.project.list.go()" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">Back</button>
-<button class="btn" ng-click="navigator.project.list.go()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Cancel</button>
-<button class="btn" ng-click="saveProject()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Save</button>
+<button class="btn" ng-click="navigator.project.list.go()" ng-hide="canEditProject()">Back</button>
+<button class="btn" ng-click="navigator.project.list.go()" ng-show="canEditProject()">Cancel</button>
+<button class="btn" ng-click="saveProject()" ng-show="canEditProject()">Save</button>
