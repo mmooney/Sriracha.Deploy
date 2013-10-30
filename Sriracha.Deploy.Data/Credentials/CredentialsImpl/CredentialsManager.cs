@@ -63,5 +63,16 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 		{
 			return _encrypterator.Decrypt(userName, encryptedPassword);
 		}
+
+
+		public DeployCredentials GetCredentials(string credentialsId)
+		{
+			return _credentialsRepository.GetCredentials(credentialsId);
+		}
+
+		public string DecryptPassword(DeployCredentials credentials)
+		{
+			return this.DecrypedPassword(credentials.UserName, credentials.EncryptedPassword);
+		}
 	}
 }

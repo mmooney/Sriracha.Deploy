@@ -10,6 +10,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
+using Sriracha.Deploy.Data.Credentials;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -20,6 +21,7 @@ namespace Sriracha.Deploy.Data.Tests
 			public Mock<IDeployTaskFactory> TaskFactory { get; set; }
 			public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
 			public TupleList<Mock<IDeployTaskDefinition>, Mock<IDeployTaskExecutor>, Type> TaskDefinitionExecutorList { get; set; }
+			public Mock<IImpersonator> Impersonator { get; set; }
 			public DeployComponent Component { get; set; }
 			public DeployEnvironmentConfiguration EnvironmentComponent { get; set; }
 			public DeployBuild Build { get; set; }
@@ -51,12 +53,14 @@ namespace Sriracha.Deploy.Data.Tests
 					StatusManager = new Mock<IDeployTaskStatusManager>(),
 					Component = fixture.Create<DeployComponent>(),
 					EnvironmentComponent = fixture.Create<DeployEnvironmentConfiguration>(),
+					Impersonator = new Mock<IImpersonator>(),
 					Build = fixture.Create<DeployBuild>(),
 					RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 					TaskDefinitionExecutorList = new TupleList<Mock<IDeployTaskDefinition>,Mock<IDeployTaskExecutor>,Type>(),
 					DeployStateId = fixture.Create<string>()
 				};
-				returnValue.Sut = new DeployComponentRunner(returnValue.TaskFactory.Object);
+				returnValue.EnvironmentComponent.DeployCredentialsId = null;
+				returnValue.Sut = new DeployComponentRunner(returnValue.TaskFactory.Object, returnValue.Impersonator.Object);
 
 				for (int index = 0; index < taskCount; index++)
 				{

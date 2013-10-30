@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Dto.Credentials
 		public string Id { get; set; }
 		public string Domain { get; set; }
 		public string UserName { get; set; }
+
 		public string DisplayValue
 		{
 			get 

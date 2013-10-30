@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
 
 namespace Sriracha.Deploy.Data.Deployment
 {
@@ -22,5 +23,7 @@ namespace Sriracha.Deploy.Data.Deployment
 		void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err);
 		void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage);
 		void MarkBatchDeploymentResumed(string deployBatchRequestId, string resumeMessage);
+
+		//Impersonatator BeginImpersonation(string deployStateId, string projectId, string environmentId);
 	}
 }

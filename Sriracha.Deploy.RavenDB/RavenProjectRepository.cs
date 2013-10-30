@@ -242,7 +242,7 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			var project = GetProject(projectId);
 			var item = project.ConfigurationList.Single(i=>i.Id == configurationId);
-			item.ConfigurationName = configurationName;;
+			item.ConfigurationName = configurationName;
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveChanges();
@@ -910,7 +910,7 @@ namespace Sriracha.Deploy.RavenDB
 			return project.EnvironmentList;
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -932,7 +932,6 @@ namespace Sriracha.Deploy.RavenDB
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
-				DeployCredentialsId = deploymentCredentialsUserName
 			};
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
@@ -991,7 +990,7 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -1018,7 +1017,6 @@ namespace Sriracha.Deploy.RavenDB
 			environment.ConfigurationList = configurationList.ToList();
 			environment.UpdatedByUserName = _userIdentity.UserName;
 			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
-			environment.DeployCredentialsId = deploymentCredentialsUserName;
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
 			this._documentSession.SaveChanges();

@@ -17,5 +17,27 @@ namespace Sriracha.Deploy.Data.Dto.Credentials
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
 
+		public string DisplayValue
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(this.Domain) && string.IsNullOrEmpty(this.UserName))
+				{
+					return null;
+				}
+				else if (string.IsNullOrEmpty(this.Domain) && !string.IsNullOrEmpty(this.UserName))
+				{
+					return this.UserName;
+				}
+				else if (!string.IsNullOrEmpty(this.Domain) && string.IsNullOrEmpty(this.UserName))
+				{
+					return this.Domain + "\\?";
+				}
+				else
+				{
+					return this.Domain + "\\" + this.UserName;
+				}
+			}
+		}
 	}
 }

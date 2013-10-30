@@ -39,7 +39,6 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				try
 				{
-					bool isResume = false;
 					this._logger.Info("Found pending deployment: " + nextDeploymentBatch.Id);
 
 					if(nextDeploymentBatch.CancelRequested)
@@ -50,7 +49,6 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					else if (nextDeploymentBatch.ResumeRequested)
 					{
 						_deployStateManager.MarkBatchDeploymentResumed(nextDeploymentBatch.Id, nextDeploymentBatch.ResumeMessage);
-						isResume = true;
 					}
 					List<string> environmentIds = nextDeploymentBatch.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.EnvironmentId)).ToList();
 					var existingDeployments = _deployQueueManager

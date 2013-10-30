@@ -13,6 +13,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public string EnvironmentId { get; set; }
 		public string ParentId { get; set; }
 		public EnumDeployStepParentType ParentType { get; set; }
+		public string DeployCredentialsId { get; set; }
 		public List<DeployMachine> MachineList { get; set; }
 		public Dictionary<string, string> ConfigurationValueList { get; set; }
 

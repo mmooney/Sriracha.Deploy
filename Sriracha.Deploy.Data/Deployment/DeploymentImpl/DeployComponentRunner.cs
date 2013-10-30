@@ -5,16 +5,19 @@ using System.Text;
 using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Credentials;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
 	public class DeployComponentRunner : IDeployComponentRunner
 	{
 		private readonly IDeployTaskFactory _deployTaskFactory;
+		private readonly IImpersonator _impersonator;
 		
-		public DeployComponentRunner(IDeployTaskFactory deployTaskFactory)
+		public DeployComponentRunner(IDeployTaskFactory deployTaskFactory, IImpersonator impersonator)
 		{
-			this._deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
+			_deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
+			_impersonator = DIHelper.VerifyParameter(impersonator);
 		}
 
 		public void Run(string deployStateId, IDeployTaskStatusManager statusManager, List<IDeployTaskDefinition> taskDefinitionList, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
@@ -24,8 +27,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				stepCounter++;
 				statusManager.Info(deployStateId, string.Format("Step {0}: Starting {1}", stepCounter, taskDefinition.TaskDefintionName));
-				var executor = _deployTaskFactory.CreateTaskExecutor(taskDefinition.GetTaskExecutorType());
-				var result = executor.Execute(deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, build, runtimeSystemSettings);
+				DeployTaskExecutionResult result;
+				using (var impersontator = BeginImpersonation(deployStateId, statusManager, environmentComponent))
+				{
+					result = executor.Execute(deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, build, runtimeSystemSettings);
+				}
 				switch(result.Status)
 				{
 					case EnumDeployTaskExecutionResultStatus.Success:
@@ -41,6 +47,21 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					default:
 						throw new UnknownEnumValueException(result.Status);
 				}
+			}
+		}
+
+		private ImpersonationContext BeginImpersonation(string deployStateId, IDeployTaskStatusManager statusManager, DeployEnvironmentConfiguration environmentComponent)
+		{
+			if(!string.IsNullOrEmpty(environmentComponent.DeployCredentialsId))
+			{
+				var context = _impersonator.BeginImpersonation(environmentComponent.DeployCredentialsId);
+				statusManager.Info(deployStateId, "Starting impersonation of " + context.Credentials.DisplayValue);
+				return context;
+			}
+			else 
+			{
+				statusManager.Info(deployStateId, "No impersonation");
+				return null;
 			}
 		}
 	}

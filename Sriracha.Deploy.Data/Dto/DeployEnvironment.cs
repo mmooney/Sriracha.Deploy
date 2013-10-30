@@ -17,7 +17,6 @@ namespace Sriracha.Deploy.Data.Dto
 		public string UpdatedByUserName { get; set; }
 		public List<DeployEnvironmentConfiguration> ComponentList { get; set; }
 		public List<DeployEnvironmentConfiguration> ConfigurationList { get; set; }
-		public string DeployCredentialsId { get; set; }
 
 		public DeployEnvironment()
 		{
