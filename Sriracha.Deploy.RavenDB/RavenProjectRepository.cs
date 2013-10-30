@@ -910,7 +910,7 @@ namespace Sriracha.Deploy.RavenDB
 			return project.EnvironmentList;
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -931,7 +931,8 @@ namespace Sriracha.Deploy.RavenDB
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
-				UpdatedByUserName = _userIdentity.UserName
+				UpdatedByUserName = _userIdentity.UserName,
+				DeploymentCredentialsUserName = deploymentCredentialsUserName
 			};
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
@@ -990,7 +991,7 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -1017,6 +1018,7 @@ namespace Sriracha.Deploy.RavenDB
 			environment.ConfigurationList = configurationList.ToList();
 			environment.UpdatedByUserName = _userIdentity.UserName;
 			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
+			environment.DeploymentCredentialsUserName = deploymentCredentialsUserName;
 			UpdateComponentList(componentList, project, environment);
 			UpdateComponentList(configurationList, project, environment);
 			this._documentSession.SaveChanges();

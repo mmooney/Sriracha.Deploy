@@ -272,7 +272,7 @@
 				edit: {
 					url: "/systemSettings/credentials/edit/:credentialsId",
 					clientUrl: function (credentialsId) { return root.getUrl(this.url, { credentialsId: credentialsId }) },
-					go: function (credentialsId) { root.goTo(this.url, { credentialsId: credentialsId });}
+					go: function (credentialsId) { root.goTo(this.url, { credentialsId: credentialsId }); }
 				}
 			}
 		};

@@ -75,6 +75,12 @@
 				<div ng-hide="component.configurationId" class="alert">Warning: this component is marked to use a configuration group, but no configuration is selected</div>
 			</div>
 			<div ng-hide="component.useConfigurationGroup">
+				<strong>Run As:</strong>
+				<div>
+					<select ng-model="environment.deploymentCredentialsUserName" ng-options="item.userName as item.userName for item in credentials.items">
+						<option value="">[User Account Of Deployment Service]</option>
+					</select>
+				</div>
 				<strong>Environment Values</strong>
 				<table class="table table-striped table-bordered ">
 					<thead>

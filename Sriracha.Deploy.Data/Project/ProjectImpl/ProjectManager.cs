@@ -304,9 +304,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.GetEnvironmentList(projectId);
 		}
 
-		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
+		public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
 		{
-			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList, configurationList);
+			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList, configurationList, deploymentCredentialsUserName);
 		}
 
 		public DeployEnvironment GetEnvironment(string environmentId)
@@ -314,9 +314,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.GetEnvironment(environmentId);
 		}
 
-		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
+		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList, string deploymentCredentialsUserName)
 		{
-			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList, configurationList);
+			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList, configurationList, deploymentCredentialsUserName);
 		}
 
 		public void DeleteEnvironment(string environmentId)
@@ -367,7 +367,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				component.ConfigurationValueList = new Dictionary<string, string>();
 			}
 			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
+			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList, environment.DeploymentCredentialsUserName);
 		}
 
 

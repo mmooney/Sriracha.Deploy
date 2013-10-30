@@ -5,7 +5,6 @@
 		$scope.navigator = SrirachaNavigator;
 		$scope.permissionVerifier = PermissionVerifier;
 		$scope.editForm = {};
-		console.log(SrirachaResource)
 		if ($routeParams.credentialsId) {
 			$scope.credentialsItem = SrirachaResource.credentials.get(
 				{id: $routeParams.credentialsId},
@@ -21,7 +20,7 @@
 			$scope.credentialsList = SrirachaResource.credentials.get(
 				{},
 				function (data) {
-					console.log(data);
+					//console.log(data);
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);
@@ -58,14 +57,14 @@
 				if ($routeParams.credentialsId) {
 					saveParams.id = $routeParams.credentialsId;
 				}
-				item.$save(saveParams,
+				var result = item.$save(saveParams,
 					function (data) {
-						console.log(data);
 						if ($routeParams.credentialsId) {
 							$scope.navigator.systemSettings.credentials.list.go();
 						}
 						else {
-							$scope.navigator.systemSettings.credentials.edit.go({ credentialsId: data.id });
+							$scope.navigator.systemSettings.credentials.list.go();
+							//$scope.navigator.systemSettings.credentials.edit.go(data.id);
 						}
 					},
 					function (err) {

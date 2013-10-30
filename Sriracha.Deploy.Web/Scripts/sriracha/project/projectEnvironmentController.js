@@ -23,6 +23,15 @@
 			$scope.environment = new SrirachaResource.environment({ projectId: $routeParams.projectId });
 		}
 	});
+	$scope.credentials = SrirachaResource.credentials.get(
+		{pageSize:1000},
+		function (data) {
+			console.log(data);
+		},
+		function (err) {
+			ErrorReporter.handleResourceError(err);
+		}
+	)
 
 	$scope.isEditable = function () {
 		if ($routeParams.environmentId) {
