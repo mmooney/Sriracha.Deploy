@@ -164,7 +164,7 @@
 					projectComponentId: item.build.projectComponentId,
 					sortField: "UpdatedDateTimeUtc",
 					sortAscending: false,
-					pageSize: 10
+					pageSize: 1000
 				};
 				var buildList = SrirachaResource.build.get(queryParameters,
 					function (data) {
