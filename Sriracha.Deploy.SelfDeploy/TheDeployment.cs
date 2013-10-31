@@ -132,13 +132,14 @@ namespace Sriracha.Deploy.SelfDeploy
 											}
 										}
 									});
-				DeploymentStepsFor(CommandLine,
+					DeploymentStepsFor(CommandLine,
 									s =>
 									{
 										this.ValidateSettings(settings);
-									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").ClearDestinationBeforeDeploying();
+										s.CreateEmptyFolder(@"{{TargetCommandLinePath}}");
+										s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").ClearDestinationBeforeDeploying();
 
-									   this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
+										this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
 								   });
 			});
 		}
