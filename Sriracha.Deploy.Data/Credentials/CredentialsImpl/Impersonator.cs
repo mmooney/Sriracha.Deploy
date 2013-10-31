@@ -99,7 +99,10 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 			//var ok = LogonUser(username, domain, password,
 			//			   LOGON32_LOGON_NEW_CREDENTIALS, 0, out this._handle);
 			ImpersonationContext.SafeTokenHandle handle;
-			var ok = LogonUser(credentials.UserName, credentials.Domain, password,(int)EnumLogonType.LOGON32_LOGON_BATCH, (int)EnumLogonProvider.LOGON32_PROVIDER_DEFAULT, out handle);
+			var loginType = EnumLogonType.LOGON32_LOGON_INTERACTIVE;
+			//loginType = EnumLogonType.LOGON32_LOGON_BATCH;
+			loginType = EnumLogonType.LOGON32_LOGON_NEW_CREDENTIALS;
+			var ok = LogonUser(credentials.UserName, credentials.Domain, password, (int)loginType, (int)EnumLogonProvider.LOGON32_PROVIDER_DEFAULT, out handle);
 			if (!ok)
             {
                 var errorCode = Marshal.GetLastWin32Error();

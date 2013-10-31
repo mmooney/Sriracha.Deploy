@@ -10,6 +10,7 @@ using Sriracha.Deploy.Data.Tasks.LocalCommandLine;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Utility;
+using Sriracha.Deploy.Data.Credentials;
 
 namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 {
@@ -21,6 +22,8 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public Mock<IProcessRunner> ProcessRunner { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
 		public Mock<IDeploymentValidator> Validator { get; set; }
+		public Mock<ICredentialsManager> CredentialsManager { get; set; }
+		public Mock<IImpersonator> Impersonator { get; set; }
 		public Mock<IBuildParameterEvaluator> BuildParameterEvaluator { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public List<string> MachineParameters { get; set; }
@@ -42,6 +45,8 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
 				RuntimeSystemSettings = new RuntimeSystemSettings(),
 				ProcessRunner = new Mock<IProcessRunner>(),
+				CredentialsManager = new Mock<ICredentialsManager>(),
+				Impersonator = new Mock<IImpersonator>(),
 				Validator = new Mock<IDeploymentValidator>(),
 				BuildParameterEvaluator = new Mock<IBuildParameterEvaluator>(),
 				Component = new DeployComponent
@@ -70,7 +75,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				},
 				Build = new DeployBuild()
 			};
-			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object, returnValue.Validator.Object, returnValue.BuildParameterEvaluator.Object);
+			returnValue.TaskExecutor = new LocalCommandLineTaskExecutor(returnValue.ProcessRunner.Object, returnValue.Validator.Object, returnValue.BuildParameterEvaluator.Object, returnValue.CredentialsManager.Object, returnValue.Impersonator.Object);
 			returnValue.TaskDefinition = new LocalCommandLineTaskDefinition(returnValue.ParameterParser.Object)
 			{
 				Options = new LocalCommandLineTaskOptions

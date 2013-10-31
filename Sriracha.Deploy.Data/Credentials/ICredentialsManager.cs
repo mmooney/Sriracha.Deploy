@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security;
 
 namespace Sriracha.Deploy.Data.Credentials
 {
@@ -17,5 +18,6 @@ namespace Sriracha.Deploy.Data.Credentials
 		DeployCredentialsMasked UpdateCredentials(string credentialsId, string domain, string userName, string password);
 
 		string DecryptPassword(DeployCredentials credentials);
+		SecureString DecryptPasswordSecure(DeployCredentials credentials);
 	}
 }

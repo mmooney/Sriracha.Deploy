@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 												.Replace("${machine:MachineParameter2}", machine.ConfigurationValueList["MachineParameter2"])
 												.Replace("${env:EnvironmentParameter1}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter1"])
 												.Replace("${env:EnvironmentParameter2}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter2"]);
-				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>()), Times.Once());
+				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>(), null, null, null), Times.Once());
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 												.Replace("${machine:MachineParameter2}", machine.ConfigurationValueList["MachineParameter2"])
 												.Replace("${env:sensitive:EnvironmentParameter1}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter1"])
 												.Replace("${env:EnvironmentParameter2}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter2"]);
-				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>()), Times.Once());
+				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>(), null, null, null), Times.Once());
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 												.Replace("${machine:MachineParameter2}", machine.ConfigurationValueList["MachineParameter2"])
 												.Replace("${env:EnvironmentParameter1}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter1"])
 												.Replace("${env:EnvironmentParameter2}", testData.EnvironmentComponent.ConfigurationValueList["EnvironmentParameter2"]);
-				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>()), Times.Once());
+				testData.ProcessRunner.Verify(i => i.Run(testData.TaskDefinition.Options.ExecutablePath, expectedParameters, It.IsAny<TextWriter>(), It.IsAny<TextWriter>(), null, null, null), Times.Once());
 			}
 		}
 	}

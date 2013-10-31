@@ -28,11 +28,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				stepCounter++;
 				statusManager.Info(deployStateId, string.Format("Step {0}: Starting {1}", stepCounter, taskDefinition.TaskDefintionName));
 				DeployTaskExecutionResult result;
-				using (var impersontator = BeginImpersonation(deployStateId, statusManager, environmentComponent))
-				{
+				//using (var impersontator = BeginImpersonation(deployStateId, statusManager, environmentComponent))
+				//{
 					var executor = _deployTaskFactory.CreateTaskExecutor(taskDefinition.GetTaskExecutorType());
 					result = executor.Execute(deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, build, runtimeSystemSettings);
-				}
+				//}
 				switch(result.Status)
 				{
 					case EnumDeployTaskExecutionResultStatus.Success:
