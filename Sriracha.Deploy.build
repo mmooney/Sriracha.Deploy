@@ -50,7 +50,7 @@
 		</copy>
 	</target>
 	<target name="DeploySolution">
-		<exec program=".\packages\dropkick.core.0.4.13.0\tools\dropkick\dk.exe" verbose="true">
+		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
 			<arg value="/deployment:${BuildDirectory}\Sriracha.Deploy.SelfDeploy\bin\Release\Sriracha.Deploy.SelfDeploy.dll"/>
 			<arg value="/environment:${deployEnvironment}"/>
