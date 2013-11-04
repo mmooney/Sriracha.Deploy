@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dropkick">
-      <HintPath>..\packages\dropkick.core.0.4.13.0\lib\dropkick.dll</HintPath>
+    <Reference Include="dropkick, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdParty\dropkick-trunk\dropkick.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -59,8 +60,22 @@
   <ItemGroup>
     <Content Include="settings\LOCAL.js" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMDB.DropkicK.Extensions\MMDB.DropkicK.Extensions.csproj">
+      <Project>{0dc7095e-0da3-41a3-9a5c-1e91aaecd90f}</Project>
+      <Name>MMDB.DropkicK.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)DeployTest /i /y
+xcopy $(SolutionDir)ThirdParty\dropkick-trunk\*.* $(SolutionDir)DeployTest /i /y /s</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

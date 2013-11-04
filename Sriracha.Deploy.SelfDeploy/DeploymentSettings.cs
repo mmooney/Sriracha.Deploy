@@ -29,6 +29,10 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string SiteUrl { get; set; }
 		public string EncryptionKey { get; set; }
 
+        //Target Machine Authentication
+        public string TargetMachineUserName { get; set; }
+        public string TargetMachinePassword { get; set; }
+
 		//Web
 		public string SourceWebsitePath { get; set; }
 		public string TargetWebsitePath{ get; set; }
