@@ -25,7 +25,9 @@ using dropkick.Configuration.Dsl.RoundhousE;
 using dropkick.Configuration.Dsl.Security;
 using dropkick.Configuration.Dsl.WinService;
 using dropkick.Configuration.Dsl.Xml;
+using dropkick.Configuration.Dsl.Notes;
 using dropkick.Wmi;
+using MMDB.Shared;
 //using MMDB.DropkicK.Extensions.Configuration.Dsl.Files;
 
 namespace Sriracha.Deploy.SelfDeploy
@@ -104,6 +106,15 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
+                                        s.Note("TargetMachineUserName: {0}", StringHelper.IsNullOrEmpty(settings.TargetMachineUserName, "(None)"));
+                                        if(!string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.Note("TargetMachinePassword: Exists");
+                                        }
+                                        else
+                                        {
+                                            s.Note("TargetMachinePassword: Does not exists");
+                                        }
 										var serviceName = settings.ServiceName;
                                         var serviceOptions = s.WinService(serviceName);
 
