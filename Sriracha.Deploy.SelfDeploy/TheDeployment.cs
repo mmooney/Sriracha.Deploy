@@ -1,4 +1,3 @@
-using System;
 //ReSharper disable ConvertToLambdaExpression
 // ==============================================================================
 // 
@@ -17,6 +16,7 @@ using System;
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 // ==============================================================================
+using System;
 using System.IO;
 using dropkick.Configuration.Dsl;
 using dropkick.Configuration.Dsl.Files;
@@ -27,8 +27,6 @@ using dropkick.Configuration.Dsl.WinService;
 using dropkick.Configuration.Dsl.Xml;
 using dropkick.Configuration.Dsl.Notes;
 using dropkick.Wmi;
-using MMDB.Shared;
-//using MMDB.DropkicK.Extensions.Configuration.Dsl.Files;
 
 namespace Sriracha.Deploy.SelfDeploy
 {
@@ -106,7 +104,14 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
-                                        s.Note("TargetMachineUserName: {0}", StringHelper.IsNullOrEmpty(settings.TargetMachineUserName, "(None)"));
+                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName))
+                                        {
+                                            s.Note("TargetMachineUserName: {0}", settings.TargetMachineUserName, "(None)");
+                                        }
+                                        else 
+                                        {
+                                            s.Note("TargetMachineUserName: (None)");
+                                        }
                                         if(!string.IsNullOrEmpty(settings.TargetMachinePassword))
                                         {
                                             s.Note("TargetMachinePassword: Exists");
