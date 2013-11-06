@@ -15,7 +15,7 @@
     </label>
 <h4>Isolation</h4>
     <label class="radio">
-        <input type="radio" ng-model="component.isolationType" value="IsolatedPerServer" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+        <input type="radio" ng-model="component.isolationType" value="IsolatedPerMachine" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
         Isolate this component so it is the only thing being deployed against the server at a given time
     </label>
     <label class="radio">

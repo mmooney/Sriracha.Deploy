@@ -194,13 +194,13 @@ namespace Sriracha.Deploy.RavenDB
 			return project.ConfigurationList;
 		}
 
-		public DeployConfiguration GetConfiguration(string configurationId)
+		public DeployConfiguration GetConfiguration(string configurationId, string projectId = null)
 		{
 			if(string.IsNullOrEmpty(configurationId))
 			{
 				throw new ArgumentNullException("Missing Configuration ID");
-			}
-			var item = this.TryGetConfiguration(configurationId);
+		    }	
+			var item = this.TryGetConfiguration(configurationId, projectId);
 			if(item == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
@@ -256,12 +256,20 @@ namespace Sriracha.Deploy.RavenDB
 			_documentSession.SaveEvict(project);
 		}
 
-		public DeployConfiguration TryGetConfiguration(string configurationId)
+		public DeployConfiguration TryGetConfiguration(string configurationId, string projectId=null)
 		{
-			var project = _documentSession.QueryNoCache<DeployProject>()
-								.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
-								.ToList()
-								.FirstOrDefault(i=>i.ConfigurationList.Any(j=>j.Id == configurationId));
+            DeployProject project;
+            if(!string.IsNullOrEmpty(projectId))
+            {
+                project = _documentSession.LoadNoCache<DeployProject>(projectId);
+            }
+            else 
+            {
+			    project = _documentSession.QueryNoCache<DeployProject>()
+								    .Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
+								    .ToList()
+								    .FirstOrDefault(i=>i.ConfigurationList.Any(j=>j.Id == configurationId));
+            }
 			if(project == null)
 			{
 				return null;
@@ -412,7 +420,7 @@ namespace Sriracha.Deploy.RavenDB
 							}
 							else 
 							{
-                                component = CreateComponent(projectId, componentName, false, null, EnumDeploymentIsolationType.IsolatedPerServer);
+                                component = CreateComponent(projectId, componentName, false, null, EnumDeploymentIsolationType.IsolatedPerMachine);
 								transaction.Complete();
 								itemId = component.Id;
 							}

@@ -113,7 +113,10 @@
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
-    <Compile Include="Dto\Deployment\DeploymentPlan.cs" />
+    <Compile Include="Dto\Deployment\Plan\DeploymentPlan.cs" />
+    <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueue.cs" />
+    <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueueItem.cs" />
+    <Compile Include="Dto\Deployment\Plan\DeploymentPlanParallelBatch.cs" />
     <Compile Include="Dto\Project\ComponentConfigurationDefinition.cs" />
     <Compile Include="Dto\Credentials\DeployCredentials.cs" />
     <Compile Include="Dto\Credentials\DeployCredentialsMasked.cs" />

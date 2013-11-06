@@ -21,8 +21,8 @@ namespace Sriracha.Deploy.Data.Repository
 
 		List<DeployConfiguration> GetConfigurationList(string projectId);
         DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
-		DeployConfiguration GetConfiguration(string configurationId);
-		DeployConfiguration TryGetConfiguration(string configurationId);
+        DeployConfiguration GetConfiguration(string configurationId, string projectId = null);
+        DeployConfiguration TryGetConfiguration(string configurationId, string projectId = null);
         DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		void DeleteConfiguration(string configurationId);
 		

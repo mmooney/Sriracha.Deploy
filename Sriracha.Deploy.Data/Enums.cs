@@ -47,7 +47,7 @@ namespace Sriracha.Deploy.Data
 
     public enum EnumDeploymentIsolationType
     {
-        IsolatedPerServer,
+        IsolatedPerMachine,
         IsolatedPerDeployment,
         NoIsolation
     }

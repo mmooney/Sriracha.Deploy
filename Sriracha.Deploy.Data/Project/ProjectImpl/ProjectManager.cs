@@ -397,5 +397,20 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		{
 			_projectRepository.DeleteConfiguration(configurationId);
 		}
-	}
+
+
+        public EnumDeploymentIsolationType GetComponentIsolationType(string projectId, string componentId)
+        {
+            var component = _projectRepository.GetComponent(projectId, componentId);
+            if(component.UseConfigurationGroup && !string.IsNullOrEmpty(component.ConfigurationId))
+            {
+                var configuration = _projectRepository.GetConfiguration(projectId, component.ConfigurationId);
+                return configuration.IsolationType;
+            }
+            else 
+            {
+                return component.IsolationType;
+            }
+        }
+    }
 }
