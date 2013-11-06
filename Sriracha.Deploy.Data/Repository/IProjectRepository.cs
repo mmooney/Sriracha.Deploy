@@ -20,14 +20,14 @@ namespace Sriracha.Deploy.Data.Repository
 		void DeleteProject(string projectId);
 
 		List<DeployConfiguration> GetConfigurationList(string projectId);
-		DeployConfiguration CreateConfiguration(string projectId, string configurationName);
+        DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		DeployConfiguration GetConfiguration(string configurationId);
 		DeployConfiguration TryGetConfiguration(string configurationId);
-		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName);
+        DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		void DeleteConfiguration(string configurationId);
 		
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
-		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
+        DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		DeployComponent GetComponent(string componentId, string projectId=null);
 		DeployComponent TryGetComponent(string componentId, string projectId = null);
 		DeployComponent GetComponent(DeployProject project, string componentId);
@@ -35,7 +35,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployComponent GetComponentByName(DeployProject project, string componentName);
 		DeployComponent TryGetComponentByName(DeployProject project, string componentName);
 		DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName);
-		DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId);
+        DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		void DeleteComponent(string projectId, string componentId);
 
 		List<DeployStep> GetComponentDeploymentStepList(string componentId);

@@ -16,15 +16,15 @@ namespace Sriracha.Deploy.Data.Project
 		void DeleteProject(string projectId);
 
 		List<DeployConfiguration> GetConfigurationList(string projectId);
-		DeployConfiguration CreateConfiguration(string projectId, string configurationName);
+        DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		DeployConfiguration GetConfiguration(string configurationId);
-		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName);
+		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		void DeleteConfiguration(string configurationId);
 
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
-		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
+        DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		DeployComponent GetComponent(string componentId);
-		DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId);
+        DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		void DeleteComponent(string projectId, string componentId);
 
 		List<DeployStep> GetComponentDeploymentStepList(string componentId);

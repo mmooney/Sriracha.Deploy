@@ -76,10 +76,10 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.GetComponentList(projectId);
 		}
 
-		public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponent(projectId, componentName, useConfigurationGroup, configurationId);
+			var returnValue = this._projectRepository.CreateComponent(projectId, componentName, useConfigurationGroup, configurationId, isolationType);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				var someOtherComponent = project.ComponentList.FirstOrDefault(i=>i.Id != returnValue.Id);
@@ -104,9 +104,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			_projectRepository.DeleteComponent(projectId, componentId);
 		}
 
-		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
-			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId);
+			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId, isolationType);
 		}
 
 		public List<DeployStep> GetComponentDeploymentStepList(string componentId)
@@ -383,14 +383,14 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		}
 
 
-		public DeployConfiguration CreateConfiguration(string projectId, string configurationName)
+        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
-			return _projectRepository.CreateConfiguration(projectId, configurationName);
+			return _projectRepository.CreateConfiguration(projectId, configurationName, isolationType);
 		}
 
-		public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName)
+        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
-			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName);
+			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName, isolationType);
 		}
 
 		public void DeleteConfiguration(string configurationId)

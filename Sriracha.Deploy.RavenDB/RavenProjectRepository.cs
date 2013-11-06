@@ -208,7 +208,7 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployConfiguration CreateConfiguration(string projectId, string configurationName)
+        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			var item = new DeployConfiguration
@@ -216,6 +216,7 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = project.Id,
 				ConfigurationName = configurationName,
+                IsolationType = isolationType,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
@@ -226,11 +227,12 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName)
+        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			var item = project.ConfigurationList.Single(i=>i.Id == configurationId);
 			item.ConfigurationName = configurationName;
+            item.IsolationType = isolationType;
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveEvict(project);
@@ -276,7 +278,7 @@ namespace Sriracha.Deploy.RavenDB
 			return project.ComponentList;
 		}
 
-		public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			var item = new DeployComponent
@@ -286,6 +288,7 @@ namespace Sriracha.Deploy.RavenDB
 				ComponentName = componentName,
 				UseConfigurationGroup = useConfigurationGroup,
 				ConfigurationId = configurationId,
+                IsolationType = isolationType,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
@@ -409,7 +412,7 @@ namespace Sriracha.Deploy.RavenDB
 							}
 							else 
 							{
-								component = CreateComponent(projectId, componentName, false, null);
+                                component = CreateComponent(projectId, componentName, false, null, EnumDeploymentIsolationType.IsolatedPerServer);
 								transaction.Complete();
 								itemId = component.Id;
 							}
@@ -432,13 +435,14 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			var item = project.ComponentList.Single(i=>i.Id == componentId);
 			item.ComponentName = componentName;
 			item.UseConfigurationGroup = useConfigurationGroup;
 			item.ConfigurationId = configurationId;
+            item.IsolationType = isolationType;
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			this._documentSession.SaveEvict(project);
