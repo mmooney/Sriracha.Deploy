@@ -17,7 +17,14 @@
 				<include name="*.exe"/>
 			</fileset>
 		</copy>
-		<copy todir=".\Publish\CommandLine">
+    <copy todir=".\Publish\SelfDeploy">
+      <fileset basedir=".\Sriracha.Deploy.SelfDeploy\bin\Release">
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\CommandLine">
 			<fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
 				<include name="*.config"/>
 				<include name="*.dll"/>
