@@ -5,6 +5,8 @@ using System.Text;
 using PagedList;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Repository
 {

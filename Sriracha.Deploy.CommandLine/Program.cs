@@ -15,6 +15,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.CommandLine
 {

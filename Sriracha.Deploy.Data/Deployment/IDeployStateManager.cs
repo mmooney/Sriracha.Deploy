@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Data.Deployment
 {

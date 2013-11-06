@@ -1,6 +1,7 @@
 ﻿using ServiceStack.ServiceHost;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Deployment;
 using System;
 using System.Collections.Generic;
 using System.Linq;

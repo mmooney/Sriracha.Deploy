@@ -1,5 +1,8 @@
 ﻿using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +12,7 @@ namespace Sriracha.Deploy.Data.Notifications
 {
 	public class FakeProjectNofifier : IProjectNotifier
 	{
-		public void SendBuildPublishedNotification(DeployProject project, Dto.DeployBuild build)
+		public void SendBuildPublishedNotification(DeployProject project, DeployBuild build)
 		{
 		}
 

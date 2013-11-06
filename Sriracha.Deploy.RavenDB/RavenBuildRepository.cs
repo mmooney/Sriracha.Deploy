@@ -11,6 +11,7 @@ using Sriracha.Deploy.Data.Repository;
 using MMDB.Shared;
 using PagedList;
 using Raven.Client.Linq;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.RavenDB
 {

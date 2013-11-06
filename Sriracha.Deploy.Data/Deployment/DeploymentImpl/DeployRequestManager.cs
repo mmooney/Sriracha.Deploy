@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {

@@ -1,5 +1,6 @@
 ﻿using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using System;
 using System.Collections.Generic;

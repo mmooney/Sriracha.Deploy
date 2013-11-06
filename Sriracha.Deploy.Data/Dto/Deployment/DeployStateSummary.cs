@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Build;
 
-namespace Sriracha.Deploy.Data.Dto
+namespace Sriracha.Deploy.Data.Dto.Deployment
 {
 	public class DeployStateSummary
 	{
