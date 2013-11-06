@@ -59,7 +59,7 @@
 	<target name="DeploySolution">
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
-			<arg value="/deployment:${BuildDirectory}\Sriracha.Deploy.SelfDeploy\bin\Release\Sriracha.Deploy.SelfDeploy.dll"/>
+			<arg value="/deployment:.\Publish\SelfDeploy\Sriracha.Deploy.SelfDeploy.dll"/>
 			<arg value="/environment:${deployEnvironment}"/>
 			<arg value="/settings:${deploySettingsDirectory}"/>
 			<arg value="--silent"/>
