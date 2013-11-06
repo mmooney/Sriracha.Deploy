@@ -44,4 +44,11 @@ namespace Sriracha.Deploy.Data
 		[EnumDisplayValue("Cancelled")]
 		Cancelled
 	}
+
+    public enum EnumDeploymentIsolationType
+    {
+        IsolatedPerServer,
+        IsolatedPerDeployment,
+        NoIsolation
+    }
 }

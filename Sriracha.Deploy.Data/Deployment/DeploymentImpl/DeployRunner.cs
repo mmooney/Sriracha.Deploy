@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Build;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {

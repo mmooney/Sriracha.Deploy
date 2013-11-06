@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Web.Services
 {

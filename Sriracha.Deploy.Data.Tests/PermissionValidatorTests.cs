@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Project.Roles;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Project;

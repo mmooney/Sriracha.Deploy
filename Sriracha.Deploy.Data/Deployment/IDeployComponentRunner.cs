@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Deployment
 {

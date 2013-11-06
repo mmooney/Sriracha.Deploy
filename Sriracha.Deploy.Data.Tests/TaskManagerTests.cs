@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -30,7 +31,7 @@ namespace Sriracha.Deploy.Data.Tests
 					throw new NotImplementedException();
 				}
 
-				public void Execute(Dto.DeployEnvironmentConfiguration deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
+				public void Execute(DeployEnvironmentConfiguration deployEnvironmentComponent, RuntimeSystemSettings runtimeSystemSettings)
 				{
 					throw new NotImplementedException();
 				}

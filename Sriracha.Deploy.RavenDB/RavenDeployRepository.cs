@@ -12,6 +12,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Raven.Client.Linq;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.RavenDB
 {

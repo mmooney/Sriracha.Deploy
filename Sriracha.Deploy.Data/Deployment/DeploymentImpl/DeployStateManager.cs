@@ -6,6 +6,7 @@ using NLog;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {

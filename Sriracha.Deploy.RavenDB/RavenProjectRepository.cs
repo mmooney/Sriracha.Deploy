@@ -10,6 +10,7 @@ using Raven.Imports.Newtonsoft.Json;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.RavenDB
 {

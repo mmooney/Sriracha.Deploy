@@ -8,6 +8,7 @@ using System.Linq;
 using MMDB.Shared;
 using Moq;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {

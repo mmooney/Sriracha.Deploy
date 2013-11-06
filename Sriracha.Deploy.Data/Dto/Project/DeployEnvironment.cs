@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MMDB.Shared;
 
-namespace Sriracha.Deploy.Data.Dto
+namespace Sriracha.Deploy.Data.Dto.Project
 {
 	public class DeployEnvironment
 	{

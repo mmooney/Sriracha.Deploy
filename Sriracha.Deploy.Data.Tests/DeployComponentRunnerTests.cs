@@ -11,6 +11,7 @@ using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
 using Sriracha.Deploy.Data.Credentials;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Tests
 {
