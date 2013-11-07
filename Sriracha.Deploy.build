@@ -83,7 +83,7 @@
       <arg value="-BasePath"/>
         <arg value="${BuildDirectory}\Publish\CommandLine"/>
       <arg value="-Version"/>
-        <arg value="${ENV.BUILD_NUMBER}"/>
+        <arg value="${BuildNumber}"/>
     </exec>
   </target>
 
