@@ -10,16 +10,6 @@
 	<target name="PackageSolution" description="Package Solution">
 		<delete dir=".\Publish"/>
 		<delete dir=".\PublishTemp"/>
-    <copy todir=".\Publish">
-      <fileset basedir=".">
-        <include name="*.build"/>
-      </fileset>
-    </copy>
-    <copy todir=".\Publish\Nant">
-      <fileset basedir=".\ThirdParty\nant-0.92">
-        <include name="*.*"/>
-      </fileset>
-    </copy>
 		<copy todir=".\Publish\WindowsService">
 			<fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
 				<include name="*.config"/>
