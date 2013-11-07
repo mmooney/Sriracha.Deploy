@@ -79,7 +79,7 @@
       <arg value="-Verbosity"/>
         <arg value="detailed"/>
       <arg value="-Tool"/>
-      <arg value="-BaseDir"/>
+      <arg value="-BasePath"/>
         <arg value="${BuildDirectory}\Publish\CommandLine"/>
     </exec>
   </target>
