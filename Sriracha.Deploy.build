@@ -10,6 +10,13 @@
 	<target name="PackageSolution" description="Package Solution">
 		<delete dir=".\Publish"/>
 		<delete dir=".\PublishTemp"/>
+    <copy todir=".\Publish">
+      <fileset basedir=".">
+        <include name=".build"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
 		<copy todir=".\Publish\WindowsService">
 			<fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
 				<include name="*.config"/>
@@ -25,13 +32,14 @@
       </fileset>
     </copy>
     <copy todir=".\Publish\CommandLine">
-			<fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
-				<include name="*.config"/>
-				<include name="*.dll"/>
-				<include name="*.exe"/>
-			</fileset>
-		</copy>
-		<msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
+      <fileset basedir=".\Sriracha.Deploy.CommandLine">
+        <include name="*.nuspec"/>
+        <include name="bin\Release\*.config"/>
+        <include name="bin\Release\*.dll"/>
+        <include name="bin\Release\*.exe"/>
+      </fileset>
+    </copy>
+    <msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
 			<property name="Configuration" value="Release"/>
 			<property name="OutDir" value="..\PublishTemp\Website\\"/>
 			<property name="BuildingProject" value="true"/>
