@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Sriracha.Deploy.CommandLine</id>
+    <version>$version$</version>
+    <title>Sriracha Deployment Command Line Tool</title>
+    <authors>Mike Mooney, MMDB Solutions LLC</authors>
+    <owners>Mike Mooney, MMDB Solutions LLC</owners>
+    <licenseUrl>https://github.com/mmooney/Sriracha.Deploy/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/mmooney/Sriracha.Deploy</projectUrl>
+    <iconUrl>https://raw.github.com/mmooney/Sriracha.Deploy/master/pepper.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Sriracha Deployment Command Line Tool</description>
+    <copyright>Copyright 2013 Mike Mooney, MMDB Solutions LLC</copyright>
+    <tags>.net deploy sriracha</tags>
+  </metadata>
+</package>
