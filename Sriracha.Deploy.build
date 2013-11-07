@@ -18,7 +18,7 @@
       </fileset>
     </copy>
     <copy todir=".\Publish\Nant">
-      <fileset basedir="*.\ThirdParty\nant-0.92">
+      <fileset basedir=".\ThirdParty\nant-0.92">
         <include name="*.*"/>
       </fileset>
     </copy>
