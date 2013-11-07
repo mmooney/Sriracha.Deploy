@@ -38,6 +38,8 @@
       <fileset basedir=".\Sriracha.Deploy.CommandLine">
         <include name="*.nuspec"/>
       </fileset>
+    </copy>
+    <copy todir=".\Publish\CommandLine">
       <fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
         <include name="bin\Release\*.config"/>
         <include name="bin\Release\*.dll"/>
