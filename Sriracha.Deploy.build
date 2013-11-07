@@ -2,6 +2,7 @@
 <project name="Sriracha" xmlns="http://nant.sf.net/release/0.86-beta1/nant.xsd">
   <description />
   <property name="BuildDirectory" value="${directory::get-current-directory()}" />
+  <property name="BuildNumber" value="${environment::get-variable('BUILD_NUMBER')}"
 	<target name="BuildSolution" description="Build Solution">
 		<msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
 			<property name="Configuration" value="Release"/>
@@ -81,6 +82,8 @@
       <arg value="-Tool"/>
       <arg value="-BasePath"/>
         <arg value="${BuildDirectory}\Publish\CommandLine"/>
+      <arg value="-Version"/>
+        <arg value="${ENV.BUILD_NUMBER}"/>
     </exec>
   </target>
 
