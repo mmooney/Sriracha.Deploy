@@ -74,10 +74,13 @@
     <exec program=".\.nuget\nuget.exe" verbose="true">
       <arg value="pack"/>
       <arg value="${BuildDirectory}\Publish\CommandLine\Sriracha.Deploy.CommandLine.nuspec"/>
-      <arg value="-OutputDirectory ${BuildDirectory}\Publish\NuGet\CommandLine"/>
-      <arg value="-Verbosity detailed"/>
+      <arg value="-OutputDirectory"/>
+        <arg value="${BuildDirectory}\Publish\NuGet\CommandLine"/>
+      <arg value="-Verbosity"/>
+        <arg value="detailed"/>
       <arg value="-Tool"/>
-      <arg value="-BaseDir ${BuildDirectory}\Publish\CommandLine"/>
+      <arg value="-BaseDir"/>
+        <arg value="${BuildDirectory}\Publish\CommandLine"/>
     </exec>
   </target>
 
