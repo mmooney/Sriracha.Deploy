@@ -71,7 +71,7 @@
 		</exec>
 	</target>
   <target name="NuGetPackageCommandLine" description="NuGet Package Command Line">
-    <exec program=".\nuget\nuget.exe" verbose="true">
+    <exec program=".\.nuget\nuget.exe" verbose="true">
       <arg value="pack"/>
       <arg value="${BuildDirectory}\Publish\CommandLine\Sriracha.Deploy.CommandLine.nuspec"/>
       <arg value="-OutputDirectory ${BuildDirectory}\Publish\NuGet\CommandLine"/>
