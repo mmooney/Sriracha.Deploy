@@ -12,9 +12,7 @@
 		<delete dir=".\PublishTemp"/>
     <copy todir=".\Publish">
       <fileset basedir=".">
-        <include name=".build"/>
-        <include name="*.dll"/>
-        <include name="*.exe"/>
+        <include name="*.build"/>
       </fileset>
     </copy>
     <copy todir=".\Publish\Nant">
@@ -39,6 +37,8 @@
     <copy todir=".\Publish\CommandLine">
       <fileset basedir=".\Sriracha.Deploy.CommandLine">
         <include name="*.nuspec"/>
+      </fileset>
+      <fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
         <include name="bin\Release\*.config"/>
         <include name="bin\Release\*.dll"/>
         <include name="bin\Release\*.exe"/>
