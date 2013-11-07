@@ -32,9 +32,9 @@
     </copy>
     <copy todir=".\Publish\CommandLine">
       <fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
-        <include name="bin\Release\*.config"/>
-        <include name="bin\Release\*.dll"/>
-        <include name="bin\Release\*.exe"/>
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
       </fileset>
     </copy>
     <msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
