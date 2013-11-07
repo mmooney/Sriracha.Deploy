@@ -15,7 +15,8 @@ namespace Sriracha.Deploy.Data.Dto.Build
 		public string BranchId { get; set; }
 		public string Version { get; set; }
 		public string NewFileName { get; set; }
-
 		public string FilePattern { get; set; }
-	}
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
 }

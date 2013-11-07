@@ -22,6 +22,43 @@ namespace Sriracha.Deploy.Web.Controllers
 		//
 		// POST: /Account/LogOn
 
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult LogOnJson(string userName, string password)
+        {
+            var response = new Sriracha.Deploy.Data.Account.AuthResponse();
+            try 
+            {
+                if (Membership.ValidateUser(userName, password))
+                {
+                    var authCookie = FormsAuthentication.GetAuthCookie(userName, false);
+                    response.Success = true;
+                    response.CookieName = authCookie.Name;
+                    response.CookieValue = authCookie.Value;
+                    response.CookiPath = authCookie.Path;
+                    if(string.IsNullOrEmpty(authCookie.Domain))
+                    {
+                        response.CookieDomain = this.Request.Url.Host;
+                    }
+                    else 
+                    {
+                        response.CookieDomain = authCookie.Domain;
+                    }
+                }
+                else
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Logon Failed";
+                }
+            }
+            catch
+            {
+                response.Success = false;
+                response.ErrorMessage = "Logon Exception";
+            }
+            return Json(response);
+        }
+
 		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult LogOn(LogOnModel model, string returnUrl)
