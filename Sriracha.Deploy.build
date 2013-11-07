@@ -64,7 +64,7 @@
 			</fileset>
 		</copy>
 	</target>
-	<target name="DeploySolution">
+	<target name="DeploySolution" description="Deploy Solution">
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
 			<arg value="/deployment:.\Publish\SelfDeploy\Sriracha.Deploy.SelfDeploy.dll"/>
@@ -73,6 +73,16 @@
 			<arg value="--silent"/>
 		</exec>
 	</target>
+  <target name="NuGetPackageCommandLine" description="NuGet Package Command Line">
+    <exec program=".\nuget\nuget.exe" verbose="true">
+      <arg value="pack"/>
+      <arg value="${BuildDirectory}\Publish\CommandLine\Sriracha.Deploy.CommandLine.nuspec"/>
+      <arg value="-OutputDirectory ${BuildDirectory}\Publish\NuGet\CommandLine"/>
+      <arg value="-Verbosity detailed"/>
+      <arg value="-Tool"/>
+      <arg value="-BaseDir ${BuildDirectory}\Publish\CommandLine"/>
+    </exec>
+  </target>
 
 </project>
 
