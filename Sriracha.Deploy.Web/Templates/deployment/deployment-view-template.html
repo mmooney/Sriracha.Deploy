@@ -5,7 +5,7 @@
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>Submitted Date (UTC)</th>
-		<td>{{deployState.submittedDateTimeUtc | displayDate}}</td>
+		<td>{{deployState.submittedDateTimeUtc | displayDateTimeShort}}</td>
 	</tr>
 	<tr>
 		<th>Status</th>
@@ -20,12 +20,12 @@
 <table class="table table-striped table-bordered">
 	<thead>
 		<tr>
-			<th>Date/Time (UTC)</th>
+			<th>Date/Time</th>
 			<th>Message</th>
 		</tr>
 	</thead>
 	<tr ng-repeat="item in deployState.messageList | orderBy:'-dateTimeUtc'">
-		<td>{{item.dateTimeUtc}}</td>
+		<td>{{item.dateTimeUtc | displayDateTimeShort}}</td>
 		<td><pre>{{item.message}}</pre></td>
 	</tr>
 </table>
