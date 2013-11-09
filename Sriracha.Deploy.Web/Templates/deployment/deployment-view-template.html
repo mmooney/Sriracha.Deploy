@@ -20,6 +20,10 @@
         </td>
     </tr>
     <tr>
+        <th>Build</th>
+        <td><a href="{{navigator.build.view.clientUrl(deployState.build.id)}}">{{deployState.build.displayValue}}</a></td>
+    </tr>
+    <tr>
         <th>Submitted Date</th>
         <td>{{deployState.submittedDateTimeUtc | displayDateTimeShort}}</td>
     </tr>
