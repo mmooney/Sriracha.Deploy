@@ -114,6 +114,7 @@
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
+    <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlan.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueue.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueueItem.cs" />

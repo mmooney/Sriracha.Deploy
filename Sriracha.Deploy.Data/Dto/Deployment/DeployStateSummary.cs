@@ -34,7 +34,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 
 		public DateTime SubmittedDateTimeUtc { get; set; }
 		public DateTime DeploymentStartedDateTimeUtc { get; set; }
-		public DateTime DeploymentCompleteDateTimeUtc { get; set; }
+		public DateTime? DeploymentCompleteDateTimeUtc { get; set; }
 		public string ErrorDetails { get; set; }
 		public string UserName { get; set; }
 	}

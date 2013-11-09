@@ -18,7 +18,7 @@ namespace Sriracha.Deploy.AutofacModules
 		{
 			builder.Register(context =>
 					{
-						var documentStore = RavenHelper.CreateDocumentStore();
+						 var documentStore = RavenHelper.CreateDocumentStore();
 						return documentStore;
 					})
 					.As<IDocumentStore>()
