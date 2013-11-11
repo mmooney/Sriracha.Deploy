@@ -70,7 +70,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RavenDeployHistoryRepository.cs" />
     <Compile Include="DocumentSessionExtensions.cs" />
+    <Compile Include="Indexes\ComponentDeployHistoryIndex.cs" />
     <Compile Include="RavenConnectionSettingRepository.cs" />
     <Compile Include="RavenCredentialRepository.cs" />
     <Compile Include="RavenDBPermissionRepository.cs" />

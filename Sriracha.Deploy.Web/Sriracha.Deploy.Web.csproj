@@ -266,6 +266,8 @@
     <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
+    <Compile Include="Services\Deployment\DeployHistoryRequest.cs" />
+    <Compile Include="Services\Deployment\DeployHistoryService.cs" />
     <Compile Include="Services\Deployment\DeployQueueRequest.cs" />
     <Compile Include="Services\Deployment\DeployQueueService.cs" />
     <Compile Include="Services\DeployStateService.cs" />

@@ -106,8 +106,10 @@
     <Compile Include="Credentials\ImpersonationContext.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchParallelRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
+    <Compile Include="Deployment\DeploymentImpl\DeployHistoryReporter.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeploymentPlanBuilder.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />
+    <Compile Include="Deployment\IDeployHistoryReporter.cs" />
     <Compile Include="Deployment\IDeploymentPlanBuilder.cs" />
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
+    <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlan.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueue.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueueItem.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
     <Compile Include="Repository\ICredentialsRepository.cs" />
+    <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Account\AccountImpl\AccountSettingsManager.cs" />
     <Compile Include="Build\BuildImpl\BuildPurger.cs" />
