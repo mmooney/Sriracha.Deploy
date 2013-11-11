@@ -16,6 +16,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
         public string ProjectBranchName { get; set; }
         public string ProjectComponentId { get; set; }
         public string ProjectComponentName { get; set; }
+        public string BuildId { get; set; }
         public string FileId { get; set; }
         public string Version { get; set; }
         public DateTime DeploymentStartedDateTimeUtc { get; set; }
@@ -24,10 +25,32 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 
         public string EnvironmentId { get; set; }
         public string EnvironmentName { get; set; }
-        public string MachineId;
-        public string MachineName;
+        public string MachineId 
+        { 
+            get 
+            {
+                if(this.MachineList != null)
+                {
+                    return this.MachineList.Select(i=>i.Id).FirstOrDefault();
+                }
+                return null;
+            }
+        }
+        public string MachineName 
+        { 
+            get
+            {
+                if (this.MachineList != null)
+                {
+                    return this.MachineList.Select(i => i.MachineName).FirstOrDefault();
+                }
+                return null;
+            }
+        }
 
         public EnumDeployStatus Status { get; set; }
         public string StatusDisplayValue { get; set; }
+
+        public List<Sriracha.Deploy.Data.Dto.Project.DeployMachine> MachineList { get; set; }
     }
 }

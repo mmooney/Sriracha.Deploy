@@ -6,6 +6,15 @@
 		$scope.build = SrirachaResource.build.get({ id: $routeParams.buildId }, function () {
 			$scope.project = SrirachaResource.project.get({ id: $scope.build.projectId });
 		});
+		$scope.deployHistory = SrirachaResource.deployHistory.get(
+            { buildIdList: [$routeParams.buildId] },
+            function () {
+                console.log($scope.deployHistory);
+            },
+            function (err) {
+                ErrorReporter.handleResourceError(err);
+            }
+        );
 	}
 	else {
 		$scope.buildList = SrirachaResource.build.get(
