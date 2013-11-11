@@ -120,5 +120,16 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		{
 			return _deployRepository.HasCancelRequested(deployBatchRequestId);
 		}
+
+
+		public bool IsCancelled(string deployBatchRequestId)
+		{
+			return _deployRepository.IsCancelled(deployBatchRequestId);
+		}
+
+		public bool IsStopped(string deployBatchRequestId)
+		{
+			return _deployRepository.IsStopped(deployBatchRequestId);
+		}
 	}
 }

@@ -401,10 +401,10 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 
         public EnumDeploymentIsolationType GetComponentIsolationType(string projectId, string componentId)
         {
-            var component = _projectRepository.GetComponent(projectId, componentId);
+			var component = _projectRepository.GetComponent(componentId, projectId);
             if(component.UseConfigurationGroup && !string.IsNullOrEmpty(component.ConfigurationId))
             {
-                var configuration = _projectRepository.GetConfiguration(projectId, component.ConfigurationId);
+				var configuration = _projectRepository.GetConfiguration(component.ConfigurationId, projectId);
                 return configuration.IsolationType;
             }
             else 

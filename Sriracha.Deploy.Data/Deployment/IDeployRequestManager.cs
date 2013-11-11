@@ -21,5 +21,9 @@ namespace Sriracha.Deploy.Data.Deployment
 		DeployBatchRequest PerformAction(string deployBatchRequestId, EnumDeployBatchAction action, string userMessage);
 
 		bool HasCancelRequested(string deployBatchRequestId);
+
+		bool IsCancelled(string deployBatchRequestId);
+
+		bool IsStopped(string p);
 	}
 }

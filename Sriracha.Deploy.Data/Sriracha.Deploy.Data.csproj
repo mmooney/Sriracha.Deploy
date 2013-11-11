@@ -104,6 +104,7 @@
     <Compile Include="Credentials\ICredentialsManager.cs" />
     <Compile Include="Credentials\IEncrypterator.cs" />
     <Compile Include="Credentials\ImpersonationContext.cs" />
+    <Compile Include="Deployment\DeploymentImpl\DeployBatchParallelRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeploymentPlanBuilder.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />

@@ -417,9 +417,8 @@ namespace Sriracha.Deploy.RavenDB
 
 		public bool HasCancelRequested(string deployBatchRequestId)
 		{
-			var item = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
 			bool returnValue = item.CancelRequested;
-			_documentSession.Advanced.Evict(item);
 			return returnValue;
 		}
 
@@ -437,6 +436,19 @@ namespace Sriracha.Deploy.RavenDB
 			request.MessageList.Add(statusMessage);
 			_documentSession.SaveEvict(request);
 			return request;
+		}
+
+
+		public bool IsStopped(string deployBatchRequestId)
+		{
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+			return (item.Status != EnumDeployStatus.InProcess);
+		}
+
+		public bool IsCancelled(string deployBatchRequestId)
+		{
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+			return (item.Status == EnumDeployStatus.Cancelled);
 		}
 	}
 }
