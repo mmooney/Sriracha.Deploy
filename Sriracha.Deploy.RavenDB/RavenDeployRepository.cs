@@ -15,6 +15,7 @@ using Raven.Client.Linq;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -449,6 +450,11 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
 			return (item.Status == EnumDeployStatus.Cancelled);
+		}
+
+		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
+		{
+			return _documentSession.StoreSaveEvict(plan);
 		}
 	}
 }

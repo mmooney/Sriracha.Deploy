@@ -90,6 +90,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					};
 					Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
 					var plan = _deploymentPlanBuilder.Build(nextDeploymentBatch);
+					_deployStateManager.SaveDeploymentPlan(plan);
 					foreach(var parallelBatchList in plan.ParallelBatchList)
 					{
 						var taskList = new List<Task>();

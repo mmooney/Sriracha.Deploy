@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.Data.Repository
 {
@@ -38,5 +39,7 @@ namespace Sriracha.Deploy.Data.Repository
 
 		bool IsStopped(string deployBatchRequestId);
 		bool IsCancelled(string deployBatchRequestId);
+
+		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 	}
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.Data.Deployment
 {
@@ -26,5 +27,7 @@ namespace Sriracha.Deploy.Data.Deployment
 		void MarkBatchDeploymentResumed(string deployBatchRequestId, string resumeMessage);
 
 		//Impersonatator BeginImpersonation(string deployStateId, string projectId, string environmentId);
+
+		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 	}
 }

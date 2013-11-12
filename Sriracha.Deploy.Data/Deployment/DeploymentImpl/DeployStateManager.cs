@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
@@ -113,6 +114,12 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				statusMessage += ", Notes: " + resumeMessage;
 			}
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
+		}
+
+
+		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
+		{
+			return _deployRepository.SaveDeploymentPlan(plan);
 		}
 	}
 }
