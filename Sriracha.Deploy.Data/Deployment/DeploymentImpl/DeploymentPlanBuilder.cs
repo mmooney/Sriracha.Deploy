@@ -42,6 +42,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
                                 {
                                     new DeploymentPlanMachineQueue()
                                     {
+										Id = Guid.NewGuid().ToString(),
                                         MachineName = machine.MachineName,
                                         MachineQueueItemList = new List<DeploymentPlanMachineQueueItem>
                                         {
@@ -74,6 +75,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
                             {
                                 machineQueue = new DeploymentPlanMachineQueue
                                 {
+									Id = Guid.NewGuid().ToString(),
                                     MachineName = machine.MachineName
                                 };
                                 currentParallelBatch.MachineQueueList.Add(machineQueue);
@@ -100,7 +102,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
                         {
                             var machineQueue = new DeploymentPlanMachineQueue
                             {
-                                MachineName = machine.MachineName
+								Id = Guid.NewGuid().ToString(),
+								MachineName = machine.MachineName
                             };
                             currentParallelBatch.MachineQueueList.Add(machineQueue);
                             var machineQueueItem = new DeploymentPlanMachineQueueItem

@@ -74,6 +74,7 @@ namespace Sriracha.Deploy.Data.Tests
                 Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, parallelBatchItem.IsolationType);
                 Assert.AreEqual(1, parallelBatchItem.MachineQueueList.Count);
                 Assert.AreEqual(1, parallelBatchItem.MachineQueueList[0].MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(parallelBatchItem.MachineQueueList[0].Id);
             }
             for(int i = 0; i < testData.DeployBatchRequest.ItemList.Count; i++)
             {
@@ -100,15 +101,17 @@ namespace Sriracha.Deploy.Data.Tests
                 Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, parallelBatchItem.IsolationType);
                 Assert.AreEqual(1, parallelBatchItem.MachineQueueList.Count);
                 Assert.AreEqual(1, parallelBatchItem.MachineQueueList[0].MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(parallelBatchItem.MachineQueueList[0].Id);
             }
             int counter = 0;
             foreach(var item in testData.DeployBatchRequest.ItemList)
             {
                 foreach(var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[counter].MachineQueueList[0];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[0].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[0].MachineId);
+                    var machineQueue = result.ParallelBatchList[counter].MachineQueueList[0];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[0].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[0].MachineId);
                     counter++;
                 }
             }
@@ -130,18 +133,20 @@ namespace Sriracha.Deploy.Data.Tests
 			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.NoIsolation, result.ParallelBatchList[0].IsolationType);
-            foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[0].MachineQueueList)
             {
-                Assert.AreEqual(1, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(1, machineQueue.MachineQueueItemList.Count);
             }
             int counter = 0;
             foreach (var item in testData.DeployBatchRequest.ItemList)
             {
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[0].MachineQueueList[counter];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[0].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[0].MachineId);
+                    var machineQueue = result.ParallelBatchList[0].MachineQueueList[counter];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[0].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[0].MachineId);
                     counter++;
                 }
             }
@@ -163,18 +168,20 @@ namespace Sriracha.Deploy.Data.Tests
 			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(50, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.NoIsolation, result.ParallelBatchList[0].IsolationType);
-            foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[0].MachineQueueList)
             {
-                Assert.AreEqual(1, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(1, machineQueue.MachineQueueItemList.Count);
             }
             int counter = 0;
             foreach (var item in testData.DeployBatchRequest.ItemList)
             {
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[0].MachineQueueList[counter];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[0].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[0].MachineId);
+                    var machineQueue = result.ParallelBatchList[0].MachineQueueList[counter];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[0].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[0].MachineId);
                     counter++;
                 }
             }
@@ -196,18 +203,20 @@ namespace Sriracha.Deploy.Data.Tests
 			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[0].IsolationType);
-            foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[0].MachineQueueList)
             {
-                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, machineQueue.MachineQueueItemList.Count);
             }
             int counter = 0;
             foreach (var item in testData.DeployBatchRequest.ItemList)
             {
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[0].MachineQueueList[0];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[counter].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[counter].MachineId);
+                    var machineQueue = result.ParallelBatchList[0].MachineQueueList[0];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[counter].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[counter].MachineId);
                     counter++;
                 }
             }
@@ -229,9 +238,10 @@ namespace Sriracha.Deploy.Data.Tests
 			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(5, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[0].IsolationType); 
-            foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[0].MachineQueueList)
             {
-                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, machineQueue.MachineQueueItemList.Count);
             }
             int itemCounter = 0;
             foreach (var item in testData.DeployBatchRequest.ItemList)
@@ -239,9 +249,10 @@ namespace Sriracha.Deploy.Data.Tests
                 int machineCounter = 0;
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[0].MachineQueueList[machineCounter];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[itemCounter].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[itemCounter].MachineId);
+                    var machineQueue = result.ParallelBatchList[0].MachineQueueList[machineCounter];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[itemCounter].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[itemCounter].MachineId);
                     machineCounter++;
                 }
                 itemCounter++;
@@ -267,22 +278,25 @@ namespace Sriracha.Deploy.Data.Tests
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[0].IsolationType);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[0], result.ParallelBatchList[0].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[0].MachineQueueList[0].Id);
 
             //next, machine isolated queues
             Assert.AreEqual(1, result.ParallelBatchList[1].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[1].IsolationType);
-            foreach (var machineQueueItem in result.ParallelBatchList[1].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[1].MachineQueueList)
             {
-                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count-1, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count-1, machineQueue.MachineQueueItemList.Count);
             }
             int counter = 0;
             foreach (var item in testData.DeployBatchRequest.ItemList.Skip(1))
             {
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[1].MachineQueueList[0];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[counter].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[counter].MachineId);
+                    var machineQueue = result.ParallelBatchList[1].MachineQueueList[0];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[counter].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[counter].MachineId);
                     counter++;
                 }
             }
@@ -306,22 +320,26 @@ namespace Sriracha.Deploy.Data.Tests
             //first, 3 fully isolated queues
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[0], result.ParallelBatchList[0].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[0].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[0].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[0].MachineQueueList[0].Id);
 
             Assert.AreEqual(1, result.ParallelBatchList[1].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[0], result.ParallelBatchList[1].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[1].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[1].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[1].MachineQueueList[0].Id);
 
             Assert.AreEqual(1, result.ParallelBatchList[2].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[0], result.ParallelBatchList[2].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[2].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[2].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[2].MachineQueueList[0].Id);
 
             //next, machine isolated queue
             Assert.AreEqual(3, result.ParallelBatchList[3].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[3].IsolationType);
-            foreach (var machineQueueItem in result.ParallelBatchList[3].MachineQueueList)
+            foreach (var machineQueue in result.ParallelBatchList[3].MachineQueueList)
             {
-                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count - 1, machineQueueItem.MachineQueueItemList.Count);
+				Assert.IsNotNullOrEmpty(machineQueue.Id);
+                Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count - 1, machineQueue.MachineQueueItemList.Count);
             }
             int itemCounter = 1;
             foreach (var item in testData.DeployBatchRequest.ItemList.Skip(1))
@@ -329,9 +347,10 @@ namespace Sriracha.Deploy.Data.Tests
                 int machineCounter = 0;
                 foreach (var machine in item.MachineList)
                 {
-                    var machineQueueItem = result.ParallelBatchList[3].MachineQueueList[machineCounter];
-                    Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[itemCounter-1].DeployBatchRequestItem);
-                    Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[itemCounter-1].MachineId);
+                    var machineQueue = result.ParallelBatchList[3].MachineQueueList[machineCounter];
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(item, machineQueue.MachineQueueItemList[itemCounter-1].DeployBatchRequestItem);
+                    Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[itemCounter-1].MachineId);
                     machineCounter++;
                 }
                 itemCounter++;
@@ -357,9 +376,10 @@ namespace Sriracha.Deploy.Data.Tests
             {
                 Assert.AreEqual(3, result.ParallelBatchList[0].MachineQueueList.Count);
                 Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[0].IsolationType);
-                foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
+                foreach (var machineQueue in result.ParallelBatchList[0].MachineQueueList)
                 {
-                    Assert.AreEqual(5, machineQueueItem.MachineQueueItemList.Count);
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(5, machineQueue.MachineQueueItemList.Count);
                 } 
                 int itemCounter = 0;
                 foreach (var item in testData.DeployBatchRequest.ItemList.Take(5))
@@ -367,9 +387,10 @@ namespace Sriracha.Deploy.Data.Tests
                     int machineCounter = 0;
                     foreach (var machine in item.MachineList)
                     {
-                        var machineQueueItem = result.ParallelBatchList[0].MachineQueueList[machineCounter];
-                        Assert.AreEqual(item, machineQueueItem.MachineQueueItemList[itemCounter].DeployBatchRequestItem);
-                        Assert.AreEqual(machine.Id, machineQueueItem.MachineQueueItemList[itemCounter].MachineId);
+                        var machineQueue = result.ParallelBatchList[0].MachineQueueList[machineCounter];
+						Assert.IsNotNullOrEmpty(machineQueue.Id);
+                        Assert.AreEqual(item, machineQueue.MachineQueueItemList[itemCounter].DeployBatchRequestItem);
+                        Assert.AreEqual(machine.Id, machineQueue.MachineQueueItemList[itemCounter].MachineId);
                         machineCounter++;
                     }
                     itemCounter++;
@@ -380,23 +401,27 @@ namespace Sriracha.Deploy.Data.Tests
             //Next, 3 fully isolated queues for step 6
             Assert.AreEqual(1, result.ParallelBatchList[1].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[5], result.ParallelBatchList[1].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[1].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[1].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[1].MachineQueueList[0].Id);
 
             Assert.AreEqual(1, result.ParallelBatchList[2].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[5], result.ParallelBatchList[2].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[2].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[2].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[2].MachineQueueList[0].Id);
 
             Assert.AreEqual(1, result.ParallelBatchList[3].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[5], result.ParallelBatchList[3].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
-            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[3].IsolationType); 
+            Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[3].IsolationType);
+			Assert.IsNotNullOrEmpty(result.ParallelBatchList[3].MachineQueueList[0].Id);
 
             //Then 1 more machine isolated queue
             {
                 Assert.AreEqual(3, result.ParallelBatchList[4].MachineQueueList.Count);
                 Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[4].IsolationType);
-                foreach (var machineQueueItem in result.ParallelBatchList[4].MachineQueueList)
+                foreach (var machineQueue in result.ParallelBatchList[4].MachineQueueList)
                 {
-                    Assert.AreEqual(4, machineQueueItem.MachineQueueItemList.Count);
+					Assert.IsNotNullOrEmpty(machineQueue.Id);
+                    Assert.AreEqual(4, machineQueue.MachineQueueItemList.Count);
                 }
                 int itemCounter = 6;
                 foreach (var item in testData.DeployBatchRequest.ItemList.Skip(6))

@@ -75,7 +75,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				var taskList = new List<Task>();
 				foreach (var machineQueue in parallelBatchList.MachineQueueList)
 				{
-					var task = Task.Factory.StartNew(() => DeployMachineQueue(deployBatchRequest.Id, machineQueue, runtimeSettings));
+					string machineQueueId = machineQueue.Id;
+					var task = Task.Factory.StartNew(() => DeployMachineQueue(plan, machineQueueId, runtimeSettings));
 					taskList.Add(task);
 				}
 				var taskArray = taskList.ToArray();
@@ -140,8 +141,14 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			}
 		}
 
-		public void DeployMachineQueue(string deployBatchRequestId, DeploymentPlanMachineQueue machineQueue, RuntimeSystemSettings runtimeSettings)
+		public void DeployMachineQueue(DeploymentPlan plan, string machineQueueId, RuntimeSystemSettings runtimeSettings)
 		{
+			string deployBatchRequestId = plan.DeployBatchRequestId;
+			var machineQueue = plan.ParallelBatchList.SelectMany(i=>i.MachineQueueList.Where(j=>j.Id == machineQueueId)).SingleOrDefault();
+			if(machineQueue == null)
+			{
+				throw new RecordNotFoundException(typeof(DeploymentPlanMachineQueue), "Id", machineQueueId);
+			}
 			//Sooooo, we're in some threads now.  And some of our repository types (Raven) doesn't like sharing sessions between threads.
 			//	So let's create a new instance now for this method
 			var localDeployRequestManager = _diFactory.CreateInjectedObject<IDeployRequestManager>();
