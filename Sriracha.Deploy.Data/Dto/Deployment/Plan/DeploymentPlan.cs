@@ -7,8 +7,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment.Plan
 {
     public class DeploymentPlan
     {
-		public string Id { get; set; }
-        public DeployBatchRequest DeployBatchRequest { get; set; }
+        public string DeployBatchRequestId { get; set; }
         public List<DeploymentPlanParallelBatch> ParallelBatchList { get; set; }
 
         public DeploymentPlan()

@@ -454,7 +454,10 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
 		{
-			return _documentSession.StoreSaveEvict(plan);
+			var deployBatchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(plan.DeployBatchRequestId);
+			deployBatchRequest.Plan = plan;
+			_documentSession.SaveEvict(deployBatchRequest);
+			return plan;
 		}
 	}
 }

@@ -8,5 +8,6 @@ namespace Sriracha.Deploy.Data.Deployment
 	public interface IDeployBatchRunner
 	{
 		void TryRunNextDeployment();
+		void ForceRunDeployment(string deployBatchRequestId);
 	}
 }

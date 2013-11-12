@@ -67,7 +67,7 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
+            Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, result.ParallelBatchList.Count());
             foreach(var parallelBatchItem in result.ParallelBatchList)
             {
@@ -93,8 +93,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(50, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(50, result.ParallelBatchList.Count());
             foreach (var parallelBatchItem in result.ParallelBatchList)
             {
                 Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, parallelBatchItem.IsolationType);
@@ -126,8 +126,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(1, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(testData.DeployBatchRequest.ItemList.Count, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.NoIsolation, result.ParallelBatchList[0].IsolationType);
             foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
@@ -159,8 +159,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(1, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(50, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.NoIsolation, result.ParallelBatchList[0].IsolationType);
             foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
@@ -192,8 +192,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(1, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[0].IsolationType);
             foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
@@ -225,8 +225,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(1, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(1, result.ParallelBatchList.Count());
             Assert.AreEqual(5, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerMachine, result.ParallelBatchList[0].IsolationType); 
             foreach (var machineQueueItem in result.ParallelBatchList[0].MachineQueueList)
@@ -261,8 +261,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(2, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(2, result.ParallelBatchList.Count());
             //first, fully isolated queue
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(EnumDeploymentIsolationType.IsolatedPerDeployment, result.ParallelBatchList[0].IsolationType);
@@ -301,8 +301,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(4, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(4, result.ParallelBatchList.Count());
             //first, 3 fully isolated queues
             Assert.AreEqual(1, result.ParallelBatchList[0].MachineQueueList.Count);
             Assert.AreEqual(testData.DeployBatchRequest.ItemList[0], result.ParallelBatchList[0].MachineQueueList[0].MachineQueueItemList[0].DeployBatchRequestItem);
@@ -351,8 +351,8 @@ namespace Sriracha.Deploy.Data.Tests
             var result = testData.Sut.Build(testData.DeployBatchRequest);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(testData.DeployBatchRequest, result.DeployBatchRequest);
-            Assert.AreEqual(5, result.ParallelBatchList.Count());
+			Assert.AreEqual(testData.DeployBatchRequest.Id, result.DeployBatchRequestId);
+			Assert.AreEqual(5, result.ParallelBatchList.Count());
             //first 5 steps with server isolation
             {
                 Assert.AreEqual(3, result.ParallelBatchList[0].MachineQueueList.Count);

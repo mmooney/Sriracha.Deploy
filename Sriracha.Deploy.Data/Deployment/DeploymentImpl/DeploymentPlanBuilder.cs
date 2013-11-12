@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
         {
             var returnValue = new DeploymentPlan()
             {
-                DeployBatchRequest = deployBatchRequest
+                DeployBatchRequestId = deployBatchRequest.Id
             };
             DeploymentPlanParallelBatch currentParallelBatch = null;
             if(deployBatchRequest.ItemList != null)

@@ -11,6 +11,7 @@ using MMDB.Shared;
 using NLog;
 using Sriracha.Deploy.AutofacModules;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Server
 {
@@ -34,6 +35,8 @@ namespace Sriracha.Deploy.Server
             [Option("patchdata")]
             public bool PatchData { get; set; }
 
+			[Option("runDeployment")]
+			public string RunDeploymentId { get; set; }
 			[ParserState]
 			public IParserState LastParserState { get; set; }
 
@@ -88,7 +91,12 @@ namespace Sriracha.Deploy.Server
 				var settings = _diFactory.CreateInjectedObject<ISystemSettings>();
 				settings.DeployWorkingDirectory = options.WorkingDirectory;
 			}
-            if (options.Debug)
+			if(!string.IsNullOrEmpty(options.RunDeploymentId))
+			{
+				var deploymentBatchRunner = _diFactory.CreateInjectedObject<IDeployBatchRunner>();
+				deploymentBatchRunner.ForceRunDeployment(options.RunDeploymentId);
+			}
+            else if (options.Debug)
 			{
 				Console.WriteLine("\t-Starting in debug mode...");
 				try 

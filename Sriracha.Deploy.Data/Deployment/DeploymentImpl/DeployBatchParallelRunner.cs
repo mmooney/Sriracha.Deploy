@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 using Sriracha.Deploy.Data.Tasks;
 
@@ -29,6 +30,64 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 			_deploymentPlanBuilder = DIHelper.VerifyParameter(deploymentPlanBuilder);
 			_diFactory = DIHelper.VerifyParameter(diFactory);
+		}
+
+		public void ForceRunDeployment(string deployBatchRequestId)
+		{
+			var deployBatchRequest = _deployRequestManager.GetDeployBatchRequest(deployBatchRequestId);
+			try 
+			{
+				_deployStateManager.MarkBatchDeploymentResumed(deployBatchRequest.Id, "Force run");
+				RunDeployment(deployBatchRequest);
+			}
+			catch (Exception err)
+			{
+				_deployStateManager.MarkBatchDeploymentFailed(deployBatchRequest.Id, err);
+				throw;
+			}
+		}
+
+		private void RunDeployment(DeployBatchRequest deployBatchRequest)
+		{
+			string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + deployBatchRequest.Id;
+			string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, subDirName);
+			if (Directory.Exists(deployDirectory))
+			{
+				//if directory already exists, start adding "_1", "_2", until we get a directory that does not exist
+				int counter = 1;
+				string newDeployDirectory = deployDirectory;
+				while (Directory.Exists(newDeployDirectory))
+				{
+					newDeployDirectory = deployDirectory + "_" + counter.ToString();
+					counter++;
+				}
+				deployDirectory = newDeployDirectory;
+			}
+			var runtimeSettings = new RuntimeSystemSettings
+			{
+				LocalDeployDirectory = deployDirectory
+			};
+			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
+			var plan = _deploymentPlanBuilder.Build(deployBatchRequest);
+			_deployStateManager.SaveDeploymentPlan(plan);
+			foreach (var parallelBatchList in plan.ParallelBatchList)
+			{
+				var taskList = new List<Task>();
+				foreach (var machineQueue in parallelBatchList.MachineQueueList)
+				{
+					var task = Task.Factory.StartNew(() => DeployMachineQueue(deployBatchRequest.Id, machineQueue, runtimeSettings));
+					taskList.Add(task);
+				}
+				var taskArray = taskList.ToArray();
+				Task.WaitAll(taskArray);
+				if (_deployRequestManager.IsStopped(deployBatchRequest.Id))
+				{
+					break;
+				}
+			}
+			_deployStateManager.MarkBatchDeploymentSuccess(deployBatchRequest.Id);
+
+			this._logger.Info("Deployment complete: " + deployBatchRequest.Id);
 		}
 
 		public void TryRunNextDeployment()
@@ -70,51 +129,14 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 						return;
 					}
 
-					string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + nextDeploymentBatch.Id;
-					string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, subDirName);
-					if (Directory.Exists(deployDirectory))
-					{
-						//if directory already exists, start adding "_1", "_2", until we get a directory that does not exist
-						int counter = 1;
-						string newDeployDirectory = deployDirectory;
-						while (Directory.Exists(newDeployDirectory))
-						{
-							newDeployDirectory = deployDirectory + "_" + counter.ToString();
-							counter++;
-						}
-						deployDirectory = newDeployDirectory;
-					}
-					var runtimeSettings = new RuntimeSystemSettings
-					{
-						LocalDeployDirectory = deployDirectory
-					};
-					Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-					var plan = _deploymentPlanBuilder.Build(nextDeploymentBatch);
-					_deployStateManager.SaveDeploymentPlan(plan);
-					foreach(var parallelBatchList in plan.ParallelBatchList)
-					{
-						var taskList = new List<Task>();
-						foreach(var machineQueue in parallelBatchList.MachineQueueList)
-						{
-							var task = Task.Factory.StartNew(()=>DeployMachineQueue(nextDeploymentBatch.Id, machineQueue, runtimeSettings));
-							taskList.Add(task);
-						}
-						var taskArray = taskList.ToArray();
-						Task.WaitAll(taskArray);	
-						if (_deployRequestManager.IsStopped(nextDeploymentBatch.Id))
-						{
-							break;
-						}
-					}
-					_deployStateManager.MarkBatchDeploymentSuccess(nextDeploymentBatch.Id);
-
-					this._logger.Info("Deployment complete: " + nextDeploymentBatch.Id);
+					RunDeployment(nextDeploymentBatch);
 				}
 				catch (Exception err)
 				{
 					_deployStateManager.MarkBatchDeploymentFailed(nextDeploymentBatch.Id, err);
 					throw;
 				}
+
 			}
 		}
 

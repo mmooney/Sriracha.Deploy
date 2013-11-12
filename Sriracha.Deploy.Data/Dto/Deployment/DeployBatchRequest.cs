@@ -53,5 +53,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 
 		public bool ResumeRequested { get; set; }
 		public string ResumeMessage { get; set; }
+
+		public Plan.DeploymentPlan Plan { get; set; }
 	}
 }
