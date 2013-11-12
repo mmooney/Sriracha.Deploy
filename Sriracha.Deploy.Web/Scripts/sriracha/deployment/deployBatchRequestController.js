@@ -26,6 +26,12 @@
 						projectComponentId: x.build.projectComponentId
 					};
 					$scope.selectedItems.push(x);
+					console.log(x);
+					if (x.machineList && x.machineList.length) {
+					    _.each(x.machineList, function (machine) {
+					        $scope.ensureLatestBuildCache(x.build.projectId, x.build.projectBranchId, x.build.projectComponentId, machine.environmentId);
+					    });
+					}
 				});
 			},
 			function (err) {
