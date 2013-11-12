@@ -18,5 +18,6 @@ namespace Sriracha.Deploy.Web.Services.Deployment
         public List<string> EnvironentNameList { get; set; }
         public List<string> MachineIdList { get; set; }
         public List<string> MachineNameList { get; set; }
+        public List<string> StatusList { get; set; }
     }
 }

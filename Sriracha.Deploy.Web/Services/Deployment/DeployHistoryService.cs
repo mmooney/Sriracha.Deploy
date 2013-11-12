@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.Web.Services.Deployment
             {
                 throw new ArgumentNullException("request is null");
             }
-            return _deployHistoryReporter.GetComponentDeployHistory(request.BuildListOptions(), request.ProjectIdList, request.BranchIdList, request.ComponentIdList, request.BuildIdList, request.EnvironentIdList, request.EnvironentNameList, request.MachineIdList, request.MachineNameList);
+            return _deployHistoryReporter.GetComponentDeployHistory(request.BuildListOptions(), request.ProjectIdList, request.BranchIdList, request.ComponentIdList, request.BuildIdList, request.EnvironentIdList, request.EnvironentNameList, request.MachineIdList, request.MachineNameList, request.StatusList);
         }
     }
 }

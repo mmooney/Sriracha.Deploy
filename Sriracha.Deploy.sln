@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMDB.ConnectionSettings", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMDB.DropkicK.Extensions", "MMDB.DropkicK.Extensions\MMDB.DropkicK.Extensions.csproj", "{0DC7095E-0DA3-41A3-9A5C-1E91AAECD90F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.RavenDB.DataPatcher", "Sriracha.Deploy.RavenDB.DataPatcher\Sriracha.Deploy.RavenDB.DataPatcher.csproj", "{93EA3F13-3136-4B85-8A02-E80C454305FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{0DC7095E-0DA3-41A3-9A5C-1E91AAECD90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DC7095E-0DA3-41A3-9A5C-1E91AAECD90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DC7095E-0DA3-41A3-9A5C-1E91AAECD90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93EA3F13-3136-4B85-8A02-E80C454305FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93EA3F13-3136-4B85-8A02-E80C454305FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93EA3F13-3136-4B85-8A02-E80C454305FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93EA3F13-3136-4B85-8A02-E80C454305FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

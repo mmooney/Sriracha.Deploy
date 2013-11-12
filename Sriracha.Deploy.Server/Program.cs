@@ -31,6 +31,9 @@ namespace Sriracha.Deploy.Server
 			[Option("thrashmode")]
 			public bool ThrashMode { get; set; }
 
+            [Option("patchdata")]
+            public bool PatchData { get; set; }
+
 			[ParserState]
 			public IParserState LastParserState { get; set; }
 
@@ -85,7 +88,7 @@ namespace Sriracha.Deploy.Server
 				var settings = _diFactory.CreateInjectedObject<ISystemSettings>();
 				settings.DeployWorkingDirectory = options.WorkingDirectory;
 			}
-			if (options.Debug)
+            if (options.Debug)
 			{
 				Console.WriteLine("\t-Starting in debug mode...");
 				try 

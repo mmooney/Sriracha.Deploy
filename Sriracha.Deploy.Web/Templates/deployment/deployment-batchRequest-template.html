@@ -21,6 +21,13 @@
 				<td>
 					<div>
 						{{item.build.displayValue}}
+                        <div ng-repeat="machine in item.machineList" >
+                            <div ng-show="item.build && machine">
+                                <div class="alert alert-warning" ng-show="newerBuildAlreadyDeployed(item.build, machine.environmentId)">
+                                    A newer version has already been deployed to this environment: {{machine.environmentName}} - {{getLatestDeployedBuild(item.build.projectId,item.build.projectBranchId,item.build.projectComponentId,machine.environmentId).version}}
+                                </div>
+                            </div>
+                        </div>
 					</div>	
 				</td>
 				<td>
@@ -96,6 +103,11 @@
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align:center">
+                    <div ng-show="build && environment">
+                        <div class="alert alert-warning" ng-show="newerBuildAlreadyDeployed(build, environment.id)">
+                            A newer version has already been deployed to this environment: {{getLatestDeployedBuild(build.projectId,build.projectBranchId,build.projectComponentId,environment.id).version}}
+                        </div>
+                    </div>
 					<button class="btn btn-primary" ng-click="addBuildToBatch()" ng-disabled="!canAddBuild()">Save Build To Deployment</button>
 				</td>
 			</tr>

@@ -17,10 +17,10 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
             _deployHistoryRepository = DIHelper.VerifyParameter(deployHistoryRepository);
         }
 
-        public PagedSortedList<ComponentDeployHistory> GetComponentDeployHistory(ListOptions listOptions, List<string> projectIdList, List<string> branchIdList, List<string> componentIdList, List<string> buildIdList, List<string> environmentIdList, List<string> environmentNameList, List<string> machineIdList, List<string> machineNameList)
+        public PagedSortedList<ComponentDeployHistory> GetComponentDeployHistory(ListOptions listOptions, List<string> projectIdList, List<string> branchIdList, List<string> componentIdList, List<string> buildIdList, List<string> environmentIdList, List<string> environmentNameList, List<string> machineIdList, List<string> machineNameList, List<string> statusList)
         {
             listOptions = ListOptions.SetDefaults(listOptions, 10, 1, "DeploymentStartedDateTimeUtc", false);
-            return _deployHistoryRepository.GetComponentDeployHistory(listOptions, projectIdList, branchIdList, componentIdList, buildIdList, environmentIdList, environmentNameList, machineIdList, machineNameList);
+            return _deployHistoryRepository.GetComponentDeployHistory(listOptions, projectIdList, branchIdList, componentIdList, buildIdList, environmentIdList, environmentNameList, machineIdList, machineNameList, statusList);
         }
     }
 }

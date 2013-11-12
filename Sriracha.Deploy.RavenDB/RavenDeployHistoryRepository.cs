@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using MMDB.Shared;
+using PagedList;
 using Raven.Client;
 using Raven.Client.Linq;
 using Sriracha.Deploy.Data;
@@ -23,7 +24,7 @@ namespace Sriracha.Deploy.RavenDB
         }
         public PagedSortedList<ComponentDeployHistory> GetComponentDeployHistory(ListOptions listOptions, List<string> projectIdList, List<string> branchIdList, List<string> componentIdList, 
                                                                             List<string> buildIdList, List<string> environmentIdList, List<string> environmentNameList, 
-                                                                            List<string> machineIdList, List<string> machineNameList)
+                                                                            List<string> machineIdList, List<string> machineNameList, List<string> statusList)
         {
             var baseQuery = _documentSession.Query<DeployState>().Customize(i=>i.WaitForNonStaleResultsAsOfNow());
             RavenQueryStatistics stats;
@@ -61,13 +62,22 @@ namespace Sriracha.Deploy.RavenDB
             {
                 baseQuery = baseQuery.Where(i=>i.MachineList.Any(j=>j.MachineName.In(machineNameList)));
             }
+            if(statusList != null)
+            {
+                List<EnumDeployStatus> statusEnumList = (from i in statusList
+                                                            select EnumHelper.Parse<EnumDeployStatus>(i)).ToList();
+                baseQuery = baseQuery.Where(i=>i.Status.In(statusEnumList));
+            }
 
             var query = GetComponentDeployHistoryBaseQuery(baseQuery);
             IPagedList<ComponentDeployHistory> pagedList;
-            switch(listOptions.SortField)
+            switch(listOptions.SortField.ToLower())
             {
-                case "DeploymentStartedDateTimeUtc":
+                case "deploymentstarteddatetimeutc":
                     pagedList = query.PageAndSort(listOptions, i=>i.DeploymentStartedDateTimeUtc);
+                    break;
+                case "version":
+                    pagedList = query.PageAndSort(listOptions, i=>i.SortableVersion);
                     break;
                 default:
                     throw new ArgumentException("Unrecognized sort field: " + listOptions.SortField);
@@ -98,6 +108,7 @@ namespace Sriracha.Deploy.RavenDB
                                     BuildId = i.Build.Id,
                                     FileId = i.Build.FileId,
                                     Version = i.Build.Version,
+                                    SortableVersion = i.Build.SortableVersion,
 
                                     EnvironmentId = i.Environment.Id,
                                     EnvironmentName = i.Environment.EnvironmentName,
