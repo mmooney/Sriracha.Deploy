@@ -19,6 +19,7 @@ namespace Sriracha.Deploy.RavenDB
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
 		private readonly Logger _logger;
+
 		public RavenProjectRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
