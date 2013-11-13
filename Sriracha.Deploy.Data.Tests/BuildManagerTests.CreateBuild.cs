@@ -10,6 +10,8 @@ using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Build.BuildImpl;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Tests
 {

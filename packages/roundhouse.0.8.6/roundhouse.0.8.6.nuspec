@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>roundhouse</id>
+    <version>0.8.6</version>
+    <title>RoundhousE</title>
+    <authors>Rob Reynolds</authors>
+    <owners>Rob Reynolds</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://projectroundhouse.org/</projectUrl>
+    <iconUrl>https://raw.github.com/chucknorris/roundhouse/master/nuget/RoundhousE_Logo.NuGet.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>RoundhousE is a Professional Database Change and Versioning Management tool. Type rh /? for options</description>
+    <summary>RoundhousE - Professional Database Change and Versioning Management</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>roundhouse db migration database migrator chucknorris</tags>
+  </metadata>
+</package>

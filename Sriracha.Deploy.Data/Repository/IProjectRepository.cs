@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IProjectRepository
 	{
-		IEnumerable<DeployProject> GetProjectList(string[] idList=null);
+		IEnumerable<DeployProject> GetProjectList();
 		DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration);
 		DeployProject TryGetProject(string projectId);
 		DeployProject GetProject(string projectId);
@@ -19,16 +20,14 @@ namespace Sriracha.Deploy.Data.Repository
 		void DeleteProject(string projectId);
 
 		List<DeployConfiguration> GetConfigurationList(string projectId);
-		DeployConfiguration CreateConfiguration(string projectId, string configurationName);
-		DeployConfiguration CreateConfiguration(DeployProject project, string configurationName);
-		DeployConfiguration GetConfiguration(string configurationId);
-		DeployConfiguration TryGetConfiguration(string configurationId);
-		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName);
+        DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
+        DeployConfiguration GetConfiguration(string configurationId, string projectId = null);
+        DeployConfiguration TryGetConfiguration(string configurationId, string projectId = null);
+        DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
 		void DeleteConfiguration(string configurationId);
 		
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
-		DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId);
-		DeployComponent CreateComponent(DeployProject project, string componentName, bool useConfigurationGroup, string configurationId);
+        DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		DeployComponent GetComponent(string componentId, string projectId=null);
 		DeployComponent TryGetComponent(string componentId, string projectId = null);
 		DeployComponent GetComponent(DeployProject project, string componentId);
@@ -36,21 +35,17 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployComponent GetComponentByName(DeployProject project, string componentName);
 		DeployComponent TryGetComponentByName(DeployProject project, string componentName);
 		DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName);
-		DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId);
-		void DeleteComponent(string componentId);
+        DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
+		void DeleteComponent(string projectId, string componentId);
 
 		List<DeployStep> GetComponentDeploymentStepList(string componentId);
 		List<DeployStep> GetConfigurationDeploymentStepList(string configurationId);
 		DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
 		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
-		DeployStep CreateComponentDeploymentStep(DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployStep CreateConfigurationDeploymentStep(DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
 		DeployStep GetComponentDeploymentStep(string deploymentStepId);
 		DeployStep GetConfigurationDeploymentStep(string deploymentStepId);
 		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
 		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
-		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, DeployProject project, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, DeployProject project, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
 		void DeleteComponentDeploymentStep(string deploymentStepId);
 		void DeleteConfigurationDeploymentStep(string deploymentStepId);
 
@@ -66,7 +61,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName);
 		DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
-		void DeleteBranch(string branchId);
+		void DeleteBranch(string branchId, string projectId);
 
 		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
 		DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);

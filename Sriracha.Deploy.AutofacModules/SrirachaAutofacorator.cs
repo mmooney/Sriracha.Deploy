@@ -30,6 +30,7 @@ using Sriracha.Deploy.Data.Project.ProjectImpl;
 using Sriracha.Deploy.Data.Project;
 using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
 using Sriracha.Deploy.Data.Credentials;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -75,6 +76,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployQueueManager>().As<IDeployQueueManager>();
 			builder.RegisterType<DeployRequestManager>().As<IDeployRequestManager>();
 			builder.RegisterType<CredentialsManager>().As<ICredentialsManager>();
+            builder.RegisterType<DeployHistoryReporter>().As<IDeployHistoryReporter>();
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
@@ -93,8 +95,16 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<Zipper>().As<IZipper>();
 			builder.RegisterType<BuildParameterEvaluator>().As<IBuildParameterEvaluator>().SingleInstance();
 			
-			builder.RegisterType<DeployBatchRunner>().As<IDeployBatchRunner>();
+			if(AppSettingsHelper.GetBoolSetting("ParallelDeploy", true)) 
+			{
+				builder.RegisterType<DeployBatchParallelRunner>().As<IDeployBatchRunner>();
+			}
+			else 
+			{
+				builder.RegisterType<DeployBatchRunner>().As<IDeployBatchRunner>();
+			}
 			builder.RegisterType<DeployRunner>().As<IDeployRunner>();
+            builder.RegisterType<DeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
 			builder.RegisterType<DeployTaskStatusManager>().As<IDeployTaskStatusManager>();
 			builder.RegisterType<DeployComponentRunner>().As<IDeployComponentRunner>();
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();

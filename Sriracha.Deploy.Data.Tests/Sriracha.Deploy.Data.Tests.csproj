@@ -64,12 +64,15 @@
   <ItemGroup>
     <Compile Include="BuildParameterEvaluatorTests.cs" />
     <Compile Include="DeployComponentRunnerTests.cs" />
+    <Compile Include="DeploymentPlanBuilderTests.cs" />
     <Compile Include="ModuleInspectorTests.cs" />
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexResolverTests.cs" />
+    <Compile Include="Repository\ProjectRepositoryBaseTests.cs" />
+    <Compile Include="Repository\RepositoryTestBase.cs" />
     <Compile Include="TaskManagerTests.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinitionTests.cs" />
     <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutorTests.cs" />
@@ -85,10 +88,6 @@
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sriracha.Deploy.RavenDB\Sriracha.Deploy.RavenDB.csproj">
-      <Project>{29f6b5f6-9d29-434f-93f5-8b989dd350dc}</Project>
-      <Name>Sriracha.Deploy.RavenDB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Web.Services
 {
@@ -39,17 +40,17 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if (string.IsNullOrEmpty(component.Id))
 			{
-				return _projectManager.CreateComponent(component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId);
+				return _projectManager.CreateComponent(component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId, component.IsolationType);
 			}
 			else
 			{
-				return _projectManager.UpdateComponent(component.Id, component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId);
+				return _projectManager.UpdateComponent(component.Id, component.ProjectId, component.ComponentName, component.UseConfigurationGroup, component.ConfigurationId, component.IsolationType);
 			}
 		}
 
 		public void Delete(DeployComponent component)
 		{
-			_projectManager.DeleteComponent(component.Id);
+			_projectManager.DeleteComponent(component.ProjectId, component.Id);
 		}
 	}
 }

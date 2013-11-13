@@ -10,6 +10,7 @@ using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Project;
 using Sriracha.Deploy.Data.Project.ProjectImpl;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -142,11 +143,11 @@ namespace Sriracha.Deploy.Data.Tests
 					new DeployProject { Id = Guid.NewGuid().ToString(), ProjectName = Guid.NewGuid().ToString() },
 					new DeployProject { Id = Guid.NewGuid().ToString(), ProjectName = Guid.NewGuid().ToString() }
 				};
-				repository.Setup(i=>i.GetProjectList(null)).Returns(projectList);
+				repository.Setup(i=>i.GetProjectList()).Returns(projectList);
 				IProjectManager sut = new ProjectManager(repository.Object);
 				var result = sut.GetProjectList();
 				Assert.AreEqual(projectList.Count, result.Count());
-				repository.Verify(i=>i.GetProjectList(null), Times.Once());
+				repository.Verify(i=>i.GetProjectList(), Times.Once());
 			}
 		}
 
@@ -279,7 +280,7 @@ namespace Sriracha.Deploy.Data.Tests
 									};
 				projectRepository.Setup(i=>i.GetProject(projectId))
 									.Returns(project);
-				projectRepository.Setup(i=>i.CreateComponentDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, null))
+				projectRepository.Setup(i=>i.CreateComponentDeploymentStep(project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null))
 									.Returns(new DeployStep
 										{
 											Id = Guid.NewGuid().ToString(),
@@ -296,7 +297,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 				Assert.IsNotNull(result);
 				Assert.AreEqual(stepName, result.StepName);
-				projectRepository.Verify(i=>i.CreateComponentDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, null), Times.Once());
+				projectRepository.Verify(i=>i.CreateComponentDeploymentStep(project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null), Times.Once());
 			}
 
 			[Test]
@@ -441,7 +442,7 @@ namespace Sriracha.Deploy.Data.Tests
 					UsesSharedComponentConfiguration = false
 				};
 				projectRepository.Setup(i=>i.GetProject(projectId)).Returns(project);
-				projectRepository.Setup(i => i.UpdateComponentDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, null))
+				projectRepository.Setup(i => i.UpdateComponentDeploymentStep(deploymentStepId, project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null))
 									.Returns(new DeployStep
 									{
 										Id = deploymentStepId,
@@ -459,7 +460,7 @@ namespace Sriracha.Deploy.Data.Tests
 				Assert.IsNotNull(result);
 				Assert.AreEqual(stepName, result.StepName);
 
-				projectRepository.Verify(i => i.UpdateComponentDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson,null), Times.Once());
+				projectRepository.Verify(i => i.UpdateComponentDeploymentStep(deploymentStepId, project.Id, componentId, stepName, taskTypeName, taskOptionsJson,null), Times.Once());
 			}
 
 			[Test]

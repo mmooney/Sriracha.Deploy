@@ -11,6 +11,9 @@ using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Credentials;
 using System.Security.Principal;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Validation;
 
 namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 {

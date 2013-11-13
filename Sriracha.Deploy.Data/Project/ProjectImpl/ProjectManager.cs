@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Project.ProjectImpl
 {
@@ -75,10 +76,10 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.GetComponentList(projectId);
 		}
 
-		public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponent(project, componentName, useConfigurationGroup, configurationId);
+			var returnValue = this._projectRepository.CreateComponent(projectId, componentName, useConfigurationGroup, configurationId, isolationType);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				var someOtherComponent = project.ComponentList.FirstOrDefault(i=>i.Id != returnValue.Id);
@@ -86,7 +87,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				{
 					foreach(var deploymentStep in someOtherComponent.DeploymentStepList)
 					{
-						this._projectRepository.CreateComponentDeploymentStep(project, returnValue.Id, deploymentStep.StepName, deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson, deploymentStep.SharedDeploymentStepId);
+						this._projectRepository.CreateComponentDeploymentStep(project.Id, returnValue.Id, deploymentStep.StepName, deploymentStep.TaskTypeName, deploymentStep.TaskOptionsJson, deploymentStep.SharedDeploymentStepId);
 					}
 				}
 			}
@@ -98,14 +99,14 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.GetComponent(componentId);
 		}
 
-		public void DeleteComponent(string componentId)
+		public void DeleteComponent(string projectId, string componentId)
 		{
-			_projectRepository.DeleteComponent(componentId);
+			_projectRepository.DeleteComponent(projectId, componentId);
 		}
 
-		public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId)
+        public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
-			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId);
+			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId, isolationType);
 		}
 
 		public List<DeployStep> GetComponentDeploymentStepList(string componentId)
@@ -140,14 +141,14 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				throw new ArgumentNullException("Missing Task Options");
 			}
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.CreateComponentDeploymentStep(project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			var returnValue = this._projectRepository.CreateComponentDeploymentStep(project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null);
 			if(project.UsesSharedComponentConfiguration)
 			{
 				foreach(var component in project.ComponentList)
 				{
 					if(component.Id != componentId)
 					{
-						this._projectRepository.CreateComponentDeploymentStep(project, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
+						this._projectRepository.CreateComponentDeploymentStep(project.Id, component.Id, stepName, taskTypeName, taskOptionsJson, returnValue.SharedDeploymentStepId);
 					}
 				}
 			}
@@ -215,7 +216,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				throw new ArgumentNullException("Missing Task Options");
 			}
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, project, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson, null);
 			if(project.UsesSharedComponentConfiguration)
 			{ 
 				foreach(var component in project.ComponentList)
@@ -293,9 +294,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.UpdateBranch(branchId, projectId, branchName);
 		}
 
-		public void DeleteBranch(string branchId)
+		public void DeleteBranch(string branchId, string projectId)
 		{
-			this._projectRepository.DeleteBranch(branchId);
+			this._projectRepository.DeleteBranch(branchId, projectId);
 		}
 
 
@@ -382,19 +383,34 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		}
 
 
-		public DeployConfiguration CreateConfiguration(string projectId, string configurationName)
+        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
-			return _projectRepository.CreateConfiguration(projectId, configurationName);
+			return _projectRepository.CreateConfiguration(projectId, configurationName, isolationType);
 		}
 
-		public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName)
+        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
-			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName);
+			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName, isolationType);
 		}
 
 		public void DeleteConfiguration(string configurationId)
 		{
 			_projectRepository.DeleteConfiguration(configurationId);
 		}
-	}
+
+
+        public EnumDeploymentIsolationType GetComponentIsolationType(string projectId, string componentId)
+        {
+			var component = _projectRepository.GetComponent(componentId, projectId);
+            if(component.UseConfigurationGroup && !string.IsNullOrEmpty(component.ConfigurationId))
+            {
+				var configuration = _projectRepository.GetConfiguration(component.ConfigurationId, projectId);
+                return configuration.IsolationType;
+            }
+            else 
+            {
+                return component.IsolationType;
+            }
+        }
+    }
 }

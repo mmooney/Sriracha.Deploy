@@ -1,19 +1,34 @@
 ﻿<h2>Project {{project.projectName}} - {{component.componentName}} Component 
 	<a ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" ng-href="{{navigator.component.edit.clientUrl(component.projectId, component.id)}}">(edit)</a> </h2>
-<h3>Deployment Steps</h3>
-<label class="radio">
-	<input type="radio" ng-model="component.useConfigurationGroup" ng-value="true" ng-disabled="!project.configurationList.length || !permissionVerifier.canEditComponentConfiguration(project.id)" />
-	Use Common Configuration:
-	<div>
-		<select ng-model="component.configurationId" ng-options="item.id as item.configurationName for item in project.configurationList" ng-disabled="!component.useConfigurationGroup || !project.configurationList.length || !permissionVerifier.canEditComponentConfiguration(project.id)"></select>
-	</div>
-</label>
-<label class="radio">
-	<input type="radio" ng-model="component.useConfigurationGroup" ng-value="false" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
-	Use Custom Configuration:
-</label>
+<h3>Setup</h3>
+<h4>Configuration</h4>
+    <label class="radio">
+	    <input type="radio" ng-model="component.useConfigurationGroup" ng-value="true" ng-disabled="!project.configurationList.length || !permissionVerifier.canEditComponentConfiguration(project.id)" />
+	    Use Common Configuration:
+	    <div>
+		    <select ng-model="component.configurationId" ng-options="item.id as item.configurationName for item in project.configurationList" ng-disabled="!component.useConfigurationGroup || !project.configurationList.length || !permissionVerifier.canEditComponentConfiguration(project.id)"></select>
+	    </div>
+    </label>
+    <label class="radio">
+	    <input type="radio" ng-model="component.useConfigurationGroup" ng-value="false" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+	    Use Custom Configuration (below)
+    </label>
+<h4>Isolation</h4>
+    <label class="radio">
+        <input type="radio" ng-model="component.isolationType" value="IsolatedPerMachine" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+        Isolate this component so it is the only thing being deployed against the server at a given time
+    </label>
+    <label class="radio">
+        <input type="radio" ng-model="component.isolationType" value="IsolatedPerDeployment" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+        Isolate this component so it is the only thing being deployed in the entire deployment batch at a given time
+    </label>
+    <label class="radio">
+        <input type="radio" ng-model="component.isolationType" value="NoIsolation" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+        No isolation, this component can be deployed in parallel with anything
+    </label>
 <button ng-show="permissionVerifier.canEditComponentConfiguration(project.id)" class="btn btn-primary" ng-click="saveComponent()">Save</button>
 <button ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)" class="btn btn-action" ng-click="navigator.project.view.go(project.id)">Back</button>
+<h3>Deployment Steps</h3>
 <div ng-show="!component.useConfigurationGroup">
 	<table class="table table-border table-striped" ng-show="component.deploymentStepList.length">
 		<thead>

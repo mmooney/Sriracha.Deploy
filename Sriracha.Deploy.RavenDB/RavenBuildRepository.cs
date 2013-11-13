@@ -11,6 +11,7 @@ using Sriracha.Deploy.Data.Repository;
 using MMDB.Shared;
 using PagedList;
 using Raven.Client.Linq;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -28,7 +29,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions, string projectId = null, string branchId = null, string componentId = null)
 		{
-			var query = this._documentSession.Query<DeployBuild>();
+			var query = this._documentSession.Query<DeployBuild>().Customize(i=>i.NoCaching()).Customize(i=>i.NoTracking());
 			if(!string.IsNullOrEmpty(projectId))
 			{
 				query = (IRavenQueryable<DeployBuild>)query.Where(i=>i.ProjectId == projectId);
@@ -59,6 +60,10 @@ namespace Sriracha.Deploy.RavenDB
 					break;
 				default:
 					throw new Exception("Unrecognized sort field " + listOptions.SortField);
+			}
+			foreach(var item in pagedList)
+			{
+				_documentSession.Advanced.Evict(item);
 			}
 			return new PagedSortedList<DeployBuild>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}

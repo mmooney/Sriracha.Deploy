@@ -6,6 +6,8 @@ using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Credentials;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {

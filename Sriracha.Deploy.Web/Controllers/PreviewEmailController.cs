@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Web.Controllers
 {

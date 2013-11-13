@@ -2,6 +2,7 @@
 <project name="Sriracha" xmlns="http://nant.sf.net/release/0.86-beta1/nant.xsd">
   <description />
   <property name="BuildDirectory" value="${directory::get-current-directory()}" />
+  <property name="BuildNumber" value="${environment::get-variable('BUILD_NUMBER')}"/>
 	<target name="BuildSolution" description="Build Solution">
 		<msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
 			<property name="Configuration" value="Release"/>
@@ -17,14 +18,26 @@
 				<include name="*.exe"/>
 			</fileset>
 		</copy>
-		<copy todir=".\Publish\CommandLine">
-			<fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
-				<include name="*.config"/>
-				<include name="*.dll"/>
-				<include name="*.exe"/>
-			</fileset>
-		</copy>
-		<msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
+    <copy todir=".\Publish\SelfDeploy">
+      <fileset basedir=".\Sriracha.Deploy.SelfDeploy\bin\Release">
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\CommandLine">
+      <fileset basedir=".\Sriracha.Deploy.CommandLine">
+        <include name="*.nuspec"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\CommandLine">
+      <fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
+    <msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
 			<property name="Configuration" value="Release"/>
 			<property name="OutDir" value="..\PublishTemp\Website\\"/>
 			<property name="BuildingProject" value="true"/>
@@ -49,15 +62,31 @@
 			</fileset>
 		</copy>
 	</target>
-	<target name="DeploySolution">
-		<exec program=".\packages\dropkick.core.0.4.13.0\tools\dropkick\dk.exe" verbose="true">
+	<target name="DeploySolution" description="Deploy Solution">
+		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
-			<arg value="/deployment:${BuildDirectory}\Sriracha.Deploy.SelfDeploy\bin\Release\Sriracha.Deploy.SelfDeploy.dll"/>
+			<arg value="/deployment:.\Publish\SelfDeploy\Sriracha.Deploy.SelfDeploy.dll"/>
 			<arg value="/environment:${deployEnvironment}"/>
 			<arg value="/settings:${deploySettingsDirectory}"/>
 			<arg value="--silent"/>
 		</exec>
 	</target>
+  <target name="NuGetPackageCommandLine" description="NuGet Package Command Line">
+    <mkdir dir="${BuildDirectory}\Publish\NuGet\CommandLine"/>
+    <exec program=".\.nuget\nuget.exe" verbose="true">
+      <arg value="pack"/>
+      <arg value="${BuildDirectory}\Publish\CommandLine\Sriracha.Deploy.CommandLine.nuspec"/>
+      <arg value="-OutputDirectory"/>
+        <arg value="${BuildDirectory}\Publish\NuGet\CommandLine"/>
+      <arg value="-Verbosity"/>
+        <arg value="detailed"/>
+      <arg value="-Tool"/>
+      <arg value="-BasePath"/>
+        <arg value="${BuildDirectory}\Publish\CommandLine"/>
+      <arg value="-Version"/>
+        <arg value="${BuildNumber}"/>
+    </exec>
+  </target>
 
 </project>
 

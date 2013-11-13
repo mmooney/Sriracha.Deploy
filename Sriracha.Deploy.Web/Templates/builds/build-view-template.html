@@ -1,5 +1,5 @@
 ﻿<h2>Build {{build.DisplayValue}}</h2>
-
+<h3>Build Details</h3>
 <table class="table table-bordered">
 	<tr>
 		<th>Project</th>
@@ -19,18 +19,37 @@
 	</tr>
 	<tr>
 		<th>Created By</th>
-		<th>{{build.createdByUserName}}</th>
+		<td>{{build.createdByUserName}}</td>
 	</tr>
 	<tr>
 		<th>Created Date</th>
-		<th>{{build.createdDateTimeUtc | displayDate}}</th>
+		<td>{{build.createdDateTimeUtc | displayDateTimeShort}}</td>
 	</tr>
 	<tr>
 		<th>Updated By</th>
-		<th>{{build.updatedByUserName}}</th>
+		<td>{{build.updatedByUserName}}</td>
 	</tr>
 	<tr>
 		<th>Updated Date</th>
-		<th>{{build.updatedDateTimeUtc | displayDate}}</th>
+		<td>{{build.updatedDateTimeUtc | displayDateTimeShort}}</td>
 	</tr>
+</table>
+<h3>Recent Deploy History</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date/Time</th>
+            <th>Environment</th>
+            <th>Machine</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="item in deployHistory.items">
+            <td>{{item.deploymentCompleteDateTimeUtc | displayDateTimeShort}}</td>
+            <td>{{item.environmentName}}</td>
+            <td>{{item.machineName}}</td>
+            <td><a href="{{navigator.deployment.view.clientUrl(item.deployStateId)}}">{{item.statusDisplayValue}}</a></td>
+        </tr>
+    </tbody>
 </table>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
@@ -27,13 +28,81 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 		}
 
+		public void ForceRunDeployment(string deployBatchRequestId)
+		{
+			var deployBatchRequest = _deployRequestManager.GetDeployBatchRequest(deployBatchRequestId);
+			try 
+			{
+				_deployStateManager.MarkBatchDeploymentResumed(deployBatchRequest.Id, "Force run");
+				RunDeployment(deployBatchRequest);
+			}
+			catch (Exception err)
+			{
+				_deployStateManager.MarkBatchDeploymentFailed(deployBatchRequest.Id, err);
+				throw;
+			}
+		}
+
+		private void RunDeployment(DeployBatchRequest deployBatchRequest)
+		{
+			string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + deployBatchRequest.Id;
+			string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, subDirName);
+			if (Directory.Exists(deployDirectory))
+			{
+				//if directory already exists, start adding "_1", "_2", until we get a directory that does not exist
+				int counter = 1;
+				string newDeployDirectory = deployDirectory;
+				while (Directory.Exists(newDeployDirectory))
+				{
+					newDeployDirectory = deployDirectory + "_" + counter.ToString();
+					counter++;
+				}
+				deployDirectory = newDeployDirectory;
+			}
+			var runtimeSettings = new RuntimeSystemSettings
+			{
+				LocalDeployDirectory = deployDirectory
+			};
+			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
+			foreach (var item in deployBatchRequest.ItemList)
+			{
+				foreach (var machine in item.MachineList)
+				{
+					if (_deployRequestManager.HasCancelRequested(deployBatchRequest.Id))
+					{
+						_deployStateManager.MarkBatchDeploymentCancelled(deployBatchRequest.Id, deployBatchRequest.CancelMessage);
+						return;
+					}
+					var deployState = _deployStateManager.GetOrCreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, deployBatchRequest.Id);
+					if (deployState.Status != EnumDeployStatus.Success)
+					{
+						try
+						{
+							_deployStateManager.MarkDeploymentInProcess(deployState.Id);
+							var machineIdList = new List<string> { machine.Id };
+							_deployRunner.Deploy(deployState.Id, machine.EnvironmentId, item.Build.Id, machineIdList, runtimeSettings);
+							_deployStateManager.MarkDeploymentSuccess(deployState.Id);
+						}
+						catch (Exception err)
+						{
+							_deployStateManager.MarkDeploymentFailed(deployState.Id, err);
+							throw;
+						}
+					}
+				}
+			}
+
+			_deployStateManager.MarkBatchDeploymentSuccess(deployBatchRequest.Id);
+
+			this._logger.Info("Deployment complete: " + deployBatchRequest.Id);
+		}
+
 		public void TryRunNextDeployment()
 		{
 			var nextDeploymentBatch = _deployQueueManager.PopNextBatchDeployment();
 			if (nextDeploymentBatch == null)
 			{
 				this._logger.Trace("No pending deployment found");
-
 			}
 			else
 			{
@@ -66,56 +135,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 						return;
 					}
 
-					string subDirName = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + nextDeploymentBatch.Id;
-					string deployDirectory = Path.Combine(_systemSettings.DeployWorkingDirectory, subDirName);
-					if (Directory.Exists(deployDirectory))
-					{
-						//if directory already exists, start adding "_1", "_2", until we get a directory that does not exist
-						int counter = 1;
-						string newDeployDirectory = deployDirectory;
-						while (Directory.Exists(newDeployDirectory))
-						{
-							newDeployDirectory = deployDirectory + "_" + counter.ToString();
-							counter++;
-						}
-						deployDirectory = newDeployDirectory;
-					}
-					var runtimeSettings = new RuntimeSystemSettings
-					{
-						LocalDeployDirectory = deployDirectory
-					};
-					Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-					foreach (var item in nextDeploymentBatch.ItemList)
-					{
-						foreach (var machine in item.MachineList)
-						{
-							if(_deployRequestManager.HasCancelRequested(nextDeploymentBatch.Id))
-							{
-								_deployStateManager.MarkBatchDeploymentCancelled(nextDeploymentBatch.Id, nextDeploymentBatch.CancelMessage);
-								return;
-							}
-							var deployState = _deployStateManager.GetOrCreateDeployState(item.Build.ProjectId, item.Build.Id, machine.EnvironmentId, machine.Id, nextDeploymentBatch.Id);
-							if(deployState.Status != EnumDeployStatus.Success)
-							{
-								try
-								{
-									_deployStateManager.MarkDeploymentInProcess(deployState.Id);
-									var machineIdList = new List<string> { machine.Id };
-									_deployRunner.Deploy(deployState.Id, machine.EnvironmentId, item.Build.Id, machineIdList, runtimeSettings);
-									_deployStateManager.MarkDeploymentSuccess(deployState.Id);
-								}
-								catch (Exception err)
-								{
-									_deployStateManager.MarkDeploymentFailed(deployState.Id, err);
-									throw;
-								}
-							}
-						}
-					}
-
-					_deployStateManager.MarkBatchDeploymentSuccess(nextDeploymentBatch.Id);
-
-					this._logger.Info("Deployment complete: " + nextDeploymentBatch.Id);
+					RunDeployment(nextDeploymentBatch);
 				}
 				catch (Exception err)
 				{

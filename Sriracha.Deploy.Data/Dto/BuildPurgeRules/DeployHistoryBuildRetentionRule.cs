@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 {
@@ -25,19 +26,19 @@ namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 		{
 			var deployStateRepository = diFactory.CreateInjectedObject<IDeployRepository>();
 			var projectRepository = diFactory.CreateInjectedObject<IProjectRepository>();
-			if(this.EnvironmentIdList != null)
+			if (this.EnvironmentIdList != null)
 			{
 				foreach(var environmentId in this.EnvironmentIdList)
 				{
 					var list = deployStateRepository.FindDeployStateListForEnvironment(build.Id, environmentId);
-					if(list != null && list.Count > 0)
+					if (list != null && list.Count > 0)
 					{
 						return true;
 					}
 				}
 			}
 			var project = projectRepository.GetProject(build.ProjectId);
-			if(this.EnvironmentNameList != null)
+			if (this.EnvironmentNameList != null)
 			{
 				foreach(var environmentName in this.EnvironmentNameList)
 				{

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PagedList;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Data.Deployment
 {
@@ -20,5 +21,9 @@ namespace Sriracha.Deploy.Data.Deployment
 		DeployBatchRequest PerformAction(string deployBatchRequestId, EnumDeployBatchAction action, string userMessage);
 
 		bool HasCancelRequested(string deployBatchRequestId);
+
+		bool IsCancelled(string deployBatchRequestId);
+
+		bool IsStopped(string p);
 	}
 }

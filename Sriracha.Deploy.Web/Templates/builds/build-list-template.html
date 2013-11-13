@@ -13,7 +13,7 @@
 		<tr ng-repeat="build in buildList.items">
 			<td><a ng-href="{{navigator.build.view.clientUrl(build.id)}}">{{build.displayValue}}</a></td>
 			<td>{{build.projectBranchName}}</td>
-			<td>{{build.updatedDateTimeUtc | displayDate}}</td>
+			<td>{{build.updatedDateTimeUtc | displayDateTimeShort}}</td>
 			<td><a class="btn btn-danger" ng-href="{{navigator.build.remove.clientUrl(build.id)}}">Delete</a></td>
 		</tr>
 	</tbody>

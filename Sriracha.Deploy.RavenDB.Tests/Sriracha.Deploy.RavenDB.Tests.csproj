@@ -107,6 +107,10 @@
     <Compile Include="TempTestDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj">
+      <Project>{4aabd8d9-ab20-4db6-82ce-8ecb5644255e}</Project>
+      <Name>Sriracha.Deploy.Data.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>

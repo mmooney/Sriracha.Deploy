@@ -12,6 +12,10 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Raven.Client.Linq;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -47,8 +51,7 @@ namespace Sriracha.Deploy.RavenDB
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName
 			};
-			_documentSession.Store(deployState);
-			_documentSession.SaveChanges();
+			_documentSession.StoreSaveEvict(deployState);
 			return deployState;
 		}
 
@@ -74,7 +77,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing deploy batch request item ID");
 			}
-			return (from i in _documentSession.Query<DeployState>()
+			return (from i in _documentSession.QueryNoCache<DeployState>()
 						where i.ProjectId == projectId
 							&& i.Build.Id == buildId
 							&& i.Environment.Id == environmentId
@@ -90,7 +93,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing Deploy State ID");
 			}
-			var returnValue = _documentSession.Load<DeployState>(deployStateId);
+			var returnValue = _documentSession.LoadNoCache<DeployState>(deployStateId);
 			if (returnValue == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
@@ -100,13 +103,13 @@ namespace Sriracha.Deploy.RavenDB
 
 		public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
 		{
-			return _documentSession.Query<DeployState>().Where(i=>i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
+			return _documentSession.QueryNoCache<DeployState>().Where(i=>i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
 		}
 
 
 		public List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId)
 		{
-			var tempList = _documentSession.Query<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
+			var tempList = _documentSession.QueryNoCache<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
 			return tempList.Where(i=>i.MachineList.Any(j=>j.Id == machineId)).ToList();;
 		}
 
@@ -116,7 +119,7 @@ namespace Sriracha.Deploy.RavenDB
 			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
 			{
 				this._logger.Trace("Checking for next deployment");
-				var tempItem = this._documentSession.Query<DeployBatchRequest>()
+				var tempItem = this._documentSession.QueryNoCache<DeployBatchRequest>()
 										.Customize(i => i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
 										.OrderBy(i => i.SubmittedDateTimeUtc)
 										.Where(i => i.Status == EnumDeployStatus.NotStarted
@@ -128,7 +131,7 @@ namespace Sriracha.Deploy.RavenDB
 					return null;
 				}
 
-				var reloadedItem = this._documentSession.Load<DeployBatchRequest>(tempItem.Id);
+				var reloadedItem = this._documentSession.LoadEnsure<DeployBatchRequest>(tempItem.Id);
 				if (reloadedItem.Status != EnumDeployStatus.NotStarted
 						&& !(reloadedItem.ResumeRequested && (reloadedItem.Status == EnumDeployStatus.Error || reloadedItem.Status == EnumDeployStatus.Cancelled)))
 				{
@@ -139,7 +142,7 @@ namespace Sriracha.Deploy.RavenDB
 				reloadedItem.Status = EnumDeployStatus.InProcess;
 				reloadedItem.StartedDateTimeUtc = DateTime.UtcNow;
 				itemId = reloadedItem.Id;
-				this._documentSession.SaveChanges();
+				this._documentSession.SaveEvict(reloadedItem);
 
 				transaction.Complete();
 			}
@@ -149,16 +152,16 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else 
 			{
-				return _documentSession.Load<DeployBatchRequest>(itemId);
+				return _documentSession.LoadNoCache<DeployBatchRequest>(itemId);
 			}
 		}
 
 		public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
 		{
 			var deployStateMessage = CreateDeploymentMessage(deployStateId, message);
-			var state = GetDeployState(deployStateId);
+			var state = _documentSession.LoadEnsure<DeployState>(deployStateId);
 			state.MessageList.Add(deployStateMessage);
-			this._documentSession.SaveChanges();
+			this._documentSession.SaveEvict(state);
 			return deployStateMessage;
 		}
 
@@ -178,11 +181,11 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus status, Exception err = null)
 		{
-			var state = GetDeployState(deployStateId);
+			var state = _documentSession.LoadEnsure<DeployState>(deployStateId);
 			if(state.MessageList == null || state.MessageList.Count == 0)
 			{
 				_documentSession.Advanced.Evict(state);
-				state = GetDeployState(deployStateId);
+				state = _documentSession.LoadEnsure<DeployState>(deployStateId);
 			}
 			state.Status = status;
 			switch(status)
@@ -198,7 +201,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			state.UpdatedDateTimeUtc = DateTime.UtcNow;
 			state.UpdatedByUserName = _userIdentity.UserName;
-			this._documentSession.SaveChanges();
+			this._documentSession.SaveEvict(state);
 			return state;
 		}
 
@@ -212,7 +215,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBatchRequest GetBatchRequest(string id)
 		{
-			return _documentSession.Load<DeployBatchRequest>(id);
+			return _documentSession.LoadNoCache<DeployBatchRequest>(id);
 		}
 
 		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
@@ -255,8 +258,7 @@ namespace Sriracha.Deploy.RavenDB
 
 			};
 			request.MessageList.Add(message);
-			_documentSession.Store(request);
-			_documentSession.SaveChanges();
+			_documentSession.StoreSaveEvict(request);
 			return request;
 		}
 
@@ -264,7 +266,7 @@ namespace Sriracha.Deploy.RavenDB
 		public List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId)
 		{
 			#if true
-			var list = (from i in _documentSession.Query<DeployState>()
+			var list = (from i in _documentSession.QueryNoCache<DeployState>()
 							where i.DeployBatchRequestItemId == deployBatchRequestItemId
 							select new DeployStateSummary
 							{
@@ -326,7 +328,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null, bool addToMessageHistory=true)
 		{
-			var batchRequest = GetBatchRequest(deployBatchRequestId);
+			var batchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			var oldStatus = batchRequest.Status;
 			batchRequest.Status = status;
 			switch (status)
@@ -353,7 +355,7 @@ namespace Sriracha.Deploy.RavenDB
 			batchRequest.LastStatusMessage = statusMessage;
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
-			this._documentSession.SaveChanges();
+			this._documentSession.SaveEvict(batchRequest);
 			return batchRequest;
 		}
 
@@ -364,7 +366,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				statusList = new List<EnumDeployStatus> { EnumDeployStatus.NotStarted, EnumDeployStatus.InProcess };
 			}
-			var query = (IRavenQueryable<DeployBatchRequest>)_documentSession.Query<DeployBatchRequest>()
+			var query = (IRavenQueryable<DeployBatchRequest>)_documentSession.QueryNoCache<DeployBatchRequest>()
 										.OrderBy(i => i.SubmittedDateTimeUtc)
 										.Where(i => i.Status.In(statusList) 
 												|| (i.ResumeRequested && (i.Status == EnumDeployStatus.Error || i.Status == EnumDeployStatus.Cancelled)));
@@ -387,7 +389,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage)
 		{
-			var request = GetBatchRequest(deployBatchRequestId);
+			var request = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			request.CancelRequested = true;
 			string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
 			if(!string.IsNullOrEmpty(userMessage))
@@ -396,36 +398,35 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			request.LastStatusMessage = statusMessage;
 			request.MessageList.Add(statusMessage);
-			_documentSession.SaveChanges();
+			_documentSession.SaveEvict(request);
 			return request;
 		}
 
 
 		public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage)
 		{
-			var batchRequest = GetBatchRequest(deployBatchRequestId);
+			var batchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			batchRequest.Status = newStatus;
 			batchRequest.StartedDateTimeUtc = null;
 			batchRequest.LastStatusMessage = statusMessage;
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
-			this._documentSession.SaveChanges();
+			this._documentSession.SaveEvict(batchRequest);
 			return batchRequest;
 		}
 
 
 		public bool HasCancelRequested(string deployBatchRequestId)
 		{
-			var item = _documentSession.Load<DeployBatchRequest>(deployBatchRequestId);
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
 			bool returnValue = item.CancelRequested;
-			_documentSession.Advanced.Evict(item);
 			return returnValue;
 		}
 
 
 		public DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage)
 		{
-			var request = GetBatchRequest(deployBatchRequestId);
+			var request = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			request.ResumeRequested = true;
 			string statusMessage = string.Format("{0} requested deployment to be resumed at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
 			if (!string.IsNullOrEmpty(userMessage))
@@ -434,8 +435,29 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			request.LastStatusMessage = statusMessage;
 			request.MessageList.Add(statusMessage);
-			_documentSession.SaveChanges();
+			_documentSession.SaveEvict(request);
 			return request;
+		}
+
+
+		public bool IsStopped(string deployBatchRequestId)
+		{
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+			return (item.Status != EnumDeployStatus.InProcess);
+		}
+
+		public bool IsCancelled(string deployBatchRequestId)
+		{
+			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+			return (item.Status == EnumDeployStatus.Cancelled);
+		}
+
+		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
+		{
+			var deployBatchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(plan.DeployBatchRequestId);
+			deployBatchRequest.Plan = plan;
+			_documentSession.SaveEvict(deployBatchRequest);
+			return plan;
 		}
 	}
 }

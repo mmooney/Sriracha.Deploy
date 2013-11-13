@@ -7,6 +7,7 @@ using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Build.BuildImpl;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Tests
 {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Validation;
 
 namespace Sriracha.Deploy.Web.Services.ValidateEnvironment
 {

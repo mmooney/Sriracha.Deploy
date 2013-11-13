@@ -164,6 +164,7 @@
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\BinDeploy\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -265,6 +266,8 @@
     <Compile Include="Services\Deployment\DeployBatchStatusRequest.cs" />
     <Compile Include="Services\Deployment\DeployBatchStatusService.cs" />
     <Compile Include="Services\Deployment\BatchRequestService.cs" />
+    <Compile Include="Services\Deployment\DeployHistoryRequest.cs" />
+    <Compile Include="Services\Deployment\DeployHistoryService.cs" />
     <Compile Include="Services\Deployment\DeployQueueRequest.cs" />
     <Compile Include="Services\Deployment\DeployQueueService.cs" />
     <Compile Include="Services\DeployStateService.cs" />

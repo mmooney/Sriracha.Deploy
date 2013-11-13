@@ -10,6 +10,10 @@ using ServiceStack.Common.Web;
 using ServiceStack.ServiceClient.Web;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Utility;
+using Sriracha.Deploy.Data.Dto.Build;
+using System.Net;
+using System.Diagnostics;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.Data.Build.BuildImpl
 {
@@ -61,7 +65,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			_zipper.ZipDirectory(options.Directory, zipPath);
 
-			PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath);
+			PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath, options.UserName, options.Password);
 
 			try 
 			{
@@ -234,7 +238,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			_zipper.ZipFile(options.File, zipPath);
 
-			PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath);
+			PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath, options.UserName, options.Password);
 
 			try
 			{
@@ -271,7 +275,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			_logger.Info("Done publishing file {0} to URL {1}", options.File, options.ApiUrl);
 		}
 
-		private void PublishZip(string apiUrl, string projectId, string componentId, string branchId, string version, string zipPath)
+		private void PublishZip(string apiUrl, string projectId, string componentId, string branchId, string version, string zipPath, string userName, string password)
 		{
 			string url = apiUrl;
 			if (!url.EndsWith("/"))
@@ -288,6 +292,12 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				FileName = Path.GetFileName(zipPath)
 			};
 			branchId = FormatBranch(branchId, version);
+
+            Cookie authCookie = null;
+            if(!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+            {
+                authCookie = GetAuthCookie(apiUrl, userName, password);
+            }
 			using (var client = new JsonServiceClient(url))
 			{
 				_logger.Debug("Posting file {0} to URL {1}", zipPath, url);
@@ -297,6 +307,10 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				client.Credentials = System.Net.CredentialCache.DefaultCredentials;
 				client.Timeout = TimeSpan.FromMinutes(2);
 				client.ReadWriteTimeout = TimeSpan.FromMinutes(2);
+                if(authCookie != null)
+                {  
+                    client.CookieContainer.Add(authCookie);
+                }
 				var fileResponse = client.PostFile<DeployFileDto>(fileUrl, fileToUpload, MimeTypes.GetMimeType(fileToUpload.Name));
 				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, fileResponse.Id, fileResponse.FileStorageId);
 
@@ -323,6 +337,47 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 
 		}
+
+        private Cookie GetAuthCookie(string apiUrl, string userName, string password)
+        {
+            string logonUrl = apiUrl;
+            if (logonUrl.EndsWith("/"))
+            {
+                logonUrl = logonUrl.Substring(0, logonUrl.Length - 1);
+            }
+            if (logonUrl.EndsWith("/api", StringComparison.CurrentCultureIgnoreCase))
+            {
+                logonUrl = logonUrl.Substring(0, logonUrl.Length - "/api".Length);
+            }
+            if (!logonUrl.EndsWith("/"))
+            {
+                logonUrl += "/";
+            }
+            logonUrl += "Account/LogOnJson";
+            var request = HttpWebRequest.Create(logonUrl);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            using (var requestStream = request.GetRequestStream())
+            using (var requestWriter = new StreamWriter(requestStream))
+            {
+                var postObject = new { UserName = userName, Password = password };
+                string postJson = postObject.ToJson();
+                requestWriter.Write(postJson);
+                requestWriter.Flush();
+            }
+            using (var response = request.GetResponse())
+            using (var responseStream = response.GetResponseStream())
+            using (var responseReader = new StreamReader(responseStream))
+            {
+                var responseString = responseReader.ReadToEnd();
+                var authResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<Sriracha.Deploy.Data.Account.AuthResponse>(responseString);
+                if (!authResponse.Success)
+                {
+                    throw new Exception("Failed to authenticate user " + userName + ": " + StringHelper.IsNullOrEmpty(authResponse.ErrorMessage, "Unknown Error"));
+                }
+                return new Cookie(authResponse.CookieName, authResponse.CookieValue, authResponse.CookiPath, authResponse.CookieDomain);
+            }
+        }
 
 		private string FormatBranch(string branchId, string version)
 		{

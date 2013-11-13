@@ -1,4 +1,3 @@
-using System;
 //ReSharper disable ConvertToLambdaExpression
 // ==============================================================================
 // 
@@ -17,6 +16,7 @@ using System;
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 // ==============================================================================
+using System;
 using System.IO;
 using dropkick.Configuration.Dsl;
 using dropkick.Configuration.Dsl.Files;
@@ -25,6 +25,7 @@ using dropkick.Configuration.Dsl.RoundhousE;
 using dropkick.Configuration.Dsl.Security;
 using dropkick.Configuration.Dsl.WinService;
 using dropkick.Configuration.Dsl.Xml;
+using dropkick.Configuration.Dsl.Notes;
 using dropkick.Wmi;
 
 namespace Sriracha.Deploy.SelfDeploy
@@ -56,6 +57,12 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
+
+                                        if (!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.OpenFolderShareWithAuthentication(@"{{TargetWebsitePath}}", settings.TargetMachineUserName, settings.TargetMachinePassword);
+                                        }
+
 										s.CopyDirectory(settings.SourceWebsitePath).To(@"{{TargetWebsitePath}}").DeleteDestinationBeforeDeploying();
 
 										ApplySettings(s, settings, @"{{TargetWebsitePath}}\web.config");
@@ -71,51 +78,81 @@ namespace Sriracha.Deploy.SelfDeploy
 										});
 									});
 
-				DeploymentStepsFor(VirtualDirectory,
-									s =>
-									{
-										string appPoolName = settings.ApplicationPoolName;
-										if (string.IsNullOrWhiteSpace(appPoolName))
-										{
-											appPoolName = settings.VirtualDirectorySite;
-										}
-										s.Iis7Site(settings.VirtualDirectorySite)
-										 .VirtualDirectory(settings.VirtualDirectoryName)
-										 .SetAppPoolTo(appPoolName, pool =>
-														 {
-															 pool.SetRuntimeToV4();
-															 //pool.UseClassicPipeline();
-															 //pool.Enable32BitAppOnWin64();
-														 }).SetPathTo(@"{{TargetWebsitePath}}");
-									});
+                //DeploymentStepsFor(VirtualDirectory,
+                //                    s =>
+                //                    {
+                //                        string appPoolName = settings.ApplicationPoolName;
+                //                        if (string.IsNullOrWhiteSpace(appPoolName))
+                //                        {
+                //                            appPoolName = settings.VirtualDirectorySite;
+                //                        }
+                //                        var iis = s.Iis7Site(settings.VirtualDirectorySite)
+                //                         .VirtualDirectory(settings.VirtualDirectoryName)
+                //                         .SetAppPoolTo(appPoolName, pool =>
+                //                                         {
+                //                                             pool.SetRuntimeToV4();
+                //                                             //pool.UseClassicPipeline();
+                //                                             //pool.Enable32BitAppOnWin64();
+                //                                         }).SetPathTo(@"{{TargetWebsitePath}}");
+                //                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                //                        {
+                //                            iis.WithAdministratorAccount(settings.TargetMachineUserName, settings.TargetMachineUserName);
+                //                        }
+                //                    });
 
 				DeploymentStepsFor(Host,
 									s =>
 									{
 										ValidateSettings(settings);
+                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName))
+                                        {
+                                            s.Note("TargetMachineUserName: {0}", settings.TargetMachineUserName, "(None)");
+                                        }
+                                        else 
+                                        {
+                                            s.Note("TargetMachineUserName: (None)");
+                                        }
+                                        if(!string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.Note("TargetMachinePassword: Exists");
+                                        }
+                                        else
+                                        {
+                                            s.Note("TargetMachinePassword: Does not exists");
+                                        }
 										var serviceName = settings.ServiceName;
-										s.WinService(serviceName).Stop();
-										s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
+                                        var serviceOptions = s.WinService(serviceName);
+
+                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            serviceOptions.WithAuthentication(settings.TargetMachineUserName, settings.TargetMachinePassword);
+
+                                            s.OpenFolderShareWithAuthentication(@"{{ServiceTargetPath}}", settings.TargetMachineUserName, settings.TargetMachinePassword); 
+                                        }
+										serviceOptions.Stop();
+                                        s.CreateEmptyFolder(@"{{ServiceTargetPath}}");
+                                        s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
 
 										ApplySettings(s, settings, @"{{ServiceTargetPath}}\{{ServiceExeName}}.config");
 
-										s.Security(o =>
-										{
-											o.LocalPolicy(lp =>
-											{
-												lp.LogOnAsService(settings.ServiceUserName);
-												lp.LogOnAsBatch(settings.ServiceUserName);
-											});
+                                        //TODO: Figure out how to do this remotely
+                                        //s.Security(o =>
+                                        //{
+                                        //    o.LocalPolicy(lp =>
+                                        //    {
+                                        //        lp.LogOnAsService(settings.ServiceUserName);
+                                        //        lp.LogOnAsBatch(settings.ServiceUserName);
+                                        //    });
 
-											o.ForPath(settings.ServiceTargetPath, fs => fs.GrantRead(settings.ServiceUserName));
-											//o.ForPath(Path.Combine(settings.ServiceTargetPath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
-										});
+                                        //    o.ForPath(settings.ServiceTargetPath, fs => fs.GrantRead(settings.ServiceUserName));
+                                        //    //o.ForPath(Path.Combine(settings.ServiceTargetPath, "logs"), fs => fs.GrantReadWrite(settings.ServiceUserName));
+                                        //});
 
 										s.XmlPoke(@"{{ServiceTargetPath}}\{{ServiceExeName}}.config")
 														.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
 
-										s.WinService(serviceName).Delete();
-										s.WinService(serviceName).Create()
+										serviceOptions.Delete();
+										serviceOptions.Create()
 											.WithCredentials(settings.ServiceUserName, settings.ServiceUserPassword)
 											//.WithDisplayName("__REPLACE_ME__ ({{Environment}})")
 											.WithServicePath(@"{{ServiceTargetPath}}\{{ServiceExeName}}")
@@ -128,17 +165,22 @@ namespace Sriracha.Deploy.SelfDeploy
 										{
 											if (settings.AutoStartService)
 											{
-												s.WinService(serviceName).Start();
+												serviceOptions.Start();
 											}
 										}
 									});
-				DeploymentStepsFor(CommandLine,
+					DeploymentStepsFor(CommandLine,
 									s =>
 									{
 										this.ValidateSettings(settings);
-									   s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").ClearDestinationBeforeDeploying();
+                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetWebsitePath))
+                                        {
+                                            s.OpenFolderShareWithAuthentication(@"{{TargetCommandLinePath}}", settings.TargetMachineUserName, settings.TargetMachinePassword);
+                                        }
+    									s.CreateEmptyFolder(@"{{TargetCommandLinePath}}");
+										s.CopyDirectory(settings.SourceCommandLinePath).To(@"{{TargetCommandLinePath}}").ClearDestinationBeforeDeploying();
 
-									   this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
+										this.ApplySettings(s, settings, @"{{TargetCommandLinePath}}\{{CommandLineExeName}}.config");
 								   });
 			});
 		}
@@ -164,7 +206,15 @@ namespace Sriracha.Deploy.SelfDeploy
 
 		private void ValidateSettings(DeploymentSettings settings)
 		{
-			if (string.IsNullOrEmpty(settings.EmailConnectionString))
+            if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && string.IsNullOrEmpty(settings.TargetMachinePassword))
+            {
+                throw new Exception("Cannot have TargetMachineUserName without TargetMachinePassword");
+            }
+            if (string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+            {
+                throw new Exception("Cannot have TargetMachinePassword without TargetMachineUserName");
+            }
+            if (string.IsNullOrEmpty(settings.EmailConnectionString))
 			{
 				throw new Exception("Missing EmailConnectionString");
 			}

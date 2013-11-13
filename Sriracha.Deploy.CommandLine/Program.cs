@@ -15,6 +15,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Project;
+using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.CommandLine
 {
@@ -66,6 +67,12 @@ namespace Sriracha.Deploy.CommandLine
 
 		[CommandLineParser.Option('f',"file")]
 		public string File { get; set; }
+
+        [CommandLineParser.Option("userName")]
+        public string UserName { get; set; }
+
+        [CommandLineParser.Option("password")]
+        public string Password { get; set; }
 
 		[CommandLineParser.Option("filePattern")]
 		public string FilePattern { get; set; }
@@ -172,6 +179,11 @@ namespace Sriracha.Deploy.CommandLine
 						//VerifyParameter(options.BranchId,"Publish", "BranchId", "branch");
 						VerifyParameter(options.ComponentId,"Publish", "ComponentId", "component", 'c');
 						VerifyParameter(options.Version,"Publish", "Version", "version", 'v');
+                        if((!string.IsNullOrEmpty(options.UserName) && string.IsNullOrEmpty(options.Password))
+                            || (string.IsNullOrEmpty(options.UserName) && !string.IsNullOrEmpty(options.Password)))
+                        {
+                            throw new Exception("UserName (--userName) and Password (--password) must be used together for Publish");
+                        }
 						if(!string.IsNullOrWhiteSpace(options.File))
 						{
 							if (!string.IsNullOrWhiteSpace(options.Directory))
@@ -182,7 +194,7 @@ namespace Sriracha.Deploy.CommandLine
 							{
 								throw new Exception("File (--file|-f) and FilePattern (--filePattern) cannot be both be used together for Publish");
 							}
-							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName);
+							PublishFile(options.File, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName, options.UserName, options.Password);
 						}
 						else if (!string.IsNullOrWhiteSpace(options.Directory))
 						{
@@ -190,11 +202,11 @@ namespace Sriracha.Deploy.CommandLine
 							{
 								throw new Exception("Directory (--directory|-d) and FilePattern (--filePattern) cannot be both be used together for Publish");
 							}
-							PublishDirectory(options.Directory, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version);
+							PublishDirectory(options.Directory, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.UserName, options.Password);
 						}
 						else if (!string.IsNullOrWhiteSpace(options.FilePattern))
 						{
-							PublishFilePattern(options.FilePattern, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName);
+							PublishFilePattern(options.FilePattern, options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, options.NewFileName, options.UserName, options.Password);
 						}
 						else 
 						{
@@ -242,7 +254,7 @@ namespace Sriracha.Deploy.CommandLine
 			}
 		}
 
-		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
+		private static void PublishFile(string filePath, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName, string userName, string password)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
 			var options = new BuildPublishOptions
@@ -253,12 +265,14 @@ namespace Sriracha.Deploy.CommandLine
 				ComponentId = componentId,
 				BranchId = branchId, 
 				Version = version,
-				NewFileName = newFileName
+				NewFileName = newFileName,
+                UserName = userName,
+                Password = password
 			};
 			publisher.PublishFile(options);
 		}
 
-		private static void PublishFilePattern(string filePattern, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName)
+        private static void PublishFilePattern(string filePattern, string apiUrl, string projectId, string componentId, string branchId, string version, string newFileName, string userName, string password)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
 			var options = new BuildPublishOptions
@@ -269,12 +283,14 @@ namespace Sriracha.Deploy.CommandLine
 				ComponentId = componentId,
 				BranchId = branchId,
 				Version = version,
-				NewFileName = newFileName
+				NewFileName = newFileName,
+                UserName = userName,
+                Password = password
 			};
 			publisher.PublishFilePattern(options);
 		}
 
-		private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version)
+        private static void PublishDirectory(string directoryPath, string apiUrl, string projectId, string componentId, string branchId, string version, string userName, string password)
 		{
 			var publisher = _diFactory.CreateInjectedObject<IBuildPublisher>();
 			var options = new BuildPublishOptions
@@ -284,7 +300,9 @@ namespace Sriracha.Deploy.CommandLine
 				ProjectId = projectId,
 				ComponentId = componentId,
 				BranchId = branchId,
-				Version = version
+				Version = version,
+                UserName = userName,
+                Password = password
 			};
 			publisher.PublishDirectory(options);
 		}

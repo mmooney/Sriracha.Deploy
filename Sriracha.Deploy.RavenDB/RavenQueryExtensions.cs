@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.RavenDB
 			else 
 			{
 				sortedQuery = startingQuery.OrderBy(sortSelector);
-			}
+			} 
 			var resultQuery = sortedQuery.Skip((pageNumber - 1) * pageSize)
 											.Take(pageSize);
 			return new StaticPagedList<T>(resultQuery.ToList(), pageNumber, pageSize, stats.TotalResults);

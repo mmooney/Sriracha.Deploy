@@ -23,8 +23,8 @@ ngSriracha.filter("displayDateTimeShort", function () {
 				amPm = "AM";
 				twelveHourHour = date.getHours();
 			}
-			return date.getFullYear() + "-" + lpad(date.getMonth(),2) + "-" + lpad(date.getDay(),2) + " " + lpad(twelveHourHour,2) + ":" + lpad(date.getMinutes(),2) + ":" + lpad(date.getSeconds(),2) + " " + amPm;
-			return date.toString();
+			var returnValue = date.getFullYear() + "-" + lpad(date.getMonth()+1, 2) + "-" + lpad(date.getDate(), 2) + " " + lpad(twelveHourHour, 2) + ":" + lpad(date.getMinutes(), 2) + ":" + lpad(date.getSeconds(), 2) + " " + amPm + " " + getTimezoneShort(date);
+			return returnValue;
 		}
 
 		function lpad(data, size, padChar) {
@@ -34,6 +34,25 @@ ngSriracha.filter("displayDateTimeShort", function () {
 				returnValue = padChar + returnValue;
 			}
 			return returnValue;
+		}
+		function getTimezoneShort(now) { //now is expected as a Date object
+			if (now == null)
+				return '';
+			var str = now.toString();
+			// Split on the first ( character
+			var s = str.split("(");
+			if (s.length == 2) {
+				// remove the ending ')'
+				var n = s[1].replace(")", "");
+				// split on words
+				var parts = n.split(" ");
+				var abbr = "";
+				for (i = 0; i < parts.length; i++) {
+					// for each word - get the first letter
+					abbr += parts[i].charAt(0).toUpperCase();
+				}
+				return abbr;
+			}
 		}
 	}
 });

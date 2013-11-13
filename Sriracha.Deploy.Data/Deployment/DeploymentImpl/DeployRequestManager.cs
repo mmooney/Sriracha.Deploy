@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Notifications;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Tasks;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto.Deployment;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
@@ -118,6 +119,17 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		public bool HasCancelRequested(string deployBatchRequestId)
 		{
 			return _deployRepository.HasCancelRequested(deployBatchRequestId);
+		}
+
+
+		public bool IsCancelled(string deployBatchRequestId)
+		{
+			return _deployRepository.IsCancelled(deployBatchRequestId);
+		}
+
+		public bool IsStopped(string deployBatchRequestId)
+		{
+			return _deployRepository.IsStopped(deployBatchRequestId);
 		}
 	}
 }

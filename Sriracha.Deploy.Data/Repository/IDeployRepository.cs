@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using PagedList;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment.Plan;
 
 namespace Sriracha.Deploy.Data.Repository
 {
@@ -32,5 +36,10 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage);
 		bool HasCancelRequested(string deployBatchRequestId);
 		DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage);
+
+		bool IsStopped(string deployBatchRequestId);
+		bool IsCancelled(string deployBatchRequestId);
+
+		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 	}
 }

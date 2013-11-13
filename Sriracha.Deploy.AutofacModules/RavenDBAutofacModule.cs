@@ -18,7 +18,7 @@ namespace Sriracha.Deploy.AutofacModules
 		{
 			builder.Register(context =>
 					{
-						var documentStore = RavenHelper.CreateDocumentStore();
+						 var documentStore = RavenHelper.CreateDocumentStore();
 						return documentStore;
 					})
 					.As<IDocumentStore>()
@@ -37,6 +37,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();
 			builder.RegisterType<RavenCredentialRepository>().As<ICredentialsRepository>();
 			builder.RegisterType<RavenRazorTemplateRepository>().As<IRazorTemplateRepository>();
+            builder.RegisterType<RavenDeployHistoryRepository>().As<IDeployHistoryRepository>();
 
 			builder.RegisterType<RavenConnectionSettingRepository>().As<IConnectionSettingRepository>();
 			builder.RegisterType<RavenDBPermissionRepository>().As<IPermissionRepository>();

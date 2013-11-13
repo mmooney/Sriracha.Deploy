@@ -26,6 +26,12 @@
 						projectComponentId: x.build.projectComponentId
 					};
 					$scope.selectedItems.push(x);
+					console.log(x);
+					if (x.machineList && x.machineList.length) {
+					    _.each(x.machineList, function (machine) {
+					        $scope.ensureLatestBuildCache(x.build.projectId, x.build.projectBranchId, x.build.projectComponentId, machine.environmentId);
+					    });
+					}
 				});
 			},
 			function (err) {
@@ -164,7 +170,7 @@
 					projectComponentId: item.build.projectComponentId,
 					sortField: "UpdatedDateTimeUtc",
 					sortAscending: false,
-					pageSize: 10
+					pageSize: 1000
 				};
 				var buildList = SrirachaResource.build.get(queryParameters,
 					function (data) {
@@ -273,6 +279,10 @@
 			$scope.refreshEnvironmentList();
 		}
 		$scope.updateEnvironmentMachines();
+
+		if ($scope.build && $scope.environment) {
+		    $scope.ensureLatestBuildCache($scope.build.projectId, $scope.build.projectBranchId, $scope.build.projectComponentId, $scope.environment.id);
+		}
 	}
 
 	$scope.environmentSelected = function () {
@@ -284,6 +294,10 @@
 		//	$scope.selectedMachines = [];
 		//}
 		$scope.updateEnvironmentMachines();
+
+		if ($scope.build && $scope.environment) {
+		    $scope.ensureLatestBuildCache($scope.build.projectId, $scope.build.projectBranchId, $scope.build.projectComponentId, $scope.environment.id);
+		}
 	}
 
 	$scope.canAddBuild = function () {
@@ -427,5 +441,65 @@
 		if ($scope.selectedItems) {
 			return ($scope.selectedItems.length && !$scope.getPermissionMessages().length);
 		}
+	}
+
+	$scope.getLatestDeployedBuild = function (projectId, branchId, componentId, environmentId) {
+	    if (projectId && branchId && componentId && environmentId && $scope.latestBuildCache) {
+	        var cacheKey = $scope.getLatestBuildCacheKey(projectId, branchId, componentId, environmentId);
+	        return $scope.latestBuildCache[cacheKey];
+	    }
+	}
+
+	$scope.newerBuildAlreadyDeployed = function (build, environmentId) {
+	    if ($scope.latestBuildCache && build && environmentId) {
+	        var cacheKey = $scope.getLatestBuildCacheKey(build.projectId, build.projectBranchId, build.projectComponentId, environmentId);
+	        var latestItem = $scope.latestBuildCache[cacheKey];
+	        if (latestItem) {
+	            if (latestItem.sortableVersion && build.sortableVersion) {
+	                console.log(latestItem, latestItem.sortableVersion, build.sortableVersion, latestItem.sortableVersion > build.sortableVersion);
+	                if (latestItem.sortableVersion > build.sortableVersion) {
+	                    return true;
+	                }
+	            }
+	            else {
+	                console.log(latestItem, latestItem.version, build.version, latestItem.version > build.version);
+	                if (latestItem.version > build.version) {
+	                    return true;
+	                }
+	            }
+	        }
+	        else {
+                console.log("no ltest item")
+	        }
+        }
+	}
+
+	$scope.getLatestBuildCacheKey = function (projectId, branchId, componentId, environmentId) {
+	    return projectId + "_" + branchId + "_" + componentId + "_" + environmentId;
+	}
+	$scope.ensureLatestBuildCache = function (projectId, branchId, componentId, environmentId) {
+	    $scope.latestBuildCache = $scope.latestBuildCache || {};
+	    var cacheKey = $scope.getLatestBuildCacheKey(projectId, branchId, componentId, environmentId);
+	    var latestBuild = $scope.latestBuildCache[cacheKey];
+	    if (latestBuild == null) {
+            var deployHistory = SrirachaResource.deployHistory.get(
+	            { 
+	                projectIdList: [projectId], branchIdList: [branchId], componentIdList: [componentId], environmentIdList: [environmentId],
+                    statusList: ["Success"],
+                    sortField: "version", sortAscending: false, pageSize: 1000
+	            },
+	            function () {
+	                if (deployHistory && deployHistory.items && deployHistory.items.length) {
+	                    var sortedList = _.sortBy(deployHistory.items, function (x) { return x.sortableVersion }).reverse();
+	                    //console.log("test",sortedList, deployHistory.items)
+	                    $scope.latestBuildCache[cacheKey] = sortedList[0];
+	                }
+	            },
+	            function (err) {
+	                ErrorReporter.handleResourceError(err);
+	            }
+	        );
+	    }
+	    
 	}
 }]);

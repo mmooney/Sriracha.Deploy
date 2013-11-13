@@ -46,8 +46,7 @@ namespace Sriracha.Deploy.RavenDB
 				MessageText = message,
 				LoggerName = loggerName
 			};
-			this._documentSession.Store(systemLog);
-			this._documentSession.SaveChanges();
+			this._documentSession.StoreSaveEvict(systemLog);
 			return systemLog;
 		}
 
@@ -80,7 +79,7 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			int skip = (pageNumber - 1) * pageSize;
 			RavenQueryStatistics stats;
-			var query = this._documentSession.Query<SystemLog>().Statistics(out stats).AsQueryable();
+			var query = this._documentSession.QueryNoCache<SystemLog>().Statistics(out stats).AsQueryable();
 			query = AppySort(query, sortField, sortAscending);
 			var items = query.ToList();
 			return new PagedList.StaticPagedList<SystemLog>(items, pageNumber, pageSize, stats.TotalResults);

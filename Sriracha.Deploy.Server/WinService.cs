@@ -32,9 +32,9 @@ namespace Sriracha.Deploy.Server
 			this._jobScheduler.StopJobs();
 		}
 
-		public void DebugStart()
+		public void DebugStart(bool thrashMode=false)
 		{
-			this._jobScheduler.StartJobs();
+			this._jobScheduler.StartJobs(thrashMode);
 			while (true)
 			{
 				Thread.Sleep(1000);
