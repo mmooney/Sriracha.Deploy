@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
         protected IDocumentSession DocumentSession { get; private set; }
 
         [SetUp]
-        public void SetUp()
+        public void RavenSetUp()
         {
             this.DocumentSession = EmbeddedRavenProvider.DocumentStore.OpenSession();
         }
@@ -30,7 +30,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
         }
 
         [TearDown]
-        public void TearDown()
+        public void RavenTearDown()
         {
             using (this.DocumentSession) { };
             this.DocumentSession = null;

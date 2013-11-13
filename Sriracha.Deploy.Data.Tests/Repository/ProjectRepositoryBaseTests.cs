@@ -30,6 +30,15 @@ namespace Sriracha.Deploy.Data.Tests.Repository
  	        return sut.CreateProject(this.Fixture.Create<string>("ProjectName"), false);
         }
 
+        private void AssertDateEqual(DateTime expected, DateTime actual)
+        {
+            Assert.AreEqual(expected.Date, actual.Date);
+            Assert.AreEqual(expected.Hour, actual.Hour);
+            Assert.AreEqual(expected.Minute, actual.Minute);
+            Assert.AreEqual(expected.Second, actual.Second);
+        }
+
+
         [SetUp]
         public void SetUp()
         {
@@ -213,7 +222,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             Assert.IsNotNull(dbItem);
             Assert.AreEqual(newProjectName, dbItem.ProjectName);
             Assert.AreEqual(true, dbItem.UsesSharedComponentConfiguration);
-            Assert.AreEqual(project.CreatedDateTimeUtc, dbItem.CreatedDateTimeUtc);
+            AssertDateEqual(project.CreatedDateTimeUtc, dbItem.CreatedDateTimeUtc);
             Assert.AreEqual(project.CreatedByUserName, dbItem.CreatedByUserName);
             Assert.AreEqual(newUserName, dbItem.UpdatedByUserName);
             AssertIsRecent(dbItem.UpdatedDateTimeUtc);
