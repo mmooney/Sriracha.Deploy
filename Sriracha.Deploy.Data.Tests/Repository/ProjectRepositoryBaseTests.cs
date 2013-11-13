@@ -54,7 +54,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
         {
             string projectName = Guid.NewGuid().ToString();
             
-            var sut = this.GetRepository();
+            var sut = this.GetRepository(); 
 
             var result = sut.CreateProject(projectName, false);
             Assert.IsNotNull(result);
