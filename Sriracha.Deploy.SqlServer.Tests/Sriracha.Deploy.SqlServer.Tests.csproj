@@ -98,10 +98,6 @@
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Sriracha.Deploy.SqlServer.RoundhousE\Sriracha.Deploy.SqlServer.RoundhousE.csproj">
-      <Project>{1aa839c6-9057-40a5-9f35-249b55a4c0d5}</Project>
-      <Name>Sriracha.Deploy.SqlServer.RoundhousE</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.SqlServer\Sriracha.Deploy.SqlServer.csproj">
       <Project>{21c46193-7ee6-4a8e-9307-38b1df745519}</Project>
       <Name>Sriracha.Deploy.SqlServer</Name>
