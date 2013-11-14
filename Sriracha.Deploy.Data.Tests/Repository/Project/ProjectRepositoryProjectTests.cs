@@ -9,27 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Tests.Repository
+namespace Sriracha.Deploy.Data.Tests.Repository.Project
 {
 	[TestFixture]
-	public abstract class ProjectRepositoryBaseProjectTests : RepositoryTestBase<IProjectRepository>
+	public abstract class ProjectRepositoryBaseProjectTests : ProjectRepositoryTestBase
 	{
-        protected Mock<IUserIdentity> UserIdentity { get; private set; }
-        protected Mock<NLog.Logger> Logger { get; private set; }
-        protected string UserName { get; private set; }
-        protected Fixture Fixture { get; private set; }
-
-        protected void AssertIsRecent(DateTime dateTime)
-        {
-            Assert.Greater(DateTime.UtcNow, dateTime);
-            Assert.Less(DateTime.UtcNow.AddMinutes(-2), dateTime);
-        }
-
-        protected DeployProject CreateTestProject(IProjectRepository sut)
-        {
- 	        return sut.CreateProject(this.Fixture.Create<string>("ProjectName"), false);
-        }
-
         private void AssertProject(DeployProject expected, DeployProject actual)
         {
             Assert.IsNotNull(actual);
@@ -41,25 +25,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
             Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-        }
-
-        private void AssertDateEqual(DateTime expected, DateTime actual)
-        {
-            Assert.AreEqual(expected.Date, actual.Date);
-            Assert.AreEqual(expected.Hour, actual.Hour);
-            Assert.AreEqual(expected.Minute, actual.Minute);
-            Assert.AreEqual(expected.Second, actual.Second);
-        }
-
-
-        [SetUp]
-        public void SetUp()
-        {
-            this.Fixture = new Fixture();
-            this.UserName = this.Fixture.Create<string>("UserName");
-            this.UserIdentity = new Mock<IUserIdentity>();
-            this.UserIdentity.Setup(i=>i.UserName).Returns(this.UserName);
-            this.Logger = new Mock<NLog.Logger>();
         }
 
         [Test]
@@ -140,55 +105,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             var sut = GetRepository();
             string projectId = Guid.NewGuid().ToString();
             Assert.Throws<RecordNotFoundException>(() => sut.GetProject(projectId));
-        }
-
-        [Test]
-        public void CreateBranch_CanCreateBranch()
-        {
-            var sut = this.GetRepository();
-
-            var project = this.CreateTestProject(sut);
-
-            string branchName = this.Fixture.Create<string>("BranchName");
-            var result = sut.CreateBranch(project.Id, branchName);
-
-            Assert.IsNotNull(result);
-            Assert.IsNotNullOrEmpty(result.Id);
-            Assert.AreEqual(project.Id, result.ProjectId);
-
-            var dbProject = sut.GetProject(result.ProjectId);
-            Assert.IsNotNull(dbProject);
-            Assert.AreEqual(1, dbProject.BranchList.Count);
-            Assert.AreEqual(result.Id, dbProject.BranchList[0].Id);
-            Assert.AreEqual(project.Id, dbProject.BranchList[0].ProjectId);
-            Assert.AreEqual(branchName, dbProject.BranchList[0].BranchName);
-        }
-
-        [Test]
-        public void CreateBranch_MissingBranchName_ThrowsError()
-        {
-            var sut = this.GetRepository();
-            string projectId = Guid.NewGuid().ToString();
-            string branchName = null;
-            Assert.Throws<ArgumentNullException>(() => sut.CreateBranch(projectId, branchName));
-        }
-
-        [Test]
-        public void CreateBranch_MissingProjectId_ThrowsError()
-        {
-            var sut = this.GetRepository();
-            string projectId = null;
-            string branchName = Guid.NewGuid().ToString();
-            Assert.Throws<ArgumentNullException>(() => sut.CreateBranch(projectId, branchName));
-        }
-
-        [Test]
-        public void CreateBranch_BadProjectId_ThrowsError()
-        {
-            var sut = this.GetRepository();
-            string projectId = Guid.NewGuid().ToString();
-            string branchName = Guid.NewGuid().ToString();
-            Assert.Throws<RecordNotFoundException>(() => sut.CreateBranch(projectId, branchName));
         }
 
         [Test]
@@ -356,7 +272,5 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
             Assert.Throws<ArgumentNullException>(() => sut.TryGetProjectByName(null));
         }
-
-
     }
 }

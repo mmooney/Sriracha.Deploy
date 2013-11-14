@@ -86,7 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmbeddedSqlServerProvider.cs" />
-    <Compile Include="SqlServerProjectRepositoryTests.cs" />
+    <Compile Include="SqlServerProjectRepositoryProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,12 +9,12 @@ using MMDB.Shared;
 using Moq;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto.Project;
-using Sriracha.Deploy.Data.Tests.Repository;
+using Sriracha.Deploy.Data.Tests.Repository.Project;
 using Raven.Client;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
-	public class RavenProjectRepositoryProjectTests : ProjectRepositoryBaseProjectTests
+	public class RavenProjectRepositoryProjectTests : ProjectRepositoryTestBase
 	{
         protected IDocumentSession DocumentSession { get; private set; }
 
