@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security;
 
 namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 {
@@ -59,20 +60,24 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 			return _encrypterator.Encrypt(userName, password);
 		}
 
-		private string DecrypedPassword(string userName, string encryptedPassword)
-		{
-			return _encrypterator.Decrypt(userName, encryptedPassword);
-		}
-
-
 		public DeployCredentials GetCredentials(string credentialsId)
 		{
 			return _credentialsRepository.GetCredentials(credentialsId);
 		}
 
+		public SecureString DecryptPasswordSecure(DeployCredentials credentials)
+		{
+			var returnValue = new SecureString();
+			foreach (var c in _encrypterator.Decrypt(credentials.UserName, credentials.EncryptedPassword))
+			{
+				returnValue.AppendChar(c);
+			}
+			return returnValue;
+		}
+
 		public string DecryptPassword(DeployCredentials credentials)
 		{
-			return this.DecrypedPassword(credentials.UserName, credentials.EncryptedPassword);
+			return _encrypterator.Decrypt(credentials.UserName, credentials.EncryptedPassword);
 		}
 	}
 }

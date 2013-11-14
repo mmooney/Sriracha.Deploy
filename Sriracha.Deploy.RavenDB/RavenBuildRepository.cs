@@ -109,7 +109,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing build ID");
 			}
-			return this._documentSession.Load<DeployBuild>(buildId);
+			return this._documentSession.LoadEnsure<DeployBuild>(buildId);
 		}
 
 		public DeployBuild UpdateBuild(string buildId, string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)

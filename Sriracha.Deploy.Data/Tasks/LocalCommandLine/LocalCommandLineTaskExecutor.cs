@@ -9,6 +9,8 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Utility;
+using Sriracha.Deploy.Data.Credentials;
+using System.Security.Principal;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Validation;
@@ -20,11 +22,15 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 		private const string ValueMask = "*****";
 		private readonly IProcessRunner _processRunner;
 		private readonly IDeploymentValidator _validator;
+		private readonly ICredentialsManager _credentialsManager;
+		private readonly IImpersonator _impersonator;
 
-		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
+		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator, ICredentialsManager credentialsManager, IImpersonator impersonator) : base(buildParameterEvaluator)
 		{
-			this._processRunner = DIHelper.VerifyParameter(processRunner);
-			this._validator = DIHelper.VerifyParameter(validator);
+			_processRunner = DIHelper.VerifyParameter(processRunner);
+			_validator = DIHelper.VerifyParameter(validator);
+			_credentialsManager = DIHelper.VerifyParameter(credentialsManager);
+			_impersonator = DIHelper.VerifyParameter(impersonator);
 		}
 
 		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
@@ -54,7 +60,26 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			using (var standardOutputWriter = new StringWriter())
 			using(var errorOutputWriter = new StringWriter())
 			{
-				int result = _processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
+				int result;
+				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId))
+				{
+					result = _processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
+				}
+				else 
+				{
+					var credentials = _credentialsManager.GetCredentials(environmentComponent.DeployCredentialsId);
+					using(var impersonation = _impersonator.BeginImpersonation(credentials.Id))
+					{
+						statusManager.Info(deployStateId, string.Format("Starting process as {0} impersonating {1}", WindowsIdentity.GetCurrent().Name, credentials.DisplayValue));
+						using(var password = _credentialsManager.DecryptPasswordSecure(credentials))
+						{
+							string exePath = Path.GetFullPath(definition.Options.ExecutablePath);
+							statusManager.Info(deployStateId,string.Format("For Options.ExecutablePath {0}, using {1}", definition.Options.ExecutablePath, exePath));
+							//result = _processRunner.RunAsUser(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, credentials.Domain, credentials.UserName, password);
+							result = _processRunner.RunAsToken(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, impersonation.TokenHandle);
+						}
+					}
+				}
 				string standardOutput = standardOutputWriter.GetStringBuilder().ToString();
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
 				if(result == 0)

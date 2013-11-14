@@ -98,6 +98,7 @@
     <Compile Include="Account\AuthResponse.cs" />
     <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
     <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
+    <Compile Include="Credentials\CredentialsImpl\ProcessSample.cs" />
     <Compile Include="Credentials\IImpersonator.cs" />
     <Compile Include="Credentials\CredentialsImpl\Impersonator.cs" />
     <Compile Include="Credentials\CredentialsImpl\AppSettingKeyEncrypterator.cs" />
