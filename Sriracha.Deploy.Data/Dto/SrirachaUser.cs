@@ -29,8 +29,8 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public DateTime CreatedDateTimcUtc { get; set; }
 		public string CreatedByUserName { get; set; }
-		public DateTime ModifiedDateTimeUtc { get; set; }
-		public string ModifiedByUserName { get; set; }
+		public DateTime UpdatedDateTimeUtc { get; set; }
+		public string UpdatedByUserName { get; set; }
 
 		public List<ProjectNotificationItem> ProjectNotificationItemList { get; set; }
 

@@ -101,5 +101,19 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
 				ProjectNotificationItemList = projectNotificationItemList
 			};
 		}
+
+
+		public void EnsureUserAccount(string userName)
+		{
+			var user = _membershipRepository.TryLoadUserByUserName(userName);
+			if(user == null)
+			{
+				user = new SrirachaUser
+				{
+					UserName = userName
+				};
+				_membershipRepository.CreateUser(user);
+			}
+		}
 	}
 }

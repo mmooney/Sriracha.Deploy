@@ -12,5 +12,7 @@ namespace Sriracha.Deploy.Data.Account
 		AccountSettings GetAccountSettings(string userName);
 
 		AccountSettings UpdateCurrentUserSettings(string emailAddress, List<ProjectNotificationItem> projectNotificationItemList);
+
+		void EnsureUserAccount(string userName);
 	}
 }

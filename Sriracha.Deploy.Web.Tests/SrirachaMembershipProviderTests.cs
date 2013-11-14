@@ -59,8 +59,8 @@ namespace Sriracha.Deploy.Web.Tests
 						UserGuid = (Guid)testData.ProviderUserKey,
 						CreatedDateTimcUtc = DateTime.UtcNow.AddDays(-5),
 						CreatedByUserName = "UserTestData",
-						ModifiedDateTimeUtc = DateTime.UtcNow.AddDays(-10),
-						ModifiedByUserName = "UserTestData"
+						UpdatedDateTimeUtc = DateTime.UtcNow.AddDays(-10),
+						UpdatedByUserName = "UserTestData"
 					};
 					testData.SrirachaUser.EncryptedPassword = testData.EncryptedPassword;
 					testData.Repository.Setup(i => i.LoadUserByUserName(It.Is<string>(j => j == testData.UserName))).Returns(testData.SrirachaUser);

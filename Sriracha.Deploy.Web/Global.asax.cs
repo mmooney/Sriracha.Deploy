@@ -22,12 +22,8 @@ namespace Sriracha.Deploy.Web
 
 		void MvcApplication_AuthenticateRequest(object sender, EventArgs e)
 		{
-			if(this.Request.IsAuthenticated)
-			{
-				//For NT auth, ensure that the membership provider creates the user if they don't already exist
-				var currentUser = Membership.GetUser();	
-			}
 		}
+
 
 		protected void Application_Start()
 		{

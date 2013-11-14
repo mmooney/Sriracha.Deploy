@@ -16,10 +16,12 @@ namespace Sriracha.Deploy.RavenDB
 	public class RavenMembershipRepository : IMembershipRepository
 	{
 		private readonly IDocumentSession _documentSession;
+		private readonly IUserIdentity _userIdentity;
 
-		public RavenMembershipRepository(IDocumentSession documentSession)
+		public RavenMembershipRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
+			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
 		public SrirachaUser CreateUser(SrirachaUser user)
@@ -30,6 +32,10 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentException(string.Format("User with username {0} already exists", user.UserName));
 			}
+			dbUser.CreatedByUserName = _userIdentity.UserName;
+			dbUser.CreatedDateTimcUtc = DateTime.UtcNow;
+			dbUser.UpdatedByUserName = _userIdentity.UserName;
+			dbUser.UpdatedDateTimeUtc = DateTime.UtcNow;
 			dbUser.Id = FormatId(dbUser.UserName);
 			_documentSession.Store(dbUser);
 			try 
@@ -53,6 +59,8 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			var dbUser = this.LoadUserByUserName(user.UserName);
 			AutoMapper.Mapper.Map(dbUser, user.UserName);
+			user.UpdatedByUserName = _userIdentity.UserName;
+			user.UpdatedDateTimeUtc = DateTime.UtcNow;
 			_documentSession.SaveChanges();
 			return dbUser;
 		}
