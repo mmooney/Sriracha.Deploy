@@ -75,7 +75,8 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 						{
 							string exePath = Path.GetFullPath(definition.Options.ExecutablePath);
 							statusManager.Info(deployStateId,string.Format("For Options.ExecutablePath {0}, using {1}", definition.Options.ExecutablePath, exePath));
-							result = _processRunner.Run(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, credentials.Domain, credentials.UserName, password);
+							//result = _processRunner.RunAsUser(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, credentials.Domain, credentials.UserName, password);
+							result = _processRunner.RunAsToken(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, impersonation.TokenHandle);
 						}
 					}
 				}

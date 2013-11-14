@@ -24,6 +24,14 @@ namespace Sriracha.Deploy.Data.Credentials
 			_context = context;
 		}
 
+		public SafeTokenHandle TokenHandle 
+		{ 
+			get
+			{
+				return _handle;
+			}
+		}
+
 		public DeployCredentialsMasked Credentials
 		{
 			get 
