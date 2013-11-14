@@ -118,6 +118,7 @@
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
+    <Compile Include="Dto\CleanupTaskData.cs" />
     <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlan.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueue.cs" />
@@ -154,10 +155,12 @@
     <Compile Include="Build\IBuildParameterEvaluator.cs" />
     <Compile Include="Build\IBuildPublisher.cs" />
     <Compile Include="Build\IBuildPurger.cs" />
+    <Compile Include="ICleanupManager.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Deployment\IDeployQueueManager.cs" />
     <Compile Include="Build\BuildImpl\BuildParameterEvaluator.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployQueueManager.cs" />
+    <Compile Include="Impl\CleanupManager.cs" />
     <Compile Include="Impl\PermissionValidator.cs" />
     <Compile Include="Project\ProjectImpl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
@@ -168,6 +171,7 @@
     <Compile Include="Notifications\FakeProjectNofifier.cs" />
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
+    <Compile Include="Repository\ICleanupRepository.cs" />
     <Compile Include="Repository\ICredentialsRepository.cs" />
     <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />

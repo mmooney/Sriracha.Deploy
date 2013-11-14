@@ -20,8 +20,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly IDeployQueueManager _deployQueueManager;
 		private readonly IDeploymentPlanBuilder _deploymentPlanBuilder;
 		private readonly IDIFactory _diFactory;
+		private readonly ICleanupManager _cleanupManager;
 
-		public DeployBatchParallelRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployQueueManager deployQueueManager, IDeployRequestManager deployRequestManager, IDeploymentPlanBuilder deploymentPlanBuilder, IDIFactory diFactory)
+		public DeployBatchParallelRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployQueueManager deployQueueManager, IDeployRequestManager deployRequestManager, IDeploymentPlanBuilder deploymentPlanBuilder, IDIFactory diFactory, ICleanupManager cleanupManager)
 		{
 			_logger = DIHelper.VerifyParameter(logger);
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
@@ -30,6 +31,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 			_deploymentPlanBuilder = DIHelper.VerifyParameter(deploymentPlanBuilder);
 			_diFactory = DIHelper.VerifyParameter(diFactory);
+			_cleanupManager = DIHelper.VerifyParameter(cleanupManager);
 		}
 
 		public void ForceRunDeployment(string deployBatchRequestId)
@@ -68,6 +70,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				LocalDeployDirectory = deployDirectory
 			};
 			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
+			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
 			var plan = _deploymentPlanBuilder.Build(deployBatchRequest);
 			//_deployStateManager.SaveDeploymentPlan(plan);
 			foreach (var parallelBatchList in plan.ParallelBatchList)

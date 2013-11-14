@@ -9,7 +9,7 @@
 		$scope.deployHistory = SrirachaResource.deployHistory.get(
             { buildIdList: [$routeParams.buildId] },
             function () {
-                console.log($scope.deployHistory);
+                //console.log($scope.deployHistory);
             },
             function (err) {
                 ErrorReporter.handleResourceError(err);

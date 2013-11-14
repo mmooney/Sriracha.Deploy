@@ -26,7 +26,7 @@
 						projectComponentId: x.build.projectComponentId
 					};
 					$scope.selectedItems.push(x);
-					console.log(x);
+					//console.log(x);
 					if (x.machineList && x.machineList.length) {
 					    _.each(x.machineList, function (machine) {
 					        $scope.ensureLatestBuildCache(x.build.projectId, x.build.projectBranchId, x.build.projectComponentId, machine.environmentId);
@@ -456,20 +456,20 @@
 	        var latestItem = $scope.latestBuildCache[cacheKey];
 	        if (latestItem) {
 	            if (latestItem.sortableVersion && build.sortableVersion) {
-	                console.log(latestItem, latestItem.sortableVersion, build.sortableVersion, latestItem.sortableVersion > build.sortableVersion);
+	                //console.log(latestItem, latestItem.sortableVersion, build.sortableVersion, latestItem.sortableVersion > build.sortableVersion);
 	                if (latestItem.sortableVersion > build.sortableVersion) {
 	                    return true;
 	                }
 	            }
 	            else {
-	                console.log(latestItem, latestItem.version, build.version, latestItem.version > build.version);
+	                //console.log(latestItem, latestItem.version, build.version, latestItem.version > build.version);
 	                if (latestItem.version > build.version) {
 	                    return true;
 	                }
 	            }
 	        }
 	        else {
-                console.log("no ltest item")
+                //console.log("no ltest item")
 	        }
         }
 	}

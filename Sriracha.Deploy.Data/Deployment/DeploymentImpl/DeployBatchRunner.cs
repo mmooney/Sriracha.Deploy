@@ -17,8 +17,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly IDeployRequestManager _deployRequestManager;
 		private IDeployRunner _deployRunner;
 		private IDeployQueueManager _deployQueueManager;
+		private ICleanupManager _cleanupManager;
 
-		public DeployBatchRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployRunner deployRunner, IDeployQueueManager deployQueueManager, IDeployRequestManager deployRequestManager)
+		public DeployBatchRunner(NLog.Logger logger, ISystemSettings systemSettings, IDeployStateManager deployStateManager, IDeployRunner deployRunner, IDeployQueueManager deployQueueManager, IDeployRequestManager deployRequestManager, ICleanupManager cleanupManager)
 		{
 			_logger = DIHelper.VerifyParameter(logger);
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
@@ -26,6 +27,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_deployRunner = DIHelper.VerifyParameter(deployRunner);
 			_deployQueueManager = DIHelper.VerifyParameter(deployQueueManager);
 			_deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
+			_cleanupManager = DIHelper.VerifyParameter(_cleanupManager);
 		}
 
 		public void ForceRunDeployment(string deployBatchRequestId)
@@ -59,11 +61,13 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				}
 				deployDirectory = newDeployDirectory;
 			}
+
 			var runtimeSettings = new RuntimeSystemSettings
 			{
 				LocalDeployDirectory = deployDirectory
 			};
 			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
+			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
 			foreach (var item in deployBatchRequest.ItemList)
 			{
 				foreach (var machine in item.MachineList)

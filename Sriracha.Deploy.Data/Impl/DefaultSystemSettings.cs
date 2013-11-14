@@ -169,5 +169,13 @@ namespace Sriracha.Deploy.Data.Impl
 			get { return _gcFlushJobIntervalSeconds.GetValueOrDefault(60*60); }
 			set { _gcFlushJobIntervalSeconds = value; }
 		}
+
+		private int? _deploymentFolderCleanupMinutes;
+		public int DeploymentFolderCleanupMinutes 
+		{ 
+			get { return _deploymentFolderCleanupMinutes.GetValueOrDefault(60*24); }
+			set { _deploymentFolderCleanupMinutes = value; }
+		}
+
 	}
 }
