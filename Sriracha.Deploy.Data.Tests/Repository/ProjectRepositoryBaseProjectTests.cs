@@ -12,7 +12,7 @@ using System.Text;
 namespace Sriracha.Deploy.Data.Tests.Repository
 {
 	[TestFixture]
-	public abstract class ProjectRepositoryBaseTests : RepositoryTestBase<IProjectRepository>
+	public abstract class ProjectRepositoryBaseProjectTests : RepositoryTestBase<IProjectRepository>
 	{
         protected Mock<IUserIdentity> UserIdentity { get; private set; }
         protected Mock<NLog.Logger> Logger { get; private set; }
@@ -22,12 +22,25 @@ namespace Sriracha.Deploy.Data.Tests.Repository
         protected void AssertIsRecent(DateTime dateTime)
         {
             Assert.Greater(DateTime.UtcNow, dateTime);
-            Assert.Less(DateTime.UtcNow.AddMinutes(-1), dateTime);
+            Assert.Less(DateTime.UtcNow.AddMinutes(-2), dateTime);
         }
 
         protected DeployProject CreateTestProject(IProjectRepository sut)
         {
  	        return sut.CreateProject(this.Fixture.Create<string>("ProjectName"), false);
+        }
+
+        private void AssertProject(DeployProject expected, DeployProject actual)
+        {
+            Assert.IsNotNull(actual);
+            Assert.IsNotNullOrEmpty(actual.Id);
+            Assert.AreEqual(expected.Id, actual.Id);
+            Assert.AreEqual(expected.ProjectName, actual.ProjectName);
+            Assert.AreEqual(expected.UsesSharedComponentConfiguration, actual.UsesSharedComponentConfiguration);
+            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
+            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
+            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
+            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
         }
 
         private void AssertDateEqual(DateTime expected, DateTime actual)
@@ -245,5 +258,105 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             string projectName = string.Empty;
             Assert.Throws<ArgumentNullException>(() => sut.UpdateProject(projectId, projectName, false));
         }
+
+        [Test]
+        public void GetOrCreateProject_CreatesNewProject()
+        {
+            var sut = this.GetRepository();
+
+            string projectName = this.Fixture.Create<string>("ProjectName");
+
+            var result = sut.GetOrCreateProject(projectName);
+            Assert.IsNotNull(result);
+            Assert.IsNotNullOrEmpty(result.Id);
+            Assert.AreEqual(projectName, result.ProjectName);
+            Assert.AreEqual(false, result.UsesSharedComponentConfiguration);
+            Assert.AreEqual(this.UserName, result.CreatedByUserName);
+            AssertIsRecent(result.CreatedDateTimeUtc);
+            Assert.AreEqual(this.UserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+
+            var dbItem = sut.GetProject(result.Id);
+            Assert.AreEqual(projectName, dbItem.ProjectName);
+        }
+
+        [Test]
+        public void GetOrCreateProject_GetsProjectById()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            var result = sut.GetOrCreateProject(project.Id);
+            Assert.IsNotNull(result);
+            Assert.IsNotNullOrEmpty(result.Id);
+            Assert.AreEqual(project.Id, result.Id);
+            Assert.AreEqual(project.ProjectName, result.ProjectName);
+            Assert.AreEqual(project.UsesSharedComponentConfiguration, result.UsesSharedComponentConfiguration);
+            Assert.AreEqual(project.CreatedByUserName, result.CreatedByUserName);
+            AssertDateEqual(project.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(project.UpdatedByUserName, result.UpdatedByUserName);
+            AssertDateEqual(project.UpdatedDateTimeUtc, result.UpdatedDateTimeUtc);
+       }
+
+        [Test]
+        public void GetOrCreateProject_GetsProjectByName()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            var result = sut.GetOrCreateProject(project.ProjectName);
+            AssertProject(project, result);
+        }
+
+
+        [Test]
+        public void GetOrCreateProject_MissingProjectIdOrName_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(()=>sut.GetOrCreateProject(null));
+        }
+
+        [Test]
+        public void TryGetProject_ReturnsProject()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            var result = sut.TryGetProject(project.Id);
+            AssertProject(project, result);
+        }
+
+        [Test]
+        public void TryGetProject_MissingProjectID_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetProject(null));
+        }
+
+        [Test]
+        public void TryGetProjectByName_ReturnsProject()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            var result = sut.TryGetProjectByName(project.ProjectName);
+            AssertProject(project, result);
+        }
+
+        [Test]
+        public void TryGetProjectByName_MissingProjectName_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetProjectByName(null));
+        }
+
+
     }
 }

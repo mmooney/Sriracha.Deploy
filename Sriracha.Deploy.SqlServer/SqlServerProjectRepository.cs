@@ -102,14 +102,44 @@ namespace Sriracha.Deploy.SqlServer
             return project;
         }
 
-        public DeployProject GetOrCreateProject(string projectId, string projectName)
+        public DeployProject GetOrCreateProject(string projectIdOrName)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectIdOrName))
+            {
+                throw new ArgumentNullException("Missing project ID or name");
+            }
+            var project = TryGetProject(projectIdOrName);
+            if(project == null)
+            {
+                project = TryGetProjectByName(projectIdOrName);
+            }
+            if(project == null)
+            {
+                project = CreateProject(projectIdOrName, false);
+            }
+            return project;
         }
 
         public DeployProject TryGetProjectByName(string projectName)
         {
-            throw new NotImplementedException();
+            DeployProject project;
+            if (string.IsNullOrEmpty(projectName))
+            {
+                throw new ArgumentNullException("Missing project name");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                            .Append("FROM Project")
+                            .Append("WHERE ProjectName = @0", projectName);
+                project = db.SingleOrDefault<DeployProject>(sql);
+            }
+            if (project != null)
+            {
+                project.BranchList = GetBranchList(project.Id).ToList();
+            }
+            return project;
         }
 
         public DeployProject GetProjectByName(string projectName)

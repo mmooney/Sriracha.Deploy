@@ -13,7 +13,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration);
 		DeployProject TryGetProject(string projectId);
 		DeployProject GetProject(string projectId);
-		DeployProject GetOrCreateProject(string projectId, string projectName);
+		DeployProject GetOrCreateProject(string projectIdOrName);
 		DeployProject TryGetProjectByName(string projectName);
 		DeployProject GetProjectByName(string projectName);
 		DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration);

@@ -14,7 +14,7 @@ using Raven.Client;
 
 namespace Sriracha.Deploy.RavenDB.Tests
 {
-	public class RavenProjectRepositoryTests : ProjectRepositoryBaseTests
+	public class RavenProjectRepositoryProjectTests : ProjectRepositoryBaseProjectTests
 	{
         protected IDocumentSession DocumentSession { get; private set; }
 

@@ -9,7 +9,7 @@ using System.Text;
 namespace Sriracha.Deploy.SqlServer.Tests
 {
     [TestFixture]
-    public class SqlServerProjectRepositoryTests : ProjectRepositoryBaseTests
+    public class SqlServerProjectRepositoryProjectTests : ProjectRepositoryBaseProjectTests
     {
         protected override IProjectRepository GetRepository()
         {

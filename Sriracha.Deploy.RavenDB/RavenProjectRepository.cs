@@ -65,7 +65,7 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployProject GetOrCreateProject(string projectId, string projectName)
+        public DeployProject GetOrCreateProject(string projectIdOrName)
 		{
 			int retryCounter = 5;
 			while(true)
@@ -75,7 +75,7 @@ namespace Sriracha.Deploy.RavenDB
 					string itemId;
 					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable} ))
 					{
-						var item = _documentSession.Load<DeployProject>(projectId);
+                        var item = _documentSession.LoadNoCache<DeployProject>(projectIdOrName);
 						if(item != null)
 						{
 							itemId = item.Id;
@@ -85,14 +85,14 @@ namespace Sriracha.Deploy.RavenDB
 							item = _documentSession.Query<DeployProject>()
 												.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
 												.Customize(i=>i.NoTracking()).Customize(i=>i.NoCaching())
-												.FirstOrDefault(i=>i.ProjectName == projectName);
+                                                .FirstOrDefault(i => i.ProjectName == projectIdOrName);
 							if(item != null)
 							{
 								itemId = item.Id;
 							}
 							else 
 							{
-								item = CreateProject(projectName, false);
+                                item = CreateProject(projectIdOrName, false);
 								itemId = item.Id;
 								transaction.Complete();
 							}
