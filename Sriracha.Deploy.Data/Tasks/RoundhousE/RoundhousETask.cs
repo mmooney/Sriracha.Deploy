@@ -31,5 +31,10 @@ namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 		{
 			get { return "RoundhousE"; }
 		}
+
+		public override IList<TaskParameter> GetDeployTaskParameterList()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

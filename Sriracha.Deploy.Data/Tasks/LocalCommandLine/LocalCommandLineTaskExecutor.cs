@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 		private readonly ICredentialsManager _credentialsManager;
 		private readonly IImpersonator _impersonator;
 
-		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator, ICredentialsManager credentialsManager, IImpersonator impersonator) : base(buildParameterEvaluator)
+		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IParameterEvaluator buildParameterEvaluator, ICredentialsManager credentialsManager, IImpersonator impersonator) : base(buildParameterEvaluator)
 		{
 			_processRunner = DIHelper.VerifyParameter(processRunner);
 			_validator = DIHelper.VerifyParameter(validator);
@@ -51,8 +51,8 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 		{
 			statusManager.Info(deployStateId, string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
 			var machineResult = validationResult.MachineResultList[machine.Id];
-			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, build, false);
-			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, build, true);
+			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
+			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
 
 			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 
@@ -61,7 +61,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			using(var errorOutputWriter = new StringWriter())
 			{
 				int result;
-				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId))
+				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId) && AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
 				{
 					result = _processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
 				}
@@ -116,7 +116,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, maskedFormattedArgs));
 		}
 
-		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, List<TaskParameter> buildParameters, DeployBuild build, bool masked)
+		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, List<TaskParameter> buildParameters, List<TaskParameter> deployParameters, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, DeployMachine machine, DeployComponent component, bool masked)
 		{
 			string returnValue = format;
 			foreach(var item in environmentValues)
@@ -175,7 +175,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				}
 				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
 			}
-			foreach(var item in buildParameters)
+			foreach (var item in buildParameters)
 			{
 				string value;
 				string fieldName;
@@ -194,6 +194,28 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 				else
 				{
 					value = this.GetBuildParameterValue(item.FieldName, build);
+				}
+				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+			}
+			foreach (var item in deployParameters)
+			{
+				string value;
+				string fieldName;
+				if (item.Sensitive)
+				{
+					fieldName = string.Format("${{deploy:sensitive:{0}}}", item.FieldName);
+				}
+				else
+				{
+					fieldName = string.Format("${{deploy:{0}}}", item.FieldName);
+				}
+				if (masked && item.Sensitive)
+				{
+					value = LocalCommandLineTaskExecutor.ValueMask;
+				}
+				else
+				{
+					value = this.GetDeployParameterValue(item.FieldName, runtimeSystemSettings, machine, component);
 				}
 				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
 			}

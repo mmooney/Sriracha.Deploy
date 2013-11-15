@@ -91,6 +91,87 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 		}
 
+		public class FindDeployParameters
+		{
+			[Test]
+			public void CanFindSingleDeployParameter()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${DEPLOY:testvalue} this is a test";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(1, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+			}
+
+			[Test]
+			public void CanFindMultipleDeployParameters()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${DEPLOY:testvalue} this is a test${DEPLOY:testvalue2}...";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void IgnoresEnvironmentAndMachineParameters()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${DEPLOY:testvalue} this ${ENV:ignoreMe} ${MACHINE:ignoreMe2} is a test${DEPLOY:testvalue2}...";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void IsCaseInsensitive()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${deploy:testvalue} this is a test${dEPLOY:testvalue2}...";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+			[Test]
+			public void HandlesDuplicates()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${deploy:testvalue} this is a test${dEPLOY:testvalue2} and again ${deploy:testvalue} ...";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testvalue", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+
+
+			[Test]
+			public void HandlesDuplicatesCaseInsensitive()
+			{
+				var sut = new ParameterParser();
+				string data = "This is a Test ${deploy:testVALUE} this is a test${dEPLOY:testvalue2} and again ${DEPLOY:TESTvalue} ...";
+
+				var result = sut.FindDeployParameters(data);
+
+				Assert.AreEqual(2, result.Count);
+				Assert.AreEqual("testVALUE", result[0]);
+				Assert.AreEqual("testvalue2", result[1]);
+			}
+		}
+
 		public class FindBuildParameters
 		{
 			[Test]

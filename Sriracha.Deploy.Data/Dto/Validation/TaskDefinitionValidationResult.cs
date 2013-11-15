@@ -25,12 +25,14 @@ namespace Sriracha.Deploy.Data.Dto.Validation
 		public List<TaskDefinitionValidationResultItem> EnvironmentResultList { get; set; }
 		public Dictionary<string, List<TaskDefinitionValidationResultItem>> MachineResultList { get; set; }
 		public List<TaskParameter> BuildParameterList { get; set; }
+		public List<TaskParameter> DeployParameterList { get; set; }
 
 		public TaskDefinitionValidationResult()
 		{
 			this.EnvironmentResultList = new List<TaskDefinitionValidationResultItem>();
 			this.MachineResultList = new Dictionary<string,List<TaskDefinitionValidationResultItem>>();
 			this.BuildParameterList = new List<TaskParameter>();
+			this.DeployParameterList = new List<TaskParameter>();
 		}
 
 		public EnumRuntimeValidationStatus Status

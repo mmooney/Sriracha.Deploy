@@ -11,7 +11,8 @@ namespace Sriracha.Deploy.Data
 		Static,
 		Environment,
 		Machine,
-		Build
+		Build,
+		Deploy
 	}
 
 	public enum EnumDeployBatchAction

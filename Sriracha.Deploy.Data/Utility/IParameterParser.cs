@@ -11,5 +11,6 @@ namespace Sriracha.Deploy.Data.Utility
 		List<string> FindMachineParameters(string value);
 		List<string> FindEnvironmentParameters(string value);
 		List<string> FindBuildParameters(string value);
+		List<string> FindDeployParameters(string value);
 	}
 }

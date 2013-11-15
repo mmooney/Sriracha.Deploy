@@ -6,15 +6,16 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
 	public abstract class BaseDeployTaskExecutor<TaskDefinition> : IDeployTaskExecutor 
 		where TaskDefinition: IDeployTaskDefinition
 	{
-		private readonly IBuildParameterEvaluator _buildParameterEvaluator;
+		private readonly IParameterEvaluator _buildParameterEvaluator;
 
-		public BaseDeployTaskExecutor(IBuildParameterEvaluator buildParamterEvaluator)
+		public BaseDeployTaskExecutor(IParameterEvaluator buildParamterEvaluator)
 		{
 			_buildParameterEvaluator = DIHelper.VerifyParameter(buildParamterEvaluator);
 		}
@@ -35,7 +36,12 @@ namespace Sriracha.Deploy.Data.Tasks
 
 		protected string GetBuildParameterValue(string parameterName, DeployBuild build)
 		{
-			return _buildParameterEvaluator.Evaluate(parameterName, build);
+			return _buildParameterEvaluator.EvaluateBuildParameter(parameterName, build);
+		}
+
+		protected string GetDeployParameterValue(string parameterName, RuntimeSystemSettings runtimeSystemSettings, DeployMachine machine, DeployComponent component)
+		{
+			return _buildParameterEvaluator.EvaluateDeployParameter(parameterName, runtimeSystemSettings, machine, component);
 		}
 
 		protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings);

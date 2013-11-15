@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Dto.Credentials;
 
 namespace Sriracha.Deploy.RavenDB.DataPatcher
 {
@@ -25,6 +26,14 @@ namespace Sriracha.Deploy.RavenDB.DataPatcher
             _diFactory = container.Resolve<IDIFactory>();
 
             var session = _diFactory.CreateInjectedObject<IDocumentSession>();
+
+			var x = session.Query<DeployCredentials>().FirstOrDefault(i=>i.UserName == "mmoone00c");
+			if(x != null)
+			{
+				session.Delete(x);
+				session.SaveChanges();
+			}
+
             bool done = false;
             int processedRecords = 0;
             while(!done) 

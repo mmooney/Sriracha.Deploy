@@ -261,6 +261,12 @@ namespace Sriracha.Deploy.Data.Tests
 				{
 					throw new NotImplementedException();
 				}
+
+
+				public IList<TaskParameter> GetDeployTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
 			}
 
 			[Test]
@@ -420,6 +426,12 @@ namespace Sriracha.Deploy.Data.Tests
 
 
 				public IList<TaskParameter> GetBuildTaskParameterList()
+				{
+					throw new NotImplementedException();
+				}
+
+
+				public IList<TaskParameter> GetDeployTaskParameterList()
 				{
 					throw new NotImplementedException();
 				}

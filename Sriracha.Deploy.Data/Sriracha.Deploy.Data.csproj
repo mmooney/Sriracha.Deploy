@@ -152,13 +152,13 @@
     <Compile Include="Dto\Account\UserEffectivePermissions.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Account\IAccountSettingsManager.cs" />
-    <Compile Include="Build\IBuildParameterEvaluator.cs" />
+    <Compile Include="Deployment\IParameterEvaluator.cs" />
     <Compile Include="Build\IBuildPublisher.cs" />
     <Compile Include="Build\IBuildPurger.cs" />
     <Compile Include="ICleanupManager.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Deployment\IDeployQueueManager.cs" />
-    <Compile Include="Build\BuildImpl\BuildParameterEvaluator.cs" />
+    <Compile Include="Deployment\DeploymentImpl\ParameterEvaluator.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployQueueManager.cs" />
     <Compile Include="Impl\CleanupManager.cs" />
     <Compile Include="Impl\PermissionValidator.cs" />
@@ -181,6 +181,7 @@
     <Compile Include="Notifications\IEmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
+    <Compile Include="ServiceJobs\ICleanupJob.cs" />
     <Compile Include="ServiceJobs\IGCFlushJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\GCFlushJob.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />

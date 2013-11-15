@@ -94,7 +94,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<FileWriter>().As<IFileWriter>().SingleInstance();
 			builder.RegisterType<RegexResolver>().As<IRegexResolver>().SingleInstance();
 			builder.RegisterType<Zipper>().As<IZipper>();
-			builder.RegisterType<BuildParameterEvaluator>().As<IBuildParameterEvaluator>().SingleInstance();
+			builder.RegisterType<ParameterEvaluator>().As<IParameterEvaluator>().SingleInstance();
 			
 			if(AppSettingsHelper.GetBoolSetting("ParallelDeploy", true)) 
 			{

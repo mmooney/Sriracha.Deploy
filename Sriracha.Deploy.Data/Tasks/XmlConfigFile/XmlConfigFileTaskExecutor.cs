@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 		private readonly IFileWriter _fileWriter;
 		private readonly IDeploymentValidator _validator;
 
-		public XmlConfigFileTaskExecutor(IFileWriter fileWriter, IDeploymentValidator validator, IBuildParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
+		public XmlConfigFileTaskExecutor(IFileWriter fileWriter, IDeploymentValidator validator, IParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
 		{
 			_fileWriter = DIHelper.VerifyParameter(fileWriter);
 			_validator = DIHelper.VerifyParameter(validator);

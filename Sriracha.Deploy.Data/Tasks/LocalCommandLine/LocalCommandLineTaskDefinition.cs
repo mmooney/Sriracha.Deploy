@@ -53,7 +53,18 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 					{
 						FieldName = i,
 						FieldType = EnumTaskParameterType.String,
-						Sensitive = false 
+						Sensitive = false
+					}).ToList();
+		}
+
+		public override IList<TaskParameter> GetDeployTaskParameterList()
+		{
+			return (from i in _parameterParser.FindDeployParameters(this.Options.ExecutableArguments)
+					select new TaskParameter
+					{
+						FieldName = i,
+						FieldType = EnumTaskParameterType.String,
+						Sensitive = false
 					}).ToList();
 		}
 

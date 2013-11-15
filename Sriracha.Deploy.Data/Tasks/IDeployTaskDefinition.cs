@@ -13,6 +13,7 @@ namespace Sriracha.Deploy.Data.Tasks
 		IList<TaskParameter> GetEnvironmentTaskParameterList();
 		IList<TaskParameter> GetMachineTaskParameterList();
 		IList<TaskParameter> GetBuildTaskParameterList();
+		IList<TaskParameter> GetDeployTaskParameterList();
 		Type GetTaskExecutorType();
 
 		Type GetTaskOptionType();

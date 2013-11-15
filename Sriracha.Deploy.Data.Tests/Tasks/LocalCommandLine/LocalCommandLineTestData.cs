@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 		public Mock<IDeploymentValidator> Validator { get; set; }
 		public Mock<ICredentialsManager> CredentialsManager { get; set; }
 		public Mock<IImpersonator> Impersonator { get; set; }
-		public Mock<IBuildParameterEvaluator> BuildParameterEvaluator { get; set; }
+		public Mock<IParameterEvaluator> BuildParameterEvaluator { get; set; }
 		public RuntimeSystemSettings RuntimeSystemSettings { get; set; }
 		public List<string> MachineParameters { get; set; }
 		public List<string> EnvironmentParameters { get; set; }
@@ -50,7 +50,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
 				CredentialsManager = new Mock<ICredentialsManager>(),
 				Impersonator = new Mock<IImpersonator>(),
 				Validator = new Mock<IDeploymentValidator>(),
-				BuildParameterEvaluator = new Mock<IBuildParameterEvaluator>(),
+				BuildParameterEvaluator = new Mock<IParameterEvaluator>(),
 				Component = new DeployComponent
 				{
 					Id = Guid.NewGuid().ToString()

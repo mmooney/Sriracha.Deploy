@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Deployment;
 
 namespace Sriracha.Deploy.Data.Tasks.RoundhousE
 {
 	public class RoundhousETaskExecutor : BaseDeployTaskExecutor<RoundhousETask>
 	{
-		public RoundhousETaskExecutor(IBuildParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
+		public RoundhousETaskExecutor(IParameterEvaluator buildParameterEvaluator) : base(buildParameterEvaluator)
 		{
 
 		}

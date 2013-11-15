@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 		public Mock<IFileWriter> FileWriter { get; set; }
 		public Mock<IDeploymentValidator> Validator { get; set; }
 		public Mock<IDeployTaskStatusManager> StatusManager { get; set; }
-		public Mock<IBuildParameterEvaluator> BuildParameterEvaluator { get; set; } 
+		public Mock<IParameterEvaluator> BuildParameterEvaluator { get; set; } 
 		public Dictionary<string, string> ExpectedResult { get; set; }
 		public string DeployStateId { get; set; }
 
@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
 				FileWriter = new Mock<IFileWriter>(),
 				DeployStateId = fixture.Create<string>(),
 				StatusManager = new Mock<IDeployTaskStatusManager>(),
-				BuildParameterEvaluator = new Mock<IBuildParameterEvaluator>(),
+				BuildParameterEvaluator = new Mock<IParameterEvaluator>(),
 				RuntimeSystemSettings = fixture.Create<RuntimeSystemSettings>(),
 				Validator = new Mock<IDeploymentValidator>(),
 				Component = fixture.Create<DeployComponent>(),

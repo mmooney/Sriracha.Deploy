@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Tasks;
 
-namespace Sriracha.Deploy.Data.Build.BuildImpl
+namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
-	public class BuildParameterEvaluator : IBuildParameterEvaluator
+	public class ParameterEvaluator : IParameterEvaluator
 	{
-		public string Evaluate(string parameterName, DeployBuild build)
+		public string EvaluateBuildParameter(string parameterName, DeployBuild build)
 		{
 			if(string.IsNullOrEmpty(parameterName))
 			{
@@ -47,6 +50,26 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				throw new ArgumentException(string.Format("Unable to parse parameter {0} from version {1}", parameterName, version));
 			}
 			return parts[position];
+		}
+
+
+		public string EvaluateDeployParameter(string parameterName, RuntimeSystemSettings runtimeSettings, DeployMachine machine, DeployComponent component)
+		{
+			if (string.IsNullOrEmpty(parameterName))
+			{
+				throw new ArgumentNullException("Missing parameterName");
+			}
+			if (runtimeSettings == null)
+			{
+				throw new ArgumentNullException("Missing runtimeSettings");
+			}
+			switch (parameterName.ToLower())
+			{
+				case "directory":
+					return runtimeSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
+				default:
+					throw new ArgumentException(string.Format("Unrecognized deploy parameter \"{0}\"", parameterName));
+			}
 		}
 	}
 }

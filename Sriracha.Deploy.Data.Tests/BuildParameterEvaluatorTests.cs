@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Build.BuildImpl;
 using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -16,25 +17,25 @@ namespace Sriracha.Deploy.Data.Tests
 		[Test]
 		public void NullParameter_ThrowsArgumentNullException()
 		{
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentNullException>(()=>sut.Evaluate(null, new DeployBuild()));
+			Assert.Throws<ArgumentNullException>(()=>sut.EvaluateBuildParameter(null, new DeployBuild()));
 		}
 
 		[Test]
 		public void NullBuild_ThrowsArgumentNullException()
 		{
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentNullException>(()=>sut.Evaluate(Guid.NewGuid().ToString(), null));
+			Assert.Throws<ArgumentNullException>(()=>sut.EvaluateBuildParameter(Guid.NewGuid().ToString(), null));
 		}
 
 		[Test]
 		public void InvalidParameterName_ThrowsArgumentException()
 		{
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentException>(()=>sut.Evaluate(Guid.NewGuid().ToString(), new DeployBuild()));
+			Assert.Throws<ArgumentException>(()=>sut.EvaluateBuildParameter(Guid.NewGuid().ToString(), new DeployBuild()));
 		}
 
 		[Test]
@@ -45,9 +46,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = fixture.Create<string>()
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("Version", build);
+			var result = sut.EvaluateBuildParameter("Version", build);
 
 			Assert.AreEqual(build.Version, result);
 		}
@@ -60,9 +61,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("MajorVersion", build);
+			var result = sut.EvaluateBuildParameter("MajorVersion", build);
 
 			Assert.AreEqual("123", result);
 		}
@@ -75,9 +76,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("MinorVersion", build);
+			var result = sut.EvaluateBuildParameter("MinorVersion", build);
 
 			Assert.AreEqual("456", result);
 		}
@@ -90,9 +91,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("BuildVersion", build);
+			var result = sut.EvaluateBuildParameter("BuildVersion", build);
 
 			Assert.AreEqual("789", result);
 		}
@@ -105,9 +106,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("RevisionVersion", build);
+			var result = sut.EvaluateBuildParameter("RevisionVersion", build);
 
 			Assert.AreEqual("012", result);
 		}
@@ -120,9 +121,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("MajorVersion", build);
+			var result = sut.EvaluateBuildParameter("MajorVersion", build);
 
 			Assert.AreEqual("123456789012", result);
 		}
@@ -135,9 +136,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentException>(()=>sut.Evaluate("MinorVersion", build));
+			Assert.Throws<ArgumentException>(()=>sut.EvaluateBuildParameter("MinorVersion", build));
 		}
 
 		[Test]
@@ -148,9 +149,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentException>(() => sut.Evaluate("BuildVersion", build));
+			Assert.Throws<ArgumentException>(() => sut.EvaluateBuildParameter("BuildVersion", build));
 		}
 
 		[Test]
@@ -161,9 +162,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			Assert.Throws<ArgumentException>(() => sut.Evaluate("RevisionVersion", build));
+			Assert.Throws<ArgumentException>(() => sut.EvaluateBuildParameter("RevisionVersion", build));
 		}
 
 		[Test]
@@ -174,9 +175,9 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = fixture.Create<string>()
 			};
-			var sut = new BuildParameterEvaluator();
+			var sut = new ParameterEvaluator();
 
-			var result = sut.Evaluate("veRsIon", build);
+			var result = sut.EvaluateBuildParameter("veRsIon", build);
 
 			Assert.AreEqual(build.Version, result);
 		}

@@ -27,6 +27,11 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 			return FindParameters(value, "BUILD:");
 		}
 
+		public List<string> FindDeployParameters(string value)
+		{
+			return FindParameters(value, "DEPLOY:");
+		}
+
 		private List<string> FindParameters(string value, string prefix)
 		{
 			var returnList = new List<string>();
