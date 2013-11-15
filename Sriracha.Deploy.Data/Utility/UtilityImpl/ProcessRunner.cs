@@ -232,6 +232,7 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 				string cmdArguments = string.Format("/c {0} {1} > \"{2}\" 2> \"{3}\"", executablePath, executableParameters, stdoutLogFile, stderrLogFile);
 				var psi = new ProcessStartInfo(cmdPath, cmdArguments)
 				{
+					WorkingDirectory = Environment.CurrentDirectory,
 					UseShellExecute = false,
 					LoadUserProfile = true,
 					Domain = domain,
