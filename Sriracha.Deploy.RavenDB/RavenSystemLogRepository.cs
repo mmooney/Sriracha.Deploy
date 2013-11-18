@@ -16,15 +16,15 @@ namespace Sriracha.Deploy.RavenDB
 {
 	public class RavenSystemLogRepository : ISystemLogRepository
 	{
-		public class SystemLogByDateIndex : AbstractIndexCreationTask<SystemLog>
-		{
-			public SystemLogByDateIndex()
-			{
-				Map = messages => from i in messages
-								  select new { i.MessageDateTimeUtc, i.EnumSystemLogTypeID };
-				Index(x => x.MessageDateTimeUtc, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
-			}
-		}
+		//public class SystemLogByDateIndex : AbstractIndexCreationTask<SystemLog>
+		//{
+		//	public SystemLogByDateIndex()
+		//	{
+		//		Map = messages => from i in messages
+		//						  select new { i.MessageDateTimeUtc, i.EnumSystemLogTypeID };
+		//		Index(x => x.MessageDateTimeUtc, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+		//	}
+		//}
 
 		private readonly IDocumentSession _documentSession;
 		private readonly Logger _logger;
@@ -46,31 +46,31 @@ namespace Sriracha.Deploy.RavenDB
 				MessageText = message,
 				LoggerName = loggerName
 			};
-			this._documentSession.StoreSaveEvict(systemLog);
+			//this._documentSession.StoreSaveEvict(systemLog);
 			return systemLog;
 		}
 
 
 		public void PurgeLogMessages(DateTime utcNow, EnumSystemLogType systemLogType, int? ageMinutes)
 		{
-			if (ageMinutes.HasValue)
-			{
-				DateTime maxDate = utcNow.AddMinutes(0 - ageMinutes.Value);
-				this._logger.Trace(string.Format("Deleting {0} messages older than {1}", systemLogType, maxDate));
-				var query = this._documentSession.Advanced.LuceneQuery<SystemLog, SystemLogByDateIndex>()
-												.WhereEquals("EnumSystemLogTypeID", systemLogType)
-												.AndAlso().WhereLessThan("MessageDateTimeUtc", maxDate);
-				var queryString = query.ToString();
-				this._documentSession.Advanced.DocumentStore.DatabaseCommands.DeleteByIndex
-				(
-					typeof(SystemLogByDateIndex).Name, new IndexQuery
-					{
-						Query = queryString
-					},
-					allowStale: true
-				);
-				this._documentSession.SaveChanges();
-			}
+			//if (ageMinutes.HasValue)
+			//{
+			//	DateTime maxDate = utcNow.AddMinutes(0 - ageMinutes.Value);
+			//	this._logger.Trace(string.Format("Deleting {0} messages older than {1}", systemLogType, maxDate));
+			//	var query = this._documentSession.Advanced.LuceneQuery<SystemLog, SystemLogByDateIndex>()
+			//									.WhereEquals("EnumSystemLogTypeID", systemLogType)
+			//									.AndAlso().WhereLessThan("MessageDateTimeUtc", maxDate);
+			//	var queryString = query.ToString();
+			//	this._documentSession.Advanced.DocumentStore.DatabaseCommands.DeleteByIndex
+			//	(
+			//		typeof(SystemLogByDateIndex).Name, new IndexQuery
+			//		{
+			//			Query = queryString
+			//		},
+			//		allowStale: true
+			//	);
+			//	this._documentSession.SaveChanges();
+			//}
 
 		}
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto.Credentials;
+using System.Diagnostics;
 
 namespace Sriracha.Deploy.RavenDB.DataPatcher
 {
@@ -27,69 +28,95 @@ namespace Sriracha.Deploy.RavenDB.DataPatcher
 
             var session = _diFactory.CreateInjectedObject<IDocumentSession>();
 
-			var x = session.Query<DeployCredentials>().FirstOrDefault(i=>i.UserName == "mmoone00c");
-			if(x != null)
+			if(args != null && args.Contains("--dropAllIndexes", StringComparer.CurrentCultureIgnoreCase))
 			{
-				session.Delete(x);
-				session.SaveChanges();
+				DropAllIndexes(session.Advanced.DocumentStore);
 			}
+			else 
+			{
+				var x = session.Query<DeployCredentials>().FirstOrDefault(i=>i.UserName == "mmoone00c");
+				if(x != null)
+				{
+					session.Delete(x);
+					session.SaveChanges();
+				}
 
-            bool done = false;
-            int processedRecords = 0;
-            while(!done) 
-            {  
-                RavenQueryStatistics stats;
-                var list = session.Query<DeployBuild>()
-                    .Statistics(out stats)
-                    .OrderBy(i=>i.CreatedDateTimeUtc)
-                    .Skip(processedRecords)
-                    .ToList();
-                foreach(var build in list)
-                {
-                    string oldVersion = build.Version;
-                    build.Version = "test";
-                    build.Version = oldVersion;
-                    session.SaveEvict(build);
-                }
-                processedRecords += list.Count;
-                if (processedRecords >= stats.TotalResults)
-                {
-                    done = true;
-                }
-            }
+				bool done = false;
+				int processedRecords = 0;
+				while(!done) 
+				{  
+					RavenQueryStatistics stats;
+					var list = session.Query<DeployBuild>()
+						.Statistics(out stats)
+						.OrderBy(i=>i.CreatedDateTimeUtc)
+						.Skip(processedRecords)
+						.ToList();
+					foreach(var build in list)
+					{
+						string oldVersion = build.Version;
+						build.Version = "test";
+						build.Version = oldVersion;
+						session.SaveEvict(build);
+					}
+					processedRecords += list.Count;
+					if (processedRecords >= stats.TotalResults)
+					{
+						done = true;
+					}
+				}
 
-            done = false;
-            while(!done)
-            {
-                var processedRecordList = new List<string>();
-                RavenQueryStatistics stats;
-                var list = session.Query<DeployState>()
-                    .Statistics(out stats)
-                    .OrderBy(i => i.CreatedDateTimeUtc)
-                    .Take(int.MaxValue)
-                    .Skip(processedRecordList.Count)
-                    .ToList();
-                foreach (var state in list)
-                {
-                    if(processedRecordList.Contains(state.Id))
-                    {
-                        throw new Exception("Duplicatge: " + state.Id);
-                    }
-                    if(state.Build != null)
-                    {
-                        string oldVersion = state.Build.Version;
-                        state.Build.Version = "test";
-                        state.Build.Version = oldVersion;
-                        //session.SaveEvict(state);
-                    }
-                    processedRecordList.Add(state.Id);
-                }
-                session.SaveChanges();
-                if (processedRecordList.Count >= stats.TotalResults)
-                {
-                    done = true;
-                }
+				done = false;
+				while(!done)
+				{
+					var processedRecordList = new List<string>();
+					RavenQueryStatistics stats;
+					var list = session.Query<DeployState>()
+						.Statistics(out stats)
+						.OrderBy(i => i.CreatedDateTimeUtc)
+						.Take(int.MaxValue)
+						.Skip(processedRecordList.Count)
+						.ToList();
+					foreach (var state in list)
+					{
+						if(processedRecordList.Contains(state.Id))
+						{
+							throw new Exception("Duplicatge: " + state.Id);
+						}
+						if(state.Build != null)
+						{
+							string oldVersion = state.Build.Version;
+							state.Build.Version = "test";
+							state.Build.Version = oldVersion;
+							//session.SaveEvict(state);
+						}
+						processedRecordList.Add(state.Id);
+					}
+					session.SaveChanges();
+					if (processedRecordList.Count >= stats.TotalResults)
+					{
+						done = true;
+					}
+				}
             }
         }
+
+		private static void DropAllIndexes(IDocumentStore documentStore)
+		{
+			var indexNames = documentStore.DatabaseCommands.GetIndexNames(0, 1000);
+			foreach(var index in indexNames)
+			{
+				Console.WriteLine("Deleting index " + index);
+				Debug.WriteLine("Deleting index " + index);
+				try 
+				{
+					documentStore.DatabaseCommands.DeleteIndex(index);
+				}
+				catch(Exception err)
+				{
+					Console.WriteLine("Error deleting index " + index + ": " + err.ToString());
+					Debug.WriteLine("Error deleting index " + index + ": " + err.ToString());
+				}
+			}
+		}
     }
 }
