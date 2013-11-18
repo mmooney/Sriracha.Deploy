@@ -61,7 +61,7 @@ namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
 			using(var errorOutputWriter = new StringWriter())
 			{
 				int result;
-				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId) && AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
+				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId) || !AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
 				{
 					result = _processRunner.Run(definition.Options.ExecutablePath, formattedArgs, standardOutputWriter, errorOutputWriter);
 				}
