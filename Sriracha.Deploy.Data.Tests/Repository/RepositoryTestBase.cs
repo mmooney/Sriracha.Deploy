@@ -30,7 +30,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         protected void AssertIsRecent(DateTime dateTime)
         {
-            Assert.GreaterOrEqual(DateTime.UtcNow, dateTime);
+            Assert.GreaterOrEqual(DateTime.UtcNow.AddSeconds(1), dateTime);
             Assert.Less(DateTime.UtcNow.AddMinutes(-2), dateTime);
         }
 

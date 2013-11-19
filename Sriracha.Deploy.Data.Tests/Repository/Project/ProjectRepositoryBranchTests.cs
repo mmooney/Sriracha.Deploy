@@ -10,7 +10,7 @@ using Ploeh.AutoFixture;
 namespace Sriracha.Deploy.Data.Tests.Repository.Project
 {
     [TestFixture]
-    public abstract class ProjectRepositoryBaseBranchTests : ProjectRepositoryTestBase
+    public abstract class ProjectRepositoryBranchTests : ProjectRepositoryTestBase
     {
         [Test]
         public void CreateBranch_CanCreateBranch()

@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmbeddedSqlServerProvider.cs" />
+    <Compile Include="Project\SqlServerProjectRepositoryBranchTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryComponentTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryConfigurationTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryProjectTests.cs" />

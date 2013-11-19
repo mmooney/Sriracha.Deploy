@@ -49,12 +49,8 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		DeployProjectBranch GetBranch(string branchId, string projectId=null);
 		DeployProjectBranch TryGetBranch(string branchId, string projectId = null);
-		DeployProjectBranch GetBranch(DeployProject project, string branchId);
-		DeployProjectBranch TryGetBranch(DeployProject project, string branchId);
 		DeployProjectBranch GetBranchByName(string projectId, string branchName);
 		DeployProjectBranch TryGetBranchByName(string projectId, string branchName);
-		DeployProjectBranch GetBranchByName(DeployProject project, string branchName);
-		DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName);
 		DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId, string projectId);

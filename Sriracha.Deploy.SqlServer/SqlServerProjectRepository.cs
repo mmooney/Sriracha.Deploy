@@ -612,22 +612,40 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployProjectBranch GetBranch(string branchId, string projectId = null)
         {
-            throw new NotImplementedException();
+            var item = this.TryGetBranch(branchId, projectId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
+            }
+            return item;
         }
 
         public DeployProjectBranch TryGetBranch(string branchId, string projectId = null)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(branchId))
+            {
+                throw new ArgumentNullException("Missing branch ID");
+            }
+            if(!string.IsNullOrEmpty(projectId))
+            {
+                VerifyProjectExists(projectId);
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBranchBaseQuery().Append("WHERE ID=@0", branchId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                return db.SingleOrDefault<DeployProjectBranch>(sql);
+            }
         }
 
-        public DeployProjectBranch GetBranch(DeployProject project, string branchId)
+        private PetaPoco.Sql GetBranchBaseQuery()
         {
-            throw new NotImplementedException();
-        }
-
-        public DeployProjectBranch TryGetBranch(DeployProject project, string branchId)
-        {
-            throw new NotImplementedException();
+            return PetaPoco.Sql.Builder
+                .Append("SELECT ID, ProjectID, BranchName, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                .Append("FROM Branch");
         }
 
         public DeployProjectBranch GetBranchByName(string projectId, string branchName)
@@ -636,16 +654,6 @@ namespace Sriracha.Deploy.SqlServer
         }
 
         public DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DeployProjectBranch GetBranchByName(DeployProject project, string branchName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName)
         {
             throw new NotImplementedException();
         }
