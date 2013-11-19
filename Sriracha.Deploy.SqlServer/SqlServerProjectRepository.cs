@@ -36,6 +36,26 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
+        private void VerifyBranchExists(string branchId, string projectId)
+        {
+            if (string.IsNullOrEmpty(branchId))
+            {
+                throw new ArgumentNullException("Missing branch ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var branchExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Branch WHERE ID=@0", branchId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    branchExistsSql = branchExistsSql.Append("AND ProjectID=@0", projectId);
+                }
+                if (db.ExecuteScalar<int>(branchExistsSql) == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployProject), "Id", branchId);
+                }
+            }
+        }
+
         private void VerifyConfigurationExists(string configurationId, string projectId)
         {
             if(string.IsNullOrEmpty(configurationId))
@@ -207,7 +227,7 @@ namespace Sriracha.Deploy.SqlServer
             }
             if (project != null)
             {
-                project.BranchList = GetBranchList(project.Id).ToList();
+                LoadProjectChildren(project);
             }
             return project;
         }
@@ -567,8 +587,13 @@ namespace Sriracha.Deploy.SqlServer
             throw new NotImplementedException();
         }
 
-        public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
+        public List<DeployProjectBranch> GetBranchList(string projectId)
         {
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
@@ -626,10 +651,6 @@ namespace Sriracha.Deploy.SqlServer
             {
                 throw new ArgumentNullException("Missing branch ID");
             }
-            if(!string.IsNullOrEmpty(projectId))
-            {
-                VerifyProjectExists(projectId);
-            }
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetBranchBaseQuery().Append("WHERE ID=@0", branchId);
@@ -650,30 +671,110 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployProjectBranch GetBranchByName(string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            var item = TryGetBranchByName(projectId, branchName);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployProjectBranch), "BranchName", branchName);
+            }
+            return item;
         }
 
         public DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if (string.IsNullOrEmpty(branchName))
+            {
+                throw new ArgumentNullException("Missing brandh name");
+            }
+            VerifyProjectExists(projectId);
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBranchBaseQuery().Where("ProjectID=@0 AND BranchName=@1", projectId, branchName);
+                return db.SingleOrDefault<DeployProjectBranch>(sql);
+            }
         }
 
-        public DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName)
+        public DeployProjectBranch GetOrCreateBranch(string projectId, string branchIdOrName)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(branchIdOrName))
+            {
+                throw new ArgumentNullException("Missing branch ID or name");
+            }
+            VerifyProjectExists(projectId);
+            var item = TryGetBranch(branchIdOrName, projectId);
+            if(item == null)
+            {
+                item = TryGetBranchByName(projectId, branchIdOrName);
+            }
+            if(item == null)
+            {
+                item = CreateBranch(projectId, branchIdOrName);
+            }
+            return item;
         }
 
         public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(branchId))
+            {
+                throw new ArgumentNullException("Missing branch ID");
+            }
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(branchName))
+            {
+                throw new ArgumentNullException("Missing branch name");
+            }
+            VerifyProjectExists(projectId);
+            VerifyBranchExists(branchId, projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE Branch")
+                            .Append("SET BranchName=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", branchName, _userIdentity.UserName, DateTime.UtcNow)
+                            .Append("WHERE ID=@0", branchId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                db.Execute(sql);
+            }
+            return GetBranch(branchId, projectId);
         }
 
         public void DeleteBranch(string branchId, string projectId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(branchId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(!string.IsNullOrEmpty(projectId))
+            {
+                VerifyProjectExists(projectId);
+            }
+            VerifyBranchExists(branchId, projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM Branch WHERE ID=@0", branchId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                db.Execute(sql);
+            }
         }
 
-        public IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId)
+        public List<DeployEnvironment> GetEnvironmentList(string projectId)
         {
             throw new NotImplementedException();
         }

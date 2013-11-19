@@ -45,17 +45,17 @@ namespace Sriracha.Deploy.Data.Repository
 		void DeleteComponentDeploymentStep(string deploymentStepId);
 		void DeleteConfigurationDeploymentStep(string deploymentStepId);
 
-		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
+		List<DeployProjectBranch> GetBranchList(string projectId);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
 		DeployProjectBranch GetBranch(string branchId, string projectId=null);
 		DeployProjectBranch TryGetBranch(string branchId, string projectId = null);
 		DeployProjectBranch GetBranchByName(string projectId, string branchName);
 		DeployProjectBranch TryGetBranchByName(string projectId, string branchName);
-		DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName);
+		DeployProjectBranch GetOrCreateBranch(string projectId, string branchIdOrName);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId, string projectId);
 
-		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
+		List<DeployEnvironment> GetEnvironmentList(string projectId);
 		DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
 		DeployEnvironment GetEnvironment(string environmentId);
 		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);

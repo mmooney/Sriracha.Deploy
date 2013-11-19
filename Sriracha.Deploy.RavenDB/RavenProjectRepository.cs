@@ -673,7 +673,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		}
 		
-		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
+		public List<DeployProjectBranch> GetBranchList(string projectId)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
@@ -729,7 +729,11 @@ namespace Sriracha.Deploy.RavenDB
 			DeployProject project;
 			if(projectId != null)
 			{
-				project = GetProject(projectId);
+				project = TryGetProject(projectId);
+                if(project == null)
+                {
+                    return null;
+                }
 			}
 			else 
 			{
@@ -737,43 +741,12 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			if (project != null)
 			{
-				return project.BranchList.First(i => i.Id == branchId);
+				return project.BranchList.FirstOrDefault(i => i.Id == branchId);
 			}
 			else 
 			{
 				return null;
 			}
-		}
-
-		public DeployProjectBranch GetBranch(DeployProject project, string branchId)
-		{
-			if (string.IsNullOrEmpty(branchId))
-			{
-				throw new ArgumentNullException("Missing branch ID");
-			}
-			if (project == null)
-			{
-				throw new ArgumentNullException("Project is null");
-			}
-			var branch = this.TryGetBranch(project, branchId);
-			if (branch == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
-			}
-			return branch;
-		}
-		
-		public DeployProjectBranch TryGetBranch(DeployProject project, string branchId)
-		{
-			if (string.IsNullOrEmpty(branchId))
-			{
-				throw new ArgumentNullException("Missing branch ID");
-			}
-			if (project == null)
-			{
-				throw new ArgumentNullException("Project is null");
-			}
-			return project.BranchList.FirstOrDefault(i => i.Id == branchId);
 		}
 
 		public DeployProjectBranch GetBranchByName(string projectId, string branchName)
@@ -796,29 +769,19 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
 		{
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(branchName))
+            {
+                throw new ArgumentNullException("Missing branch name");
+            }
 			var project = this.GetProject(projectId);
-			return this.GetBranchByName(project, branchName);
-		}
-
-		public DeployProjectBranch GetBranchByName(DeployProject project, string branchName)
-		{
-			if (project == null)
-			{
-				throw new ArgumentNullException("Missing Project");
-			}
-			if (string.IsNullOrWhiteSpace(branchName))
-			{
-				throw new ArgumentNullException("Missing Branch Name");
-			}
 			return project.BranchList.FirstOrDefault(i => i.BranchName == branchName);
 		}
 
-		public DeployProjectBranch TryGetBranchByName(DeployProject project, string branchName)
-		{
-			return project.BranchList.FirstOrDefault(i=>i.BranchName == branchName);
-		}
-
-		public DeployProjectBranch GetOrCreateBranch(string projectId, string branchId, string branchName)
+		public DeployProjectBranch GetOrCreateBranch(string projectId, string branchIdOrName)
 		{
 			int retryCounter = 5;
 			while(true)
@@ -829,21 +792,21 @@ namespace Sriracha.Deploy.RavenDB
 					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable }))
 					{
 						var project = GetProject(projectId);
-						var item = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
+                        var item = project.BranchList.FirstOrDefault(i => i.Id == branchIdOrName);
 						if(item != null)
 						{
 							itemId = item.Id;
 						}
 						else 
 						{
-							item = project.BranchList.FirstOrDefault(i=>i.BranchName == branchName);
+                            item = project.BranchList.FirstOrDefault(i => i.BranchName == branchIdOrName);
 							if(item != null)
 							{
 								itemId = item.Id;
 							}
 							else 
 							{
-								item = CreateBranch(projectId, branchName);
+                                item = CreateBranch(projectId, branchIdOrName);
 								itemId = item.Id;
 								transaction.Complete();
 							}
@@ -878,9 +841,9 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			var branch = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
-			if(branchId == null)
+			if(branch == null)
 			{
-				throw new ArgumentException("Unable to find branch " + branchId + " in project " + projectId);
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
 			}
 			branch.UpdatedByUserName = _userIdentity.UserName;
 			branch.UpdatedDateTimeUtc = DateTime.UtcNow;
@@ -912,14 +875,14 @@ namespace Sriracha.Deploy.RavenDB
 			var branch = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
 			if(branch == null)
 			{
-				throw new KeyNotFoundException(string.Format("Unable to find branch {0} in project {1}", branchId, projectId));
+				throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
 			}
 			project.BranchList.Remove(branch);
 			this._documentSession.SaveEvict(project);
 		}
 
 
-		public IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId)
+		public List<DeployEnvironment> GetEnvironmentList(string projectId)
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{

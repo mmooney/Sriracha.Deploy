@@ -52,7 +52,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 		public DeployBuild CreateBuild(string projectId, string componentId, string branchId, string fileId, string version)
 		{
 			var project = _projectRepository.GetOrCreateProject(projectId);
-			var branch = _projectRepository.GetOrCreateBranch(project.Id, branchId, branchId);
+			var branch = _projectRepository.GetOrCreateBranch(project.Id, branchId);
 			var component = _projectRepository.GetOrCreateComponent(project.Id, componentId, componentId);
 			return this._buildRepository.CreateBuild(project.Id, project.ProjectName, component.Id, component.ComponentName, branch.Id, branch.BranchName, fileId, version);
 		}
