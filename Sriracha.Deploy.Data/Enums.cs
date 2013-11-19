@@ -48,8 +48,8 @@ namespace Sriracha.Deploy.Data
 
     public enum EnumDeploymentIsolationType
     {
-        IsolatedPerMachine,
-        IsolatedPerDeployment,
-        NoIsolation
+        IsolatedPerMachine = 0,
+        IsolatedPerDeployment = 1,
+        NoIsolation = 2
     }
 }

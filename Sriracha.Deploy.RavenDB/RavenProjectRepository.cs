@@ -143,7 +143,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else 
 			{
-				throw new Exception("Multiple projects found with name " + projectName);
+                throw new ArgumentException("Multiple projects found with name " + projectName);
 			}
 		}
 
@@ -230,8 +230,16 @@ namespace Sriracha.Deploy.RavenDB
 
         public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
 		{
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing configuration ID");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var item = project.ConfigurationList.Single(i=>i.Id == configurationId);
+			var item = project.ConfigurationList.SingleOrDefault(i=>i.Id == configurationId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
 			item.ConfigurationName = configurationName;
             item.IsolationType = isolationType;
 			item.UpdatedByUserName = _userIdentity.UserName;
@@ -249,7 +257,7 @@ namespace Sriracha.Deploy.RavenDB
 			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.Id == configurationId));
 			if (project == null)
 			{
-				throw new KeyNotFoundException("No project found for configuration ID " + configurationId);
+				throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
 			}
 			_logger.Info("User {0} deleting configuration {1}", _userIdentity.UserName, configurationId);
 			var configuration = project.ConfigurationList.First(i => i.Id == configurationId);
@@ -281,7 +289,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public IEnumerable<DeployComponent> GetComponentList(string projectId)
+		public List<DeployComponent> GetComponentList(string projectId)
 		{
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			return project.ComponentList;
@@ -446,8 +454,16 @@ namespace Sriracha.Deploy.RavenDB
 
         public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
 		{
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var item = project.ComponentList.Single(i=>i.Id == componentId);
+			var item = project.ComponentList.SingleOrDefault(i=>i.Id == componentId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+            }
 			item.ComponentName = componentName;
 			item.UseConfigurationGroup = useConfigurationGroup;
 			item.ConfigurationId = configurationId;
@@ -474,14 +490,14 @@ namespace Sriracha.Deploy.RavenDB
 				project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.Id == componentId));
 				if (project == null)
 				{
-					throw new KeyNotFoundException("No project found for component ID " + componentId);
+					throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
 				}
 			}
 			_logger.Info("User {0} deleting component {1}", _userIdentity.UserName, componentId);
 			var component = project.ComponentList.FirstOrDefault(i => i.Id == componentId);
 			if(component == null)
 			{
-				throw new KeyNotFoundException(string.Format("Component {0} not found in project {1}", componentId, projectId));
+				throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
 			}
 			project.ComponentList.Remove(component);
 			this._documentSession.SaveEvict(project);

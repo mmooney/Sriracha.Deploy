@@ -37,7 +37,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				project = _projectRepository.GetProjectByName(projectId);
 			}
 			var branch = _projectRepository.GetBranch(project, branchId);
-			var component = _projectRepository.GetComponent(project, componentId);
+			var component = _projectRepository.GetComponent(componentId, project.Id);
 			var file = this._fileRepository.CreateFile(fileName, fileData);
 			var build = this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
 			_projectNotifier.SendBuildPublishedNotification(project, build);
@@ -61,7 +61,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 		{
 			var project = _projectRepository.GetProject(projectId);
 			var branch = _projectRepository.GetBranch(project, branchId);
-			var component = _projectRepository.GetComponent(project, componentId);
+            var component = _projectRepository.GetComponent(componentId, project.Id);
 			return this._buildRepository.UpdateBuild(buildId, projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, fileId, version);
 		}
 

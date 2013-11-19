@@ -14,19 +14,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 	[TestFixture]
 	public abstract class ProjectRepositoryBaseProjectTests : ProjectRepositoryTestBase
 	{
-        private void AssertProject(DeployProject expected, DeployProject actual)
-        {
-            Assert.IsNotNull(actual);
-            Assert.IsNotNullOrEmpty(actual.Id);
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.ProjectName, actual.ProjectName);
-            Assert.AreEqual(expected.UsesSharedComponentConfiguration, actual.UsesSharedComponentConfiguration);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-        }
-
         [Test]
         public void CreateProject_StoresProject()
         {
@@ -271,6 +258,54 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var sut = this.GetRepository();
 
             Assert.Throws<ArgumentNullException>(() => sut.TryGetProjectByName(null));
+        }
+
+        [Test]
+        public void TryGetProjectByName_InvalidProjectName_ReturnsNull()
+        {
+            var sut = this.GetRepository();
+
+            var result = sut.TryGetProjectByName(Guid.NewGuid().ToString());
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void TryGetProjectByName_DuplicateName_ThrowsArgumentException()
+        {
+            var sut = this.GetRepository();
+
+            string projectName = this.Fixture.Create<string>("ProjectName");
+            var project1 = sut.CreateProject(projectName, false);
+            var project2 = sut.CreateProject(projectName, false);
+
+            Assert.Throws<ArgumentException>(()=>sut.TryGetProjectByName(projectName));
+        }
+
+        [Test]
+        public void GetProjectByName_GetsProject()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            var result = sut.GetProjectByName(project.ProjectName);
+            AssertProject(project, result);
+        }
+
+        [Test]
+        public void GetProjectByName_MissingProjectName_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(()=>sut.GetProjectByName(null));
+        }
+
+        [Test]
+        public void GetProjectByName_InvalidProjectName_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetProjectByName(Guid.NewGuid().ToString()));
         }
     }
 }

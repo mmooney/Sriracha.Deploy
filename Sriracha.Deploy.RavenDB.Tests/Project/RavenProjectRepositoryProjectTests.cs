@@ -12,9 +12,9 @@ using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Tests.Repository.Project;
 using Raven.Client;
 
-namespace Sriracha.Deploy.RavenDB.Tests
+namespace Sriracha.Deploy.RavenDB.Tests.Project
 {
-	public class RavenProjectRepositoryProjectTests : ProjectRepositoryTestBase
+	public class RavenProjectRepositoryProjectTests : ProjectRepositoryBaseProjectTests
 	{
         protected IDocumentSession DocumentSession { get; private set; }
 

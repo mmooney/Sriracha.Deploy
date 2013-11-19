@@ -100,9 +100,11 @@
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
     <Compile Include="EmbeddedRavenProvider.cs" />
+    <Compile Include="Project\RavenProjectRepositoryComponentTests.cs" />
+    <Compile Include="Project\RavenProjectRepositoryConfigurationTests.cs" />
     <Compile Include="RavenBuildRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RavenProjectRepositoryProjectTests.cs" />
+    <Compile Include="Project\RavenProjectRepositoryProjectTests.cs" />
     <Compile Include="RavenTestBase.cs" />
     <Compile Include="TempTestDataHelper.cs" />
   </ItemGroup>

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="db\up\0001_CreateTables.sql" />
+    <Content Include="db\up\0002_CreateTables_ConfigurationAndComponent.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DBDeployment.LOCAL.bat" />

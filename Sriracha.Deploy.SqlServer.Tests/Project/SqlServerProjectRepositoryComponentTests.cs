@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.SqlServer.Tests
+namespace Sriracha.Deploy.SqlServer.Tests.Project
 {
     [TestFixture]
-    public class SqlServerProjectRepositoryProjectTests : ProjectRepositoryTestBase
+    public class SqlServerProjectRepositoryComponentTests : ProjectRepositoryComponentTests
     {
         protected override IProjectRepository GetRepository()
         {

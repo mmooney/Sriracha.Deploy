@@ -61,5 +61,20 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.Throws<RecordNotFoundException>(() => sut.CreateBranch(projectId, branchName));
         }
 
+        [Test]
+        public void DeleteProject_DeletesBranch()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+
+            string branchName = this.Fixture.Create<string>("BranchName");
+            var result = sut.CreateBranch(project.Id, branchName);
+
+            sut.DeleteProject(project.Id);
+
+            var dbItem = sut.TryGetBranch(result.Id);
+            Assert.IsNull(dbItem);
+        }
     }
 }

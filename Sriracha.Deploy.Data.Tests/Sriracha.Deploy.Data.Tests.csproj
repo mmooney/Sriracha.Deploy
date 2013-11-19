@@ -69,6 +69,8 @@
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
+    <Compile Include="Repository\Project\ProjectRepositoryComponentTests.cs" />
+    <Compile Include="Repository\Project\ProjectRepositoryConfigurationTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegexResolverTests.cs" />

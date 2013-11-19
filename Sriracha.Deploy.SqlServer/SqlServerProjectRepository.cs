@@ -22,6 +22,10 @@ namespace Sriracha.Deploy.SqlServer
 
         private void VerifyProjectExists(string projectId)
         {
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var projectExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Project WHERE ID=@0", projectId);
@@ -32,6 +36,48 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
+        private void VerifyConfigurationExists(string configurationId, string projectId)
+        {
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing configuration ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var configurationExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Configuration WHERE ID=@0", configurationId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    configurationExistsSql = configurationExistsSql.Append("AND ProjectID=@0", projectId);
+                }
+                if (db.ExecuteScalar<int>(configurationExistsSql) == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+                }
+            }
+        }
+
+
+        private void VerifyComponentExists(string componentId, string projectId)
+        {
+            if (string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component Id");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var configurationExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Component WHERE ID=@0", componentId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    configurationExistsSql = configurationExistsSql.Append("AND ProjectID=@0", projectId);
+                }
+                if (db.ExecuteScalar<int>(configurationExistsSql) == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+                }
+            }
+        }
+
+
         public IEnumerable<DeployProject> GetProjectList()
         {
             using(var db = _sqlConnectionInfo.GetDB())
@@ -39,8 +85,20 @@ namespace Sriracha.Deploy.SqlServer
                 var sql = PetaPoco.Sql.Builder
                             .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
                             .Append("FROM Project");
-                return db.Query<DeployProject>(sql);
+                var list = db.Query<DeployProject>(sql).ToList();
+                foreach(var project in list)
+                {
+                    LoadProjectChildren(project);
+                }
+                return list;
             }
+        }
+
+        private void LoadProjectChildren(DeployProject project)
+        {
+            project.BranchList = GetBranchList(project.Id).ToList();
+            project.ConfigurationList = GetConfigurationList(project.Id);
+            project.ComponentList = GetComponentList(project.Id);
         }
 
         public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
@@ -87,7 +145,7 @@ namespace Sriracha.Deploy.SqlServer
             }
             if(project != null)
             {
-                project.BranchList = GetBranchList(projectId).ToList();
+                LoadProjectChildren(project);
             }
             return project;
         }
@@ -133,7 +191,19 @@ namespace Sriracha.Deploy.SqlServer
                             .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
                             .Append("FROM Project")
                             .Append("WHERE ProjectName = @0", projectName);
-                project = db.SingleOrDefault<DeployProject>(sql);
+                var list = db.Fetch<DeployProject>(sql);
+                if(list.Count == 0)
+                {
+                    project = null;
+                }
+                else  if(list.Count > 1)
+                {
+                    throw new ArgumentException("Multiple projects found with name " + projectName);
+                }
+                else 
+                {
+                    project = list[0];
+                }
             }
             if (project != null)
             {
@@ -144,7 +214,16 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployProject GetProjectByName(string projectName)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectName))
+            {
+                throw new ArgumentNullException("Missing project name");
+            }
+            var item = TryGetProjectByName(projectName);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployProject), "ProjectName", projectName);
+            }
+            return item;
         }
 
         public DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration)
@@ -180,6 +259,8 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                                 .Append("DELETE FROM Branch WHERE ProjectID=@0;", projectId)
+                                .Append("DELETE FROM Component WHERE ProjectID=@0;", projectId)
+                                .Append("DELETE FROM Configuration WHERE ProjectID=@0;", projectId)
                                 .Append("DELETE FROM Project WHERE ID=@0", projectId);
                 db.Execute(sql);
             }
@@ -188,72 +269,206 @@ namespace Sriracha.Deploy.SqlServer
 
         public List<DeployConfiguration> GetConfigurationList(string projectId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing Project ID");
+            }
+            VerifyProjectExists(projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetConfigurationBaseQuery()
+                            .Append("WHERE ProjectID=@0", projectId);
+                return db.Fetch<DeployConfiguration>(sql).ToList();
+            }
         }
 
-        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, Data.EnumDeploymentIsolationType isolationType)
+        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project name");
+            }
+            if(string.IsNullOrEmpty(configurationName))
+            {
+                throw new ArgumentNullException("Missing configuration name");
+            }
+            VerifyProjectExists(projectId);
+            var configuration = new DeployConfiguration
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProjectId = projectId,
+                ConfigurationName = configurationName,
+                IsolationType = isolationType,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow
+            };
+
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO Configuration (ID, ProjectID, ConfigurationName, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("VALUES (@Id, @ProjectId, @ConfigurationName, @IsolationType, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", configuration);
+                db.Execute(sql);
+            }
+            return configuration;
         }
 
         public DeployConfiguration GetConfiguration(string configurationId, string projectId = null)
         {
-            throw new NotImplementedException();
+            var item = this.TryGetConfiguration(configurationId, projectId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
+            return item;
         }
 
         public DeployConfiguration TryGetConfiguration(string configurationId, string projectId = null)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing configurationID");
+            }
+            if(!string.IsNullOrEmpty(projectId))
+            {
+                VerifyProjectExists(projectId);
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetConfigurationBaseQuery()
+                            .Append("WHERE ID=@0", configurationId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                return db.SingleOrDefault<DeployConfiguration>(sql);
+            }
         }
 
-        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, Data.EnumDeploymentIsolationType isolationType)
+        private PetaPoco.Sql GetConfigurationBaseQuery()
         {
-            throw new NotImplementedException();
+            return PetaPoco.Sql.Builder
+                            .Append("SELECT ID, ProjectID, ConfigurationName, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                            .Append("FROM Configuration");
+        }
+
+        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
+        {
+            VerifyProjectExists(projectId);
+            VerifyConfigurationExists(configurationId, projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("UPDATE Configuration")
+                                .Append("SET ConfigurationName=@0, EnumDeploymentIsolationTypeID=@1, UpdatedByUserName=@2, UpdatedDateTimeUtc=@3", configurationName, isolationType, _userIdentity.UserName, DateTime.UtcNow)
+                                .Append("WHERE ID=@0", configurationId);
+                db.Execute(sql);
+            }
+            return GetConfiguration(configurationId, projectId);
         }
 
         public void DeleteConfiguration(string configurationId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing Configuration ID");
+            }
+            VerifyConfigurationExists(configurationId, null);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM Configuration WHERE ID=@0", configurationId);
+                db.Execute(sql);
+            }
         }
 
-        public IEnumerable<DeployComponent> GetComponentList(string projectId)
+        public List<DeployComponent> GetComponentList(string projectId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            VerifyProjectExists(projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetComponentBaseQuery().Where("ProjectID=@0", projectId);
+                return db.Fetch<DeployComponent>(sql).ToList();
+            }
         }
 
-        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, Data.EnumDeploymentIsolationType isolationType)
+        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(componentName))
+            {
+                throw new ArgumentNullException("Missing component name");
+            }
+            VerifyProjectExists(projectId);
+            var component = new DeployComponent
+            {
+                Id = Guid.NewGuid().ToString(),
+                ComponentName = componentName,
+                ProjectId = projectId, 
+                UseConfigurationGroup = useConfigurationGroup,
+                ConfigurationId = configurationId,
+                IsolationType = isolationType,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow
+            };
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO Component (ID, ProjectID, ComponentName, UseConfigurationGroup, ConfigurationID, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("VALUES (@Id, @ProjectId, @ComponentName, @UseConfigurationGroup, @ConfigurationId, @IsolationType, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", component);
+                db.Execute(sql);
+            }
+            return component;
         }
 
         public DeployComponent GetComponent(string componentId, string projectId = null)
         {
-            throw new NotImplementedException();
+            var item = this.TryGetComponent(componentId, projectId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+            }
+            return item;
         }
 
         public DeployComponent TryGetComponent(string componentId, string projectId = null)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            if (!string.IsNullOrEmpty(projectId))
+            {
+                VerifyProjectExists(projectId);
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetComponentBaseQuery()
+                            .Append("WHERE ID=@0", componentId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                return db.SingleOrDefault<DeployComponent>(sql);
+            }
         }
 
-        public DeployComponent GetComponent(DeployProject project, string componentId)
+        private PetaPoco.Sql GetComponentBaseQuery()
         {
-            throw new NotImplementedException();
-        }
-
-        public DeployComponent TryGetComponent(DeployProject project, string componentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DeployComponent GetComponentByName(DeployProject project, string componentName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DeployComponent TryGetComponentByName(DeployProject project, string componentName)
-        {
-            throw new NotImplementedException();
+            return PetaPoco.Sql.Builder
+                    .Append("SELECT ID, ProjectID, ComponentName, UseConfigurationGroup, ConfigurationID, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                    .Append("FROM Component");
         }
 
         public DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName)
@@ -261,14 +476,45 @@ namespace Sriracha.Deploy.SqlServer
             throw new NotImplementedException();
         }
 
-        public DeployComponent UpdateComponent(string projectId, string componentId, string componentName, bool useConfigurationGroup, string configurationId, Data.EnumDeploymentIsolationType isolationType)
+        public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing projectID");
+            }
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Component ID");
+            }
+            if(string.IsNullOrEmpty(componentName))
+            {
+                throw new ArgumentNullException("Missing component name");   
+            }
+            VerifyProjectExists(projectId);
+            VerifyComponentExists(componentId, projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("UPDATE Component")
+                                .Append("SET ComponentName=@0, UseConfigurationGroup=@1, ConfigurationID=@2, EnumDeploymentIsolationTypeID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
+                                        componentName, useConfigurationGroup, configurationId, isolationType, _userIdentity.UserName, DateTime.UtcNow)
+                                .Append("WHERE ID=@0", componentId);
+                db.Execute(sql);
+            }
+            return this.GetComponent(componentId, projectId);
         }
 
         public void DeleteComponent(string projectId, string componentId)
         {
-            throw new NotImplementedException();
+            VerifyProjectExists(projectId);
+            VerifyComponentExists(componentId, projectId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM Component")
+                                .Append("WHERE ID=@0", componentId);
+                db.Execute(sql);
+            }
         }
 
         public List<DeployStep> GetComponentDeploymentStepList(string componentId)

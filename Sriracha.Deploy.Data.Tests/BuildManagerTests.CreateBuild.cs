@@ -91,8 +91,8 @@ namespace Sriracha.Deploy.Data.Tests
 					testData.ProjectRepository.Setup(i => i.TryGetProject(testData.DeployBuild.ProjectId)).Returns(testData.DeployProject);
 					testData.ProjectRepository.Setup(i => i.GetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
 					testData.ProjectRepository.Setup(i => i.TryGetBranch(testData.DeployProject, testData.DeployBuild.ProjectBranchId)).Returns(testData.DeployProject.BranchList[0]);
-					testData.ProjectRepository.Setup(i => i.GetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
-					testData.ProjectRepository.Setup(i => i.TryGetComponent(testData.DeployProject, testData.DeployBuild.ProjectComponentId)).Returns(testData.DeployProject.ComponentList[0]);
+                    testData.ProjectRepository.Setup(i => i.GetComponent(testData.DeployBuild.ProjectComponentId, testData.DeployProject.Id)).Returns(testData.DeployProject.ComponentList[0]);
+                    testData.ProjectRepository.Setup(i => i.TryGetComponent(testData.DeployBuild.ProjectComponentId, testData.DeployProject.Id)).Returns(testData.DeployProject.ComponentList[0]);
 
 					testData.Sut = new BuildManager(testData.BuildRepository.Object, testData.FileRepository.Object, testData.ProjectRepository.Object, testData.ProjectNotifier.Object);
 
