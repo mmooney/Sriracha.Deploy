@@ -76,7 +76,6 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-
         private void VerifyComponentExists(string componentId, string projectId)
         {
             if (string.IsNullOrEmpty(componentId))
@@ -85,18 +84,71 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var configurationExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Component WHERE ID=@0", componentId);
+                var componentExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Component WHERE ID=@0", componentId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    configurationExistsSql = configurationExistsSql.Append("AND ProjectID=@0", projectId);
+                    componentExistsSql = componentExistsSql.Append("AND ProjectID=@0", projectId);
                 }
-                if (db.ExecuteScalar<int>(configurationExistsSql) == 0)
+                if (db.ExecuteScalar<int>(componentExistsSql) == 0)
                 {
                     throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
                 }
             }
         }
 
+        private void VerifyComponentStepExists(string deploymentStepId, string componentId, string projectId)
+        {
+            if (string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step Id");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM ComponentDeployStep WHERE ID=@0", deploymentStepId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    stepExistsSql = stepExistsSql.Append("AND ProjectID=@0", projectId);
+                }
+                if (!string.IsNullOrEmpty(componentId))
+                {
+                    stepExistsSql = stepExistsSql.Append("AND ComponentID=@0", componentId);
+                }
+                if (db.ExecuteScalar<int>(stepExistsSql) == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+                }
+            }
+        }
+
+        private string VerifySharedComponentStepExists(string sharedDeploymentStepId, string componentId, string projectId)
+        {
+            if (string.IsNullOrEmpty(sharedDeploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step Id");
+            }
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT ID FROM ComponentDeployStep WHERE SharedDeploymentStepID=@0", sharedDeploymentStepId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    stepExistsSql = stepExistsSql.Append("AND ProjectID=@0", projectId);
+                }
+                if (!string.IsNullOrEmpty(componentId))
+                {
+                    stepExistsSql = stepExistsSql.Append("AND ComponentID=@0", componentId);
+                }
+                string deploymentStepId = db.ExecuteScalar<string>(stepExistsSql);
+                if (string.IsNullOrEmpty(deploymentStepId))
+                {
+                    throw new RecordNotFoundException(typeof(DeployComponent), "SharedDeploymentStepId", componentId);
+                }
+                return deploymentStepId;
+            }
+        }
 
         public IEnumerable<DeployProject> GetProjectList()
         {
@@ -279,6 +331,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                                 .Append("DELETE FROM Branch WHERE ProjectID=@0;", projectId)
+                                    .Append("DELETE FROM ComponentDeployStep WHERE ProjectID=@0;", projectId)
                                 .Append("DELETE FROM Component WHERE ProjectID=@0;", projectId)
                                 .Append("DELETE FROM Configuration WHERE ProjectID=@0;", projectId)
                                 .Append("DELETE FROM Project WHERE ID=@0", projectId);
@@ -363,8 +416,18 @@ namespace Sriracha.Deploy.SqlServer
                 {
                     sql = sql.Append("AND ProjectID=@0", projectId);
                 }
-                return db.SingleOrDefault<DeployConfiguration>(sql);
+                var item = db.SingleOrDefault<DeployConfiguration>(sql);
+                if(item != null)
+                {
+                    this.LoadConfigurationChildren(item);
+                }
+                return item;
             }
+        }
+
+        private void LoadConfigurationChildren(DeployConfiguration item)
+        {
+            item.DeploymentStepList = this.GetConfigurationDeploymentStepList(item.Id);
         }
 
         private PetaPoco.Sql GetConfigurationBaseQuery()
@@ -414,8 +477,18 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetComponentBaseQuery().Where("ProjectID=@0", projectId);
-                return db.Fetch<DeployComponent>(sql).ToList();
+                var list = db.Fetch<DeployComponent>(sql).ToList();
+                foreach(var item in list)
+                {
+                    LoadComponentChildren(item);
+                }
+                return list;
             }
+        }
+
+        private void LoadComponentChildren(DeployComponent item)
+        {
+            item.DeploymentStepList = this.GetComponentDeploymentStepList(item.Id);
         }
 
         public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
@@ -480,7 +553,12 @@ namespace Sriracha.Deploy.SqlServer
                 {
                     sql = sql.Append("AND ProjectID=@0", projectId);
                 }
-                return db.SingleOrDefault<DeployComponent>(sql);
+                var item = db.SingleOrDefault<DeployComponent>(sql);
+                if(item != null)
+                {
+                    LoadComponentChildren(item);
+                }
+                return item;
             }
         }
 
@@ -531,25 +609,71 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM Component")
-                                .Append("WHERE ID=@0", componentId);
+                                .Append("DELETE FROM ComponentDeployStep WHERE ComponentID=@0;", componentId)
+                                .Append("DELETE FROM Component WHERE ID=@0;", componentId);
                 db.Execute(sql);
             }
         }
 
         public List<DeployStep> GetComponentDeploymentStepList(string componentId)
         {
-            throw new NotImplementedException();
+            VerifyComponentExists(componentId, null);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetComponentStepBaseQuery().Append("WHERE ComponentID=@0", componentId);
+                return db.Fetch<DeployStep>(sql).ToList();
+            }
         }
 
         public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task tpe name");
+            }
+            sharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, Guid.NewGuid().ToString());
+            VerifyProjectExists(projectId);
+            VerifyComponentExists(componentId, projectId);
+            var step = new DeployStep
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProjectId = projectId,
+                ParentId = componentId,
+                ParentType = EnumDeployStepParentType.Component,
+                StepName = stepName,
+                TaskTypeName = taskTypeName,
+                TaskOptionsJson = taskOptionsJson,
+                SharedDeploymentStepId = sharedDeploymentStepId,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow
+            };
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO ComponentDeployStep (ID, ProjectID, ComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @SharedDeploymentStepId, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
+                db.Execute(sql);
+            }
+            return step;
         }
 
         public DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
@@ -559,7 +683,27 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployStep GetComponentDeploymentStep(string deploymentStepId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step ID");
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetComponentStepBaseQuery().Where("ID=@0", deploymentStepId);
+                var item = db.SingleOrDefault<DeployStep>(sql);
+                if(item == null)
+                {   
+                    throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+                }
+                return item;
+            }
+        }
+
+        private PetaPoco.Sql GetComponentStepBaseQuery()
+        {
+            return PetaPoco.Sql.Builder
+                .Append("SELECT ID, ProjectID, ComponentID AS ParentID, 'Component' AS ParentType, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                .From("ComponentDeployStep");
         }
 
         public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
@@ -569,7 +713,54 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task type name");
+            }
+            VerifyProjectExists(projectId);
+            VerifyComponentExists(componentId, projectId);
+            if (!string.IsNullOrEmpty(deploymentStepId))
+            {
+                VerifyComponentStepExists(deploymentStepId, componentId, projectId);
+            }
+            else if (!string.IsNullOrEmpty(sharedDeploymentStepId))
+            {
+                deploymentStepId = VerifySharedComponentStepExists(sharedDeploymentStepId, componentId, projectId);
+            }
+            else 
+            {
+                throw new ArgumentNullException("Either deploymentStepId or sharedDeploymentStepId must be specified");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE ComponentDeployStep")
+                            .Append("SET StepName=@0, TaskTypeName=@1, TaskOptionsJson=@2, SharedDeploymentStepID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
+                                        stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId, _userIdentity.UserName, DateTime.UtcNow)
+                            .Append("WHERE ID=@0", deploymentStepId);
+                if(!string.IsNullOrEmpty(projectId))
+                {
+                    sql = sql.Append("AND ProjectID=@0", projectId);
+                }
+                if(!string.IsNullOrEmpty(componentId))
+                {
+                    sql = sql.Append("AND ComponentID=@0", componentId);
+                }
+                db.Execute(sql);
+            }
+            return this.GetComponentDeploymentStep(deploymentStepId);
         }
 
         public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
@@ -579,7 +770,14 @@ namespace Sriracha.Deploy.SqlServer
 
         public void DeleteComponentDeploymentStep(string deploymentStepId)
         {
-            throw new NotImplementedException();
+            VerifyComponentStepExists(deploymentStepId, null, null);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("DELETE FROM ComponentDeployStep")
+                            .Append("WHERE ID=@0", deploymentStepId);
+                db.Execute(sql);
+            }
         }
 
         public void DeleteConfigurationDeploymentStep(string deploymentStepId)

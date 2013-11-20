@@ -12,12 +12,17 @@ namespace Sriracha.Deploy.RavenDB
 {
 	public static class DocumentSessionExtensions
 	{
-		public static IRavenQueryable<T> QueryNoCache<T>(this IDocumentSession documentSession)
-		{
-			return documentSession.Query<T>().Customize(i=>i.NoCaching()).Customize(i=>i.NoTracking());
-		}
+        public static IRavenQueryable<T> QueryNoCache<T>(this IDocumentSession documentSession)
+        {
+            return documentSession.Query<T>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking());
+        }
 
-		public static T LoadNoCache<T> (this IDocumentSession session, string id)
+        public static IRavenQueryable<T> QueryNotStale<T>(this IDocumentSession documentSession)
+        {
+            return documentSession.Query<T>().Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite());
+        }
+
+        public static T LoadNoCache<T>(this IDocumentSession session, string id)
 		{
 			var returnValue = session.Load<T>(id);
 			if(returnValue != null)

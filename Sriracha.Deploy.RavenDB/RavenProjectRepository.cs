@@ -516,8 +516,24 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
 		{
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Mising component ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task type name");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var component = project.ComponentList.Single(i => i.Id == componentId);
+			var component = project.ComponentList.SingleOrDefault(i => i.Id == componentId);
+            if(component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+            }
 			var item = new DeployStep
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -573,10 +589,14 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployStep GetComponentDeploymentStep(string deploymentStepId)
 		{
+            if(string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step ID");
+            }
 			var project = this._documentSession.QueryNoCache<DeployProject>().SingleOrDefault(i=>i.ComponentList.Any(j=>j.DeploymentStepList.Any(k=>k.Id == deploymentStepId)));
 			if(project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for component deployment step " + deploymentStepId);
+				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
 			var item = project.ComponentList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
 			return item;
@@ -584,27 +604,55 @@ namespace Sriracha.Deploy.RavenDB
 		
 		public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
 		{
-			var project = this._documentSession.QueryNoCache<DeployProject>().SingleOrDefault(i=>i.ConfigurationList.Any(j=>j.DeploymentStepList.Any(k=>k.Id == deploymentStepId)));
+            if (string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step ID");
+            }
+            var project = this._documentSession.QueryNoCache<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
 			if(project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for configuration deployment step " + deploymentStepId);
-			}
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
 			var item = project.ConfigurationList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
 			return item;
 		}
 
 		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
 		{
+            if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task type name");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var component = project.ComponentList.Single(i => i.Id == componentId);
+			var component = project.ComponentList.SingleOrDefault(i => i.Id == componentId);
+            if(component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+            }
 			DeployStep item;
 			if(!string.IsNullOrEmpty(deploymentStepId))
 			{
-				item = component.DeploymentStepList.Single(i=>i.Id == deploymentStepId);
+				item = component.DeploymentStepList.SingleOrDefault(i=>i.Id == deploymentStepId);
+                if(item == null)
+                {
+                    throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+                }
 			}
 			else if (!string.IsNullOrEmpty(sharedDeploymentStepId))
 			{
-				item = component.DeploymentStepList.Single(i=>i.SharedDeploymentStepId == sharedDeploymentStepId);
+				item = component.DeploymentStepList.SingleOrDefault(i=>i.SharedDeploymentStepId == sharedDeploymentStepId);
+                if(item == null)
+                {
+                    throw new RecordNotFoundException(typeof(DeployStep), "SharedDeploymentStepId", sharedDeploymentStepId);
+                }
 			}
 			else
 			{
@@ -645,10 +693,14 @@ namespace Sriracha.Deploy.RavenDB
 		
 		public void DeleteComponentDeploymentStep(string deploymentStepId)
 		{
+            if(string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step ID");
+            }
 			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
 			if (project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for component deployment step " + deploymentStepId);
+				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
 			_logger.Info("User {0} deleting component deployment step {1}", _userIdentity.UserName, deploymentStepId);
 			var component = project.ComponentList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
@@ -865,7 +917,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else 
 			{
-				project = this._documentSession.Query<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
+				project = this._documentSession.QueryNotStale<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
 				if (project == null)
 				{
 					throw new ArgumentException("Unable to find project for branch ID " + branchId);

@@ -26,6 +26,13 @@ GO
 ALTER TABLE [dbo].[Project] ADD  CONSTRAINT [DF_Project_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
 GO
 
+CREATE NONCLUSTERED INDEX IX_Project_ProjectName ON dbo.Project
+	(
+	ProjectName
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+
 CREATE TABLE [dbo].[Branch](
 	[ID] [nvarchar](50) NOT NULL,
 	[ProjectID] [nvarchar](50) NOT NULL,
@@ -54,6 +61,19 @@ GO
 
 ALTER TABLE [dbo].[Branch] CHECK CONSTRAINT [FK_Branch_Project]
 GO
+
+CREATE NONCLUSTERED INDEX IX_Branch_ProjectID ON dbo.Branch
+	(
+	ProjectID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_Branch_BranchName ON dbo.Branch
+	(
+	BranchName
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+
 CREATE TABLE [dbo].[EnumDeploymentIsolationType](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
@@ -126,6 +146,14 @@ GO
 ALTER TABLE [dbo].[Configuration] CHECK CONSTRAINT [FK_Configuration_Project]
 GO
 
+CREATE NONCLUSTERED INDEX IX_Configuration_ConfigurationName ON dbo.Configuration (ConfigurationName) 
+	WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE dbo.Configuration ADD CONSTRAINT
+	IX_Configuration_ID_ProjectID UNIQUE NONCLUSTERED  (ID, ProjectID) 
+	WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+GO
 
 CREATE TABLE [dbo].[Component](
 	[ID] [nvarchar](50) NOT NULL,
@@ -172,4 +200,53 @@ GO
 
 ALTER TABLE [dbo].[Component] CHECK CONSTRAINT [FK_Component_Project]
 GO
+
+ALTER TABLE dbo.Component ADD CONSTRAINT
+	IX_Component_ID_ProjectID UNIQUE NONCLUSTERED  (ID,ProjectID) 
+    WITH(STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_Component_ComponentName ON dbo.Component (ComponentName) 
+    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[ComponentDeployStep](
+	[ID] [nvarchar](50) NOT NULL,
+	[ProjectID] [nvarchar](50) NOT NULL,
+	[ComponentID] [nvarchar](50) NOT NULL,
+	[StepName] [nvarchar](200) NOT NULL,
+	[TaskTypeName] [nvarchar](200) NOT NULL,
+	[TaskOptionsJson] [nvarchar](max) NULL,
+	[SharedDeploymentStepId] [nvarchar](50) NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_ComponentDeployStep] PRIMARY KEY  
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep] ADD  CONSTRAINT [DF_ComponentDeployStep_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep] ADD  CONSTRAINT [DF_ComponentDeployStep_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep]  WITH CHECK ADD  CONSTRAINT [FK_ComponentDeployStep_Component] FOREIGN KEY([ComponentID], [ProjectID])
+REFERENCES [dbo].[Component] ([ID], [ProjectID])
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep] CHECK CONSTRAINT [FK_ComponentDeployStep_Component]
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep]  WITH CHECK ADD  CONSTRAINT [FK_ComponentDeployStep_Project] FOREIGN KEY([ProjectID])
+REFERENCES [dbo].[Project] ([ID])
+GO
+
+ALTER TABLE [dbo].[ComponentDeployStep] CHECK CONSTRAINT [FK_ComponentDeployStep_Project]
+GO
+
 

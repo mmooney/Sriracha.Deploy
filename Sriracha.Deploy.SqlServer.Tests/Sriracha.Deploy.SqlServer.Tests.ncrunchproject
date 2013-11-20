@@ -81,4 +81,5 @@
       <TestName>Sriracha.Deploy.SqlServer.Tests.SqlServerProjectRepositoryTests.ProjectRepositoryBaseTests:GetOrCreateProject_MissingProjectIdOrName_ThrowsNullException</TestName>
     </NamedTestSelector>
   </IgnoredTests>
+  <HiddenWarnings>LongTestTimesWithoutParallelExecution</HiddenWarnings>
 </ProjectConfiguration>
