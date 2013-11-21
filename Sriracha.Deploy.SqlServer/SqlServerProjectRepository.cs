@@ -14,6 +14,13 @@ namespace Sriracha.Deploy.SqlServer
         private readonly ISqlConnectionInfo _sqlConnectionInfo;
         private readonly IUserIdentity _userIdentity;
 
+        private class ConfigurationPair
+        {
+            public string Id { get; set; }
+            public string ConfigurationName { get; set; }
+            public string ConfigurationValue { get; set; }
+        }
+
         public SqlServerProjectRepository(ISqlConnectionInfo sqlConnectionInfo, IUserIdentity userIdentity)
         {
             _sqlConnectionInfo = DIHelper.VerifyParameter(sqlConnectionInfo);
@@ -51,7 +58,27 @@ namespace Sriracha.Deploy.SqlServer
                 }
                 if (db.ExecuteScalar<int>(branchExistsSql) == 0)
                 {
-                    throw new RecordNotFoundException(typeof(DeployProject), "Id", branchId);
+                    throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", branchId);
+                }
+            }
+        }
+
+        private void VerifyEnvironmentExists(string environmentId, string projectId)
+        {
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var environmentExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployEnvironment WHERE ID=@0", environmentId);
+                if (!string.IsNullOrEmpty(projectId))
+                {
+                    environmentExistsSql = environmentExistsSql.Append("AND DeployProjectID=@0", projectId);
+                }
+                if (db.ExecuteScalar<int>(environmentExistsSql) == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
                 }
             }
         }
@@ -195,6 +222,7 @@ namespace Sriracha.Deploy.SqlServer
             project.BranchList = GetBranchList(project.Id).ToList();
             project.ConfigurationList = GetConfigurationList(project.Id);
             project.ComponentList = GetComponentList(project.Id);
+            project.EnvironmentList = GetEnvironmentList(project.Id);
         }
 
         public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
@@ -1151,17 +1179,441 @@ namespace Sriracha.Deploy.SqlServer
 
         public List<DeployEnvironment> GetEnvironmentList(string projectId)
         {
-            throw new NotImplementedException();
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetEnvironmentBaseQuery().Append("WHERE DeployProjectID=@0", projectId);
+                var list = db.Fetch<DeployEnvironment>(sql);
+                foreach(var item in list)
+                {
+                    LoadEnvironmentChildren(item);
+                }
+                return list;
+            }
         }
 
-        public DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
+        public DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if(string.IsNullOrEmpty(environmentName))
+            {
+                throw new ArgumentNullException("Missing environment name");
+            }
+            var item = new DeployEnvironment
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProjectId = projectId,
+                EnvironmentName = environmentName,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow,
+                ComponentList = componentList.ToList(),
+                ConfigurationList = configurationList.ToList()
+            };
+            UpdateEnvironmentComponentList(item.ComponentList, item, EnumDeployStepParentType.Component);
+            UpdateEnvironmentComponentList(item.ConfigurationList, item, EnumDeployStepParentType.Configuration);
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO DeployEnvironment (ID, DeployProjectID, EnvironmentName, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("VALUES (@Id, @ProjectId, @EnvironmentName, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", item);
+                db.Execute(sql);
+            }
+            SaveEnvironmentConfigurationList(item, item.ComponentList, EnumDeployStepParentType.Component);
+            SaveEnvironmentConfigurationList(item, item.ConfigurationList, EnumDeployStepParentType.Configuration);
+            return item;
+        }
+
+        private void SaveEnvironmentConfigurationList(DeployEnvironment environment, IEnumerable<DeployEnvironmentConfiguration> componentList, EnumDeployStepParentType parentType)
+        {
+            var itemsToInsert = new List<DeployEnvironmentConfiguration>();
+            var itemsToUpdate = new List<DeployEnvironmentConfiguration>();
+            var itemsToDelete = new List<DeployEnvironmentConfiguration>();
+
+            var existingItemList = this.GetEnvironmentConfigurationList(environment.Id, parentType);
+
+            foreach(var newItem in componentList)
+            {
+                var existingItem = existingItemList.Any(i=>i.Id == newItem.Id);
+                if(existingItem)
+                {
+                    itemsToUpdate.Add(newItem);
+                }
+                else 
+                {
+                    itemsToInsert.Add(newItem);
+                }
+            }
+            foreach(var existingItem in existingItemList)
+            {
+                var newItem = componentList.Any(i=>i.Id == existingItem.Id);
+                if(!newItem)
+                {
+                    itemsToDelete.Add(existingItem);
+                }
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                foreach (var item in itemsToInsert)
+                {
+                    if(string.IsNullOrEmpty(item.Id))
+                    {
+                        item.Id = Guid.NewGuid().ToString();
+                    }
+                    item.CreatedByUserName = _userIdentity.UserName;
+                    item.CreatedDateTimeUtc = DateTime.UtcNow;
+                    item.UpdatedByUserName = _userIdentity.UserName;
+                    item.UpdatedDateTimeUtc = DateTime.UtcNow;
+
+                    var sql = PetaPoco.Sql.Builder
+                                .Append("INSERT INTO DeployEnvironmentConfiguration (ID, DeployProjectID, DeployEnvironmentID, ParentID, EnumDeployStepParentTypeID, DeployCredentialsId, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                                .Append("VALUES (@Id, @ProjectId, @EnvironmentId, @ParentId, @ParentType, @DeployCredentialsId, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", item);
+                    db.Execute(sql);
+
+                    SaveMachineList(item);
+                    SaveEnvironmentComponentValueList(item);
+                }
+                foreach (var item in itemsToUpdate)
+                {
+                    item.UpdatedByUserName = _userIdentity.UserName;
+                    item.UpdatedDateTimeUtc = DateTime.UtcNow;
+
+                    var sql = PetaPoco.Sql.Builder
+                                .Append("UPDATE DeployEnvironmentConfiguration")
+                                .Append("SET ParentID=@ParentID, EnumDeployStepParentTypeID=@ParentType, DeployCredentialsId=@DeployCredentialsId, UpdatedDateTimeUtc=@UpdatedDateTimeUtc, UpdatedByUserName=@UpdatedByUserName)", item)
+                                .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                    SaveMachineList(item);
+                    SaveEnvironmentComponentValueList(item);
+                }
+                foreach (var item in itemsToDelete)
+                {
+                    item.UpdatedByUserName = _userIdentity.UserName;
+                    item.UpdatedDateTimeUtc = DateTime.UtcNow;
+
+                    var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM DeployMachine WHERE DeployEnvironmentConfigurationID=@0;", item.Id)
+                                .Append("DELETE FROM DeployEnvironmentConfigurationValue WHERE DeployEnvironmentConfigurationID=@0;", item.Id)
+                                .Append("DELETE FROM DeployEnvironmentConfiguration WHERE ID=@0;", item.Id);
+                    db.Execute(sql);
+                }
+            }
+        }
+
+        private void SaveMachineList(DeployEnvironmentConfiguration configuration)
+        {
+            var itemsToInsert = new List<DeployMachine>();
+            var itemsToUpdate = new List<DeployMachine>();
+            var itemsToDelete = new List<DeployMachine>();
+
+            var existingList = GetMachineList(configuration.Id);
+
+            foreach(var newItem in configuration.MachineList)
+            {
+                bool existingItem = existingList.Any(i=>i.Id == newItem.Id);
+                if(existingItem)
+                {
+                    itemsToUpdate.Add(newItem);
+                }
+                else 
+                {
+                    itemsToInsert.Add(newItem);
+                }
+            }
+            foreach(var existingItem in existingList)
+            {
+                var newItem = configuration.MachineList.Any(i=>i.Id == existingItem.Id);
+                if(!newItem)
+                {
+                    itemsToDelete.Add(existingItem);
+                }
+            }
+
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                foreach(var item in itemsToInsert)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                                .Append("INSERT INTO DeployMachine (ID, DeployProjectID, DeployEnvironmentID, EnvironmentName, DeployEnvironmentConfigurationID, MachineName, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                                .Append("VALUES (@Id, @ProjectId, @EnvironmentId, @EnvironmentName, @ParentId, @MachineName, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", item);
+                    db.Execute(sql);
+                    this.SaveMachineConfigurationValueList(item);
+                }
+                foreach(var item in itemsToUpdate)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployMachine")
+                            .Append("SET EnvironmentName=@EnvironmentName, MachineName=@MachineName, UpdatedDateTimeUtc=@UpdatedDateTimeUtc, UpdatedByUserName=@UpdatedByUserName", item)
+                            .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                    this.SaveMachineConfigurationValueList(item);
+                }
+                foreach(var item in itemsToDelete)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM DeployMachine")
+                                .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                }
+            }
+        }
+
+        private void SaveMachineConfigurationValueList(DeployMachine machine)
+        {
+            var itemsToInsert = new List<ConfigurationPair>();
+            var itemsToUpdate = new List<ConfigurationPair>();
+            var itemsToDelete = new List<ConfigurationPair>();
+
+            var existingList = GetMachineConfigurationValueList(machine.Id);
+
+            foreach (var newKey in machine.ConfigurationValueList.Keys)
+            {
+                var existingItem = existingList.SingleOrDefault(i => i.ConfigurationName == newKey);
+                if (existingItem == null)
+                {
+                    itemsToInsert.Add(new ConfigurationPair { ConfigurationName = newKey, ConfigurationValue = machine.ConfigurationValueList[newKey] });
+                }
+                else if (existingItem.ConfigurationValue != machine.ConfigurationValueList[newKey])
+                {
+                    existingItem.ConfigurationValue = machine.ConfigurationValueList[newKey];
+                    itemsToUpdate.Add(existingItem);
+                }
+            }
+            foreach (var existingItem in existingList)
+            {
+                if (!machine.ConfigurationValueList.ContainsKey(existingItem.ConfigurationName))
+                {
+                    itemsToDelete.Add(existingItem);
+                }
+            }
+
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                foreach (var item in itemsToInsert)
+                {
+                    item.Id = Guid.NewGuid().ToString();
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO DeployMachineConfigurationValue (ID, DeployMachineID, ConfigurationName, ConfigurationValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("VALUES (@0, @1, @2, @3, @4, @5, @6, @7)", item.Id, machine.Id, item.ConfigurationName, item.ConfigurationValue, _userIdentity.UserName, DateTime.UtcNow, _userIdentity.UserName, DateTime.UtcNow);
+                    db.Execute(sql);
+                }
+                foreach (var item in itemsToUpdate)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployMachinetConfigurationValue")
+                            .Append("SET ConfigurationValue=@0", item.ConfigurationValue)
+                            .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                }
+                foreach (var item in itemsToDelete)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("DELETE FROM DeployMachineConfigurationValue")
+                            .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                }
+            }
+        }
+
+        private List<ConfigurationPair> GetMachineConfigurationValueList(string machineId)
+        {
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("SELECT ID, ConfigurationName, ConfigurationValue")
+                            .Append("FROM DeployMachineConfigurationValue")
+                            .Append("WHERE DeployMachineID=@0", machineId);
+                return db.Fetch<ConfigurationPair>(sql).ToList();
+            }
+        }
+
+        private List<DeployMachine> GetMachineList(string environmentConfigurationID)
+        {
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("SELECT ID, DeployProjectID AS ProjectID, DeployEnvironmentID AS EnvironmentID, EnvironmentName, DeployEnvironmentConfigurationID AS ParentID, MachineName, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                                .Append("FROM DeployMachine")
+                                .Append("WHERE DeployEnvironmentConfigurationID=@0", environmentConfigurationID);
+                var list = db.Fetch<DeployMachine>(sql).ToList();
+                foreach(var item in list)
+                {
+                    LoadMachineChildren(item);
+                }
+                return list;
+            }
+        }
+
+        private void LoadMachineChildren(DeployMachine item)
+        {
+            item.ConfigurationValueList = this.GetMachineConfigurationValueList(item.Id).ToDictionary(i=>i.ConfigurationName, i=>i.ConfigurationValue);
+        }
+
+        private void SaveEnvironmentComponentValueList(DeployEnvironmentConfiguration configuration)
+        {
+            var itemsToInsert = new List<ConfigurationPair>();
+            var itemsToUpdate = new List<ConfigurationPair>();
+            var itemsToDelete = new List<ConfigurationPair>();
+
+            var existingList = GetEnvironmentConfigurationValueList(configuration.Id);
+
+            foreach(var newKey in configuration.ConfigurationValueList.Keys)
+            {
+                var existingItem = existingList.SingleOrDefault(i=>i.ConfigurationName == newKey);
+                if(existingItem == null)
+                {
+                    itemsToInsert.Add(new ConfigurationPair { ConfigurationName=newKey, ConfigurationValue=configuration.ConfigurationValueList[newKey] });
+                }
+                else if(existingItem.ConfigurationValue != configuration.ConfigurationValueList[newKey])
+                {
+                    existingItem.ConfigurationValue = configuration.ConfigurationValueList[newKey];
+                    itemsToUpdate.Add(existingItem);
+                }
+            }
+            foreach(var existingItem in existingList)
+            {
+                if(!configuration.ConfigurationValueList.ContainsKey(existingItem.ConfigurationName))
+                {
+                    itemsToDelete.Add(existingItem);
+                }
+            }
+
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                foreach(var item in itemsToInsert)
+                {
+                    item.Id = Guid.NewGuid().ToString();
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("INSERT INTO DeployEnvironmentConfigurationValue (ID, DeployEnvironmentConfigurationID, ConfigurationName, ConfigurationValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("VALUES (@0, @1, @2, @3, @4, @5, @6, @7)", item.Id, configuration.Id, item.ConfigurationName, item.ConfigurationValue, _userIdentity.UserName, DateTime.UtcNow, _userIdentity.UserName, DateTime.UtcNow);
+                    db.Execute(sql);
+                }
+                foreach(var item in itemsToUpdate)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployEnvironmentConfigurationValue")
+                            .Append("SET ConfigurationValue=@0", item.ConfigurationValue)
+                            .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                }
+                foreach(var item in itemsToDelete)
+                {
+                    var sql = PetaPoco.Sql.Builder
+                            .Append("DELETE FROM DeployEnvironmentConfigurationValue")
+                            .Append("WHERE ID=@0", item.Id);
+                    db.Execute(sql);
+                }
+            }
+        }
+
+        private List<DeployEnvironmentConfiguration> GetEnvironmentConfigurationList(string environmentID, EnumDeployStepParentType parentType)
+        {
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetEnvironmentConfigurationBaseQuery()
+                                .Append("WHERE DeployEnvironmentID=@0 AND EnumDeployStepParentTypeID=@1", environmentID, parentType);
+                var list = db.Fetch<DeployEnvironmentConfiguration>(sql).ToList();
+                foreach(var item in list)
+                {
+                    LoadEnvironmentConfigurationChildren(item);
+                }
+                return list;
+            }
+        }
+
+        private void LoadEnvironmentConfigurationChildren(DeployEnvironmentConfiguration item)
+        {
+            item.ConfigurationValueList = GetEnvironmentConfigurationValueList(item.Id).ToDictionary(i=>i.ConfigurationName, i=>i.ConfigurationValue);;
+            item.MachineList = GetMachineList(item.Id);
+        }
+
+        private List<ConfigurationPair> GetEnvironmentConfigurationValueList(string environmentConfigurationID)
+        {
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("SELECT ID, ConfigurationName, ConfigurationValue")
+                            .Append("FROM DeployEnvironmentConfigurationValue")
+                            .Append("WHERE DeployEnvironmentConfigurationID=@0", environmentConfigurationID);
+                return db.Fetch<ConfigurationPair>(sql).ToList();
+            }
+        }
+
+        private PetaPoco.Sql GetEnvironmentConfigurationBaseQuery()
+        {
+            return PetaPoco.Sql.Builder
+                    .Append("SELECT ID, DeployProjectID AS ProjectID, DeployEnvironmentID AS EnvironmentID, ParentID, EnumDeployStepParentTypeID AS ParentType, DeployCredentialsId, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                    .Append("FROM DeployEnvironmentConfiguration");
+        }
+
+        private List<DeployEnvironmentConfiguration> UpdateEnvironmentComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployEnvironment environment, EnumDeployStepParentType parentType)
+        {
+            foreach (var component in componentList)
+            {
+                if (string.IsNullOrEmpty(component.Id))
+                {
+                    component.Id = Guid.NewGuid().ToString();
+                    component.CreatedDateTimeUtc = DateTime.UtcNow;
+                    component.CreatedByUserName = _userIdentity.UserName;
+                }
+                component.EnvironmentId = environment.Id;
+                component.ProjectId = environment.ProjectId;
+                component.ParentType = parentType;
+                component.UpdatedDateTimeUtc = DateTime.UtcNow;
+                component.UpdatedByUserName = _userIdentity.UserName;
+
+                if (component.MachineList != null)
+                {
+                    foreach (var machine in component.MachineList)
+                    {
+                        if (string.IsNullOrEmpty(machine.Id))
+                        {
+                            machine.Id = Guid.NewGuid().ToString();
+                            machine.CreatedDateTimeUtc = DateTime.UtcNow;
+                            machine.CreatedByUserName = _userIdentity.UserName;
+                        }
+                        machine.ProjectId = environment.ProjectId;
+                        machine.ParentId = component.Id;
+                        machine.EnvironmentId = environment.Id;
+                        machine.EnvironmentName = environment.EnvironmentName;
+                        machine.UpdatedDateTimeUtc = DateTime.UtcNow;
+                        machine.UpdatedByUserName = _userIdentity.UserName;
+                    }
+                }
+            }
+            return componentList.ToList();
         }
 
         public DeployEnvironment GetEnvironment(string environmentId)
         {
-            throw new NotImplementedException();
+            VerifyEnvironmentExists(environmentId, null);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetEnvironmentBaseQuery().Append("WHERE ID=@0", environmentId);
+                var item = db.SingleOrDefault<DeployEnvironment>(sql);
+                if(item == null)
+                {
+                    throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
+                }
+                LoadEnvironmentChildren(item);
+                return item;
+            }
+        }
+
+        private void LoadEnvironmentChildren(DeployEnvironment item)
+        {
+            item.ComponentList = GetEnvironmentConfigurationList(item.Id, EnumDeployStepParentType.Component);
+            item.ConfigurationList = GetEnvironmentConfigurationList(item.Id, EnumDeployStepParentType.Configuration);
+        }
+
+        private PetaPoco.Sql GetEnvironmentBaseQuery()
+        {
+            return PetaPoco.Sql.Builder
+                    .Append("SELECT ID, DeployProjectID AS ProjectID, EnvironmentName, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                    .Append("FROM DeployEnvironment");
         }
 
         public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)

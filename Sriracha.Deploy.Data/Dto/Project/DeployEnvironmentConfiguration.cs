@@ -14,12 +14,12 @@ namespace Sriracha.Deploy.Data.Dto.Project
 		public string ParentId { get; set; }
 		public EnumDeployStepParentType ParentType { get; set; }
 		public string DeployCredentialsId { get; set; }
-		public List<DeployMachine> MachineList { get; set; }
-		public Dictionary<string, string> ConfigurationValueList { get; set; }
         public DateTime CreatedDateTimeUtc { get; set; }
         public string CreatedByUserName { get; set; }
         public DateTime UpdatedDateTimeUtc { get; set; }
         public string UpdatedByUserName { get; set; }
+        public List<DeployMachine> MachineList { get; set; }
+		public Dictionary<string, string> ConfigurationValueList { get; set; }
 
 		public DeployEnvironmentConfiguration()
 		{

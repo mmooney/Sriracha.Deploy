@@ -92,7 +92,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 Assert.IsNotNull(actualMachine);
                 Assert.AreEqual(expectedMachine.Id, actualMachine.Id);
                 Assert.AreEqual(expectedMachine.ProjectId, actualMachine.ProjectId);
-                Assert.AreEqual(expectedMachine.ProjectName, actualMachine.ProjectName);
                 Assert.AreEqual(expectedMachine.EnvironmentId, actualMachine.EnvironmentId);
                 Assert.AreEqual(expectedMachine.EnvironmentName, actualMachine.EnvironmentName);
                 Assert.AreEqual(expectedMachine.ParentId, actualMachine.ParentId);
@@ -125,7 +124,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 Assert.IsNotNull(createdMachine);
                 Assert.IsNotNullOrEmpty(createdMachine.Id);
                 Assert.AreEqual(project.Id, createdMachine.ProjectId);
-                Assert.AreEqual(project.ProjectName, createdMachine.ProjectName);
                 Assert.AreEqual(environment.Id, createdMachine.EnvironmentId);
                 Assert.AreEqual(environment.EnvironmentName, createdMachine.EnvironmentName);
                 Assert.AreEqual(sourceItem.Id, createdMachine.ParentId);
