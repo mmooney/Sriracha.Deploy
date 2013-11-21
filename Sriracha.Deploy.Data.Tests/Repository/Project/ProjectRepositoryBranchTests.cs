@@ -512,21 +512,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void DeleteBranch_WithoutProjectID_DeletesBranch()
+        public void DeleteBranch_MissingProjectID_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
 
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            sut.DeleteBranch(branch.Id, null);
-
-            var dbItem = sut.TryGetBranch(branch.Id, project.Id);
-            Assert.IsNull(dbItem);
-
-            var dbProject = sut.GetProject(project.Id);
-            var dbProjectBranch = dbProject.BranchList.SingleOrDefault(i => i.Id == branch.Id);
-            Assert.IsNull(dbProjectBranch);
+            Assert.Throws<ArgumentNullException>(()=>sut.DeleteBranch(branch.Id, null));
         }
 
         [Test]

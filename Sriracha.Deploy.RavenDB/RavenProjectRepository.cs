@@ -404,8 +404,12 @@ namespace Sriracha.Deploy.RavenDB
 			return component;	
 		}
 
-		public DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName)
+		public DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName)
 		{
+            if(string.IsNullOrEmpty(componentIdOrName))
+            {
+                throw new ArgumentNullException("Missing component ID or name");
+            }
 			int retryCounter = 5;
 			while(true)
 			{
@@ -415,21 +419,21 @@ namespace Sriracha.Deploy.RavenDB
 					using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel=IsolationLevel.Serializable }))
 					{
 						var project = GetProject(projectId);
-						var component = project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
+                        var component = project.ComponentList.FirstOrDefault(i => i.Id == componentIdOrName);
 						if(component != null)
 						{
 							itemId = component.Id;
 						}
 						else 
 						{
-							component = project.ComponentList.FirstOrDefault(i=>i.ComponentName == componentName);
+                            component = project.ComponentList.FirstOrDefault(i => i.ComponentName == componentIdOrName);
 							if(component != null)
 							{
 								itemId = component.Id;
 							}
 							else 
 							{
-                                component = CreateComponent(projectId, componentName, false, null, EnumDeploymentIsolationType.IsolatedPerMachine);
+                                component = CreateComponent(projectId, componentIdOrName, false, null, EnumDeploymentIsolationType.IsolatedPerMachine);
 								transaction.Complete();
 								itemId = component.Id;
 							}
@@ -561,8 +565,24 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson) 
 		{
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing configuration ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task type name");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var configuration = project.ConfigurationList.Single(i => i.Id == configurationId);
+			var configuration = project.ConfigurationList.SingleOrDefault(i => i.Id == configurationId);
+            if(configuration == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
 			var item = new DeployStep
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -670,8 +690,24 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson) 
 		{
+            if(string.IsNullOrEmpty(configurationId))
+            {
+                throw new ArgumentNullException("Missing configuration ID");
+            }
+            if(string.IsNullOrEmpty(stepName))
+            {
+                throw new ArgumentNullException("Missing step name");
+            }
+            if(string.IsNullOrEmpty(taskTypeName))
+            {
+                throw new ArgumentNullException("Missing task type name");
+            }
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var component = project.ConfigurationList.Single(i => i.Id == configurationId);
+			var component = project.ConfigurationList.SingleOrDefault(i => i.Id == configurationId);
+            if(component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
 			if(string.IsNullOrEmpty(deploymentStepId))
 			{
 				throw new ArgumentNullException("Missing deploymentStepId");
@@ -679,7 +715,7 @@ namespace Sriracha.Deploy.RavenDB
 			var item = component.DeploymentStepList.FirstOrDefault(i=>i.Id == deploymentStepId);
 			if(item == null)
 			{
-				throw new ArgumentException("Could not find configuration DeployStep object with Id " + deploymentStepId);
+				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
 			item.StepName = stepName;
 			item.TaskTypeName = taskTypeName;
@@ -712,10 +748,14 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void DeleteConfigurationDeploymentStep(string deploymentStepId)
 		{
+            if(string.IsNullOrEmpty(deploymentStepId))
+            {
+                throw new ArgumentNullException("Missing deployment step ID");
+            }
 			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
 			if (project == null)
 			{
-				throw new KeyNotFoundException("Could not find project for configuration deployment step " + deploymentStepId);
+				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
 			_logger.Info("User {0} deleting configuration deployment step {1}", _userIdentity.UserName, deploymentStepId);
 			var configuration = project.ConfigurationList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
@@ -910,19 +950,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			DeployProject project;
-			if(!string.IsNullOrEmpty(projectId))
-			{
-				project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			}
-			else 
-			{
-				project = this._documentSession.QueryNotStale<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
-				if (project == null)
-				{
-					throw new ArgumentException("Unable to find project for branch ID " + branchId);
-				}
-			}
+			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
 			_logger.Info("User {0} deleting branch {1}", _userIdentity.UserName, branchId);
 			var branch = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
 			if(branch == null)

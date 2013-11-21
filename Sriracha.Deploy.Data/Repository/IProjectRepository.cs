@@ -30,7 +30,7 @@ namespace Sriracha.Deploy.Data.Repository
         DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		DeployComponent GetComponent(string componentId, string projectId=null);
 		DeployComponent TryGetComponent(string componentId, string projectId = null);
-		DeployComponent GetOrCreateComponent(string projectId, string componentId, string componentName);
+		DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName);
         DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		void DeleteComponent(string projectId, string componentId);
 

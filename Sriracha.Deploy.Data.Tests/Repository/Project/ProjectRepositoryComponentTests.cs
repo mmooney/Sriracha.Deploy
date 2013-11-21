@@ -26,6 +26,29 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
         }
 
+        private void AssertCreatedComponent(DeployComponent result, string projectId, string componentName, EnumDeploymentIsolationType isolationType, IProjectRepository sut)
+        {
+            Assert.IsNotNull(result);
+            Assert.IsNotNullOrEmpty(result.Id);
+            Assert.AreEqual(projectId, result.ProjectId);
+            Assert.AreEqual(componentName, result.ComponentName);
+            Assert.AreEqual(false, result.UseConfigurationGroup);
+            Assert.AreEqual(null, result.ConfigurationId);
+            Assert.AreEqual(isolationType, result.IsolationType);
+            AssertIsRecent(result.CreatedDateTimeUtc);
+            Assert.AreEqual(this.UserName, result.CreatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            Assert.AreEqual(this.UserName, result.UpdatedByUserName);
+
+            var dbItem = sut.GetComponent(result.Id);
+            AssertComponent(result, dbItem);
+
+            var dbProject = sut.GetProject(projectId);
+            var dbProjectComponent = dbProject.ComponentList.SingleOrDefault(i => i.Id == result.Id);
+            Assert.IsNotNull(dbProjectComponent);
+            AssertComponent(result, dbProjectComponent);
+        }
+
         private DeployComponent CreateTestComponent(IProjectRepository sut, string projectId)
         {
             return sut.CreateComponent(projectId, this.Fixture.Create<string>("ComponentName"), false, null, this.Fixture.Create<EnumDeploymentIsolationType>());
@@ -42,25 +65,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.CreateComponent(project.Id, componentName, false, null, isolationType);
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNullOrEmpty(result.Id);
-            Assert.AreEqual(project.Id, result.ProjectId);
-            Assert.AreEqual(componentName, result.ComponentName);
-            Assert.AreEqual(false, result.UseConfigurationGroup);
-            Assert.AreEqual(null, result.ConfigurationId);
-            Assert.AreEqual(isolationType, result.IsolationType);
-            AssertIsRecent(result.CreatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.CreatedByUserName);
-            AssertIsRecent(result.UpdatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.UpdatedByUserName);
-
-            var dbItem = sut.GetComponent(result.Id);
-            AssertComponent(result, dbItem);
-
-            var dbProject = sut.GetProject(project.Id);
-            var dbProjectComponent = dbProject.ComponentList.SingleOrDefault(i => i.Id == result.Id);
-            Assert.IsNotNull(dbProjectComponent);
-            AssertComponent(result, dbProjectComponent);
+            AssertCreatedComponent(result, project.Id, componentName, isolationType, sut);
         }
 
         [Test]
@@ -288,5 +293,78 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var dbComponent = sut.TryGetComponent(component.Id);
             Assert.IsNull(dbComponent);
         }
+
+        [Test]
+        public void GetOrCreateComponent_CreatesNewBranch()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            string componentName = this.Fixture.Create<string>("ComponentName");
+
+            var result = sut.GetOrCreateComponent(project.Id, componentName);
+
+            AssertCreatedComponent(result, project.Id, componentName, EnumDeploymentIsolationType.IsolatedPerMachine, sut);
+        }
+
+        [Test]
+        public void GetOrCreateComponent_GetsBranchByID()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var component = this.CreateTestComponent(sut, project.Id);
+
+            var result = sut.GetOrCreateComponent(project.Id, component.Id);
+
+            AssertComponent(component, result);
+        }
+
+        [Test]
+        public void GetOrCreateComponent_GetsBranchByName()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var component = this.CreateTestComponent(sut, project.Id);
+
+            var result = sut.GetOrCreateComponent(project.Id, component.ComponentName);
+
+            AssertComponent(component, result);
+        }
+
+        [Test]
+        public void GetOrCreateComponent_BadProjectID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var component = this.CreateTestComponent(sut, project.Id);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetOrCreateComponent(Guid.NewGuid().ToString(), component.Id));
+        }
+
+        [Test]
+        public void GetOrCreateComponent_MissingProjectID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var component = this.CreateTestComponent(sut, project.Id);
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateComponent(null, component.Id));
+        }
+
+        [Test]
+        public void GetOrCreateComponent_MissingBranchIdOrName_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var component = this.CreateTestComponent(sut, project.Id);
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateComponent(project.Id, null));
+        }
+
     }
 }

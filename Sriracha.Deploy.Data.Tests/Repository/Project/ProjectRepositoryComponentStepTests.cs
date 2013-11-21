@@ -558,7 +558,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             sut.DeleteComponent(step.ProjectId, step.ParentId);
 
             Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id));
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.Id, step.ParentId));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.ParentId, step.ProjectId));
         }
 
         [Test]
@@ -571,7 +571,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             sut.DeleteProject(step.ProjectId);
 
             Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id));
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.Id, step.ParentId));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.ParentId, step.ProjectId));
         }
     }
 }

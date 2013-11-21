@@ -216,7 +216,7 @@ CREATE TABLE [dbo].[ComponentDeployStep](
 	[StepName] [nvarchar](200) NOT NULL,
 	[TaskTypeName] [nvarchar](200) NOT NULL,
 	[TaskOptionsJson] [nvarchar](max) NULL,
-	[SharedDeploymentStepId] [nvarchar](50) NULL,
+	[SharedDeploymentStepID] [nvarchar](50) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
@@ -249,4 +249,68 @@ GO
 ALTER TABLE [dbo].[ComponentDeployStep] CHECK CONSTRAINT [FK_ComponentDeployStep_Project]
 GO
 
+CREATE NONCLUSTERED INDEX IX_ComponentDeployStep_ProjectID ON dbo.ComponentDeployStep
+	(
+	ProjectID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_ComponentDeployStep_ComponentID ON dbo.ComponentDeployStep
+	(
+	ComponentID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_ComponentDeployStep_SharedDeploymentStepID ON dbo.ComponentDeployStep
+	(
+	SharedDeploymentStepID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
+
+
+CREATE TABLE [dbo].[ConfigurationDeployStep](
+	[ID] [nvarchar](50) NOT NULL,
+	[ProjectID] [nvarchar](50) NOT NULL,
+	[ConfigurationID] [nvarchar](50) NOT NULL,
+	[StepName] [nvarchar](200) NOT NULL,
+	[TaskTypeName] [nvarchar](200) NOT NULL,
+	[TaskOptionsJson] [nvarchar](max) NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_ConfigurationDeployStep] PRIMARY KEY 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[ConfigurationDeployStep] ADD  CONSTRAINT [DF_ConfigurationDeployStep_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[ConfigurationDeployStep]  WITH CHECK ADD  CONSTRAINT [FK_ConfigurationDeployStep_Configuration] FOREIGN KEY([ConfigurationID], [ProjectID])
+REFERENCES [dbo].[Configuration] ([ID], [ProjectID])
+GO
+
+ALTER TABLE [dbo].[ConfigurationDeployStep] CHECK CONSTRAINT [FK_ConfigurationDeployStep_Configuration]
+GO
+
+ALTER TABLE [dbo].[ConfigurationDeployStep]  WITH CHECK ADD  CONSTRAINT [FK_ConfigurationDeployStep_Project] FOREIGN KEY([ProjectID])
+REFERENCES [dbo].[Project] ([ID])
+GO
+
+ALTER TABLE [dbo].[ConfigurationDeployStep] CHECK CONSTRAINT [FK_ConfigurationDeployStep_Project]
+GO
+
+
+CREATE NONCLUSTERED INDEX IX_ConfigurationDeployStep_ProjectID ON dbo.ConfigurationDeployStep
+	(
+	ProjectID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_ConfigurationDeployStep_ConfigurationID ON dbo.ConfigurationDeployStep
+	(
+	ConfigurationID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO

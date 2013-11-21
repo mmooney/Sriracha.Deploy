@@ -101,6 +101,7 @@
     <Compile Include="AssertEx.cs" />
     <Compile Include="EmbeddedRavenProvider.cs" />
     <Compile Include="Project\RavenProjectRepositoryBranchTests.cs" />
+    <Compile Include="Project\RavenProjectRepositoryConfigurationStepTests.cs" />
     <Compile Include="Project\RavenProjectRepositoryComponentStepTests.cs" />
     <Compile Include="Project\RavenProjectRepositoryComponentTests.cs" />
     <Compile Include="Project\RavenProjectRepositoryConfigurationTests.cs" />
