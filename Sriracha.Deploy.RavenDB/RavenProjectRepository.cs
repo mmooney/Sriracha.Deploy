@@ -995,8 +995,8 @@ namespace Sriracha.Deploy.RavenDB
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
 			};
-			UpdateComponentList(componentList, project, environment);
-			UpdateComponentList(configurationList, project, environment);
+			UpdateComponentList(environment.ComponentList, project, environment, EnumDeployStepParentType.Component);
+			UpdateComponentList(environment.ConfigurationList, project, environment, EnumDeployStepParentType.Configuration);
 			if(project.EnvironmentList == null)
 			{
 				project.EnvironmentList = new List<DeployEnvironment>();
@@ -1006,16 +1006,21 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		private static void UpdateComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployProject project, DeployEnvironment environment)
+		private void UpdateComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployProject project, DeployEnvironment environment, EnumDeployStepParentType parentType)
 		{
 			foreach (var component in componentList)
 			{
 				if (string.IsNullOrEmpty(component.Id))
 				{
 					component.Id = Guid.NewGuid().ToString();
+				    component.CreatedDateTimeUtc = DateTime.UtcNow;
+				    component.CreatedByUserName = _userIdentity.UserName;
 				}
 				component.EnvironmentId = environment.Id;
 				component.ProjectId = project.Id;
+                component.ParentType = parentType;
+				component.UpdatedDateTimeUtc = DateTime.UtcNow;
+				component.UpdatedByUserName = _userIdentity.UserName;
 
 				if (component.MachineList != null)
 				{
@@ -1024,13 +1029,17 @@ namespace Sriracha.Deploy.RavenDB
 						if (string.IsNullOrEmpty(machine.Id))
 						{
 							machine.Id = Guid.NewGuid().ToString();
-						}
+                            machine.CreatedDateTimeUtc = DateTime.UtcNow;
+                            machine.CreatedByUserName = _userIdentity.UserName;
+                        }
 						machine.ProjectId = project.Id;
 						machine.ProjectName = project.ProjectName;
 						machine.ParentId = component.Id;
 						machine.EnvironmentId = environment.Id;
 						machine.EnvironmentName = environment.EnvironmentName;
-					}
+                        machine.UpdatedDateTimeUtc = DateTime.UtcNow;
+                        machine.UpdatedByUserName = _userIdentity.UserName;
+                    }
 				}
 			}
 		}
@@ -1079,8 +1088,8 @@ namespace Sriracha.Deploy.RavenDB
 			environment.ConfigurationList = configurationList.ToList();
 			environment.UpdatedByUserName = _userIdentity.UserName;
 			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
-			UpdateComponentList(componentList, project, environment);
-			UpdateComponentList(configurationList, project, environment);
+			UpdateComponentList(componentList, project, environment, EnumDeployStepParentType.Component);
+			UpdateComponentList(configurationList, project, environment, EnumDeployStepParentType.Configuration);
 			this._documentSession.SaveEvict(project);
 			return environment;
 		}

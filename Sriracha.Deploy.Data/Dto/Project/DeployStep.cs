@@ -8,9 +8,9 @@ namespace Sriracha.Deploy.Data.Dto.Project
 {
 	public enum EnumDeployStepParentType
 	{
-		Unknown,
-		Component, 
-		Configuration
+		Unknown = 0,
+		Component = 1, 
+		Configuration = 2
 	}
 
 	public class DeployStep

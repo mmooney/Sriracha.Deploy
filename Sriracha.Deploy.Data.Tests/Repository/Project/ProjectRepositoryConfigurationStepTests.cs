@@ -475,7 +475,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var sut = this.GetRepository();
 
             var step = this.CreateTestStep(sut);
-
+            
             var result = sut.GetConfiguration(step.ParentId);
 
             Assert.IsNotNull(result);

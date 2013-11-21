@@ -14,8 +14,11 @@ namespace Sriracha.Deploy.Data.Dto.Project
 		public string EnvironmentName { get; set; }
 		public string ParentId { get; set; }
 		public string MachineName { get; set; }
-		public string RoleName { get; set; }
-		public Dictionary<string, string> ConfigurationValueList { get; set; }
+        public DateTime CreatedDateTimeUtc { get; set; }
+        public string CreatedByUserName { get; set; }
+        public DateTime UpdatedDateTimeUtc { get; set; }
+        public string UpdatedByUserName { get; set; }
+        public Dictionary<string, string> ConfigurationValueList { get; set; }
 
 		public DeployMachine()
 		{

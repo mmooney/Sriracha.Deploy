@@ -28,7 +28,7 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var projectExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Project WHERE ID=@0", projectId);
+                var projectExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployProject WHERE ID=@0", projectId);
                 if (db.ExecuteScalar<int>(projectExistsSql) == 0)
                 {
                     throw new RecordNotFoundException(typeof(DeployProject), "Id", projectId);
@@ -44,10 +44,10 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var branchExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Branch WHERE ID=@0", branchId);
+                var branchExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployBranch WHERE ID=@0", branchId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    branchExistsSql = branchExistsSql.Append("AND ProjectID=@0", projectId);
+                    branchExistsSql = branchExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (db.ExecuteScalar<int>(branchExistsSql) == 0)
                 {
@@ -64,10 +64,10 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var configurationExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Configuration WHERE ID=@0", configurationId);
+                var configurationExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployConfiguration WHERE ID=@0", configurationId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    configurationExistsSql = configurationExistsSql.Append("AND ProjectID=@0", projectId);
+                    configurationExistsSql = configurationExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (db.ExecuteScalar<int>(configurationExistsSql) == 0)
                 {
@@ -84,10 +84,10 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var componentExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM Component WHERE ID=@0", componentId);
+                var componentExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployComponent WHERE ID=@0", componentId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    componentExistsSql = componentExistsSql.Append("AND ProjectID=@0", projectId);
+                    componentExistsSql = componentExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (db.ExecuteScalar<int>(componentExistsSql) == 0)
                 {
@@ -104,14 +104,14 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM ComponentDeployStep WHERE ID=@0", deploymentStepId);
+                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployComponentStep WHERE ID=@0", deploymentStepId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ProjectID=@0", projectId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (!string.IsNullOrEmpty(componentId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ComponentID=@0", componentId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployComponentID=@0", componentId);
                 }
                 if (db.ExecuteScalar<int>(stepExistsSql) == 0)
                 {
@@ -128,14 +128,14 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM ConfigurationDeployStep WHERE ID=@0", deploymentStepId);
+                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployConfigurationStep WHERE ID=@0", deploymentStepId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ProjectID=@0", projectId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (!string.IsNullOrEmpty(configurationId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ConfigurationID=@0", configurationId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployConfigurationID=@0", configurationId);
                 }
                 if (db.ExecuteScalar<int>(stepExistsSql) == 0)
                 {
@@ -156,14 +156,14 @@ namespace Sriracha.Deploy.SqlServer
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT ID FROM ComponentDeployStep WHERE SharedDeploymentStepID=@0", sharedDeploymentStepId);
+                var stepExistsSql = PetaPoco.Sql.Builder.Append("SELECT ID FROM DeployComponentStep WHERE SharedDeploymentStepID=@0", sharedDeploymentStepId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ProjectID=@0", projectId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (!string.IsNullOrEmpty(componentId))
                 {
-                    stepExistsSql = stepExistsSql.Append("AND ComponentID=@0", componentId);
+                    stepExistsSql = stepExistsSql.Append("AND DeployComponentID=@0", componentId);
                 }
                 string deploymentStepId = db.ExecuteScalar<string>(stepExistsSql);
                 if (string.IsNullOrEmpty(deploymentStepId))
@@ -180,7 +180,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                             .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                            .Append("FROM Project");
+                            .Append("FROM DeployProject");
                 var list = db.Query<DeployProject>(sql).ToList();
                 foreach(var project in list)
                 {
@@ -217,7 +217,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                    .Append("INSERT INTO Project (ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                    .Append("INSERT INTO DeployProject (ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
                     .Append("VALUES (@Id, @ProjectName, @UsesSharedComponentConfiguration, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", project);
                 db.Execute(sql);
             }
@@ -235,7 +235,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                             .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                            .Append("FROM Project")
+                            .Append("FROM DeployProject")
                             .Append("WHERE ID = @0", projectId);
                 project = db.SingleOrDefault<DeployProject>(sql);
             }
@@ -285,7 +285,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                             .Append("SELECT ID, ProjectName, UsesSharedComponentConfiguration, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                            .Append("FROM Project")
+                            .Append("FROM DeployProject")
                             .Append("WHERE ProjectName = @0", projectName);
                 var list = db.Fetch<DeployProject>(sql);
                 if(list.Count == 0)
@@ -335,7 +335,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = PetaPoco.Sql.Builder.Append("UPDATE Project")
+                var sql = PetaPoco.Sql.Builder.Append("UPDATE DeployProject")
                                         .Append("SET ProjectName=@0, UsesSharedComponentConfiguration=@1, UpdatedByUserName=@2, UpdatedDateTimeUtc=@3", projectName, usesSharedComponentConfiguration, _userIdentity.UserName, DateTime.UtcNow)
                                         .Append("WHERE ID=@0", projectId);
                 db.Execute(sql);
@@ -354,12 +354,12 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM Branch WHERE ProjectID=@0;", projectId)
-                                    .Append("DELETE FROM ComponentDeployStep WHERE ProjectID=@0;", projectId)
-                                .Append("DELETE FROM Component WHERE ProjectID=@0;", projectId)
-                                    .Append("DELETE FROM ConfigurationDeployStep WHERE ProjectID=@0;", projectId)
-                                .Append("DELETE FROM Configuration WHERE ProjectID=@0;", projectId)
-                                .Append("DELETE FROM Project WHERE ID=@0", projectId);
+                                .Append("DELETE FROM DeployBranch WHERE DeployProjectID=@0;", projectId)
+                                    .Append("DELETE FROM DeployComponentStep WHERE DeployProjectID=@0;", projectId)
+                                .Append("DELETE FROM DeployComponent WHERE DeployProjectID=@0;", projectId)
+                                    .Append("DELETE FROM DeployConfigurationStep WHERE DeployProjectID=@0;", projectId)
+                                .Append("DELETE FROM DeployConfiguration WHERE DeployProjectID=@0;", projectId)
+                                .Append("DELETE FROM DeployProject WHERE ID=@0", projectId);
                 db.Execute(sql);
             }
         }
@@ -375,7 +375,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetConfigurationBaseQuery()
-                            .Append("WHERE ProjectID=@0", projectId);
+                            .Append("WHERE DeployProjectID=@0", projectId);
                 var list = db.Fetch<DeployConfiguration>(sql).ToList();
                 foreach(var item in list)
                 {
@@ -411,7 +411,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO Configuration (ID, ProjectID, ConfigurationName, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("INSERT INTO DeployConfiguration (ID, DeployProjectID, ConfigurationName, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
                             .Append("VALUES (@Id, @ProjectId, @ConfigurationName, @IsolationType, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", configuration);
                 db.Execute(sql);
             }
@@ -444,7 +444,7 @@ namespace Sriracha.Deploy.SqlServer
                             .Append("WHERE ID=@0", configurationId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 var item = db.SingleOrDefault<DeployConfiguration>(sql);
                 if(item != null)
@@ -463,8 +463,8 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetConfigurationBaseQuery()
         {
             return PetaPoco.Sql.Builder
-                            .Append("SELECT ID, ProjectID, ConfigurationName, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                            .Append("FROM Configuration");
+                            .Append("SELECT ID, DeployProjectID AS ProjectID, ConfigurationName, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                            .Append("FROM DeployConfiguration");
         }
 
         public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
@@ -474,7 +474,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("UPDATE Configuration")
+                                .Append("UPDATE DeployConfiguration")
                                 .Append("SET ConfigurationName=@0, EnumDeploymentIsolationTypeID=@1, UpdatedByUserName=@2, UpdatedDateTimeUtc=@3", configurationName, isolationType, _userIdentity.UserName, DateTime.UtcNow)
                                 .Append("WHERE ID=@0", configurationId);
                 db.Execute(sql);
@@ -492,8 +492,8 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM ConfigurationDeployStep WHERE ConfigurationID=@0;", configurationId)
-                                .Append("DELETE FROM Configuration WHERE ID=@0", configurationId);
+                                .Append("DELETE FROM DeployConfigurationStep WHERE DeployConfigurationID=@0;", configurationId)
+                                .Append("DELETE FROM DeployConfiguration WHERE ID=@0", configurationId);
                 db.Execute(sql);
             }
         }
@@ -507,7 +507,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = GetComponentBaseQuery().Where("ProjectID=@0", projectId);
+                var sql = GetComponentBaseQuery().Where("DeployProjectID=@0", projectId);
                 var list = db.Fetch<DeployComponent>(sql).ToList();
                 foreach(var item in list)
                 {
@@ -549,7 +549,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO Component (ID, ProjectID, ComponentName, UseConfigurationGroup, ConfigurationID, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("INSERT INTO DeployComponent (ID, DeployProjectID, ComponentName, UseConfigurationGroup, DeployConfigurationID, EnumDeploymentIsolationTypeID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
                             .Append("VALUES (@Id, @ProjectId, @ComponentName, @UseConfigurationGroup, @ConfigurationId, @IsolationType, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", component);
                 db.Execute(sql);
             }
@@ -582,7 +582,7 @@ namespace Sriracha.Deploy.SqlServer
                             .Append("WHERE ID=@0", componentId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 var item = db.SingleOrDefault<DeployComponent>(sql);
                 if(item != null)
@@ -596,8 +596,8 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetComponentBaseQuery()
         {
             return PetaPoco.Sql.Builder
-                    .Append("SELECT ID, ProjectID, ComponentName, UseConfigurationGroup, ConfigurationID, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                    .Append("FROM Component");
+                    .Append("SELECT ID, DeployProjectID AS ProjectID, ComponentName, UseConfigurationGroup, DeployConfigurationID AS ConfigurationID, EnumDeploymentIsolationTypeID AS IsolationType, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                    .Append("FROM DeployComponent");
         }
 
         public DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName)
@@ -656,8 +656,8 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("UPDATE Component")
-                                .Append("SET ComponentName=@0, UseConfigurationGroup=@1, ConfigurationID=@2, EnumDeploymentIsolationTypeID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
+                                .Append("UPDATE DeployComponent")
+                                .Append("SET ComponentName=@0, UseConfigurationGroup=@1, DeployConfigurationID=@2, EnumDeploymentIsolationTypeID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
                                         componentName, useConfigurationGroup, configurationId, isolationType, _userIdentity.UserName, DateTime.UtcNow)
                                 .Append("WHERE ID=@0", componentId);
                 db.Execute(sql);
@@ -672,8 +672,8 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM ComponentDeployStep WHERE ComponentID=@0;", componentId)
-                                .Append("DELETE FROM Component WHERE ID=@0;", componentId);
+                                .Append("DELETE FROM DeployComponentStep WHERE DeployComponentID=@0;", componentId)
+                                .Append("DELETE FROM DeployComponent WHERE ID=@0;", componentId);
                 db.Execute(sql);
             }
         }
@@ -683,7 +683,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyComponentExists(componentId, null);
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = GetComponentStepBaseQuery().Append("WHERE ComponentID=@0", componentId);
+                var sql = GetComponentStepBaseQuery().Append("WHERE DeployComponentID=@0", componentId);
                 return db.Fetch<DeployStep>(sql).ToList();
             }
         }
@@ -697,7 +697,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyConfigurationExists(configurationId, null);
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = GetConfigurationStepBaseQuery().Append("WHERE ConfigurationID=@0", configurationId);
+                var sql = GetConfigurationStepBaseQuery().Append("WHERE DeployConfigurationID=@0", configurationId);
                 return db.Fetch<DeployStep>(sql).ToList();
             }
         }
@@ -705,8 +705,8 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetConfigurationStepBaseQuery()
         {
             return PetaPoco.Sql.Builder
-                        .Append("SELECT ID, ProjectID, ConfigurationID AS ParentId, 'Configuration' AS ParentType, StepName, TaskTypeName, TaskOptionsJson, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
-                        .Append("FROM ConfigurationDeployStep");
+                        .Append("SELECT ID, DeployProjectID AS ProjectID, DeployConfigurationID AS ParentId, 'Configuration' AS ParentType, StepName, TaskTypeName, TaskOptionsJson, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                        .Append("FROM DeployConfigurationStep");
         }
 
         public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
@@ -748,7 +748,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO ComponentDeployStep (ID, ProjectID, ComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("INSERT INTO DeployComponentStep (ID, DeployProjectID, DeployComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
                             .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @SharedDeploymentStepId, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
                 db.Execute(sql);
             }
@@ -793,7 +793,7 @@ namespace Sriracha.Deploy.SqlServer
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO ConfigurationDeployStep (ID, ProjectID, ConfigurationID, StepName, TaskTypeName, TaskOptionsJson, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("INSERT INTO DeployConfigurationStep (ID, DeployProjectID, DeployConfigurationID, StepName, TaskTypeName, TaskOptionsJson, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
                             .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
                 db.Execute(sql);
             }
@@ -821,8 +821,8 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetComponentStepBaseQuery()
         {
             return PetaPoco.Sql.Builder
-                .Append("SELECT ID, ProjectID, ComponentID AS ParentID, 'Component' AS ParentType, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
-                .From("ComponentDeployStep");
+                .Append("SELECT ID, DeployProjectID AS ProjectID, DeployComponentID AS ParentID, 'Component' AS ParentType, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName")
+                .From("DeployComponentStep");
         }
 
         public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
@@ -878,17 +878,17 @@ namespace Sriracha.Deploy.SqlServer
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("UPDATE ComponentDeployStep")
+                            .Append("UPDATE DeployComponentStep")
                             .Append("SET StepName=@0, TaskTypeName=@1, TaskOptionsJson=@2, SharedDeploymentStepID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
                                         stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId, _userIdentity.UserName, DateTime.UtcNow)
                             .Append("WHERE ID=@0", deploymentStepId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if(!string.IsNullOrEmpty(componentId))
                 {
-                    sql = sql.Append("AND ComponentID=@0", componentId);
+                    sql = sql.Append("AND DeployComponentID=@0", componentId);
                 }
                 db.Execute(sql);
             }
@@ -923,17 +923,17 @@ namespace Sriracha.Deploy.SqlServer
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("UPDATE ConfigurationDeployStep")
+                            .Append("UPDATE DeployConfigurationStep")
                             .Append("SET StepName=@0, TaskTypeName=@1, TaskOptionsJson=@2, UpdatedByUserName=@3, UpdatedDateTimeUtc=@4",
                                         stepName, taskTypeName, taskOptionsJson, _userIdentity.UserName, DateTime.UtcNow)
                             .Append("WHERE ID=@0", deploymentStepId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 if (!string.IsNullOrEmpty(configurationId))
                 {
-                    sql = sql.Append("AND ConfigurationID=@0", configurationId);
+                    sql = sql.Append("AND DeployConfigurationID=@0", configurationId);
                 }
                 db.Execute(sql);
             }
@@ -946,7 +946,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("DELETE FROM ComponentDeployStep")
+                            .Append("DELETE FROM DeployComponentStep")
                             .Append("WHERE ID=@0", deploymentStepId);
                 db.Execute(sql);
             }
@@ -958,7 +958,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM ConfigurationDeployStep")
+                                .Append("DELETE FROM DeployConfigurationStep")
                                 .Append("WHERE ID=@0", deploymentStepId);
                 db.Execute(sql);
             }
@@ -973,10 +973,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = PetaPoco.Sql.Builder
-                    .Append("SELECT ID, BranchName, ProjectID, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                    .Append("FROM Branch")
-                    .Append("WHERE ProjectID=@0", projectId);
+                var sql = GetBranchBaseQuery().Append("WHERE DeployProjectID=@0", projectId);
                 return db.Fetch<DeployProjectBranch>(sql);
             }
         }
@@ -1005,7 +1002,7 @@ namespace Sriracha.Deploy.SqlServer
             {  
                 VerifyProjectExists(projectId);
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO Branch (ID, ProjectID, BranchName, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("INSERT INTO DeployBranch (ID, DeployProjectID, BranchName, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
                             .Append("VALUES (@Id, @ProjectId, @BranchName, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", branch);
                 db.Execute(sql);
             }
@@ -1033,7 +1030,7 @@ namespace Sriracha.Deploy.SqlServer
                 var sql = GetBranchBaseQuery().Append("WHERE ID=@0", branchId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 return db.SingleOrDefault<DeployProjectBranch>(sql);
             }
@@ -1042,8 +1039,8 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetBranchBaseQuery()
         {
             return PetaPoco.Sql.Builder
-                .Append("SELECT ID, ProjectID, BranchName, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                .Append("FROM Branch");
+                .Append("SELECT ID, DeployProjectID AS ProjectID, BranchName, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                .Append("FROM DeployBranch");
         }
 
         public DeployProjectBranch GetBranchByName(string projectId, string branchName)
@@ -1069,7 +1066,7 @@ namespace Sriracha.Deploy.SqlServer
             VerifyProjectExists(projectId);
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = GetBranchBaseQuery().Where("ProjectID=@0 AND BranchName=@1", projectId, branchName);
+                var sql = GetBranchBaseQuery().Where("DeployProjectID=@0 AND BranchName=@1", projectId, branchName);
                 return db.SingleOrDefault<DeployProjectBranch>(sql);
             }
         }
@@ -1116,12 +1113,12 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                            .Append("UPDATE Branch")
+                            .Append("UPDATE DeployBranch")
                             .Append("SET BranchName=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", branchName, _userIdentity.UserName, DateTime.UtcNow)
                             .Append("WHERE ID=@0", branchId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 db.Execute(sql);
             }
@@ -1143,10 +1140,10 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM Branch WHERE ID=@0", branchId);
+                                .Append("DELETE FROM DeployBranch WHERE ID=@0", branchId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
-                    sql = sql.Append("AND ProjectID=@0", projectId);
+                    sql = sql.Append("AND DeployProjectID=@0", projectId);
                 }
                 db.Execute(sql);
             }
