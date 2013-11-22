@@ -25,12 +25,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertIsRecent(result.UpdatedDateTimeUtc);
             Assert.AreEqual(this.UserName, result.UpdatedByUserName);
             
+            environmentComponentList = environmentComponentList ?? new List<DeployEnvironmentConfiguration>();
             Assert.AreEqual(environmentComponentList.Count(), result.ComponentList.Count);
             foreach(var item in environmentComponentList)
             {
                 var createdItem = result.ComponentList.SingleOrDefault(i=>i.ParentId == item.ParentId);
                 AssertCreatedEnvironmentConfiguration(item, createdItem, project, result, EnumDeployStepParentType.Component);
             }
+            environmentConfigurationList = environmentConfigurationList ?? new List<DeployEnvironmentConfiguration>();
             Assert.AreEqual(environmentConfigurationList.Count(), result.ConfigurationList.Count);
             foreach (var item in environmentConfigurationList)
             {
@@ -152,54 +154,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             }
         }
 
-        //private DeployComponent CreateTestComponent(IProjectRepository sut, string projectId)
-        //{
-        //    return sut.CreateComponent(projectId, this.Fixture.Create<string>("ComponentName"), false, null, this.Fixture.Create<EnumDeploymentIsolationType>());
-        //}
-
-        [Test]
-        public void CreateEnvironment_StoresEnvironment()
-        {
-            var sut = this.GetRepository();
-
-            var project = this.CreateTestProject(sut);
-            var componentList = this.CreateTestComponentList(project.Id, 5, sut);
-            var configurationList = this.CreateTestConfigurationList(project.Id, 3, sut);
-
-            var environmentComponentList = (from i in componentList
-                                            select new DeployEnvironmentConfiguration
-                                            {
-                                                ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                DeployCredentialsId = null,
-                                                ParentId = i.Id,
-                                                MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
-                                                                    select new DeployMachine 
-                                                                    {
-                                                                        ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                                        MachineName = machineName
-                                                                    }).ToList()
-                                            }).ToList();
-
-            var environmentConfigurationList = (from i in configurationList
-                                            select new DeployEnvironmentConfiguration
-                                            {
-                                                ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                DeployCredentialsId = null,
-                                                ParentId = i.Id,
-                                                MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
-                                                                    select new DeployMachine 
-                                                                    {
-                                                                        ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                                        MachineName = machineName
-                                                                    }).ToList()
-                                            }).ToList();
-
-            string environmentName = this.Fixture.Create<string>("EnvironmentName");
-            var result = sut.CreateEnvironment(project.Id, environmentName, environmentComponentList, environmentConfigurationList);
-
-            AssertCreatedEnvironment(result, project, environmentName, environmentComponentList, environmentConfigurationList, sut);
-        }
-
         private Dictionary<string, string> CreateTestConfigurationValueList()
         {
             return this.Fixture.Create<Dictionary<string, string>>();
@@ -219,7 +173,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         private List<DeployComponent> CreateTestComponentList(string projectId, int count, IProjectRepository sut)
         {
             var returnList = new List<DeployComponent>();
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var item = sut.CreateComponent(projectId, this.Fixture.Create<string>("ComponentName"), false, null, this.Fixture.Create<EnumDeploymentIsolationType>());
                 returnList.Add(item);
@@ -227,6 +181,142 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             return returnList;
         }
 
+        private class CreateTestData
+        {
+            public DeployProject Project { get; set; }
+            public string EnvironmentName { get; set; }
+            public List<DeployEnvironmentConfiguration> EnvironmentComponentList { get; set; }
+            public List<DeployEnvironmentConfiguration> EnvironmentConfigurationList { get; set; }
+        }
+
+
+        private CreateTestData GetCreateTestData(IProjectRepository sut)
+        {
+            var returnValue = new CreateTestData
+            {
+                Project = this.CreateTestProject(sut)
+            };
+            var componentList = this.CreateTestComponentList(returnValue.Project.Id, 5, sut);
+            var configurationList = this.CreateTestConfigurationList(returnValue.Project.Id, 3, sut);
+
+            returnValue.EnvironmentComponentList = (from i in componentList
+                                                    select new DeployEnvironmentConfiguration
+                                                    {
+                                                        ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                                                        DeployCredentialsId = null,
+                                                        ParentId = i.Id,
+                                                        MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
+                                                                       select new DeployMachine
+                                                                       {
+                                                                           ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                                                                           MachineName = machineName
+                                                                       }).ToList()
+                                                    }).ToList();
+
+            returnValue.EnvironmentConfigurationList = (from i in configurationList
+                                                        select new DeployEnvironmentConfiguration
+                                                        {
+                                                            ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                                                            DeployCredentialsId = null,
+                                                            ParentId = i.Id,
+                                                            MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
+                                                                           select new DeployMachine
+                                                                           {
+                                                                               ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                                                                               MachineName = machineName
+                                                                           }).ToList()
+                                                        }).ToList();
+
+            returnValue.EnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+
+            return returnValue;
+        }
+
+        [Test]
+        public void CreateEnvironment_StoresEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            var result = sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
+
+            AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
+        }
+
+        [Test]
+        public void CreateEnvironment_MissingProjectId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            Assert.Throws<ArgumentNullException>(() => sut.CreateEnvironment(null, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
+        }
+
+        [Test]
+        public void CreateEnvironment_BadProjectId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+            
+            var testData = GetCreateTestData(sut);
+            Assert.Throws<RecordNotFoundException>(() => sut.CreateEnvironment(Guid.NewGuid().ToString(), testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
+        }
+
+        [Test]
+        public void CreateEnvironment_MissingEnvironmentName_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            Assert.Throws<ArgumentNullException>(() => sut.CreateEnvironment(testData.Project.Id, null, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
+        }
+
+        [Test]
+        public void CreateEnvironment_MissingComponentList_CreatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            testData.EnvironmentComponentList = null;
+            var result = sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
+
+            AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
+        }
+
+        [Test]
+        public void CreateEnvironment_EmptyComponentList_CreatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            testData.EnvironmentComponentList.Clear();
+            var result = sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
+
+            AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
+        }
+
+        [Test]
+        public void CreateEnvironment_MissingConfigurationList_CreatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            testData.EnvironmentConfigurationList = null;
+            var result = sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
+
+            AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
+        }
+
+        [Test]
+        public void CreateEnvironment_EmptyConfiguationList_CreatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            testData.EnvironmentConfigurationList.Clear();
+            var result = sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
+
+            AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
+        }
         //[Test]
         //public void GetComponentList_CanRetrieveComponentList()
         //{

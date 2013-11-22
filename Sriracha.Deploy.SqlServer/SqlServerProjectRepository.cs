@@ -1201,6 +1201,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 throw new ArgumentNullException("Missing environment name");
             }
+            VerifyProjectExists(projectId);
             var item = new DeployEnvironment
             {
                 Id = Guid.NewGuid().ToString(),
@@ -1210,8 +1211,8 @@ namespace Sriracha.Deploy.SqlServer
                 CreatedDateTimeUtc = DateTime.UtcNow,
                 UpdatedByUserName = _userIdentity.UserName,
                 UpdatedDateTimeUtc = DateTime.UtcNow,
-                ComponentList = componentList.ToList(),
-                ConfigurationList = configurationList.ToList()
+                ComponentList = (componentList ?? new List<DeployEnvironmentConfiguration>()).ToList(),
+                ConfigurationList = (configurationList ?? new List<DeployEnvironmentConfiguration>()).ToList()
             };
             UpdateEnvironmentComponentList(item.ComponentList, item, EnumDeployStepParentType.Component);
             UpdateEnvironmentComponentList(item.ConfigurationList, item, EnumDeployStepParentType.Configuration);
