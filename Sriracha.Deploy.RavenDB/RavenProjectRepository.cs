@@ -1013,12 +1013,20 @@ namespace Sriracha.Deploy.RavenDB
                 switch(parentType)
                 {
                     case EnumDeployStepParentType.Component:
+                        if(string.IsNullOrEmpty(component.ParentId))
+                        {
+                            throw new ArgumentNullException("Missing component parent ID");
+                        }
                         if(!project.ComponentList.Any(i=>i.Id == component.ParentId))
                         {
                             throw new RecordNotFoundException(typeof(DeployComponent), "Id", component.ParentId);
                         }
                         break;
                     case EnumDeployStepParentType.Configuration:
+                        if(string.IsNullOrEmpty(component.ParentId))
+                        {
+                            throw new ArgumentNullException("Missing configuration parent ID");
+                        }
                         if(!project.ConfigurationList.Any(i=>i.Id == component.ParentId))
                         {
                             throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", component.ParentId);
@@ -1096,7 +1104,7 @@ namespace Sriracha.Deploy.RavenDB
 								.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
 			if (project == null)
 			{
-				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
 			}
 			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
 			environment.EnvironmentName = environmentName;

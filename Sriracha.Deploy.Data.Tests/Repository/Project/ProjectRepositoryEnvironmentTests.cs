@@ -60,16 +60,18 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
             Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
             
-            Assert.AreEqual(expected.ComponentList.Count(), actual.ComponentList.Count);
-            foreach(var expectedItem in expected.ComponentList)
+            AssertEnvironmentConfigurationList(expected.ComponentList, actual.ComponentList);
+            AssertEnvironmentConfigurationList(expected.ConfigurationList, actual.ConfigurationList);
+        }
+
+        private void AssertEnvironmentConfigurationList(List<DeployEnvironmentConfiguration> expectedList, List<DeployEnvironmentConfiguration> actualList)
+        {
+            expectedList = (expectedList ?? new List<DeployEnvironmentConfiguration>());
+            actualList = (actualList ?? new List<DeployEnvironmentConfiguration>());
+            Assert.AreEqual(expectedList.Count(), actualList.Count);
+            foreach (var expectedItem in expectedList)
             {
-                var actualItem = actual.ComponentList.SingleOrDefault(i=>i.ParentId == expectedItem.ParentId);
-                AssertEnvironmentConfiguration(expectedItem, actualItem);
-            }
-            Assert.AreEqual(expected.ConfigurationList.Count(), actual.ConfigurationList.Count);
-            foreach(var expectedItem in expected.ConfigurationList)
-            {
-                var actualItem = actual.ConfigurationList.SingleOrDefault(i=>i.ParentId == expectedItem.ParentId);
+                var actualItem = actualList.SingleOrDefault(i => i.ParentId == expectedItem.ParentId);
                 AssertEnvironmentConfiguration(expectedItem, actualItem);
             }
         }
@@ -164,10 +166,15 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var returnList = new List<DeployConfiguration>();
             for (int i = 0; i < count; i++)
             {
-                var item = sut.CreateConfiguration(projectId, this.Fixture.Create<string>("ConfigurationName"), this.Fixture.Create<EnumDeploymentIsolationType>());
+                var item = CreateTestConfiguration(sut, projectId);
                 returnList.Add(item);
             }
             return returnList;
+        }
+
+        private DeployConfiguration CreateTestConfiguration(IProjectRepository sut, string projectId)
+        {
+            return sut.CreateConfiguration(projectId, this.Fixture.Create<string>("ConfigurationName"), this.Fixture.Create<EnumDeploymentIsolationType>());
         }
 
         private List<DeployComponent> CreateTestComponentList(string projectId, int count, IProjectRepository sut)
@@ -175,10 +182,15 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var returnList = new List<DeployComponent>();
             for (int i = 0; i < count; i++)
             {
-                var item = sut.CreateComponent(projectId, this.Fixture.Create<string>("ComponentName"), false, null, this.Fixture.Create<EnumDeploymentIsolationType>());
+                var item = this.CreateTestComponent(sut, projectId);
                 returnList.Add(item);
             }
             return returnList;
+        }
+
+        private DeployComponent CreateTestComponent(IProjectRepository sut, string projectId)
+        {
+            return sut.CreateComponent(projectId, this.Fixture.Create<string>("ComponentName"), false, null, this.Fixture.Create<EnumDeploymentIsolationType>());
         }
 
         private class CreateTestData
@@ -205,36 +217,55 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var configurationList = this.CreateTestConfigurationList(returnValue.Project.Id, 3, sut);
 
             returnValue.EnvironmentComponentList = (from i in componentList
-                                                    select new DeployEnvironmentConfiguration
-                                                    {
-                                                        ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                        DeployCredentialsId = null,
-                                                        ParentId = i.Id,
-                                                        MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
-                                                                       select new DeployMachine
-                                                                       {
-                                                                           ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                                           MachineName = machineName
-                                                                       }).ToList()
-                                                    }).ToList();
+                                                    select GetCreateTestDeployEnvironmentConfiguration(i)).ToList();
 
             returnValue.EnvironmentConfigurationList = (from i in configurationList
-                                                        select new DeployEnvironmentConfiguration
-                                                        {
-                                                            ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                            DeployCredentialsId = null,
-                                                            ParentId = i.Id,
-                                                            MachineList = (from machineName in this.Fixture.CreateMany<string>("MachineName")
-                                                                           select new DeployMachine
-                                                                           {
-                                                                               ConfigurationValueList = this.CreateTestConfigurationValueList(),
-                                                                               MachineName = machineName
-                                                                           }).ToList()
-                                                        }).ToList();
+                                                            select GetCreateTestDeployEnvironmentConfiguration(i)).ToList();
 
             returnValue.EnvironmentName = this.Fixture.Create<string>("EnvironmentName");
 
             return returnValue;
+        }
+
+        private DeployEnvironmentConfiguration GetCreateTestDeployEnvironmentConfiguration(DeployConfiguration configuration)
+        {
+            return new DeployEnvironmentConfiguration
+            {
+                ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                DeployCredentialsId = null,
+                ParentId = configuration.Id,
+                MachineList = CreateTestMachineList(5)
+            };
+        }
+
+        private List<DeployMachine> CreateTestMachineList(int count)
+        {
+            var machineList = new List<DeployMachine>();
+            for (int i = 0; i < count; i++)
+            {
+                machineList.Add(CreateTestMachine());
+            }
+            return machineList;
+        }
+
+        private DeployMachine CreateTestMachine()
+        {
+            return new DeployMachine
+            {
+                ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                MachineName = this.Fixture.Create<string>("MachineName")
+            };
+        }
+
+        private DeployEnvironmentConfiguration GetCreateTestDeployEnvironmentConfiguration(DeployComponent component)
+        {
+            return new DeployEnvironmentConfiguration
+            {
+                ConfigurationValueList = this.CreateTestConfigurationValueList(),
+                DeployCredentialsId = null,
+                ParentId = component.Id,
+                MachineList = this.CreateTestMachineList(5)
+            };
         }
 
         private DeployEnvironment CreateTestEnvironment(IProjectRepository sut, string projectId=null)
@@ -427,86 +458,806 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.Throws<RecordNotFoundException>(() => sut.GetEnvironment(Guid.NewGuid().ToString()));
         }
 
-        //[Test]
-        //public void UpdateEnvironment_UpdatesEnvironment()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void UpdateEnvironment_NewEnvironmentName_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
-        //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
-        //    string newUserName = this.Fixture.Create<string>("UserName");
-        //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
-        //    bool newUseConfigurationGroup = false;
-        //    string newConfigurationId = null;
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
 
-        //    var result = sut.UpdateEnvironment(Environment.Id, project.Id, newEnvironmentName, newUseConfigurationGroup, newConfigurationId, newIsolationType);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-        //    Assert.IsNotNull(result);
-        //    Assert.AreEqual(Environment.Id, result.Id);
-        //    Assert.AreEqual(Environment.ProjectId, result.ProjectId);
-        //    Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
-        //    Assert.AreEqual(newIsolationType, result.IsolationType);
-        //    Assert.AreEqual(newUseConfigurationGroup, result.UseConfigurationGroup);
-        //    Assert.AreEqual(newConfigurationId, result.ConfigurationId);
-        //    Assert.AreEqual(Environment.CreatedByUserName, Environment.CreatedByUserName);
-        //    AssertDateEqual(Environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
-        //    Assert.AreEqual(newUserName, result.UpdatedByUserName);
-        //    AssertIsRecent(result.UpdatedDateTimeUtc);
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
 
-        //    var dbItem = sut.GetEnvironment(Environment.Id, project.Id);
-        //    AssertEnvironment(result, dbItem);
-        //}
+        [Test]
+        public void UpdateEnvironment__MissingProjectID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
 
-        //[Test]
-        //public void UpdateEnvironment__MissingProjectID_ThrowsArgumentNullException()
-        //{
-        //    var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
-        //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
-        //    string newUserName = this.Fixture.Create<string>("UserName");
-        //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(environment.Id, null, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(Environment.Id, null, newEnvironmentName, false, null, newIsolationType));
-        //}
+        [Test]
+        public void UpdateEnvironment_MissingEnvironmentId_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
 
-        //[Test]
-        //public void UpdateEnvironment_MissingEnvironmentId_ThrowsNullException()
-        //{
-        //    var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
-        //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
-        //    string newUserName = this.Fixture.Create<string>("UserName");
-        //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(null, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(null, project.Id, newEnvironmentName, false, null, newIsolationType));
-        //}
+        [Test]
+        public void UpdateEnvironment_BadEnvironmentId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
 
-        //[Test]
-        //public void UpdateConfiguration_BadEnvironmentId_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    var project = this.CreateTestProject(sut);
-        //    var configuration = this.CreateTestEnvironment(sut, project.Id);
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
-        //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
-        //    string newUserName = this.Fixture.Create<string>("UserName");
-        //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            Assert.Throws<RecordNotFoundException>(() => sut.UpdateEnvironment(Guid.NewGuid().ToString(), project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
 
-        //    Assert.Throws<RecordNotFoundException>(() => sut.UpdateEnvironment(Guid.NewGuid().ToString(), project.Id, newEnvironmentName, false, null, newIsolationType));
-        //}
+        [Test]
+        public void UpdateEnvironment_BadComponentID_ThrowRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var environment = this.CreateTestEnvironment(sut);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].ParentId = Guid.NewGuid().ToString();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.UpdateEnvironment(environment.Id, environment.ProjectId, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
+
+        [Test]
+        public void UpdateEnvironment_MissingComponentID_ThrowArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var environment = this.CreateTestEnvironment(sut);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].ParentId = null;
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(environment.Id, environment.ProjectId, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
+
+        [Test]
+        public void UpdateEnvironment_MissingEnvironmentName_ThrowArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var environment = this.CreateTestEnvironment(sut);
+
+            string newEnvironmentName = null;
+            var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(environment.Id, environment.ProjectId, newEnvironmentName, environment.ComponentList, environment.ConfigurationList));
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveComponent_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList.RemoveAt(0);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveConfiguration_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList.RemoveAt(0);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddComponent_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var component = this.CreateTestComponent(sut, project.Id);
+            environment.ComponentList.Add(this.GetCreateTestDeployEnvironmentConfiguration(component));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddConfiguration_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var configuration = this.CreateTestConfiguration(sut, project.Id);
+            environment.ConfigurationList.Add(this.GetCreateTestDeployEnvironmentConfiguration(configuration));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddComponentMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var machine = this.CreateTestMachine();
+            environment.ComponentList[0].MachineList.Add(machine);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddConfigurationMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var machine = this.CreateTestMachine();
+            environment.ConfigurationList[0].MachineList.Add(machine);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditComponentMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var machine = this.CreateTestMachine();
+            environment.ComponentList[0].MachineList[0].MachineName = this.Fixture.Create<string>("MachineName");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditConfigurationMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var machine = this.CreateTestMachine();
+            environment.ConfigurationList[0].MachineList[0].MachineName = this.Fixture.Create<string>("MachineName");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveComponentMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].MachineList.RemoveAt(0);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveConfigurationMachine_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList[0].MachineList.RemoveAt(0);
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddComponentConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].ConfigurationValueList.Add(this.Fixture.Create<string>("ConfigName"),this.Fixture.Create<string>("ConfigValue"));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddConfigurationConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList[0].ConfigurationValueList.Add(this.Fixture.Create<string>("ConfigName"), this.Fixture.Create<string>("ConfigValue"));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditComponentConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var key = environment.ComponentList[0].ConfigurationValueList.Keys.First();
+            environment.ComponentList[0].ConfigurationValueList[key] = this.Fixture.Create<string>("ConfigValue");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditConfigurationConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var key = environment.ConfigurationList[0].ConfigurationValueList.Keys.First();
+            environment.ConfigurationList[0].ConfigurationValueList[key] = this.Fixture.Create<string>("ConfigValue");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveComponentConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].ConfigurationValueList.Remove(environment.ComponentList[0].ConfigurationValueList.Keys.First());
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveConfigurationConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList[0].ConfigurationValueList.Remove(environment.ConfigurationList[0].ConfigurationValueList.Keys.First());
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+
+        [Test]
+        public void UpdateEnvironment_AddComponentMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].MachineList[0].ConfigurationValueList.Add(this.Fixture.Create<string>("ConfigName"), this.Fixture.Create<string>("ConfigValue"));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_AddConfigurationMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList[0].MachineList[0].ConfigurationValueList.Add(this.Fixture.Create<string>("ConfigName"), this.Fixture.Create<string>("ConfigValue"));
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditComponentMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var key = environment.ComponentList[0].MachineList[0].ConfigurationValueList.Keys.First();
+            environment.ComponentList[0].MachineList[0].ConfigurationValueList[key] = this.Fixture.Create<string>("ConfigValue");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_EditConfigurationMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var key = environment.ConfigurationList[0].MachineList[0].ConfigurationValueList.Keys.First();
+            environment.ConfigurationList[0].MachineList[0].ConfigurationValueList[key] = this.Fixture.Create<string>("ConfigValue");
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveComponentMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ComponentList[0].MachineList[0].ConfigurationValueList.Remove(environment.ComponentList[0].ConfigurationValueList.Keys.First());
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateEnvironment_RemoveConfigurationMachineConfigValue_UpdatesEnvironment()
+        {
+            var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
+
+            string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            environment.ConfigurationList[0].MachineList[0].ConfigurationValueList.Remove(environment.ConfigurationList[0].ConfigurationValueList.Keys.First());
+
+            var result = sut.UpdateEnvironment(environment.Id, project.Id, newEnvironmentName, environment.ComponentList, environment.ConfigurationList);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(environment.Id, result.Id);
+            Assert.AreEqual(environment.ProjectId, result.ProjectId);
+            Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
+            Assert.AreEqual(environment.CreatedByUserName, environment.CreatedByUserName);
+            AssertDateEqual(environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+            AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
+            AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
+
+            var dbItem = sut.GetEnvironment(environment.Id);
+            AssertEnvironment(result, dbItem);
+        }
 
         //[Test]
         //public void DeleteEnvironment_DeletesEnvironment()

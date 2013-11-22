@@ -54,7 +54,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 var project = this.CreateTestProject(sut);
                 projectList.Add(project);
             }
-
+            
             var result = sut.GetProjectList().ToList();
 
             Assert.GreaterOrEqual(result.Count, projectList.Count);

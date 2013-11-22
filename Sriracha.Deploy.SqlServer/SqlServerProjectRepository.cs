@@ -1215,8 +1215,8 @@ namespace Sriracha.Deploy.SqlServer
                 ComponentList = (componentList ?? new List<DeployEnvironmentConfiguration>()).ToList(),
                 ConfigurationList = (configurationList ?? new List<DeployEnvironmentConfiguration>()).ToList()
             };
-            UpdateEnvironmentComponentList(item.ComponentList, item, EnumDeployStepParentType.Component);
-            UpdateEnvironmentComponentList(item.ConfigurationList, item, EnumDeployStepParentType.Configuration);
+            UpdateEnvironmentComponentList(item.ComponentList, item.Id, projectId, environmentName, EnumDeployStepParentType.Component);
+            UpdateEnvironmentComponentList(item.ConfigurationList, item.Id, projectId, environmentName, EnumDeployStepParentType.Configuration);
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
@@ -1224,18 +1224,18 @@ namespace Sriracha.Deploy.SqlServer
                             .Append("VALUES (@Id, @ProjectId, @EnvironmentName, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", item);
                 db.Execute(sql);
             }
-            SaveEnvironmentConfigurationList(item, item.ComponentList, EnumDeployStepParentType.Component);
-            SaveEnvironmentConfigurationList(item, item.ConfigurationList, EnumDeployStepParentType.Configuration);
+            SaveEnvironmentConfigurationList(item.Id, item.ComponentList, EnumDeployStepParentType.Component);
+            SaveEnvironmentConfigurationList(item.Id, item.ConfigurationList, EnumDeployStepParentType.Configuration);
             return item;
         }
 
-        private void SaveEnvironmentConfigurationList(DeployEnvironment environment, IEnumerable<DeployEnvironmentConfiguration> componentList, EnumDeployStepParentType parentType)
+        private void SaveEnvironmentConfigurationList(string environmentId, IEnumerable<DeployEnvironmentConfiguration> componentList, EnumDeployStepParentType parentType)
         {
             var itemsToInsert = new List<DeployEnvironmentConfiguration>();
             var itemsToUpdate = new List<DeployEnvironmentConfiguration>();
             var itemsToDelete = new List<DeployEnvironmentConfiguration>();
 
-            var existingItemList = this.GetEnvironmentConfigurationList(environment.Id, parentType);
+            var existingItemList = this.GetEnvironmentConfigurationList(environmentId, parentType);
 
             foreach(var newItem in componentList)
             {
@@ -1285,7 +1285,7 @@ namespace Sriracha.Deploy.SqlServer
 
                     var sql = PetaPoco.Sql.Builder
                                 .Append("UPDATE DeployEnvironmentConfiguration")
-                                .Append("SET ParentID=@ParentID, EnumDeployStepParentTypeID=@ParentType, DeployCredentialsId=@DeployCredentialsId, UpdatedDateTimeUtc=@UpdatedDateTimeUtc, UpdatedByUserName=@UpdatedByUserName)", item)
+                                .Append("SET ParentID=@ParentId, EnumDeployStepParentTypeID=@ParentType, DeployCredentialsId=@DeployCredentialsId, UpdatedDateTimeUtc=@UpdatedDateTimeUtc, UpdatedByUserName=@UpdatedByUserName", item)
                                 .Append("WHERE ID=@0", item.Id);
                     db.Execute(sql);
                     SaveMachineList(item);
@@ -1297,10 +1297,11 @@ namespace Sriracha.Deploy.SqlServer
                     item.UpdatedDateTimeUtc = DateTime.UtcNow;
 
                     var sql = PetaPoco.Sql.Builder
+                                .Append("DELETE FROM DeployMachineConfigurationValue WHERE DeployMachineID IN (SELECT ID FROM DeployMachine WHERE DeployEnvironmentConfigurationID=@0);", item.Id)
                                 .Append("DELETE FROM DeployMachine WHERE DeployEnvironmentConfigurationID=@0;", item.Id)
                                 .Append("DELETE FROM DeployEnvironmentConfigurationValue WHERE DeployEnvironmentConfigurationID=@0;", item.Id)
                                 .Append("DELETE FROM DeployEnvironmentConfiguration WHERE ID=@0;", item.Id);
-                    db.Execute(sql);
+                    db.Execute(sql); 
                 }
             }
         }
@@ -1356,8 +1357,8 @@ namespace Sriracha.Deploy.SqlServer
                 foreach(var item in itemsToDelete)
                 {
                     var sql = PetaPoco.Sql.Builder
-                                .Append("DELETE FROM DeployMachine")
-                                .Append("WHERE ID=@0", item.Id);
+                                .Append("DELETE FROM DeployMachineConfigurationValue WHERE DeployMachineID=@0;", item.Id)
+                                .Append("DELETE FROM DeployMachine WHERE ID=@0;", item.Id);
                     db.Execute(sql);
                 }
             }
@@ -1405,7 +1406,7 @@ namespace Sriracha.Deploy.SqlServer
                 foreach (var item in itemsToUpdate)
                 {
                     var sql = PetaPoco.Sql.Builder
-                            .Append("UPDATE DeployMachinetConfigurationValue")
+                            .Append("UPDATE DeployMachineConfigurationValue")
                             .Append("SET ConfigurationValue=@0", item.ConfigurationValue)
                             .Append("WHERE ID=@0", item.Id);
                     db.Execute(sql);
@@ -1551,17 +1552,17 @@ namespace Sriracha.Deploy.SqlServer
                     .Append("FROM DeployEnvironmentConfiguration");
         }
 
-        private List<DeployEnvironmentConfiguration> UpdateEnvironmentComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployEnvironment environment, EnumDeployStepParentType parentType)
+        private List<DeployEnvironmentConfiguration> UpdateEnvironmentComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, string environmentId, string projectId, string environmentName, EnumDeployStepParentType parentType)
         {
             foreach (var component in componentList)
             {
                 switch(parentType)
                 {
                     case EnumDeployStepParentType.Component:
-                        VerifyComponentExists(component.ParentId, environment.ProjectId);
+                        VerifyComponentExists(component.ParentId, projectId);
                         break;
                     case EnumDeployStepParentType.Configuration:
-                        VerifyConfigurationExists(component.ParentId, environment.ProjectId);
+                        VerifyConfigurationExists(component.ParentId, projectId);
                         break;
                     default:
                         throw new UnknownEnumValueException(parentType);
@@ -1572,8 +1573,8 @@ namespace Sriracha.Deploy.SqlServer
                     component.CreatedDateTimeUtc = DateTime.UtcNow;
                     component.CreatedByUserName = _userIdentity.UserName;
                 }
-                component.EnvironmentId = environment.Id;
-                component.ProjectId = environment.ProjectId;
+                component.EnvironmentId = environmentId;
+                component.ProjectId = projectId;
                 component.ParentType = parentType;
                 component.UpdatedDateTimeUtc = DateTime.UtcNow;
                 component.UpdatedByUserName = _userIdentity.UserName;
@@ -1588,10 +1589,10 @@ namespace Sriracha.Deploy.SqlServer
                             machine.CreatedDateTimeUtc = DateTime.UtcNow;
                             machine.CreatedByUserName = _userIdentity.UserName;
                         }
-                        machine.ProjectId = environment.ProjectId;
+                        machine.ProjectId = projectId;
                         machine.ParentId = component.Id;
-                        machine.EnvironmentId = environment.Id;
-                        machine.EnvironmentName = environment.EnvironmentName;
+                        machine.EnvironmentId = environmentId;
+                        machine.EnvironmentName = environmentName;
                         machine.UpdatedDateTimeUtc = DateTime.UtcNow;
                         machine.UpdatedByUserName = _userIdentity.UserName;
                     }
@@ -1631,7 +1632,29 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(environmentName))
+            {
+                throw new ArgumentNullException("Missing environment name");
+            }
+            VerifyProjectExists(projectId);
+
+            var item = GetEnvironment(environmentId);
+            UpdateEnvironmentComponentList(componentList, environmentId, projectId, environmentName, EnumDeployStepParentType.Component);
+            UpdateEnvironmentComponentList(configurationList, environmentId, projectId, environmentName, EnumDeployStepParentType.Configuration);
+
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployEnvironment")
+                            .Append("SET EnvironmentName=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", environmentName, _userIdentity.UserName, DateTime.UtcNow)
+                            .Append("WHERE ID=@0", environmentId);
+                db.Execute(sql);
+            }
+
+            SaveEnvironmentConfigurationList(environmentId, componentList, EnumDeployStepParentType.Component);
+            SaveEnvironmentConfigurationList(environmentId, configurationList, EnumDeployStepParentType.Configuration);
+
+            return GetEnvironment(environmentId);
         }
 
         public void DeleteEnvironment(string environmentId)

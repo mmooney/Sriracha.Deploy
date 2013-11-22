@@ -26,11 +26,15 @@ namespace Sriracha.Deploy.RavenDB.Tests
 							Conventions = new DocumentConvention
 							{
 								DefaultQueryingConsistency = ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite,
-								MaxNumberOfRequestsPerSession = 3000
-							},
+                                DisableProfiling = true,
+                                ShouldCacheRequest = url => false,
+                                MaxNumberOfRequestsPerSession = 3000
+                            },
 						};
-						_documentStore.Initialize();
-						//IndexCreation.CreateIndexes(typeof(MMDB.DataService.Data.Jobs.DataServiceJobBase<>).Assembly, _documentStore);
+                        _documentStore.Initialize();
+                        _documentStore.DisableAggressiveCaching();
+                        _documentStore.DatabaseCommands.DisableAllCaching();
+                        //IndexCreation.CreateIndexes(typeof(MMDB.DataService.Data.Jobs.DataServiceJobBase<>).Assembly, _documentStore);
 					}
 				}
 				return _documentStore;
