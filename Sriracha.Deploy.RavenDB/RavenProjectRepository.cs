@@ -995,8 +995,8 @@ namespace Sriracha.Deploy.RavenDB
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
 			};
-			UpdateComponentList(environment.ComponentList, environment, EnumDeployStepParentType.Component);
-			UpdateComponentList(environment.ConfigurationList, environment, EnumDeployStepParentType.Configuration);
+			UpdateComponentList(environment.ComponentList, project, environment, EnumDeployStepParentType.Component);
+			UpdateComponentList(environment.ConfigurationList, project, environment, EnumDeployStepParentType.Configuration);
 			if(project.EnvironmentList == null)
 			{
 				project.EnvironmentList = new List<DeployEnvironment>();
@@ -1006,10 +1006,27 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		private void UpdateComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployEnvironment environment, EnumDeployStepParentType parentType)
+		private void UpdateComponentList(IEnumerable<DeployEnvironmentConfiguration> componentList, DeployProject project, DeployEnvironment environment, EnumDeployStepParentType parentType)
 		{
 			foreach (var component in componentList)
 			{
+                switch(parentType)
+                {
+                    case EnumDeployStepParentType.Component:
+                        if(!project.ComponentList.Any(i=>i.Id == component.ParentId))
+                        {
+                            throw new RecordNotFoundException(typeof(DeployComponent), "Id", component.ParentId);
+                        }
+                        break;
+                    case EnumDeployStepParentType.Configuration:
+                        if(!project.ConfigurationList.Any(i=>i.Id == component.ParentId))
+                        {
+                            throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", component.ParentId);
+                        }
+                        break;
+                    default:
+                        throw new UnknownEnumValueException(parentType);
+                }
 				if (string.IsNullOrEmpty(component.Id))
 				{
 					component.Id = Guid.NewGuid().ToString();
@@ -1054,7 +1071,7 @@ namespace Sriracha.Deploy.RavenDB
 							.FirstOrDefault(i=>i.EnvironmentList.Any(j=>j.Id == environmentId));
 			if(project == null)
 			{
-				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
 			}
 			var environment = project.EnvironmentList.First(i=>i.Id == environmentId);
 			return environment;
@@ -1087,8 +1104,8 @@ namespace Sriracha.Deploy.RavenDB
 			environment.ConfigurationList = configurationList.ToList();
 			environment.UpdatedByUserName = _userIdentity.UserName;
 			environment.UpdatedDateTimeUtc = DateTime.UtcNow;
-			UpdateComponentList(componentList, environment, EnumDeployStepParentType.Component);
-			UpdateComponentList(configurationList, environment, EnumDeployStepParentType.Configuration);
+			UpdateComponentList(componentList, project, environment, EnumDeployStepParentType.Component);
+			UpdateComponentList(configurationList, project, environment, EnumDeployStepParentType.Configuration);
 			this._documentSession.SaveEvict(project);
 			return environment;
 		}

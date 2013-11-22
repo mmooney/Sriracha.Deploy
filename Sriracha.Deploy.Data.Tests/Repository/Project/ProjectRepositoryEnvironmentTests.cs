@@ -190,12 +190,17 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
 
-        private CreateTestData GetCreateTestData(IProjectRepository sut)
+        private CreateTestData GetCreateTestData(IProjectRepository sut, string projectId=null)
         {
-            var returnValue = new CreateTestData
+            var returnValue = new CreateTestData();
+            if(string.IsNullOrEmpty(projectId))
             {
-                Project = this.CreateTestProject(sut)
-            };
+                returnValue.Project = this.CreateTestProject(sut);
+            }
+            else 
+            {
+                returnValue.Project = sut.GetProject(projectId);
+            }
             var componentList = this.CreateTestComponentList(returnValue.Project.Id, 5, sut);
             var configurationList = this.CreateTestConfigurationList(returnValue.Project.Id, 3, sut);
 
@@ -230,6 +235,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             returnValue.EnvironmentName = this.Fixture.Create<string>("EnvironmentName");
 
             return returnValue;
+        }
+
+        private DeployEnvironment CreateTestEnvironment(IProjectRepository sut, string projectId=null)
+        {
+            var testData = GetCreateTestData(sut, projectId);
+            return sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList);
         }
 
         [Test]
@@ -317,216 +328,220 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             AssertCreatedEnvironment(result, testData.Project, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList, sut);
         }
+
+        [Test]
+        public void CreateEnvironment_BadComponentId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            var componentList = sut.GetComponentList(testData.Project.Id).ToArray();
+            foreach(var item in componentList)
+            {
+                sut.DeleteComponent(item.ProjectId, item.Id);
+            }
+            testData.Project.ComponentList.Clear();
+            Assert.Throws<RecordNotFoundException>(()=> sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
+        }
+
+        [Test]
+        public void CreateEnvironment_BadConfigurationId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = GetCreateTestData(sut);
+            var configurationList = sut.GetConfigurationList(testData.Project.Id).ToArray();
+            foreach (var item in configurationList)
+            {
+                sut.DeleteConfiguration(item.Id);
+            }
+            testData.Project.ConfigurationList.Clear();
+            Assert.Throws<RecordNotFoundException>(() => sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
+        }
+        [Test]
+        public void GetEnvironmentList_GetsList()
+        {
+            var sut = this.GetRepository();
+
+            var project = CreateTestProject(sut);
+            var environmentList = new List<DeployEnvironment>();
+            for (int i = 0; i < 5; i++)
+            {
+                var component = CreateTestEnvironment(sut, project.Id);
+                environmentList.Add(component);
+            }
+
+            var result = sut.GetEnvironmentList(project.Id);
+
+            Assert.GreaterOrEqual(result.Count, environmentList.Count);
+            foreach (var environment in environmentList)
+            {
+                var item = result.SingleOrDefault(i => i.Id == environment.Id);
+                Assert.IsNotNull(item);
+                AssertEnvironment(environment, item);
+            }
+        }
+
+        [Test]
+        public void GetEnvironmentList_MissingProjectID_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetEnvironmentList(null));
+        }
+
+        [Test]
+        public void GetEnvironmentList_BadProjectID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetEnvironmentList(Guid.NewGuid().ToString()));
+        }
+
+        [Test]
+        public void GetEnvironment_ReturnsEnvironment()
+        {
+            var sut = this.GetRepository();
+
+            var environment = CreateTestEnvironment(sut);
+         
+            var result = sut.GetEnvironment(environment.Id);
+
+            Assert.IsNotNull(result);
+            AssertEnvironment(environment, result);
+        }
+
+        [Test]
+        public void GetEnvironment_MissingEnvironmentID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetEnvironment(null));
+        }
+
+        [Test]
+        public void GetEnvironment_BadEnvironmentID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetEnvironment(Guid.NewGuid().ToString()));
+        }
+
         //[Test]
-        //public void GetComponentList_CanRetrieveComponentList()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = CreateTestProject(sut);
-        //    var componentList = new List<DeployComponent>();
-        //    for (int i = 0; i < 5; i++)
-        //    {
-        //        var component = CreateTestComponent(sut, project.Id);
-        //        componentList.Add(component);
-        //    }
-
-        //    var result = sut.GetComponentList(project.Id);
-
-        //    Assert.GreaterOrEqual(result.Count, componentList.Count);
-        //    foreach (var component in componentList)
-        //    {
-        //        var item = result.SingleOrDefault(i => i.Id == component.Id);
-        //        Assert.IsNotNull(item);
-        //        AssertComponent(component, item);
-        //    }
-        //}
-
-        //[Test]
-        //public void GetComponentList_MissingProjectID_ThrowsNullException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetComponentList(null));
-        //}
-
-        //[Test]
-        //public void GetComponentList_BadProjectID_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    Assert.Throws<RecordNotFoundException>(() => sut.GetComponentList(Guid.NewGuid().ToString()));
-        //}
-
-        //[Test]
-        //public void GetComponent_WithProjectID_ReturnsComponent()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = CreateTestProject(sut);
-        //    var component = CreateTestComponent(sut, project.Id);
-
-        //    var result = sut.GetComponent(component.Id, project.Id);
-
-        //    Assert.IsNotNull(result);
-        //    AssertComponent(component, result);
-        //}
-
-        //[Test]
-        //public void GetComponent_WithoutProjectID_ReturnsComponent()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = CreateTestProject(sut);
-        //    var component = CreateTestComponent(sut, project.Id);
-
-        //    var result = sut.GetComponent(component.Id);
-
-        //    Assert.IsNotNull(result);
-        //    AssertComponent(component, result);
-        //}
-
-        //[Test]
-        //public void GetComponent_WithBadProjectID_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = CreateTestProject(sut);
-        //    var component = CreateTestComponent(sut, project.Id);
-
-        //    Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(component.Id, Guid.NewGuid().ToString()));
-        //}
-
-        //[Test]
-        //public void GetComponent_MissingComponentID_ThrowsArgumentNullException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetComponent(null));
-        //}
-
-        //[Test]
-        //public void GetComponent_BadComponentID_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(Guid.NewGuid().ToString()));
-        //}
-
-        //[Test]
-        //public void UpdateComponent_UpdatesComponent()
+        //public void UpdateEnvironment_UpdatesEnvironment()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    string newComponentName = this.Fixture.Create<string>("ComponentName");
+        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
         //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
         //    string newUserName = this.Fixture.Create<string>("UserName");
         //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
         //    bool newUseConfigurationGroup = false;
         //    string newConfigurationId = null;
 
-        //    var result = sut.UpdateComponent(component.Id, project.Id, newComponentName, newUseConfigurationGroup, newConfigurationId, newIsolationType);
+        //    var result = sut.UpdateEnvironment(Environment.Id, project.Id, newEnvironmentName, newUseConfigurationGroup, newConfigurationId, newIsolationType);
 
         //    Assert.IsNotNull(result);
-        //    Assert.AreEqual(component.Id, result.Id);
-        //    Assert.AreEqual(component.ProjectId, result.ProjectId);
-        //    Assert.AreEqual(newComponentName, result.ComponentName);
+        //    Assert.AreEqual(Environment.Id, result.Id);
+        //    Assert.AreEqual(Environment.ProjectId, result.ProjectId);
+        //    Assert.AreEqual(newEnvironmentName, result.EnvironmentName);
         //    Assert.AreEqual(newIsolationType, result.IsolationType);
         //    Assert.AreEqual(newUseConfigurationGroup, result.UseConfigurationGroup);
         //    Assert.AreEqual(newConfigurationId, result.ConfigurationId);
-        //    Assert.AreEqual(component.CreatedByUserName, component.CreatedByUserName);
-        //    AssertDateEqual(component.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+        //    Assert.AreEqual(Environment.CreatedByUserName, Environment.CreatedByUserName);
+        //    AssertDateEqual(Environment.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
         //    Assert.AreEqual(newUserName, result.UpdatedByUserName);
         //    AssertIsRecent(result.UpdatedDateTimeUtc);
 
-        //    var dbItem = sut.GetComponent(component.Id, project.Id);
-        //    AssertComponent(result, dbItem);
+        //    var dbItem = sut.GetEnvironment(Environment.Id, project.Id);
+        //    AssertEnvironment(result, dbItem);
         //}
 
         //[Test]
-        //public void UpdateComponent__MissingProjectID_ThrowsArgumentNullException()
+        //public void UpdateEnvironment__MissingProjectID_ThrowsArgumentNullException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    string newComponentName = this.Fixture.Create<string>("ComponentName");
+        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
         //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
         //    string newUserName = this.Fixture.Create<string>("UserName");
         //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateComponent(component.Id, null, newComponentName, false, null, newIsolationType));
+        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(Environment.Id, null, newEnvironmentName, false, null, newIsolationType));
         //}
 
         //[Test]
-        //public void UpdateComponent_MissingComponentId_ThrowsNullException()
+        //public void UpdateEnvironment_MissingEnvironmentId_ThrowsNullException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    string newComponentName = this.Fixture.Create<string>("ComponentName");
+        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
         //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
         //    string newUserName = this.Fixture.Create<string>("UserName");
         //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateComponent(null, project.Id, newComponentName, false, null, newIsolationType));
+        //    Assert.Throws<ArgumentNullException>(() => sut.UpdateEnvironment(null, project.Id, newEnvironmentName, false, null, newIsolationType));
         //}
 
         //[Test]
-        //public void UpdateConfiguration_BadComponentId_ThrowsRecordNotFoundException()
+        //public void UpdateConfiguration_BadEnvironmentId_ThrowsRecordNotFoundException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var configuration = this.CreateTestComponent(sut, project.Id);
+        //    var configuration = this.CreateTestEnvironment(sut, project.Id);
 
-        //    string newComponentName = this.Fixture.Create<string>("ComponentName");
+        //    string newEnvironmentName = this.Fixture.Create<string>("EnvironmentName");
         //    var newIsolationType = this.Fixture.Create<EnumDeploymentIsolationType>();
         //    string newUserName = this.Fixture.Create<string>("UserName");
         //    this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
-        //    Assert.Throws<RecordNotFoundException>(() => sut.UpdateComponent(Guid.NewGuid().ToString(), project.Id, newComponentName, false, null, newIsolationType));
+        //    Assert.Throws<RecordNotFoundException>(() => sut.UpdateEnvironment(Guid.NewGuid().ToString(), project.Id, newEnvironmentName, false, null, newIsolationType));
         //}
 
         //[Test]
-        //public void DeleteComponent_DeletesComponent()
+        //public void DeleteEnvironment_DeletesEnvironment()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    sut.DeleteComponent(project.Id, component.Id);
+        //    sut.DeleteEnvironment(project.Id, Environment.Id);
 
-        //    var dbConfiguration = sut.TryGetConfiguration(component.Id);
+        //    var dbConfiguration = sut.TryGetConfiguration(Environment.Id);
         //    Assert.IsNull(dbConfiguration);
 
         //    var dbProject = sut.GetProject(project.Id);
-        //    var dbProjectComponent = dbProject.ComponentList.SingleOrDefault(i => i.Id == component.Id);
-        //    Assert.IsNull(dbProjectComponent);
+        //    var dbProjectEnvironment = dbProject.EnvironmentList.SingleOrDefault(i => i.Id == Environment.Id);
+        //    Assert.IsNull(dbProjectEnvironment);
         //}
 
         //[Test]
-        //public void DeleteComponent_MissingConfigurationID_ThrowsNullException()
+        //public void DeleteEnvironment_MissingConfigurationID_ThrowsNullException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    Assert.Throws<ArgumentNullException>(() => sut.DeleteComponent(project.Id, null));
+        //    Assert.Throws<ArgumentNullException>(() => sut.DeleteEnvironment(project.Id, null));
         //}
 
         //[Test]
-        //public void DeleteComponent_BadComponentID_ThrowsRecordNotFoundException()
+        //public void DeleteEnvironment_BadEnvironmentID_ThrowsRecordNotFoundException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    Assert.Throws<RecordNotFoundException>(() => sut.DeleteComponent(project.Id, Guid.NewGuid().ToString()));
+        //    Assert.Throws<RecordNotFoundException>(() => sut.DeleteEnvironment(project.Id, Guid.NewGuid().ToString()));
         //}
 
         //[Test]
@@ -535,84 +550,84 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
         //    sut.DeleteProject(project.Id);
 
-        //    var dbComponent = sut.TryGetComponent(component.Id);
-        //    Assert.IsNull(dbComponent);
+        //    var dbEnvironment = sut.TryGetEnvironment(Environment.Id);
+        //    Assert.IsNull(dbEnvironment);
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_CreatesNewBranch()
+        //public void GetOrCreateEnvironment_CreatesNewBranch()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    string componentName = this.Fixture.Create<string>("ComponentName");
+        //    string EnvironmentName = this.Fixture.Create<string>("EnvironmentName");
 
-        //    var result = sut.GetOrCreateComponent(project.Id, componentName);
+        //    var result = sut.GetOrCreateEnvironment(project.Id, EnvironmentName);
 
-        //    AssertCreatedComponent(result, project.Id, componentName, EnumDeploymentIsolationType.IsolatedPerMachine, sut);
+        //    AssertCreatedEnvironment(result, project.Id, EnvironmentName, EnumDeploymentIsolationType.IsolatedPerMachine, sut);
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_GetsBranchByID()
+        //public void GetOrCreateEnvironment_GetsBranchByID()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    var result = sut.GetOrCreateComponent(project.Id, component.Id);
+        //    var result = sut.GetOrCreateEnvironment(project.Id, Environment.Id);
 
-        //    AssertComponent(component, result);
+        //    AssertEnvironment(Environment, result);
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_GetsBranchByName()
+        //public void GetOrCreateEnvironment_GetsBranchByName()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    var result = sut.GetOrCreateComponent(project.Id, component.ComponentName);
+        //    var result = sut.GetOrCreateEnvironment(project.Id, Environment.EnvironmentName);
 
-        //    AssertComponent(component, result);
+        //    AssertEnvironment(Environment, result);
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_BadProjectID_ThrowsRecordNotFoundException()
+        //public void GetOrCreateEnvironment_BadProjectID_ThrowsRecordNotFoundException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    Assert.Throws<RecordNotFoundException>(() => sut.GetOrCreateComponent(Guid.NewGuid().ToString(), component.Id));
+        //    Assert.Throws<RecordNotFoundException>(() => sut.GetOrCreateEnvironment(Guid.NewGuid().ToString(), Environment.Id));
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_MissingProjectID_ThrowsArgumentNullException()
+        //public void GetOrCreateEnvironment_MissingProjectID_ThrowsArgumentNullException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateComponent(null, component.Id));
+        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateEnvironment(null, Environment.Id));
         //}
 
         //[Test]
-        //public void GetOrCreateComponent_MissingBranchIdOrName_ThrowsArgumentNullException()
+        //public void GetOrCreateEnvironment_MissingBranchIdOrName_ThrowsArgumentNullException()
         //{
         //    var sut = this.GetRepository();
 
         //    var project = this.CreateTestProject(sut);
-        //    var component = this.CreateTestComponent(sut, project.Id);
+        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateComponent(project.Id, null));
+        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateEnvironment(project.Id, null));
         //}
 
     }

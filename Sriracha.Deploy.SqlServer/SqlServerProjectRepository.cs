@@ -1179,6 +1179,7 @@ namespace Sriracha.Deploy.SqlServer
 
         public List<DeployEnvironment> GetEnvironmentList(string projectId)
         {
+            VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetEnvironmentBaseQuery().Append("WHERE DeployProjectID=@0", projectId);
@@ -1554,6 +1555,17 @@ namespace Sriracha.Deploy.SqlServer
         {
             foreach (var component in componentList)
             {
+                switch(parentType)
+                {
+                    case EnumDeployStepParentType.Component:
+                        VerifyComponentExists(component.ParentId, environment.ProjectId);
+                        break;
+                    case EnumDeployStepParentType.Configuration:
+                        VerifyConfigurationExists(component.ParentId, environment.ProjectId);
+                        break;
+                    default:
+                        throw new UnknownEnumValueException(parentType);
+                }
                 if (string.IsNullOrEmpty(component.Id))
                 {
                     component.Id = Guid.NewGuid().ToString();
