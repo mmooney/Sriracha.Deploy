@@ -40,7 +40,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 AssertCreatedEnvironmentConfiguration(item, createdItem, project, result, EnumDeployStepParentType.Configuration);
             }
 
-            var dbItem = sut.GetEnvironment(result.Id);
+            var dbItem = sut.GetEnvironment(result.Id, result.ProjectId);
             AssertEnvironment(result, dbItem);
 
             var dbProject = sut.GetProject(project.Id);
@@ -389,7 +389,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var configurationList = sut.GetConfigurationList(testData.Project.Id).ToArray();
             foreach (var item in configurationList)
             {
-                sut.DeleteConfiguration(item.Id);
+                sut.DeleteConfiguration(item.Id, testData.Project.Id);
             }
             testData.Project.ConfigurationList.Clear();
             Assert.Throws<RecordNotFoundException>(() => sut.CreateEnvironment(testData.Project.Id, testData.EnvironmentName, testData.EnvironmentComponentList, testData.EnvironmentConfigurationList));
@@ -441,7 +441,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var environment = CreateTestEnvironment(sut);
          
-            var result = sut.GetEnvironment(environment.Id);
+            var result = sut.GetEnvironment(environment.Id, environment.ProjectId);
 
             Assert.IsNotNull(result);
             AssertEnvironment(environment, result);
@@ -452,7 +452,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetEnvironment(null));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetEnvironment(null, project.Id));
         }
 
         [Test]
@@ -460,7 +462,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetEnvironment(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetEnvironment(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -488,7 +492,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -616,7 +620,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -647,7 +651,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -679,7 +683,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -711,7 +715,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -742,7 +746,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -773,7 +777,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -804,7 +808,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -835,7 +839,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -865,7 +869,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -895,7 +899,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, project.Id);
             AssertEnvironment(result, dbItem);
         }
 
@@ -925,7 +929,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -955,7 +959,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -986,7 +990,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1017,7 +1021,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1047,7 +1051,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1077,7 +1081,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1108,7 +1112,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1138,7 +1142,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1169,7 +1173,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1200,7 +1204,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1230,7 +1234,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1260,7 +1264,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironmentConfigurationList(environment.ComponentList, result.ComponentList);
             AssertEnvironmentConfigurationList(environment.ConfigurationList, result.ConfigurationList);
 
-            var dbItem = sut.GetEnvironment(environment.Id);
+            var dbItem = sut.GetEnvironment(environment.Id, environment.ProjectId);
             AssertEnvironment(result, dbItem);
         }
 
@@ -1272,9 +1276,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = this.CreateTestProject(sut);
             var environment = this.CreateTestEnvironment(sut, project.Id);
 
-            sut.DeleteEnvironment(environment.Id);
+            sut.DeleteEnvironment(environment.Id, environment.ProjectId);
 
-            var dbConfiguration = sut.TryGetConfiguration(environment.Id);
+            var dbConfiguration = sut.TryGetConfiguration(environment.Id, project.Id);
             Assert.IsNull(dbConfiguration);
 
             var dbProject = sut.GetProject(project.Id);
@@ -1288,7 +1292,8 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var sut = this.GetRepository();
 
             var project = this.CreateTestProject(sut);
-            Assert.Throws<ArgumentNullException>(() => sut.DeleteEnvironment(null));
+            
+            Assert.Throws<ArgumentNullException>(() => sut.DeleteEnvironment(null, project.Id));
         }
 
         [Test]
@@ -1296,7 +1301,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.DeleteEnvironment(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut); 
+            
+            Assert.Throws<RecordNotFoundException>(() => sut.DeleteEnvironment(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -1309,7 +1316,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteProject(project.Id);
 
-            Assert.Throws<RecordNotFoundException>(()=>sut.GetEnvironment(environment.Id));
+            Assert.Throws<RecordNotFoundException>(()=>sut.GetEnvironment(environment.Id, environment.ProjectId));
         }
 
         [Test]

@@ -104,5 +104,25 @@ namespace Sriracha.Deploy.Data.Dto.Project
 			}
 			return returnValue;
 		}
-	}
+
+        public DeployStep GetComponentDeploymentStep(string deploymentStepId)
+        {
+            var item = this.ComponentList.SelectMany(i=>i.DeploymentStepList.Where(j=>j.Id == deploymentStepId)).SingleOrDefault();
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+            return item;
+        }
+
+        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
+        {
+            var item = this.ConfigurationList.SelectMany(i => i.DeploymentStepList.Where(j => j.Id == deploymentStepId)).SingleOrDefault();
+            if (item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+            return item;
+        }
+    }
 }

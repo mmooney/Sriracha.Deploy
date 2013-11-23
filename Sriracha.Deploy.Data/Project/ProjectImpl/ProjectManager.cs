@@ -94,9 +94,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return returnValue;
 		}
 
-		public DeployComponent GetComponent(string componentId)
+		public DeployComponent GetComponent(string componentId, string projectId)
 		{
-			return _projectRepository.GetComponent(componentId);
+			return _projectRepository.GetComponent(componentId, projectId);
 		}
 
 		public void DeleteComponent(string projectId, string componentId)
@@ -109,13 +109,13 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.UpdateComponent(componentId, projectId, componentName, useConfigurationGroup, configurationId, isolationType);
 		}
 
-		public List<DeployStep> GetComponentDeploymentStepList(string componentId)
+		public List<DeployStep> GetComponentDeploymentStepList(string componentId, string projectId)
 		{
-			return this._projectRepository.GetComponentDeploymentStepList(componentId);
+			return this._projectRepository.GetComponentDeploymentStepList(componentId, projectId);
 		}
-		public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId)
+        public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId)
 		{
-			return this._projectRepository.GetConfigurationDeploymentStepList(configurationId);
+			return this._projectRepository.GetConfigurationDeploymentStepList(configurationId, projectId);
 		}
 
 		public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson)
@@ -180,13 +180,13 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.CreateConfigurationDeploymentStep(projectId, configurationId, stepName, taskTypeName, taskOptionsJson);
 		}
 
-		public DeployStep GetComponentDeploymentStep(string deploymentStepId)
+        public DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId)
 		{
-			return this._projectRepository.GetComponentDeploymentStep(deploymentStepId);
+			return this._projectRepository.GetComponentDeploymentStep(deploymentStepId, projectId);
 		}
-		public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
+        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId)
 		{
-			return this._projectRepository.GetConfigurationDeploymentStep(deploymentStepId);
+			return this._projectRepository.GetConfigurationDeploymentStep(deploymentStepId, projectId);
 		}
 
 		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson)
@@ -256,13 +256,13 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return returnValue;
 		}
 
-		public void DeleteComponentDeploymentStep(string deploymentStepId)
+        public void DeleteComponentDeploymentStep(string deploymentStepId, string projectId)
 		{
-			this._projectRepository.DeleteComponentDeploymentStep(deploymentStepId);
+			this._projectRepository.DeleteComponentDeploymentStep(deploymentStepId, projectId);
 		}
-		public void DeleteConfigurationDeploymentStep(string deploymentStepId)
+        public void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId)
 		{
-			this._projectRepository.DeleteConfigurationDeploymentStep(deploymentStepId);
+			this._projectRepository.DeleteConfigurationDeploymentStep(deploymentStepId, projectId);
 		}
 
 		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
@@ -284,9 +284,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.CreateBranch(projectId, branchName);
 		}
 
-		public DeployProjectBranch GetBranch(string branchId)
+		public DeployProjectBranch GetBranch(string branchId, string projectId)
 		{
-			return this._projectRepository.GetBranch(branchId);
+			return this._projectRepository.GetBranch(branchId, projectId);
 		}
 
 		public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
@@ -310,9 +310,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.CreateEnvironment(projectId, environmentName, componentList, configurationList);
 		}
 
-		public DeployEnvironment GetEnvironment(string environmentId)
+        public DeployEnvironment GetEnvironment(string environmentId, string projectId)
 		{
-			return this._projectRepository.GetEnvironment(environmentId);
+			return this._projectRepository.GetEnvironment(environmentId, projectId);
 		}
 
 		public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
@@ -320,9 +320,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.UpdateEnvironment(environmentId, projectId, environmentName, componentList, configurationList);
 		}
 
-		public void DeleteEnvironment(string environmentId)
+		public void DeleteEnvironment(string environmentId, string projectId)
 		{
-			this._projectRepository.DeleteEnvironment(environmentId);
+			this._projectRepository.DeleteEnvironment(environmentId, projectId);
 		}
 
 
@@ -359,17 +359,17 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			}
 		}
 
-		public void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue)
-		{
-			var environment = this._projectRepository.GetEnvironment(environmentId);
-			var component = environment.GetComponentItem(componentId);
-			if (component.ConfigurationValueList == null)
-			{
-				component.ConfigurationValueList = new Dictionary<string, string>();
-			}
-			this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
-		}
+        //public void UpdateEnvironmentComponentConfig(string environmentId, string projectId, string componentId, string configName, string configValue)
+        //{
+        //    var environment = this._projectRepository.GetEnvironment(environmentId, string projectId);
+        //    var component = environment.GetComponentItem(componentId);
+        //    if (component.ConfigurationValueList == null)
+        //    {
+        //        component.ConfigurationValueList = new Dictionary<string, string>();
+        //    }
+        //    this.UpdateConfig(component.ConfigurationValueList, configName, configValue);
+        //    this._projectRepository.UpdateEnvironment(environmentId, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
+        //}
 
 
 		public List<DeployConfiguration> GetConfigurationList(string projectId)
@@ -377,9 +377,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.GetConfigurationList(projectId);
 		}
 
-		public DeployConfiguration GetConfiguration(string configurationId)
+        public DeployConfiguration GetConfiguration(string configurationId, string projectId)
 		{
-			return _projectRepository.GetConfiguration(configurationId);
+			return _projectRepository.GetConfiguration(configurationId, projectId);
 		}
 
 
@@ -393,9 +393,9 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return _projectRepository.UpdateConfiguration(configurationId, projectId, configurationName, isolationType);
 		}
 
-		public void DeleteConfiguration(string configurationId)
+        public void DeleteConfiguration(string configurationId, string projectId)
 		{
-			_projectRepository.DeleteConfiguration(configurationId);
+			_projectRepository.DeleteConfiguration(configurationId, projectId);
 		}
 
 

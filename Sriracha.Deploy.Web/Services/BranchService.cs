@@ -28,7 +28,7 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			if (string.IsNullOrEmpty(request.Id))
 			{
-				return _projectManager.GetBranch(request.Id);
+				return _projectManager.GetBranch(request.Id, request.ProjectId);
 			}
 			else 
 			{

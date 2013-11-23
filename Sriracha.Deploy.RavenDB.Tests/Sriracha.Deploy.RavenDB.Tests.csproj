@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertEx.cs" />
+    <Compile Include="Build\RavenBuildRepositoryTests.cs" />
     <Compile Include="EmbeddedRavenProvider.cs" />
     <Compile Include="Project\RavenProjectRepositoryBranchTests.cs" />
     <Compile Include="Project\RavenProjectRepositoryEnvironmentTests.cs" />

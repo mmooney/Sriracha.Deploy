@@ -37,9 +37,9 @@ namespace Sriracha.Deploy.Web.Services
 					switch(request.ParentType)
 					{
 						case EnumDeployStepParentType.Component:
-							return _projectManager.GetComponentDeploymentStep(request.Id);
+							return _projectManager.GetComponentDeploymentStep(request.Id, request.ProjectId);
 						case EnumDeployStepParentType.Configuration:
-							return _projectManager.GetConfigurationDeploymentStepList(request.Id);
+							return _projectManager.GetConfigurationDeploymentStepList(request.Id, request.ProjectId);
 						default:
 							throw new UnknownEnumValueException(request.ParentType);
 					}
@@ -49,9 +49,9 @@ namespace Sriracha.Deploy.Web.Services
 					switch(request.ParentType)
 					{
 						case EnumDeployStepParentType.Component:
-							return _projectManager.GetComponentDeploymentStepList(request.ParentId);
+							return _projectManager.GetComponentDeploymentStepList(request.ParentId, request.ProjectId);
 						case EnumDeployStepParentType.Configuration:
-							return _projectManager.GetConfigurationDeploymentStepList(request.ParentId);
+							return _projectManager.GetConfigurationDeploymentStepList(request.ParentId, request.ProjectId);
 						default:
 							throw new UnknownEnumValueException(request.ParentType);
 					}
@@ -100,10 +100,10 @@ namespace Sriracha.Deploy.Web.Services
 			switch(deploymentStep.ParentType)
 			{ 
 				case EnumDeployStepParentType.Component:
-					_projectManager.DeleteComponentDeploymentStep(deploymentStep.Id);
+					_projectManager.DeleteComponentDeploymentStep(deploymentStep.Id, deploymentStep.ProjectId);
 					break;
 				case EnumDeployStepParentType.Configuration:
-					_projectManager.DeleteConfigurationDeploymentStep(deploymentStep.Id);
+					_projectManager.DeleteConfigurationDeploymentStep(deploymentStep.Id, deploymentStep.ProjectId);
 					break;
 				default:
 					throw new UnknownEnumValueException(deploymentStep.ParentType);

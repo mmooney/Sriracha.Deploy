@@ -36,10 +36,10 @@ namespace Sriracha.Deploy.Web.Services
 			switch(request.ParentType)
 			{
 				case EnumDeployStepParentType.Component:
-					var component = _projectManager.GetComponent(request.ParentId);
+					var component = _projectManager.GetComponent(request.ParentId, request.ProjectId);
 					return _deploymentValidator.GetComponentConfigurationDefinition(component.DeploymentStepList);
 				case EnumDeployStepParentType.Configuration:
-					var configuration = _projectManager.GetConfiguration(request.ParentId);
+					var configuration = _projectManager.GetConfiguration(request.ParentId, request.ProjectId);
 					return _deploymentValidator.GetComponentConfigurationDefinition(configuration.DeploymentStepList);
 				default:
 					throw new UnknownEnumValueException(request.ParentType);

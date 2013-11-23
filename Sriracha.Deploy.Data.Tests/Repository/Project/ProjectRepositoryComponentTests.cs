@@ -40,7 +40,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertIsRecent(result.UpdatedDateTimeUtc);
             Assert.AreEqual(this.UserName, result.UpdatedByUserName);
 
-            var dbItem = sut.GetComponent(result.Id);
+            var dbItem = sut.GetComponent(result.Id, projectId);
             AssertComponent(result, dbItem);
 
             var dbProject = sut.GetProject(projectId);
@@ -123,17 +123,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void GetComponent_WithoutProjectID_ReturnsComponent()
+        public void GetComponent_WithoutProjectID_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
 
             var project = CreateTestProject(sut);
             var component = CreateTestComponent(sut, project.Id);
 
-            var result = sut.GetComponent(component.Id);
-
-            Assert.IsNotNull(result);
-            AssertComponent(component, result);
+            Assert.Throws<ArgumentNullException>(()=>sut.GetComponent(component.Id, null));
         }
 
         [Test]
@@ -152,7 +149,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetComponent(null));
+            var project = CreateTestProject(sut);
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetComponent(null, project.Id));
         }
 
         [Test]
@@ -160,7 +159,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(Guid.NewGuid().ToString()));
+            var project = CreateTestProject(sut);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -254,7 +255,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteComponent(project.Id, component.Id);
 
-            var dbConfiguration = sut.TryGetConfiguration(component.Id);
+            var dbConfiguration = sut.TryGetConfiguration(component.Id, project.Id);
             Assert.IsNull(dbConfiguration);
 
             var dbProject = sut.GetProject(project.Id);
@@ -290,7 +291,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteProject(project.Id);
 
-            var dbComponent = sut.TryGetComponent(component.Id);
+            var dbComponent = sut.TryGetComponent(component.Id, project.Id);
             Assert.IsNull(dbComponent);
         }
 

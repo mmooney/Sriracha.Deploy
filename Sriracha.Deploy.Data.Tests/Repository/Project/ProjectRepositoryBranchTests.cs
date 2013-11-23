@@ -113,16 +113,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void GetBranch_WithoutProjectID_GetsBranch()
+        public void GetBranch_WithoutProjectID_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
 
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            var result = sut.GetBranch(branch.Id);
-
-            AssertBranch(branch, result);
+            Assert.Throws<ArgumentNullException>(()=>sut.GetBranch(branch.Id, null));
         }
 
         [Test]
@@ -144,15 +142,17 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetBranch(null));
+            Assert.Throws<ArgumentNullException>(() => sut.GetBranch(null, branch.ProjectId));
         }
 
         [Test]
         public void GetBranch_BadBranchID_ThrowsRecordNotFoundException()
         {
             var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var branch = this.CreateTestBranch(sut, project.Id);
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetBranch(Guid.NewGuid().ToString()));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetBranch(Guid.NewGuid().ToString(), branch.ProjectId));
         }
 
         [Test]
@@ -214,16 +214,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void TryGetBranch_WithoutProjectID_GetsBranch()
+        public void TryGetBranch_WithoutProjectID_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
 
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            var result = sut.TryGetBranch(branch.Id);
-
-            AssertBranch(branch, result);
+            Assert.Throws<ArgumentNullException>(()=>sut.TryGetBranch(branch.Id, null));
         }
 
         [Test]
@@ -247,7 +245,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            var result = sut.TryGetBranch(Guid.NewGuid().ToString());
+            var result = sut.TryGetBranch(Guid.NewGuid().ToString(), project.Id);
 
             Assert.IsNull(result);
         }
@@ -260,7 +258,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = this.CreateTestProject(sut);
             var branch = this.CreateTestBranch(sut, project.Id);
 
-            Assert.Throws<ArgumentNullException>(()=>sut.TryGetBranch(null));
+            Assert.Throws<ArgumentNullException>(()=>sut.TryGetBranch(null, project.Id));
         }
 
         [Test]
@@ -489,7 +487,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteProject(project.Id);
 
-            var dbItem = sut.TryGetBranch(result.Id);
+            var dbItem = sut.TryGetBranch(result.Id, result.ProjectId);
             Assert.IsNull(dbItem);
         }
 

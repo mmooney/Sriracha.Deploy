@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			if (!string.IsNullOrEmpty(request.Id))
 			{
-				return _projectManager.GetConfiguration(request.Id);
+				return _projectManager.GetConfiguration(request.Id, request.ProjectId);
 			}
 			else 
 			{
@@ -50,7 +50,7 @@ namespace Sriracha.Deploy.Web.Services
 
 		public void Delete(DeployConfiguration configuration)
 		{
-			_projectManager.DeleteConfiguration(configuration.Id);
+			_projectManager.DeleteConfiguration(configuration.Id, configuration.ProjectId);
 		}
 	}
 }

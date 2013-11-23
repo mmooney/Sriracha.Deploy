@@ -52,7 +52,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertIsRecent(result.UpdatedDateTimeUtc);
             Assert.AreEqual(this.UserName, result.UpdatedByUserName);
 
-            var dbItem = sut.GetConfiguration(result.Id);
+            var dbItem = sut.GetConfiguration(result.Id, result.ProjectId);
             AssertConfiguration(result, dbItem);
 
             var dbProject = sut.GetProject(project.Id);
@@ -123,7 +123,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = CreateTestProject(sut);
             var configuration = CreateTestConfiguration(sut, project.Id);
 
-            var result = sut.GetConfiguration(configuration.Id);
+            var result = sut.GetConfiguration(configuration.Id, project.Id);
 
             Assert.IsNotNull(result);
             AssertConfiguration(configuration, result);
@@ -145,7 +145,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetConfiguration(null));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetConfiguration(null,project.Id));
         }
 
         [Test]
@@ -153,7 +155,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetConfiguration(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetConfiguration(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -241,9 +245,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var project = this.CreateTestProject(sut);
             var configuration = this.CreateTestConfiguration(sut, project.Id);
 
-            sut.DeleteConfiguration(configuration.Id);
+            sut.DeleteConfiguration(configuration.Id, project.Id);
 
-            var dbConfiguration = sut.TryGetConfiguration(configuration.Id);
+            var dbConfiguration = sut.TryGetConfiguration(configuration.Id, project.Id);
             Assert.IsNull(dbConfiguration);
 
             var dbProject = sut.GetProject(project.Id);
@@ -256,7 +260,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(() => sut.DeleteConfiguration(null));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<ArgumentNullException>(() => sut.DeleteConfiguration(null, project.Id));
         }
 
         [Test]
@@ -264,7 +270,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.DeleteConfiguration(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.DeleteConfiguration(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -277,7 +285,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteProject(project.Id);
 
-            var dbConfiguration = sut.TryGetConfiguration(configuration.Id);
+            var dbConfiguration = sut.TryGetConfiguration(configuration.Id, project.Id);
             Assert.IsNull(dbConfiguration);
         }
     }

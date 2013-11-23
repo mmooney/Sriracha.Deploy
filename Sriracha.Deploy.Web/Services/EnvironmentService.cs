@@ -28,7 +28,7 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			if (!string.IsNullOrEmpty(request.Id))
 			{
-				return _projectManager.GetEnvironment(request.Id);
+				return _projectManager.GetEnvironment(request.Id, request.ProjectId);
 			}
 			else 
 			{
@@ -50,7 +50,7 @@ namespace Sriracha.Deploy.Web.Services
 
 		public void Delete(DeployEnvironment environment)
 		{
-			_projectManager.DeleteEnvironment(environment.Id);
+			_projectManager.DeleteEnvironment(environment.Id, environment.ProjectId);
 		}
 	}
 }

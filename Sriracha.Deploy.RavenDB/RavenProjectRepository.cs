@@ -29,7 +29,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public IEnumerable<DeployProject> GetProjectList()
 		{
-			return _documentSession.QueryNoCache<DeployProject>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking());
+            return _documentSession.QueryNoCacheNotStale<DeployProject>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking());
 		}
 
 		public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
@@ -82,9 +82,7 @@ namespace Sriracha.Deploy.RavenDB
 						}
 						else 
 						{
-							item = _documentSession.Query<DeployProject>()
-												.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
-												.Customize(i=>i.NoTracking()).Customize(i=>i.NoCaching())
+							item = _documentSession.QueryNoCacheNotStale<DeployProject>()
                                                 .FirstOrDefault(i => i.ProjectName == projectIdOrName);
 							if(item != null)
 							{
@@ -130,8 +128,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing Project Name");
 			}
-			var list = _documentSession.QueryNoCache<DeployProject>()
-											.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
+            var list = _documentSession.QueryNoCacheNotStale<DeployProject>()
 											.Where(i=>i.ProjectName == projectName).ToList();
 			if(list.Count == 0)
 			{
@@ -191,11 +188,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing Project ID");
 			}
-			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
+			var project = _documentSession.LoadEnsureNoCache<DeployProject>(projectId);
 			return project.ConfigurationList;
 		}
 
-		public DeployConfiguration GetConfiguration(string configurationId, string projectId = null)
+		public DeployConfiguration GetConfiguration(string configurationId, string projectId)
 		{
 			if(string.IsNullOrEmpty(configurationId))
 			{
@@ -248,24 +245,24 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public void DeleteConfiguration(string configurationId)
+        public void DeleteConfiguration(string configurationId, string projectId)
 		{
 			if (string.IsNullOrEmpty(configurationId))
 			{
 				throw new ArgumentNullException("Missing Configuration ID");
 			}
-			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.Id == configurationId));
-			if (project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
-			}
+			var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
 			_logger.Info("User {0} deleting configuration {1}", _userIdentity.UserName, configurationId);
-			var configuration = project.ConfigurationList.First(i => i.Id == configurationId);
+			var configuration = project.ConfigurationList.FirstOrDefault(i => i.Id == configurationId);
+            if(configuration == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
 			project.ConfigurationList.Remove(configuration);
 			_documentSession.SaveEvict(project);
 		}
 
-		public DeployConfiguration TryGetConfiguration(string configurationId, string projectId=null)
+		public DeployConfiguration TryGetConfiguration(string configurationId, string projectId)
 		{
             DeployProject project;
             if(!string.IsNullOrEmpty(projectId))
@@ -274,9 +271,7 @@ namespace Sriracha.Deploy.RavenDB
             }
             else 
             {
-			    project = _documentSession.QueryNoCache<DeployProject>()
-								    .Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
-								    .ToList()
+                project = _documentSession.QueryNoCacheNotStale<DeployProject>()
 								    .FirstOrDefault(i=>i.ConfigurationList.Any(j=>j.Id == configurationId));
             }
 			if(project == null)
@@ -291,7 +286,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public List<DeployComponent> GetComponentList(string projectId)
 		{
-			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
+			var project = _documentSession.LoadEnsureNoCache<DeployProject>(projectId);
 			return project.ComponentList;
 		}
 
@@ -316,7 +311,7 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponent GetComponent(string componentId, string projectId=null)
+		public DeployComponent GetComponent(string componentId, string projectId)
 		{
 			if(string.IsNullOrEmpty(componentId))
 			{
@@ -330,20 +325,17 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployComponent TryGetComponent(string componentId, string projectId=null)
+		public DeployComponent TryGetComponent(string componentId, string projectId)
 		{
-			DeployProject project;
-			if(!string.IsNullOrEmpty(projectId))
+			if(string.IsNullOrEmpty(componentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+			if(string.IsNullOrEmpty(projectId))
 			{
-				project = _documentSession.LoadNoCache<DeployProject>(projectId);
+                throw new ArgumentNullException("Missing projet ID");
 			}
-			else 
-			{
-				project = _documentSession.QueryNoCache<DeployProject>()
-								.Customize(i=>i.WaitForNonStaleResultsAsOfLastWrite())
-								.ToList()
-								.FirstOrDefault(i=>i.ComponentList.Any(j=>j.Id == componentId));
-			}
+			var project = _documentSession.LoadNoCache<DeployProject>(projectId);
 			if(project == null)
 			{
 				return null;
@@ -352,56 +344,6 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				return project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
 			}
-		}
-
-		public DeployComponent TryGetComponent(DeployProject project, string componentId)
-		{
-			if (string.IsNullOrEmpty(componentId))
-			{
-				throw new ArgumentNullException("Missing Component ID");
-			}
-			return project.ComponentList.FirstOrDefault(i=>i.Id == componentId);
-		}
-
-		public DeployComponent GetComponentByName(DeployProject project, string componentName)
-		{
-			if(project == null)
-			{
-				throw new ArgumentNullException("Missing project");
-			}
-			if(string.IsNullOrWhiteSpace(componentName))
-			{
-				throw new ArgumentNullException("Missing component name");
-			}
-			var item = this.TryGetComponentByName(project, componentName);
-			if(item == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployComponent), "ComponentName", componentName);
-			}
-			return item;
-		}
-
-		public DeployComponent TryGetComponentByName(DeployProject project, string componentName)
-		{
-			return project.ComponentList.FirstOrDefault(i=>i.ComponentName == componentName);
-		}
-
-		public DeployComponent GetComponent(DeployProject project, string componentId)
-		{
-			if (string.IsNullOrEmpty(componentId))
-			{
-				throw new ArgumentNullException("Missing component ID");
-			}
-			if (project == null)
-			{
-				throw new ArgumentNullException("Project is null");
-			}
-			var component = project.ComponentList.FirstOrDefault(i => i.Id == componentId);
-			if (componentId == null)
-			{
-				throw new ArgumentException("Unable to find component " + componentId + " in project " + project.Id);
-			}
-			return component;	
 		}
 
 		public DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName)
@@ -491,7 +433,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else 
 			{
-				project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.Id == componentId));
+                project = this._documentSession.QueryNotStale<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.Id == componentId));
 				if (project == null)
 				{
 					throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
@@ -507,14 +449,14 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveEvict(project);
 		}
 
-		public List<DeployStep> GetComponentDeploymentStepList(string componentId)
+		public List<DeployStep> GetComponentDeploymentStepList(string componentId, string projectId)
 		{
-			var component = GetComponent(componentId);
+			var component = GetComponent(componentId, projectId);
 			return component.DeploymentStepList;
 		}
-		public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId)
+        public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId)
 		{
-			var configuration = GetConfiguration(configurationId);
+			var configuration = GetConfiguration(configurationId, projectId);
 			return configuration.DeploymentStepList;
 		}
 
@@ -607,34 +549,24 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 		}
 
-		public DeployStep GetComponentDeploymentStep(string deploymentStepId)
+        public DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId)
 		{
             if(string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
-			var project = this._documentSession.QueryNoCache<DeployProject>().SingleOrDefault(i=>i.ComponentList.Any(j=>j.DeploymentStepList.Any(k=>k.Id == deploymentStepId)));
-			if(project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
-			}
-			var item = project.ComponentList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
-			return item;
+            var project = this._documentSession.LoadEnsureNoCache<DeployProject>(projectId);
+			return project.GetComponentDeploymentStep(deploymentStepId);
 		}
-		
-		public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
+
+        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId)
 		{
             if (string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
-            var project = this._documentSession.QueryNoCache<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
-			if(project == null)
-			{
-                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
-            }
-			var item = project.ConfigurationList.Single(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId)).DeploymentStepList.First(i=>i.Id == deploymentStepId);
-			return item;
+            var project = this._documentSession.LoadEnsureNoCache<DeployProject>(projectId);
+            return project.GetConfigurationDeploymentStep(deploymentStepId);
 		}
 
 		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
@@ -726,40 +658,52 @@ namespace Sriracha.Deploy.RavenDB
 			return item;
 			
 		}
-		
-		public void DeleteComponentDeploymentStep(string deploymentStepId)
+
+        public void DeleteComponentDeploymentStep(string deploymentStepId, string projectId)
 		{
             if(string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
-			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ComponentList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
-			if (project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
-			}
+            var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
 			_logger.Info("User {0} deleting component deployment step {1}", _userIdentity.UserName, deploymentStepId);
-			var component = project.ComponentList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
-			var item = component.DeploymentStepList.First(i => i.Id == deploymentStepId);
+			var component = project.ComponentList.SingleOrDefault(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
+            if(component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+			var item = component.DeploymentStepList.FirstOrDefault(i => i.Id == deploymentStepId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
 			component.DeploymentStepList.Remove(item);
 			this._documentSession.SaveEvict(project);
 
 		}
 
-		public void DeleteConfigurationDeploymentStep(string deploymentStepId)
+        public void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId)
 		{
             if(string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
-			var project = this._documentSession.Query<DeployProject>().SingleOrDefault(i => i.ConfigurationList.Any(j => j.DeploymentStepList.Any(k => k.Id == deploymentStepId)));
+            var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
 			if (project == null)
 			{
 				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
 			_logger.Info("User {0} deleting configuration deployment step {1}", _userIdentity.UserName, deploymentStepId);
-			var configuration = project.ConfigurationList.Single(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
-			var item = configuration.DeploymentStepList.First(i => i.Id == deploymentStepId);
+			var configuration = project.ConfigurationList.SingleOrDefault(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
+            if(configuration == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+			var item = configuration.DeploymentStepList.FirstOrDefault(i => i.Id == deploymentStepId);
+            if(item == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
 			configuration.DeploymentStepList.Remove(item);
 			this._documentSession.SaveEvict(project);
 
@@ -798,7 +742,7 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public DeployProjectBranch GetBranch(string branchId, string projectId=null)
+		public DeployProjectBranch GetBranch(string branchId, string projectId)
 		{
 			if(string.IsNullOrEmpty(branchId))
 			{
@@ -812,32 +756,24 @@ namespace Sriracha.Deploy.RavenDB
 			return branch;
 		}
 
-		public DeployProjectBranch TryGetBranch(string branchId, string projectId=null)
+		public DeployProjectBranch TryGetBranch(string branchId, string projectId)
 		{
 			if (string.IsNullOrEmpty(branchId))
 			{
 				throw new ArgumentNullException("Missing branch ID");
 			}
-			DeployProject project;
-			if(projectId != null)
-			{
-				project = TryGetProject(projectId);
-                if(project == null)
-                {
-                    return null;
-                }
-			}
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            var project = TryGetProject(projectId);
+            if(project == null)
+            {
+                return null;
+            }
 			else 
-			{
-				project = this._documentSession.QueryNoCache<DeployProject>().FirstOrDefault(i => i.BranchList.Any(j => j.Id == branchId));
-			}
-			if (project != null)
 			{
 				return project.BranchList.FirstOrDefault(i => i.Id == branchId);
-			}
-			else 
-			{
-				return null;
 			}
 		}
 
@@ -1068,20 +1004,18 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public DeployEnvironment GetEnvironment(string environmentId)
+        public DeployEnvironment GetEnvironment(string environmentId, string projectId)
 		{
 			if (string.IsNullOrEmpty(environmentId))
 			{
 				throw new ArgumentNullException("Missing environment ID");
 			}
-			var project = this._documentSession.QueryNoCache<DeployProject>()
-							.ToList()
-							.FirstOrDefault(i=>i.EnvironmentList.Any(j=>j.Id == environmentId));
-			if(project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
-			}
-			var environment = project.EnvironmentList.First(i=>i.Id == environmentId);
+            var project = this._documentSession.LoadEnsureNoCache<DeployProject>(projectId);
+			var environment = project.EnvironmentList.SingleOrDefault(i=>i.Id == environmentId);
+            if(environment == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
+            }
 			return environment;
 		}
 
@@ -1099,14 +1033,12 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new ArgumentNullException("Missing environment name");
 			}
-			var project = this._documentSession.Query<DeployProject>()
-								.ToList()
-								.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
-			if (project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
-			}
-			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
+            var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
+			var environment = project.EnvironmentList.SingleOrDefault(i => i.Id == environmentId);
+            if(environment == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
+            }
 			environment.EnvironmentName = environmentName;
 			environment.ComponentList = componentList.ToList();
 			environment.ConfigurationList = configurationList.ToList();
@@ -1118,48 +1050,22 @@ namespace Sriracha.Deploy.RavenDB
 			return environment;
 		}
 
-		public void DeleteEnvironment(string environmentId)
+        public void DeleteEnvironment(string environmentId, string projectId)
 		{
 			if (string.IsNullOrEmpty(environmentId))
 			{
 				throw new ArgumentNullException("Missing environment ID");
 			}
-			var project = this._documentSession.Query<DeployProject>()
-									.ToList()
-									.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
-			if (project == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
-			}
+            var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
 			_logger.Info("User {0} deleting environment {1}", _userIdentity.UserName, environmentId);
-			var environment = project.EnvironmentList.First(i => i.Id == environmentId);
+			var environment = project.EnvironmentList.SingleOrDefault(i => i.Id == environmentId);
+            if(environment == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environment);
+            }
 			project.EnvironmentList.Remove(environment);
 			this._documentSession.SaveEvict(project);
 		}
 
-
-		public DeployMachine GetMachine(string machineId)
-		{
-			if (string.IsNullOrEmpty(machineId))
-			{
-				throw new ArgumentNullException("Missing machine ID");
-			}
-			var project = this._documentSession.QueryNoCache<DeployProject>().FirstOrDefault(i => i.EnvironmentList.Any(j => j.ComponentList.Any(k=>k.MachineList.Any(l=>l.Id == machineId))));
-			if (project == null)
-			{
-				throw new ArgumentException("Unable to find project for machine ID " + machineId);
-			}
-			return project.GetMachine(machineId);
-		}
-
-		public DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configValueList)
-		{
-			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			var item = project.GetMachine(machineId);
-			item.MachineName = machineId;
-			item.ConfigurationValueList = configValueList;
-			this._documentSession.SaveEvict(project);
-			return item;
-		}
 	}
 }

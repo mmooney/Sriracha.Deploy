@@ -69,6 +69,10 @@ namespace Sriracha.Deploy.SqlServer
             {
                 throw new ArgumentNullException("Missing environment ID");
             }
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var environmentExistsSql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployEnvironment WHERE ID=@0", environmentId);
@@ -451,7 +455,7 @@ namespace Sriracha.Deploy.SqlServer
             return configuration;
         }
 
-        public DeployConfiguration GetConfiguration(string configurationId, string projectId = null)
+        public DeployConfiguration GetConfiguration(string configurationId, string projectId)
         {
             var item = this.TryGetConfiguration(configurationId, projectId);
             if(item == null)
@@ -461,15 +465,15 @@ namespace Sriracha.Deploy.SqlServer
             return item;
         }
 
-        public DeployConfiguration TryGetConfiguration(string configurationId, string projectId = null)
+        public DeployConfiguration TryGetConfiguration(string configurationId, string projectId)
         {
             if(string.IsNullOrEmpty(configurationId))
             {
                 throw new ArgumentNullException("Missing configurationID");
             }
-            if(!string.IsNullOrEmpty(projectId))
+            if(string.IsNullOrEmpty(projectId))
             {
-                VerifyProjectExists(projectId);
+                throw new ArgumentNullException("Missing project ID");
             }
             using(var db = _sqlConnectionInfo.GetDB())
             {
@@ -490,7 +494,7 @@ namespace Sriracha.Deploy.SqlServer
 
         private void LoadConfigurationChildren(DeployConfiguration item)
         {
-            item.DeploymentStepList = this.GetConfigurationDeploymentStepList(item.Id);
+            item.DeploymentStepList = this.GetConfigurationDeploymentStepList(item.Id, item.ProjectId);
         }
 
         private PetaPoco.Sql GetConfigurationBaseQuery()
@@ -515,13 +519,17 @@ namespace Sriracha.Deploy.SqlServer
             return GetConfiguration(configurationId, projectId);
         }
 
-        public void DeleteConfiguration(string configurationId)
+        public void DeleteConfiguration(string configurationId, string projectId)
         {
             if(string.IsNullOrEmpty(configurationId))
             {
                 throw new ArgumentNullException("Missing Configuration ID");
             }
-            VerifyConfigurationExists(configurationId, null);
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            VerifyConfigurationExists(configurationId, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
@@ -552,7 +560,7 @@ namespace Sriracha.Deploy.SqlServer
 
         private void LoadComponentChildren(DeployComponent item)
         {
-            item.DeploymentStepList = this.GetComponentDeploymentStepList(item.Id);
+            item.DeploymentStepList = this.GetComponentDeploymentStepList(item.Id, item.ProjectId);
         }
 
         public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
@@ -599,15 +607,15 @@ namespace Sriracha.Deploy.SqlServer
             return item;
         }
 
-        public DeployComponent TryGetComponent(string componentId, string projectId = null)
+        public DeployComponent TryGetComponent(string componentId, string projectId)
         {
             if (string.IsNullOrEmpty(componentId))
             {
                 throw new ArgumentNullException("Missing component ID");
             }
-            if (!string.IsNullOrEmpty(projectId))
+            if (string.IsNullOrEmpty(projectId))
             {
-                VerifyProjectExists(projectId);
+                throw new ArgumentNullException("Missing project ID");
             }
             using (var db = _sqlConnectionInfo.GetDB())
             {
@@ -644,7 +652,7 @@ namespace Sriracha.Deploy.SqlServer
                 throw new ArgumentNullException("Missing component ID or name");
             }
             VerifyProjectExists(projectId);
-            var item = TryGetComponent(componentIdOrName);
+            var item = TryGetComponent(componentIdOrName, projectId);
             if(item == null)
             {
                 item = TryGetComponentByName(componentIdOrName);
@@ -711,9 +719,9 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public List<DeployStep> GetComponentDeploymentStepList(string componentId)
+        public List<DeployStep> GetComponentDeploymentStepList(string componentId, string projectId)
         {
-            VerifyComponentExists(componentId, null);
+            VerifyComponentExists(componentId, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetComponentStepBaseQuery().Append("WHERE DeployComponentID=@0", componentId);
@@ -721,13 +729,9 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId)
+        public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId)
         {
-            if(string.IsNullOrEmpty(configurationId))
-            {
-                throw new ArgumentNullException("Missing configuration ID");
-            }
-            VerifyConfigurationExists(configurationId, null);
+            VerifyConfigurationExists(configurationId, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetConfigurationStepBaseQuery().Append("WHERE DeployConfigurationID=@0", configurationId);
@@ -833,12 +837,13 @@ namespace Sriracha.Deploy.SqlServer
             return step;
         }
 
-        public DeployStep GetComponentDeploymentStep(string deploymentStepId)
+        public DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId)
         {
             if(string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
+            VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetComponentStepBaseQuery().Where("ID=@0", deploymentStepId);
@@ -858,12 +863,13 @@ namespace Sriracha.Deploy.SqlServer
                 .From("DeployComponentStep");
         }
 
-        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId)
+        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId)
         {
             if(string.IsNullOrEmpty(deploymentStepId))
             {
                 throw new ArgumentNullException("Missing deployment step ID");
             }
+            VerifyProjectExists(projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetConfigurationStepBaseQuery().Append("WHERE ID=@0", deploymentStepId);
@@ -925,7 +931,7 @@ namespace Sriracha.Deploy.SqlServer
                 }
                 db.Execute(sql);
             }
-            return this.GetComponentDeploymentStep(deploymentStepId);
+            return this.GetComponentDeploymentStep(deploymentStepId, projectId);
         }
 
         public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
@@ -970,12 +976,12 @@ namespace Sriracha.Deploy.SqlServer
                 }
                 db.Execute(sql);
             }
-            return this.GetConfigurationDeploymentStep(deploymentStepId);
+            return this.GetConfigurationDeploymentStep(deploymentStepId, projectId);
         }
 
-        public void DeleteComponentDeploymentStep(string deploymentStepId)
+        public void DeleteComponentDeploymentStep(string deploymentStepId, string projectId)
         {
-            VerifyComponentStepExists(deploymentStepId, null, null);
+            VerifyComponentStepExists(deploymentStepId,  null, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
@@ -985,9 +991,9 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public void DeleteConfigurationDeploymentStep(string deploymentStepId)
+        public void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId)
         {
-            VerifyConfigurationStepExists(deploymentStepId,null, null);
+            VerifyConfigurationStepExists(deploymentStepId,null, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
@@ -1042,7 +1048,7 @@ namespace Sriracha.Deploy.SqlServer
             return branch;
         }
 
-        public DeployProjectBranch GetBranch(string branchId, string projectId = null)
+        public DeployProjectBranch GetBranch(string branchId, string projectId)
         {
             var item = this.TryGetBranch(branchId, projectId);
             if(item == null)
@@ -1052,11 +1058,15 @@ namespace Sriracha.Deploy.SqlServer
             return item;
         }
 
-        public DeployProjectBranch TryGetBranch(string branchId, string projectId = null)
+        public DeployProjectBranch TryGetBranch(string branchId, string projectId)
         {
             if(string.IsNullOrEmpty(branchId))
             {
                 throw new ArgumentNullException("Missing branch ID");
+            }
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
             }
             using(var db = _sqlConnectionInfo.GetDB())
             {
@@ -1606,9 +1616,9 @@ namespace Sriracha.Deploy.SqlServer
             return componentList.ToList();
         }
 
-        public DeployEnvironment GetEnvironment(string environmentId)
+        public DeployEnvironment GetEnvironment(string environmentId, string projectId)
         {
-            VerifyEnvironmentExists(environmentId, null);
+            VerifyEnvironmentExists(environmentId, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetEnvironmentBaseQuery().Append("WHERE ID=@0", environmentId);
@@ -1643,7 +1653,7 @@ namespace Sriracha.Deploy.SqlServer
             }
             VerifyProjectExists(projectId);
 
-            var item = GetEnvironment(environmentId);
+            var item = GetEnvironment(environmentId, projectId);
             UpdateEnvironmentComponentList(componentList, environmentId, projectId, environmentName, EnumDeployStepParentType.Component);
             UpdateEnvironmentComponentList(configurationList, environmentId, projectId, environmentName, EnumDeployStepParentType.Configuration);
 
@@ -1659,12 +1669,12 @@ namespace Sriracha.Deploy.SqlServer
             SaveEnvironmentConfigurationList(environmentId, componentList, EnumDeployStepParentType.Component);
             SaveEnvironmentConfigurationList(environmentId, configurationList, EnumDeployStepParentType.Configuration);
 
-            return GetEnvironment(environmentId);
+            return GetEnvironment(environmentId, projectId);
         }
 
-        public void DeleteEnvironment(string environmentId)
+        public void DeleteEnvironment(string environmentId, string projectId)
         {
-            VerifyEnvironmentExists(environmentId, null);
+            VerifyEnvironmentExists(environmentId, projectId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder

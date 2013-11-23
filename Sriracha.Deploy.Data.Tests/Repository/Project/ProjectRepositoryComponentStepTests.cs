@@ -39,7 +39,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.AreEqual(this.UserName, result.UpdatedByUserName);
             AssertIsRecent(result.UpdatedDateTimeUtc);
 
-            var dbItem = sut.GetComponentDeploymentStep(result.Id);
+            var dbItem = sut.GetComponentDeploymentStep(result.Id, result.ProjectId);
             AssertStep(result, dbItem);
         }
 
@@ -59,7 +59,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.AreEqual(newUserName, result.UpdatedByUserName);
             AssertIsRecent(result.UpdatedDateTimeUtc);
 
-            var dbItem = sut.GetComponentDeploymentStep(result.Id);
+            var dbItem = sut.GetComponentDeploymentStep(result.Id, result.ProjectId);
             AssertStep(result, dbItem);
         }
 
@@ -215,7 +215,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 this.CreateTestStep(sut, otherComponent);
             }
 
-            var result = sut.GetComponentDeploymentStepList(component.Id);
+            var result = sut.GetComponentDeploymentStepList(component.Id, component.ProjectId);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(stepList.Count, result.Count);
@@ -231,7 +231,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(()=>sut.GetComponentDeploymentStepList(null));
+            var project = this.CreateTestProject(sut); 
+            
+            Assert.Throws<ArgumentNullException>(() => sut.GetComponentDeploymentStepList(null, project.Id));
         }
 
         [Test]
@@ -239,7 +241,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStepList(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStepList(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -249,7 +253,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var step = this.CreateTestStep(sut);
 
-            var result = sut.GetComponentDeploymentStep(step.Id);
+            var result = sut.GetComponentDeploymentStep(step.Id, step.ProjectId);
 
             AssertStep(step, result);
         }
@@ -261,7 +265,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var step = this.CreateTestStep(sut);
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetComponentDeploymentStep(null));
+            Assert.Throws<ArgumentNullException>(() => sut.GetComponentDeploymentStep(null, step.ProjectId));
         }
 
         [Test]
@@ -271,7 +275,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var step = this.CreateTestStep(sut);
 
-            Assert.Throws<ArgumentNullException>(() => sut.GetComponentDeploymentStep(null));
+            Assert.Throws<ArgumentNullException>(() => sut.GetComponentDeploymentStep(null, step.ProjectId));
         }
 
         [Test]
@@ -491,9 +495,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var step = this.CreateTestStep(sut);
 
-            sut.DeleteComponentDeploymentStep(step.Id);
+            sut.DeleteComponentDeploymentStep(step.Id, step.ProjectId);
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id, step.ProjectId));
 
             var dbComponent = sut.GetComponent(step.ParentId, step.ProjectId);
             var dbStep = dbComponent.DeploymentStepList.SingleOrDefault(i => i.Id == step.Id);
@@ -505,7 +509,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<ArgumentNullException>(() => sut.DeleteComponentDeploymentStep(null));
+            var project = this.CreateTestProject(sut); 
+            
+            Assert.Throws<ArgumentNullException>(() => sut.DeleteComponentDeploymentStep(null, project.Id));
         }
 
         [Test]
@@ -513,7 +519,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         {
             var sut = this.GetRepository();
 
-            Assert.Throws<RecordNotFoundException>(() => sut.DeleteComponentDeploymentStep(Guid.NewGuid().ToString()));
+            var project = this.CreateTestProject(sut); 
+            
+            Assert.Throws<RecordNotFoundException>(() => sut.DeleteComponentDeploymentStep(Guid.NewGuid().ToString(), project.Id));
         }
 
         [Test]
@@ -523,7 +531,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var step = this.CreateTestStep(sut);
 
-            var result = sut.GetComponent(step.ParentId);
+            var result = sut.GetComponent(step.ParentId, step.ProjectId);
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.DeploymentStepList);
@@ -557,7 +565,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteComponent(step.ProjectId, step.ParentId);
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id, step.ProjectId));
             Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.ParentId, step.ProjectId));
         }
 
@@ -570,7 +578,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             sut.DeleteProject(step.ProjectId);
 
-            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id));
+            Assert.Throws<RecordNotFoundException>(() => sut.GetComponentDeploymentStep(step.Id, step.ProjectId));
             Assert.Throws<RecordNotFoundException>(() => sut.GetComponent(step.ParentId, step.ProjectId));
         }
     }

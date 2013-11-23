@@ -17,39 +17,39 @@ namespace Sriracha.Deploy.Data.Project
 
 		List<DeployConfiguration> GetConfigurationList(string projectId);
         DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
-		DeployConfiguration GetConfiguration(string configurationId);
+        DeployConfiguration GetConfiguration(string configurationId, string projectId);
 		DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType);
-		void DeleteConfiguration(string configurationId);
+        void DeleteConfiguration(string configurationI, string projectIdd);
 
 		IEnumerable<DeployComponent> GetComponentList(string projectId);
         DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
-		DeployComponent GetComponent(string componentId);
+		DeployComponent GetComponent(string componentId, string projectId);
         DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType);
 		void DeleteComponent(string projectId, string componentId);
 
-		List<DeployStep> GetComponentDeploymentStepList(string componentId);
-		List<DeployStep> GetConfigurationDeploymentStepList(string configurationId);
+        List<DeployStep> GetComponentDeploymentStepList(string componentId, string projectId);
+        List<DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId);
 		DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
 		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJSON);
-		DeployStep GetComponentDeploymentStep(string deploymentStepId);
-		DeployStep GetConfigurationDeploymentStep(string deploymentStepId);
+        DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId);
+        DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId);
 		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
 		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configuration, string stepName, string taskTypeName, string taskOptionsJSON);
-		void DeleteComponentDeploymentStep(string deploymentStepId);
-		void DeleteConfigurationDeploymentStep(string deploymentStepId);
+        void DeleteComponentDeploymentStep(string deploymentStepId, string projectId);
+        void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId);
 
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
 		DeployProjectBranch CreateBranch(string projectId, string branchName);
-		DeployProjectBranch GetBranch(string branchId);
+		DeployProjectBranch GetBranch(string branchId, string projectId);
 		DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName);
 		void DeleteBranch(string branchId, string projectId);
 
 		IEnumerable<DeployEnvironment> GetEnvironmentList(string projectId);
 		DeployEnvironment CreateEnvironment(string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
-		DeployEnvironment GetEnvironment(string environmentId);
+        DeployEnvironment GetEnvironment(string environmentId, string projectId);
 		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
-		void DeleteEnvironment(string environmentId);
+        void DeleteEnvironment(string environmentId, string projectId);
 
         //void UpdateMachineConfig(string machineId, string configName, string configValue);
         //void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue);
