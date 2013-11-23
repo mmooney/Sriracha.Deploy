@@ -1129,7 +1129,7 @@ namespace Sriracha.Deploy.RavenDB
 									.FirstOrDefault(i => i.EnvironmentList.Any(j => j.Id == environmentId));
 			if (project == null)
 			{
-				throw new ArgumentException("Unable to find project for environment ID " + environmentId);
+				throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
 			}
 			_logger.Info("User {0} deleting environment {1}", _userIdentity.UserName, environmentId);
 			var environment = project.EnvironmentList.First(i => i.Id == environmentId);

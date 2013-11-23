@@ -51,8 +51,8 @@ namespace Sriracha.Deploy.Data.Project
 		DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList);
 		void DeleteEnvironment(string environmentId);
 
-		void UpdateMachineConfig(string machineId, string configName, string configValue);
-		void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue);
+        //void UpdateMachineConfig(string machineId, string configName, string configValue);
+        //void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue);
 
         EnumDeploymentIsolationType GetComponentIsolationType(string projectId, string componentId);
     }

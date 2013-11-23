@@ -30,16 +30,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         protected void AssertIsRecent(DateTime dateTime)
         {
-            Assert.GreaterOrEqual(DateTime.UtcNow.AddSeconds(1), dateTime);
-            Assert.Less(DateTime.UtcNow.AddMinutes(-2), dateTime);
+            Assert.That(dateTime, Is.EqualTo(DateTime.UtcNow).Within(TimeSpan.FromSeconds(2)));
+            //Assert.GreaterOrEqual(DateTime.UtcNow.AddSeconds(1), dateTime);
+            //Assert.Less(DateTime.UtcNow.AddMinutes(-2), dateTime);
         }
 
         protected void AssertDateEqual(DateTime expected, DateTime actual)
         {
-            Assert.AreEqual(expected.Date, actual.Date);
-            Assert.AreEqual(expected.Hour, actual.Hour);
-            Assert.AreEqual(expected.Minute, actual.Minute);
-            Assert.AreEqual(expected.Second, actual.Second);
+            Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromSeconds(2)));
         }
 
     }

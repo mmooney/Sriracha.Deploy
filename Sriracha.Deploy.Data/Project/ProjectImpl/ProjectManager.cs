@@ -326,16 +326,16 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		}
 
 
-		public void UpdateMachineConfig(string machineId, string configName, string configValue)
-		{
-			var machine = this._projectRepository.GetMachine(machineId);
-			if(machine.ConfigurationValueList == null)
-			{
-				machine.ConfigurationValueList = new Dictionary<string,string>();
-			}
-			this.UpdateConfig(machine.ConfigurationValueList, configName, configValue);
-			this._projectRepository.UpdateMachine(machine.Id, machine.ProjectId, machine.EnvironmentId, machine.ParentId, machine.MachineName, machine.ConfigurationValueList);
-		}
+        //public void UpdateMachineConfig(string machineId, string configName, string configValue)
+        //{
+        //    var machine = this._projectRepository.GetMachine(machineId);
+        //    if(machine.ConfigurationValueList == null)
+        //    {
+        //        machine.ConfigurationValueList = new Dictionary<string,string>();
+        //    }
+        //    this.UpdateConfig(machine.ConfigurationValueList, configName, configValue);
+        //    this._projectRepository.UpdateMachine(machine.Id, machine.ProjectId, machine.EnvironmentId, machine.ParentId, machine.MachineName, machine.ConfigurationValueList);
+        //}
 
 		private void UpdateConfig(Dictionary<string, string> configList, string configName, string configValue)
 		{

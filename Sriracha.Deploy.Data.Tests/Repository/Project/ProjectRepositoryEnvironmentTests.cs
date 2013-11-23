@@ -93,18 +93,23 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             foreach (var expectedMachine in expected.MachineList)
             {
                 var actualMachine = actual.MachineList.SingleOrDefault(i => i.MachineName == expectedMachine.MachineName);
-                Assert.IsNotNull(actualMachine);
-                Assert.AreEqual(expectedMachine.Id, actualMachine.Id);
-                Assert.AreEqual(expectedMachine.ProjectId, actualMachine.ProjectId);
-                Assert.AreEqual(expectedMachine.EnvironmentId, actualMachine.EnvironmentId);
-                Assert.AreEqual(expectedMachine.EnvironmentName, actualMachine.EnvironmentName);
-                Assert.AreEqual(expectedMachine.ParentId, actualMachine.ParentId);
-                Assert.AreEqual(expectedMachine.CreatedByUserName, actualMachine.CreatedByUserName);
-                AssertDateEqual(expectedMachine.CreatedDateTimeUtc, actualMachine.CreatedDateTimeUtc);
-                Assert.AreEqual(expectedMachine.UpdatedByUserName, actualMachine.UpdatedByUserName);
-                AssertDateEqual(expectedMachine.UpdatedDateTimeUtc, actualMachine.UpdatedDateTimeUtc);
-                AssertDictionary(expectedMachine.ConfigurationValueList, actualMachine.ConfigurationValueList);
+                AssertMachine(expectedMachine, actualMachine);
             }
+        }
+
+        private void AssertMachine(DeployMachine expectedMachine, DeployMachine actualMachine)
+        {
+            Assert.IsNotNull(actualMachine);
+            Assert.AreEqual(expectedMachine.Id, actualMachine.Id);
+            Assert.AreEqual(expectedMachine.ProjectId, actualMachine.ProjectId);
+            Assert.AreEqual(expectedMachine.EnvironmentId, actualMachine.EnvironmentId);
+            Assert.AreEqual(expectedMachine.EnvironmentName, actualMachine.EnvironmentName);
+            Assert.AreEqual(expectedMachine.ParentId, actualMachine.ParentId);
+            Assert.AreEqual(expectedMachine.CreatedByUserName, actualMachine.CreatedByUserName);
+            AssertDateEqual(expectedMachine.CreatedDateTimeUtc, actualMachine.CreatedDateTimeUtc);
+            Assert.AreEqual(expectedMachine.UpdatedByUserName, actualMachine.UpdatedByUserName);
+            AssertDateEqual(expectedMachine.UpdatedDateTimeUtc, actualMachine.UpdatedDateTimeUtc);
+            AssertDictionary(expectedMachine.ConfigurationValueList, actualMachine.ConfigurationValueList);
         }
 
         private void AssertCreatedEnvironmentConfiguration(DeployEnvironmentConfiguration sourceItem, DeployEnvironmentConfiguration createdItem, DeployProject project, DeployEnvironment environment, EnumDeployStepParentType parentType)
@@ -1259,127 +1264,101 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertEnvironment(result, dbItem);
         }
 
-        //[Test]
-        //public void DeleteEnvironment_DeletesEnvironment()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void DeleteEnvironment_DeletesEnvironment()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    sut.DeleteEnvironment(project.Id, Environment.Id);
+            sut.DeleteEnvironment(environment.Id);
 
-        //    var dbConfiguration = sut.TryGetConfiguration(Environment.Id);
-        //    Assert.IsNull(dbConfiguration);
+            var dbConfiguration = sut.TryGetConfiguration(environment.Id);
+            Assert.IsNull(dbConfiguration);
 
-        //    var dbProject = sut.GetProject(project.Id);
-        //    var dbProjectEnvironment = dbProject.EnvironmentList.SingleOrDefault(i => i.Id == Environment.Id);
-        //    Assert.IsNull(dbProjectEnvironment);
-        //}
+            var dbProject = sut.GetProject(project.Id);
+            var dbProjectEnvironment = dbProject.EnvironmentList.SingleOrDefault(i => i.Id == environment.Id);
+            Assert.IsNull(dbProjectEnvironment);
+        }
 
-        //[Test]
-        //public void DeleteEnvironment_MissingConfigurationID_ThrowsNullException()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void DeleteEnvironment_MissingConfigurationID_ThrowsNullException()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    Assert.Throws<ArgumentNullException>(() => sut.DeleteEnvironment(project.Id, null));
-        //}
+            var project = this.CreateTestProject(sut);
+            Assert.Throws<ArgumentNullException>(() => sut.DeleteEnvironment(null));
+        }
 
-        //[Test]
-        //public void DeleteEnvironment_BadEnvironmentID_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void DeleteEnvironment_BadEnvironmentID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    Assert.Throws<RecordNotFoundException>(() => sut.DeleteEnvironment(project.Id, Guid.NewGuid().ToString()));
-        //}
+            Assert.Throws<RecordNotFoundException>(() => sut.DeleteEnvironment(Guid.NewGuid().ToString()));
+        }
 
-        //[Test]
-        //public void DeleteProject_DeletesConfiguration()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void DeleteProject_DeletesEnvironment()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
+            var project = this.CreateTestProject(sut);
+            var environment = this.CreateTestEnvironment(sut, project.Id);
 
-        //    sut.DeleteProject(project.Id);
+            sut.DeleteProject(project.Id);
 
-        //    var dbEnvironment = sut.TryGetEnvironment(Environment.Id);
-        //    Assert.IsNull(dbEnvironment);
-        //}
+            Assert.Throws<RecordNotFoundException>(()=>sut.GetEnvironment(environment.Id));
+        }
 
-        //[Test]
-        //public void GetOrCreateEnvironment_CreatesNewBranch()
-        //{
-        //    var sut = this.GetRepository();
+        [Test]
+        public void GetProject_GetsEnvironmentList()
+        {
+            var sut = this.GetRepository();
 
-        //    var project = this.CreateTestProject(sut);
-        //    string EnvironmentName = this.Fixture.Create<string>("EnvironmentName");
+            var project = this.CreateTestProject(sut);
+            var environmentList = new List<DeployEnvironment>();
+            for(int i = 0; i < 5; i++)
+            {
+                var environment = this.CreateTestEnvironment(sut, project.Id);
+                environmentList.Add(environment);
+            }
 
-        //    var result = sut.GetOrCreateEnvironment(project.Id, EnvironmentName);
+            var dbProject = sut.GetProject(project.Id);
+            Assert.IsNotNull(project.EnvironmentList);
+            Assert.AreEqual(environmentList.Count, dbProject.EnvironmentList.Count);
+            foreach(var environment in environmentList)
+            {
+                var dbEnvironment = dbProject.EnvironmentList.SingleOrDefault(i=>i.Id == environment.Id);
+                AssertEnvironment(environment, dbEnvironment);
+            }
+        }
 
-        //    AssertCreatedEnvironment(result, project.Id, EnvironmentName, EnumDeploymentIsolationType.IsolatedPerMachine, sut);
-        //}
+        [Test]
+        public void GetProjectList_GetsEnvironmentList()
+        {
+            var sut = this.GetRepository();
 
-        //[Test]
-        //public void GetOrCreateEnvironment_GetsBranchByID()
-        //{
-        //    var sut = this.GetRepository();
+            var project = this.CreateTestProject(sut);
+            var environmentList = new List<DeployEnvironment>();
+            for (int i = 0; i < 5; i++)
+            {
+                var environment = this.CreateTestEnvironment(sut, project.Id);
+                environmentList.Add(environment);
+            }
 
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
-
-        //    var result = sut.GetOrCreateEnvironment(project.Id, Environment.Id);
-
-        //    AssertEnvironment(Environment, result);
-        //}
-
-        //[Test]
-        //public void GetOrCreateEnvironment_GetsBranchByName()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
-
-        //    var result = sut.GetOrCreateEnvironment(project.Id, Environment.EnvironmentName);
-
-        //    AssertEnvironment(Environment, result);
-        //}
-
-        //[Test]
-        //public void GetOrCreateEnvironment_BadProjectID_ThrowsRecordNotFoundException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
-
-        //    Assert.Throws<RecordNotFoundException>(() => sut.GetOrCreateEnvironment(Guid.NewGuid().ToString(), Environment.Id));
-        //}
-
-        //[Test]
-        //public void GetOrCreateEnvironment_MissingProjectID_ThrowsArgumentNullException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
-
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateEnvironment(null, Environment.Id));
-        //}
-
-        //[Test]
-        //public void GetOrCreateEnvironment_MissingBranchIdOrName_ThrowsArgumentNullException()
-        //{
-        //    var sut = this.GetRepository();
-
-        //    var project = this.CreateTestProject(sut);
-        //    var Environment = this.CreateTestEnvironment(sut, project.Id);
-
-        //    Assert.Throws<ArgumentNullException>(() => sut.GetOrCreateEnvironment(project.Id, null));
-        //}
+            var dbProjectList = sut.GetProjectList();
+            var dbProject = dbProjectList.SingleOrDefault(i=>i.Id == project.Id);
+            Assert.IsNotNull(dbProject);
+            Assert.IsNotNull(project.EnvironmentList);
+            Assert.AreEqual(environmentList.Count, dbProject.EnvironmentList.Count);
+            foreach (var environment in environmentList)
+            {
+                var dbEnvironment = dbProject.EnvironmentList.SingleOrDefault(i => i.Id == environment.Id);
+                AssertEnvironment(environment, dbEnvironment);
+            }
+        }
 
     }
 }

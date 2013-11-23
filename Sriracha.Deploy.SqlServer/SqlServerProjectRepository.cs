@@ -387,6 +387,11 @@ namespace Sriracha.Deploy.SqlServer
                                 .Append("DELETE FROM DeployComponent WHERE DeployProjectID=@0;", projectId)
                                     .Append("DELETE FROM DeployConfigurationStep WHERE DeployProjectID=@0;", projectId)
                                 .Append("DELETE FROM DeployConfiguration WHERE DeployProjectID=@0;", projectId)
+                                    .Append("DELETE FROM DeployMachineConfigurationValue WHERE DeployMachineID IN (SELECT ID FROM DeployMachine WHERE DeployProjectID=@0);", projectId)
+                                    .Append("DELETE FROM DeployMachine WHERE DeployProjectID=@0;", projectId)
+                                    .Append("DELETE FROM DeployEnvironmentConfigurationValue WHERE DeployEnvironmentConfigurationID IN (SELECT ID FROM DeployEnvironmentConfiguration WHERE DeployProjectID=@0);", projectId)
+                                    .Append("DELETE FROM DeployEnvironmentConfiguration WHERE DeployProjectID=@0;", projectId)
+                                .Append("DELETE FROM DeployEnvironment WHERE DeployProjectID=@0;", projectId)
                                 .Append("DELETE FROM DeployProject WHERE ID=@0", projectId);
                 db.Execute(sql);
             }
@@ -1659,7 +1664,17 @@ namespace Sriracha.Deploy.SqlServer
 
         public void DeleteEnvironment(string environmentId)
         {
-            throw new NotImplementedException();
+            VerifyEnvironmentExists(environmentId, null);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("DELETE FROM DeployMachineConfigurationValue WHERE DeployMachineID IN (SELECT ID FROM DeployMachine WHERE DeployEnvironmentID=@0);", environmentId)
+                            .Append("DELETE FROM DeployMachine WHERE DeployEnvironmentID=@0;", environmentId)
+                            .Append("DELETE FROM DeployEnvironmentConfigurationValue WHERE DeployEnvironmentConfigurationID IN (SELECT ID FROM DeployEnvironmentConfiguration WHERE DeployEnvironmentID=@0);", environmentId)
+                            .Append("DELETE FROM DeployEnvironmentConfiguration WHERE DeployEnvironmentID=@0;", environmentId)
+                            .Append("DELETE FROM DeployEnvironment WHERE ID=@0;", environmentId);
+                db.Execute(sql);
+            }
         }
 
         public DeployMachine GetMachine(string machineId)

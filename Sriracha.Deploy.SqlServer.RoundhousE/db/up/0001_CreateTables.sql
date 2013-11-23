@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[DeployProject](
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployProject] PRIMARY KEY 
+ CONSTRAINT [PK_DeployProject] PRIMARY KEY NONCLUSTERED
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -39,7 +39,7 @@ CREATE TABLE [dbo].[DeployBranch](
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployBranch] PRIMARY KEY 
+ CONSTRAINT [PK_DeployBranch] PRIMARY KEY NONCLUSTERED
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -116,7 +116,7 @@ CREATE TABLE [dbo].[DeployConfiguration](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployConfiguration] PRIMARY KEY 
+ CONSTRAINT [PK_DeployConfiguration] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -167,7 +167,7 @@ CREATE TABLE [dbo].[DeployComponent](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployComponent] PRIMARY KEY 
+ CONSTRAINT [PK_DeployComponent] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -225,7 +225,7 @@ CREATE TABLE [dbo].[DeployComponentStep](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployComponentStep] PRIMARY KEY  
+ CONSTRAINT [PK_DeployComponentStep] PRIMARY KEY NONCLUSTERED  
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -274,7 +274,7 @@ CREATE TABLE [dbo].[DeployConfigurationStep](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployConfigurationStep] PRIMARY KEY 
+ CONSTRAINT [PK_DeployConfigurationStep] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -315,7 +315,7 @@ CREATE TABLE [dbo].[DeployEnvironment](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_Environment] PRIMARY KEY 
+ CONSTRAINT [PK_Environment] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -389,7 +389,7 @@ CREATE TABLE [dbo].[DeployEnvironmentConfiguration](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployEnvironmentConfiguration] PRIMARY KEY 
+ CONSTRAINT [PK_DeployEnvironmentConfiguration] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -442,7 +442,7 @@ CREATE TABLE [dbo].[DeployMachine](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployMachine] PRIMARY KEY 
+ CONSTRAINT [PK_DeployMachine] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -482,7 +482,7 @@ CREATE TABLE [dbo].[DeployMachineConfigurationValue](
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployMachineConfigurationValue] PRIMARY KEY 
+ CONSTRAINT [PK_DeployMachineConfigurationValue] PRIMARY KEY NONCLUSTERED
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -522,7 +522,7 @@ CREATE TABLE [dbo].[DeployEnvironmentConfigurationValue](
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployEnvironmentConfigurationValue] PRIMARY KEY 
+ CONSTRAINT [PK_DeployEnvironmentConfigurationValue] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)

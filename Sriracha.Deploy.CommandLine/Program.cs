@@ -151,28 +151,28 @@ namespace Sriracha.Deploy.CommandLine
 						}
 						Deploy(options.EnvironmentId, options.BuildId, options.MachineId);
 						break;
-					case ActionType.Configure:
-						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.MachineId))
-						{
-							throw new Exception("EnvironmentID (--environment|-e) and Machine ID (--machine|-m) cannot be used at the same time for Configure");
-						}
-						if(string.IsNullOrWhiteSpace(options.ConfigName))
-						{
-							throw new Exception("ConfigName (--configName) required for Configure");
-						}
-						if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.ComponentId))
-						{
-							ConfigureEnvironment(options.EnvironmentId, options.ComponentId, options.ConfigName, options.ConfigValue);
-						}
-						else if (!string.IsNullOrWhiteSpace(options.MachineId))
-						{
-							ConfigureMachine(options.MachineId, options.ConfigName, options.ConfigValue);
-						}
-						else 
-						{
-							throw new Exception("EnvironmentID (--environment|-e) or combination of Machine ID (--machine|-m) and Component ID (--component|-c) required for Configure");
-						}
-						break;
+                    //case ActionType.Configure:
+                    //    if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.MachineId))
+                    //    {
+                    //        throw new Exception("EnvironmentID (--environment|-e) and Machine ID (--machine|-m) cannot be used at the same time for Configure");
+                    //    }
+                    //    if(string.IsNullOrWhiteSpace(options.ConfigName))
+                    //    {
+                    //        throw new Exception("ConfigName (--configName) required for Configure");
+                    //    }
+                    //    if(!string.IsNullOrWhiteSpace(options.EnvironmentId) && !string.IsNullOrWhiteSpace(options.ComponentId))
+                    //    {
+                    //        ConfigureEnvironment(options.EnvironmentId, options.ComponentId, options.ConfigName, options.ConfigValue);
+                    //    }
+                    //    else if (!string.IsNullOrWhiteSpace(options.MachineId))
+                    //    {
+                    //        ConfigureMachine(options.MachineId, options.ConfigName, options.ConfigValue);
+                    //    }
+                    //    else 
+                    //    {
+                    //        throw new Exception("EnvironmentID (--environment|-e) or combination of Machine ID (--machine|-m) and Component ID (--component|-c) required for Configure");
+                    //    }
+                    //    break;
 					case ActionType.Publish:
 						VerifyParameter(options.ApiUrl,"Publish", "ApiUrl", "apiurl", 'a');
 						VerifyParameter(options.ProjectId,"Publish", "ProjectId", "project", 'p');
@@ -307,17 +307,17 @@ namespace Sriracha.Deploy.CommandLine
 			publisher.PublishDirectory(options);
 		}
 
-		private static void ConfigureMachine(string machineId, string configName, string configValue)
-		{
-			var pm = _diFactory.CreateInjectedObject<IProjectManager>();
-			pm.UpdateMachineConfig(machineId, configName, configValue);
-		}
+        //private static void ConfigureMachine(string machineId, string configName, string configValue)
+        //{
+        //    var pm = _diFactory.CreateInjectedObject<IProjectManager>();
+        //    pm.UpdateMachineConfig(machineId, configName, configValue);
+        //}
 
-		private static void ConfigureEnvironment(string environmentId, string componentId, string configName, string configValue)
-		{
-			var pm = _diFactory.CreateInjectedObject<IProjectManager>();
-			pm.UpdateEnvironmentComponentConfig(environmentId, componentId, configName, configValue);
-		}
+        //private static void ConfigureEnvironment(string environmentId, string componentId, string configName, string configValue)
+        //{
+        //    var pm = _diFactory.CreateInjectedObject<IProjectManager>();
+        //    pm.UpdateEnvironmentComponentConfig(environmentId, componentId, configName, configValue);
+        //}
 
 		private static void Deploy(string environmentID, string buildID, string machineId)
 		{

@@ -443,7 +443,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var sut = this.GetRepository();
 
             var step = this.CreateTestStep(sut);
-
+            
             sut.DeleteConfigurationDeploymentStep(step.Id);
 
             Assert.Throws<RecordNotFoundException>(() => sut.GetConfigurationDeploymentStep(step.Id));
