@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.RavenDB
 
         public static IRavenQueryable<T> QueryNoCacheNotStale<T>(this IDocumentSession documentSession)
         {
-            return documentSession.Query<T>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking());
+            return documentSession.Query<T>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking()).Customize(i=>i.WaitForNonStaleResultsAsOfNow());
         }
 
         public static IRavenQueryable<T> QueryNotStale<T>(this IDocumentSession documentSession)
