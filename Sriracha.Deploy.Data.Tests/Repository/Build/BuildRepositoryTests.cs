@@ -61,7 +61,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             Assert.AreEqual(expected.Version, actual.Version);
             Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
             AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedDateTimeUtc, actual.UpdatedByUserName);
+            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
         }
 
