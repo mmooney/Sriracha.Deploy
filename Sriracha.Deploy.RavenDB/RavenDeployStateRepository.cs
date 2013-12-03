@@ -25,6 +25,30 @@ namespace Sriracha.Deploy.RavenDB
 
         public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
         {
+            if (build == null)
+            {
+                throw new ArgumentNullException("Missing build");
+            }
+            if (branch == null)
+            {
+                throw new ArgumentNullException("Missing branch");
+            }
+            if (component == null)
+            {
+                throw new ArgumentNullException("Missing component");
+            }
+            if (environment == null)
+            {
+                throw new ArgumentNullException("Missing environment");
+            }
+            if (machineList == null)
+            {
+                throw new ArgumentNullException("Missing machineList");
+            }
+            if (deployBatchRequestItemId == null)
+            {
+                throw new ArgumentNullException("Missing deployBatchRequestItemId");
+            }
             var deployState = new DeployState
             {
                 Id = Guid.NewGuid().ToString(),

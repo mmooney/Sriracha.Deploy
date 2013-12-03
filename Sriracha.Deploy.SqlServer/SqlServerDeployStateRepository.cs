@@ -60,8 +60,49 @@ namespace Sriracha.Deploy.SqlServer
             _userIdentity = DIHelper.VerifyParameter(userIdentity);
         }
 
+        private void VerifyDeployStateExists(string deployStateId)
+        {
+            if(string.IsNullOrEmpty(deployStateId))
+            {
+                throw new ArgumentNullException("Missing deploy state ID");
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployState WHERE ID=@0", deployStateId);
+                int count = db.ExecuteScalar<int>(sql);
+                if(count == 0)
+                {
+                    throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
+                }
+            }
+        }
+
         public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
         {
+            if (build == null)
+            {
+                throw new ArgumentNullException("Missing build");
+            }
+            if (branch == null)
+            {
+                throw new ArgumentNullException("Missing branch");
+            }
+            if (component == null)
+            {
+                throw new ArgumentNullException("Missing component");
+            }
+            if (environment == null)
+            {
+                throw new ArgumentNullException("Missing environment");
+            }
+            if (machineList == null)
+            {
+                throw new ArgumentNullException("Missing machineList");
+            }
+            if (deployBatchRequestItemId == null)
+            {
+                throw new ArgumentNullException("Missing deployBatchRequestItemId");
+            }
             var sqlDeployState = new SqlDeployState
             {
                 ID = Guid.NewGuid().ToString(),
@@ -125,6 +166,7 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployState GetDeployState(string deployStateId)
         {
+            VerifyDeployStateExists(deployStateId);
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = GetBaseDeployStateQuery().Append("WHERE ID=@0", deployStateId);

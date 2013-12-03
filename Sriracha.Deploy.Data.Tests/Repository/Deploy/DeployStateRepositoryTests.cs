@@ -8,6 +8,7 @@ using System.Text;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 {
@@ -22,6 +23,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             public DeployBuild Build { get; set; }
             public List<DeployMachine> MachineList { get; set; }
             public string DeployBatchRequestId { get; set; }
+        }
+
+        private DeployState CreateTestDeployState(IDeployStateRepository sut)
+        {
+            var testData = this.GetCreateTestData();
+            return sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
         }
 
         private void AssertCreatedDeployState(IDeployStateRepository sut, DeployState result, CreateTestData testData)
@@ -154,5 +161,92 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             AssertCreatedDeployState(sut, result, testData);
         }
 
+        [Test]
+        public void CreateDeployment_MissingBuild_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(null, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+        }
+
+        [Test]
+        public void CreateDeployment_MissingBranch_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, null, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+        }
+
+        [Test]
+        public void CreateDeployment_MissingEnvironment_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, null, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+        }
+
+        [Test]
+        public void CreateDeployment_MissingComponent_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, null, testData.MachineList, testData.DeployBatchRequestId));
+        }
+
+        [Test]
+        public void CreateDeployment_MissingMachineList_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, null, testData.DeployBatchRequestId));
+        }
+
+        [Test]
+        public void CreateDeployment_MissingDeployBatchRequestItemID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var testData = this.GetCreateTestData();
+
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, null));
+        }
+
+        [Test]
+        public void GetDeployState_GetsDeployState()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+
+            var result = sut.GetDeployState(deployState.Id);
+
+            AssertDeployState(deployState, result);
+        }
+
+        [Test]
+        public void GetDeployState_MissingDeployStateID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.GetDeployState(null));
+        }
+
+        [Test]
+        public void GetDeployState_BadDeployStateID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetDeployState(Guid.NewGuid().ToString()));
+        }
     }
 }
