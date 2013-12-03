@@ -73,7 +73,9 @@
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
+    <Compile Include="Repository\AssertHelpers.cs" />
     <Compile Include="Repository\Build\BuildRepositoryTests.cs" />
+    <Compile Include="Repository\Deploy\DeployStateRepositoryTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryEnvironmentTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryConfigurationStepTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryComponentStepTests.cs" />

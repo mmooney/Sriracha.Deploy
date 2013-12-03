@@ -14,18 +14,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 	[TestFixture]
     public abstract class ProjectRepositoryComponentTests : ProjectRepositoryTestBase
 	{
-        private void AssertComponent(DeployComponent expected, DeployComponent actual)
-        {
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.ProjectId, actual.ProjectId);
-            Assert.AreEqual(expected.ComponentName, actual.ComponentName);
-            Assert.AreEqual(expected.IsolationType, actual.IsolationType);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-        }
-
         private void AssertCreatedComponent(DeployComponent result, string projectId, string componentName, EnumDeploymentIsolationType isolationType, IProjectRepository sut)
         {
             Assert.IsNotNull(result);
@@ -41,12 +29,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.AreEqual(this.UserName, result.UpdatedByUserName);
 
             var dbItem = sut.GetComponent(result.Id, projectId);
-            AssertComponent(result, dbItem);
+            AssertHelpers.AssertComponent(result, dbItem);
 
             var dbProject = sut.GetProject(projectId);
             var dbProjectComponent = dbProject.ComponentList.SingleOrDefault(i => i.Id == result.Id);
             Assert.IsNotNull(dbProjectComponent);
-            AssertComponent(result, dbProjectComponent);
+            AssertHelpers.AssertComponent(result, dbProjectComponent);
         }
 
         private DeployComponent CreateTestComponent(IProjectRepository sut, string projectId)
@@ -88,7 +76,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             {
                 var item = result.SingleOrDefault(i => i.Id == component.Id);
                 Assert.IsNotNull(item);
-                AssertComponent(component, item);
+                AssertHelpers.AssertComponent(component, item);
             }
         }
 
@@ -119,7 +107,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var result = sut.GetComponent(component.Id, project.Id);
 
             Assert.IsNotNull(result);
-            AssertComponent(component, result);
+            AssertHelpers.AssertComponent(component, result);
         }
 
         [Test]
@@ -194,7 +182,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertIsRecent(result.UpdatedDateTimeUtc);
 
             var dbItem = sut.GetComponent(component.Id, project.Id);
-            AssertComponent(result, dbItem);
+            AssertHelpers.AssertComponent(result, dbItem);
         }
 
         [Test]
@@ -318,7 +306,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.GetOrCreateComponent(project.Id, component.Id);
 
-            AssertComponent(component, result);
+            AssertHelpers.AssertComponent(component, result);
         }
 
         [Test]
@@ -331,7 +319,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.GetOrCreateComponent(project.Id, component.ComponentName);
 
-            AssertComponent(component, result);
+            AssertHelpers.AssertComponent(component, result);
         }
 
         [Test]

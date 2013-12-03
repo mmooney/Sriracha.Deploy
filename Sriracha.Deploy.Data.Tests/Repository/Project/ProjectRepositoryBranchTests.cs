@@ -18,18 +18,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             return sut.CreateBranch(projectId, this.Fixture.Create<string>("BranchName"));
         }
 
-        private void AssertBranch(DeployProjectBranch expected, DeployProjectBranch actual)
-        {
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.ProjectId, actual.ProjectId);
-            Assert.AreEqual(expected.BranchName, actual.BranchName);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-        }
-
         private void AssertCreatedBranch(DeployProjectBranch result, string projectId, string branchName, IProjectRepository sut)
         {
             Assert.IsNotNull(result);
@@ -56,7 +44,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertIsRecent(result.UpdatedDateTimeUtc);
 
             var dbItem = sut.GetBranch(result.Id, result.ProjectId);
-            AssertBranch(result, dbItem);
+            AssertHelpers.AssertBranch(result, dbItem);
         }
 
         [Test]
@@ -109,7 +97,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.GetBranch(branch.Id, project.Id);
 
-            AssertBranch(branch, result);
+            AssertHelpers.AssertBranch(branch, result);
         }
 
         [Test]
@@ -180,7 +168,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             foreach(var branch in branchList)
             {
                 var resultItem = result.SingleOrDefault(i=>i.Id == branch.Id);
-                AssertBranch(branch, resultItem); 
+                AssertHelpers.AssertBranch(branch, resultItem); 
             }
         }
 
@@ -210,7 +198,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.TryGetBranch(branch.Id, project.Id);
 
-            AssertBranch(branch, result);
+            AssertHelpers.AssertBranch(branch, result);
         }
 
         [Test]
@@ -271,7 +259,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.GetBranchByName(branch.ProjectId, branch.BranchName);
 
-            AssertBranch(branch, result);
+            AssertHelpers.AssertBranch(branch, result);
         }
 
         [Test]
@@ -341,7 +329,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             
             var result = sut.GetOrCreateBranch(project.Id, branch.Id);
 
-            AssertBranch(branch, result);
+            AssertHelpers.AssertBranch(branch, result);
         }
 
         [Test]
@@ -354,7 +342,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 
             var result = sut.GetOrCreateBranch(project.Id, branch.BranchName);
 
-            AssertBranch(branch, result);
+            AssertHelpers.AssertBranch(branch, result);
         }
 
         [Test]

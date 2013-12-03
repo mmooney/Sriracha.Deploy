@@ -23,6 +23,29 @@ namespace Sriracha.Deploy.RavenDB
             _userIdentity = DIHelper.VerifyParameter(userIdentity);
         }
 
+        public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
+        {
+            var deployState = new DeployState
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProjectId = environment.ProjectId,
+                Build = build,
+                Branch = branch,
+                Environment = environment,
+                Component = component,
+                MachineList = machineList.ToList(),
+                Status = EnumDeployStatus.NotStarted,
+                SubmittedDateTimeUtc = DateTime.UtcNow,
+                DeployBatchRequestItemId = deployBatchRequestItemId,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                CreatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName
+            };
+            _documentSession.StoreSaveEvict(deployState);
+            return deployState;
+        }
+
         public DeployState GetDeployState(string deployStateId)
         {
             if (string.IsNullOrWhiteSpace(deployStateId))
@@ -47,29 +70,6 @@ namespace Sriracha.Deploy.RavenDB
         {
             var tempList = _documentSession.QueryNoCache<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
             return tempList.Where(i => i.MachineList.Any(j => j.Id == machineId)).ToList(); ;
-        }
-
-        public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
-        {
-            var deployState = new DeployState
-            {
-                Id = Guid.NewGuid().ToString(),
-                ProjectId = environment.ProjectId,
-                Build = build,
-                Branch = branch,
-                Environment = environment,
-                Component = component,
-                MachineList = machineList.ToList(),
-                Status = EnumDeployStatus.NotStarted,
-                SubmittedDateTimeUtc = DateTime.UtcNow,
-                DeployBatchRequestItemId = deployBatchRequestItemId,
-                CreatedDateTimeUtc = DateTime.UtcNow,
-                CreatedByUserName = _userIdentity.UserName,
-                UpdatedDateTimeUtc = DateTime.UtcNow,
-                UpdatedByUserName = _userIdentity.UserName
-            };
-            _documentSession.StoreSaveEvict(deployState);
-            return deployState;
         }
 
         public DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)

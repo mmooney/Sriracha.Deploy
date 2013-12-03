@@ -177,7 +177,7 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 				result = CreateProcessAsUser(primaryToken, cmdPath, cmdArguments, ref processAttributes, ref threadAttributes, inheritHandles, 16, environment, currentDirectory, ref startupInfo, out processInformation);
 				if (!result)
 				{
-					int win32Code = Marshal.GetHRForLastWin32Error();
+					long win32Code = Marshal.GetHRForLastWin32Error();
 					if (win32Code == 0x80070522 )
 					{
 						//Log on as a service

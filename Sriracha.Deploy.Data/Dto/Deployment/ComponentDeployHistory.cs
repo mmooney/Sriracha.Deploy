@@ -20,7 +20,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
         public string FileId { get; set; }
         public string Version { get; set; }
         public string SortableVersion { get; set; }
-        public DateTime DeploymentStartedDateTimeUtc { get; set; }
+        public DateTime? DeploymentStartedDateTimeUtc { get; set; }
         public DateTime? DeploymentCompleteDateTimeUtc { get; set; }
         public string ErrorDetails { get; set; }
 

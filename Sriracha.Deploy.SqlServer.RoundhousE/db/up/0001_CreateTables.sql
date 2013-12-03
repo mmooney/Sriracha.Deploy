@@ -588,3 +588,123 @@ GO
 CREATE NONCLUSTERED INDEX IDX_DeployBuild_IDFields
 ON [dbo].[DeployBuild] ([ProjectID],[ProjectBranchID],[ProjectComponentID],[Version])
 GO
+--------------------
+CREATE TABLE [dbo].[EnumDeployStatus](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumDeployStatus] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumDeployStatus] ADD  CONSTRAINT [DF_EnumDeployStatus_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumDeployStatus] ADD  CONSTRAINT [DF_EnumDeployStatus_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (0, 'Unknown', '', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (1, 'Requested', 'Requested', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (2, 'Approved', 'Approved', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (3, 'Rejected', 'Rejected', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (4, 'NotStarted', 'Not Started', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (5, 'InProcess', 'In Process', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (6, 'Warning', 'Warning', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (7, 'Success', 'Success', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (8, 'Error', 'Error', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (9, 'Cancelled', 'Cancelled', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+GO
+
+CREATE TABLE [dbo].[DeployState](
+	[ID] [nvarchar](50) NOT NULL,
+	[DeployBatchRequestItemID] [nvarchar](50) NOT NULL,
+	[EnumDeployStatusID] [int] NOT NULL,
+	[ProjectId] [nvarchar](50) NOT NULL,
+	[BranchID] [nvarchar](50) NOT NULL,
+	[BuildID] [nvarchar](50) NOT NULL,
+	[EnvironmentID] [nvarchar](50) NOT NULL,
+	[ComponentID] [nvarchar](50) NOT NULL,
+	[BranchJson] [nvarchar](max) NOT NULL,
+	[BuildJson] [nvarchar](max) NOT NULL,
+	[EnvironmentJson] [nvarchar](max) NOT NULL,
+	[ComponentJson] [nvarchar](max) NOT NULL,
+	[SubmittedDateTimeUtc] [datetime2](7) NOT NULL,
+	[DeploymentStartedDateTimeUtc] [datetime2](7) NULL,
+	[DeploymentCompleteDateTimeUtc] [datetime2](7) NULL,
+	[ErrorDetails] [nvarchar](max) NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_DeployState] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployState] ADD  CONSTRAINT [DF_DeployState_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployState] ADD  CONSTRAINT [DF_DeployState_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployState]  WITH CHECK ADD  CONSTRAINT [FK_DeployState_EnumDeployStatus] FOREIGN KEY([EnumDeployStatusID])
+REFERENCES [dbo].[EnumDeployStatus] ([ID])
+GO
+
+ALTER TABLE [dbo].[DeployState] CHECK CONSTRAINT [FK_DeployState_EnumDeployStatus]
+GO
+
+
+CREATE TABLE [dbo].[DeployStateMachine](
+	[ID] [nvarchar](50) NOT NULL,
+	[DeployStateID] [nvarchar](50) NOT NULL,
+	[MachineID] [nvarchar](50) NOT NULL,
+	[MachineName] [nvarchar](200) NOT NULL,
+	[MachineJson] [nvarchar](max) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_DeployStateMachine] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployStateMachine] ADD  CONSTRAINT [DF_DeployStateMachine_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployStateMachine] ADD  CONSTRAINT [DF_DeployStateMachine_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployStateMachine]  WITH CHECK ADD  CONSTRAINT [FK_DeployStateMachine_DeployState] FOREIGN KEY([DeployStateID])
+REFERENCES [dbo].[DeployState] ([ID])
+GO
+
+ALTER TABLE [dbo].[DeployStateMachine] CHECK CONSTRAINT [FK_DeployStateMachine_DeployState]
+GO
+
+

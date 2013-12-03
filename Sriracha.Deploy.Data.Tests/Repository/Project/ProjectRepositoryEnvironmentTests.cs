@@ -88,28 +88,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
             Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-            AssertDictionary(expected.ConfigurationValueList, actual.ConfigurationValueList);
+            AssertHelpers.AssertDictionary(expected.ConfigurationValueList, actual.ConfigurationValueList);
             Assert.AreEqual(expected.MachineList.Count, actual.MachineList.Count);
-            foreach (var expectedMachine in expected.MachineList)
-            {
-                var actualMachine = actual.MachineList.SingleOrDefault(i => i.MachineName == expectedMachine.MachineName);
-                AssertMachine(expectedMachine, actualMachine);
-            }
-        }
-
-        private void AssertMachine(DeployMachine expectedMachine, DeployMachine actualMachine)
-        {
-            Assert.IsNotNull(actualMachine);
-            Assert.AreEqual(expectedMachine.Id, actualMachine.Id);
-            Assert.AreEqual(expectedMachine.ProjectId, actualMachine.ProjectId);
-            Assert.AreEqual(expectedMachine.EnvironmentId, actualMachine.EnvironmentId);
-            Assert.AreEqual(expectedMachine.EnvironmentName, actualMachine.EnvironmentName);
-            Assert.AreEqual(expectedMachine.ParentId, actualMachine.ParentId);
-            Assert.AreEqual(expectedMachine.CreatedByUserName, actualMachine.CreatedByUserName);
-            AssertDateEqual(expectedMachine.CreatedDateTimeUtc, actualMachine.CreatedDateTimeUtc);
-            Assert.AreEqual(expectedMachine.UpdatedByUserName, actualMachine.UpdatedByUserName);
-            AssertDateEqual(expectedMachine.UpdatedDateTimeUtc, actualMachine.UpdatedDateTimeUtc);
-            AssertDictionary(expectedMachine.ConfigurationValueList, actualMachine.ConfigurationValueList);
+            AssertHelpers.AssertMachineList(expected.MachineList, actual.MachineList);
         }
 
         private void AssertCreatedEnvironmentConfiguration(DeployEnvironmentConfiguration sourceItem, DeployEnvironmentConfiguration createdItem, DeployProject project, DeployEnvironment environment, EnumDeployStepParentType parentType)
@@ -125,7 +106,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.AreEqual(this.UserName, createdItem.UpdatedByUserName);
             AssertIsRecent(createdItem.UpdatedDateTimeUtc);
 
-            AssertDictionary(sourceItem.ConfigurationValueList, createdItem.ConfigurationValueList);
+            AssertHelpers.AssertDictionary(sourceItem.ConfigurationValueList, createdItem.ConfigurationValueList);
             Assert.AreEqual(sourceItem.MachineList.Count, createdItem.MachineList.Count);
             foreach(var sourceMachine in sourceItem.MachineList)
             {
@@ -140,24 +121,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
                 AssertIsRecent(createdMachine.CreatedDateTimeUtc);
                 Assert.AreEqual(this.UserName, createdMachine.UpdatedByUserName);
                 AssertIsRecent(createdMachine.UpdatedDateTimeUtc);
-                AssertDictionary(sourceMachine.ConfigurationValueList, createdMachine.ConfigurationValueList);
-            }
-        }
-
-        private void AssertDictionary<T1,T2>(Dictionary<T1, T2> expected, Dictionary<T1,T2> actual)
-        {
-            if(expected == null)
-            {
-                Assert.IsNull(actual);
-            }
-            else 
-            {
-                Assert.AreEqual(expected.Count, actual.Count);
-                foreach(var expectedKey in expected.Keys)
-                {
-                    Assert.IsTrue(actual.ContainsKey(expectedKey));
-                    Assert.AreEqual(expected[expectedKey], actual[expectedKey]);
-                }
+                AssertHelpers.AssertDictionary(sourceMachine.ConfigurationValueList, createdMachine.ConfigurationValueList);
             }
         }
 

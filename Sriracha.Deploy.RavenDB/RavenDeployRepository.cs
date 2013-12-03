@@ -32,7 +32,51 @@ namespace Sriracha.Deploy.RavenDB
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		public DeployBatchRequest PopNextBatchDeployment()
+        public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
+        {
+            switch (status)
+            {
+                case EnumDeployStatus.Unknown:
+                    status = EnumDeployStatus.NotStarted;
+                    break;
+                case EnumDeployStatus.NotStarted:
+                case EnumDeployStatus.Requested:
+                    //OK
+                    break;
+                case EnumDeployStatus.Error:
+                case EnumDeployStatus.InProcess:
+                case EnumDeployStatus.Success:
+                case EnumDeployStatus.Warning:
+                    throw new ArgumentException(EnumHelper.GetDisplayValue(status) + " is not a valid initial status for a batch deployment request");
+                default:
+                    throw new UnknownEnumValueException(status);
+            }
+            foreach (var item in itemList)
+            {
+                item.Id = Guid.NewGuid().ToString();
+            }
+            string message = string.Format("{0} created deployment request with status of {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
+            var request = new DeployBatchRequest
+            {
+                Id = Guid.NewGuid().ToString(),
+                SubmittedDateTimeUtc = submittedDateTimeUtc,
+                SubmittedByUserName = _userIdentity.UserName,
+                DeploymentLabel = deploymentLabel,
+                ItemList = itemList,
+                LastStatusMessage = message,
+                Status = status,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                CreatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName
+
+            };
+            request.MessageList.Add(message);
+            _documentSession.StoreSaveEvict(request);
+            return request;
+        }
+
+        public DeployBatchRequest PopNextBatchDeployment()
 		{
 			string itemId = null;
 			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
@@ -87,50 +131,6 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.LoadNoCache<DeployBatchRequest>(id);
 		}
 
-		public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
-		{
-			switch(status)
-			{
-				case EnumDeployStatus.Unknown:
-					status = EnumDeployStatus.NotStarted;
-					break;
-				case EnumDeployStatus.NotStarted:
-				case EnumDeployStatus.Requested:
-					//OK
-					break;
-				case EnumDeployStatus.Error:
-				case EnumDeployStatus.InProcess:
-				case EnumDeployStatus.Success:
-				case EnumDeployStatus.Warning:
-					throw new ArgumentException(EnumHelper.GetDisplayValue(status) + " is not a valid initial status for a batch deployment request");
-				default:
-					throw new UnknownEnumValueException(status);
-			}
-			foreach(var item in itemList)
-			{
-				item.Id = Guid.NewGuid().ToString();
-			}
-			string message = string.Format("{0} created deployment request with status of {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
-			var request = new DeployBatchRequest
-			{
-				Id = Guid.NewGuid().ToString(),
-				SubmittedDateTimeUtc = submittedDateTimeUtc,
-				SubmittedByUserName = _userIdentity.UserName,
-				DeploymentLabel = deploymentLabel,
-				ItemList = itemList,
-				LastStatusMessage = message,
-				Status = status,
-				CreatedDateTimeUtc = DateTime.UtcNow,
-				CreatedByUserName = _userIdentity.UserName,
-				UpdatedDateTimeUtc = DateTime.UtcNow,
-				UpdatedByUserName = _userIdentity.UserName
-
-			};
-			request.MessageList.Add(message);
-			_documentSession.StoreSaveEvict(request);
-			return request;
-		}
-
 
 		public List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId)
 		{
@@ -156,7 +156,7 @@ namespace Sriracha.Deploy.RavenDB
 								SubmittedDateTimeUtc = i.SubmittedDateTimeUtc,
 								UpdatedByUserName = i.UpdatedByUserName,
 								UpdatedDateTimeUtc = i.UpdatedDateTimeUtc,
-								UserName = i.UserName 
+								//UserName = i.UserName 
 							}).ToList();
 			return list;
 			#else 

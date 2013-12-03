@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\SqlServerBuildRepositoryTests.cs" />
+    <Compile Include="Deploy\SqlServerDeployStateRepositoryTests.cs" />
     <Compile Include="EmbeddedSqlServerProvider.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryBranchTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryEnvironmentTests.cs" />

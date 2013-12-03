@@ -25,25 +25,25 @@ namespace Sriracha.Deploy.Data
 
 	public enum EnumDeployStatus
 	{
-		Unknown,
+		Unknown = 0,
 		[EnumDisplayValue("Requested")]
-		Requested,
+		Requested = 1,
 		[EnumDisplayValue("Approved")]
-		Approved,
+		Approved = 2,
 		[EnumDisplayValue("Rejected")]
-		Rejected,
+		Rejected = 3,
 		[EnumDisplayValue("Not Started")]
-		NotStarted,
+		NotStarted = 4,
 		[EnumDisplayValue("In Process")]
-		InProcess,
+		InProcess = 5,
 		[EnumDisplayValue("Warning")]
-		Warning,
+		Warning = 6,
 		[EnumDisplayValue("Success")]
-		Success,
+		Success = 7,
 		[EnumDisplayValue("Error")]
-		Error,
+		Error = 8,
 		[EnumDisplayValue("Cancelled")]
-		Cancelled
+		Cancelled = 9
 	}
 
     public enum EnumDeploymentIsolationType

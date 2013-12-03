@@ -60,7 +60,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             Assert.AreEqual(newUserName, updated.UpdatedByUserName);
 
             var dbBuild = sut.GetBuild(original.Id);
-            AssertBuild(updated, dbBuild);
+            AssertHelpers.AssertBuild(updated, dbBuild);
         }
 
         private void AssertCreatedBuild(CreateTestData testData, DeployBuild result)
@@ -81,24 +81,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             AssertIsRecent(result.UpdatedDateTimeUtc);
         }
 
-        private void AssertBuild(DeployBuild expected, DeployBuild actual)
-        {
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.ProjectId, actual.ProjectId);
-            Assert.AreEqual(expected.ProjectName, actual.ProjectName);
-            Assert.AreEqual(expected.ProjectComponentId, actual.ProjectComponentId);
-            Assert.AreEqual(expected.ProjectComponentName, actual.ProjectComponentName);
-            Assert.AreEqual(expected.ProjectBranchId, actual.ProjectBranchId);
-            Assert.AreEqual(expected.ProjectBranchName, actual.ProjectBranchName);
-            Assert.AreEqual(expected.FileId, actual.FileId);
-            Assert.AreEqual(expected.Version, actual.Version);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-        }
-
         [Test]
         public void CreateBuild_CreatesBuild()
         {
@@ -110,7 +92,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             AssertCreatedBuild(testData, result);
 
             var dbBuild = sut.GetBuild(result.Id);
-            AssertBuild(result, dbBuild);
+            AssertHelpers.AssertBuild(result, dbBuild);
         }
 
         [Test]
@@ -797,7 +779,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
 
             var result = sut.GetBuild(build.Id);
 
-            AssertBuild(build, result);
+            AssertHelpers.AssertBuild(build, result);
         }
 
         [Test]
