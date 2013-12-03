@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 
 		public override bool MatchesRule(DeployBuild build, IDIFactory diFactory)
 		{
-			var deployStateRepository = diFactory.CreateInjectedObject<IDeployRepository>();
+			var deployStateRepository = diFactory.CreateInjectedObject<IDeployStateRepository>();
 			var projectRepository = diFactory.CreateInjectedObject<IProjectRepository>();
 			if (this.EnvironmentIdList != null)
 			{

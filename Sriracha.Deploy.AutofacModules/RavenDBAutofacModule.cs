@@ -32,6 +32,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenFileStorage_Attachment>().As<IFileStorage>();
 			builder.RegisterType<RavenAttachmentManager>().As<IRavenAttachmentManager>();
 			builder.RegisterType<RavenDeployRepository>().As<IDeployRepository>();
+            builder.RegisterType<RavenDeployStateRepository>().As<IDeployStateRepository>();
 			builder.RegisterType<RavenSystemLogRepository>().As<ISystemLogRepository>();
 			builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
 			builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();

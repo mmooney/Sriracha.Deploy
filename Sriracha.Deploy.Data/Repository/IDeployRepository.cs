@@ -13,19 +13,10 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IDeployRepository
 	{
-		DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId);
-		DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
-		DeployBatchRequest PopNextBatchDeployment();
-		DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
-
-		DeployState GetDeployState(string deployStateId);
-		List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId);
-		List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId);
-		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
-
-		PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions);
+    	PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions);
 		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel);
-		DeployBatchRequest GetBatchRequest(string id);
+        DeployBatchRequest PopNextBatchDeployment();
+        DeployBatchRequest GetBatchRequest(string id);
 		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage = null, bool addToMessageHistory=true);
 
 		PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions);
