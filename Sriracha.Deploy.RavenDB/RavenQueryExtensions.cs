@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			else 
 			{
-				sortedQuery = startingQuery.OrderBy(sortSelector);
+				sortedQuery = startingQuery.OrderByDescending(sortSelector);
 			} 
 			var resultQuery = sortedQuery.Skip((pageNumber - 1) * pageSize)
 											.Take(pageSize);

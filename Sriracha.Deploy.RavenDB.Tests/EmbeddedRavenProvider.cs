@@ -34,7 +34,7 @@ namespace Sriracha.Deploy.RavenDB.Tests
                         _documentStore.Initialize();
                         _documentStore.DisableAggressiveCaching();
                         _documentStore.DatabaseCommands.DisableAllCaching();
-                        //IndexCreation.CreateIndexes(typeof(MMDB.DataService.Data.Jobs.DataServiceJobBase<>).Assembly, _documentStore);
+                        IndexCreation.CreateIndexes(typeof(RavenHelper).Assembly, _documentStore);
 					}
 				}
 				return _documentStore;

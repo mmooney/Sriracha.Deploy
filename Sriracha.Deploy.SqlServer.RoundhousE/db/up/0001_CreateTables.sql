@@ -554,3 +554,34 @@ ALTER TABLE dbo.DeployEnvironmentConfigurationValue ADD CONSTRAINT
 GO
 
 
+--------------Build
+
+CREATE TABLE [dbo].[DeployBuild](
+	[ID] [nvarchar](50) NOT NULL,
+	[ProjectID] [nvarchar](50) NOT NULL,
+	[ProjectName] [nvarchar](200) NOT NULL,
+	[ProjectBranchID] [nvarchar](50) NOT NULL,
+	[ProjectBranchName] [nvarchar](200) NOT NULL,
+	[ProjectComponentID] [nvarchar](50) NOT NULL,
+	[ProjectComponentName] [nvarchar](200) NOT NULL,
+	[FileID] [nvarchar](50) NOT NULL,
+	[Version] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_DeployBuild] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployBuild] ADD  CONSTRAINT [DF_DeployBuild_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployBuild] ADD  CONSTRAINT [DF_DeployBuild_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+

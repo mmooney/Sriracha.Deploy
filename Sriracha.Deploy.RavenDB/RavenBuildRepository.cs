@@ -12,6 +12,7 @@ using MMDB.Shared;
 using PagedList;
 using Raven.Client.Linq;
 using Sriracha.Deploy.Data.Dto.Build;
+using Raven.Client.Indexes;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -20,6 +21,22 @@ namespace Sriracha.Deploy.RavenDB
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
 		private readonly Logger _logger;
+
+        public class DeployBuildListIndex : AbstractIndexCreationTask<DeployBuild>
+        {
+            public DeployBuildListIndex()
+            {
+                Map = builds=> from i in builds
+                                  select new { i.ProjectId, i.ProjectName, i.ProjectComponentId, i.ProjectComponentName, i.ProjectBranchName, i.ProjectBranchId, i.UpdatedDateTimeUtc };
+                Index(x => x.ProjectId, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+                Index(x => x.ProjectName, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+                Index(x => x.ProjectComponentId, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+                Index(x => x.ProjectComponentName, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+                Index(x => x.ProjectBranchId, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+                Index(x => x.ProjectBranchName, Raven.Abstractions.Indexing.FieldIndexing.Analyzed);
+            }
+        }
+
 		public RavenBuildRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
@@ -29,7 +46,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions, string projectId = null, string branchId = null, string componentId = null)
 		{
-			var query = this._documentSession.Query<DeployBuild>().Customize(i=>i.NoCaching()).Customize(i=>i.NoTracking());
+            var query = this._documentSession.Query<DeployBuild, DeployBuildListIndex>().Customize(i => i.NoCaching()).Customize(i => i.NoTracking());
 			if(!string.IsNullOrEmpty(projectId))
 			{
 				query = (IRavenQueryable<DeployBuild>)query.Where(i=>i.ProjectId == projectId);
@@ -43,9 +60,7 @@ namespace Sriracha.Deploy.RavenDB
 				query = (IRavenQueryable<DeployBuild>)query.Where(i => i.ProjectComponentId == componentId);
 			}
 			IPagedList<DeployBuild> pagedList;
-			listOptions = listOptions ?? new ListOptions();
-			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, "UpdatedDateTimeUtc");
-			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
+			listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UpdatedDateTimeUtc", false);
 			switch(listOptions.SortField.ToLower())
 			{
 				case "updateddatetimeutc":
@@ -70,17 +85,6 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
 		{
-			var existingItem = (from i in this._documentSession.QueryNoCacheNotStale<DeployBuild>()
-								    where i.ProjectId == projectId
-									    && i.ProjectBranchId == projectBranchId
-									    && i.ProjectComponentId == projectComponentId
-									    && i.FileId == fileId
-									    && i.Version == version
-								    select i).FirstOrDefault();
-			if(existingItem != null)
-			{
-				throw new DuplicateObjectException<DeployBuild>(existingItem);
-			}
             if(string.IsNullOrEmpty(projectId))
             {
                 throw new ArgumentNullException("Missing project ID");
@@ -113,7 +117,18 @@ namespace Sriracha.Deploy.RavenDB
             {
                 throw new ArgumentNullException("Missing version");
             }
-			var item = new DeployBuild
+            var existingItem = (from i in this._documentSession.QueryNoCacheNotStale<DeployBuild>()
+                                where i.ProjectId == projectId
+                                    && i.ProjectBranchId == projectBranchId
+                                    && i.ProjectComponentId == projectComponentId
+                                    //&& i.FileId == fileId
+                                    && i.Version == version
+                                select i).FirstOrDefault();
+            if (existingItem != null)
+            {
+                throw new DuplicateObjectException<DeployBuild>(existingItem);
+            }
+            var item = new DeployBuild
 			{
 				Id = Guid.NewGuid().ToString(),
 				ProjectId = projectId,
