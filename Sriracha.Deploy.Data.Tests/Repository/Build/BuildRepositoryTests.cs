@@ -40,6 +40,29 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
                                         branchId, this.Fixture.Create<string>("BranchName"), this.Fixture.Create<string>(), this.Fixture.Create<string>());
         }
 
+        private void AssertUpdatedBuild(IBuildRepository sut, DeployBuild original, DeployBuild updated, string newProjectId, string newProjectName, string newComponentId, string newComponentName, string newBranchId, string newBranchName, string newFileId, string newVersion, string newUserName)
+        {
+            Assert.IsNotNull(updated);
+            Assert.AreEqual(original.Id, updated.Id);
+            Assert.AreEqual(newProjectId, updated.ProjectId);
+            Assert.AreEqual(newProjectName, updated.ProjectName);
+            Assert.AreEqual(newComponentId, updated.ProjectComponentId);
+            Assert.AreEqual(newComponentName, updated.ProjectComponentName);
+            Assert.AreEqual(newBranchId, updated.ProjectBranchId);
+            Assert.AreEqual(newBranchName, updated.ProjectBranchName);
+            Assert.AreEqual(newComponentId, updated.ProjectComponentId);
+            Assert.AreEqual(newComponentName, updated.ProjectComponentName);
+            Assert.AreEqual(newFileId, updated.FileId);
+            Assert.AreEqual(newVersion, updated.Version);
+            AssertDateEqual(original.CreatedDateTimeUtc, updated.CreatedDateTimeUtc);
+            Assert.AreEqual(original.CreatedByUserName, updated.CreatedByUserName);
+            AssertIsRecent(updated.UpdatedDateTimeUtc);
+            Assert.AreEqual(newUserName, updated.UpdatedByUserName);
+
+            var dbBuild = sut.GetBuild(original.Id);
+            AssertBuild(updated, dbBuild);
+        }
+
         private void AssertCreatedBuild(CreateTestData testData, DeployBuild result)
         {
             Assert.IsNotNull(result);
@@ -763,6 +786,287 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             Assert.IsTrue(result.IsLastPage);
             Assert.AreEqual(2, result.PageCount);
             Assert.AreEqual(2, result.PageNumber);
+        }
+
+        [Test]
+        public void GetBuild_GetsBuild()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+
+            var result = sut.GetBuild(build.Id);
+
+            AssertBuild(build, result);
+        }
+
+        [Test]
+        public void GetBuild_MissingBuildID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(()=>sut.GetBuild(null));
+        }
+
+        [Test]
+        public void GetBuild_BadBuildID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.GetBuild(Guid.NewGuid().ToString()));
+        }
+
+        [Test]
+        public void UpdateBuild_UpdatesBuild()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i=>i.UserName).Returns(newUserName);
+
+            var result = sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion);
+
+            AssertUpdatedBuild(sut, build, result, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion, newUserName);
+        }
+
+        [Test]
+        public void UpdateBuild_MissingBuildID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(null, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_BadBuildID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.UpdateBuild(Guid.NewGuid().ToString(), newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingProjectID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = null;//this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingProjectName_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = null;//this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingBranchID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = null;//this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingBranchName_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = null;//this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingComponentID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = null;//this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingComponentName_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = null;//this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingFileID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = this.Fixture.Create<string>("Version");
+            string newFileId = null;//this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void UpdateBuild_MissingVersion_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+            string newProjectId = this.Fixture.Create<string>();
+            string newProjectName = this.Fixture.Create<string>("ProjectName");
+            string newBranchId = this.Fixture.Create<string>();
+            string newBranchName = this.Fixture.Create<string>("BranchName");
+            string newComponentId = this.Fixture.Create<string>();
+            string newComponentName = this.Fixture.Create<string>("ComponentName");
+            string newVersion = null;//this.Fixture.Create<string>("Version");
+            string newFileId = this.Fixture.Create<string>();
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateBuild(build.Id, newProjectId, newProjectName, newComponentId, newComponentName, newBranchId, newBranchName, newFileId, newVersion));
+        }
+
+        [Test]
+        public void DeleteBuild_DeletesBuild()
+        {
+            var sut = this.GetRepository();
+
+            var build = this.CreateTestBuild(sut);
+
+            sut.DeleteBuild(build.Id);
+
+            Assert.Throws<RecordNotFoundException>(()=>sut.GetBuild(build.Id));
+
+            var buildList = sut.GetBuildList(null, projectId: build.ProjectId);
+            Assert.AreEqual(0, buildList.TotalItemCount);
+        }
+
+        [Test]
+        public void DeleteBuild_MissingBuildId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(() => sut.DeleteBuild(null));
+        }
+
+        [Test]
+        public void DeleteBuild_BadBuildId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<RecordNotFoundException>(() => sut.DeleteBuild(Guid.NewGuid().ToString()));
         }
     }
 }

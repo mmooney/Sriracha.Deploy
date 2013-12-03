@@ -154,12 +154,65 @@ namespace Sriracha.Deploy.SqlServer
 
         public DeployBuild UpdateBuild(string buildId, string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if (string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if (string.IsNullOrEmpty(projectName))
+            {
+                throw new ArgumentNullException("Missing project name");
+            }
+            if (string.IsNullOrEmpty(projectComponentId))
+            {
+                throw new ArgumentNullException("Missing component ID");
+            }
+            if (string.IsNullOrEmpty(projectComponentName))
+            {
+                throw new ArgumentNullException("Missing component name");
+            }
+            if (string.IsNullOrEmpty(projectBranchId))
+            {
+                throw new ArgumentNullException("Missing branch ID");
+            }
+            if (string.IsNullOrEmpty(projectBranchName))
+            {
+                throw new ArgumentNullException("Missing branch name");
+            }
+            if (string.IsNullOrEmpty(fileId))
+            {
+                throw new ArgumentNullException("Missing file ID");
+            }
+            if (string.IsNullOrEmpty(version))
+            {
+                throw new ArgumentNullException("Missing version");
+            } 
+            VerifyBuildExists(buildId);
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployBuild")
+                            .Append("SET ProjectID=@0, ProjectName=@1, ProjectBranchID=@2, ProjectBranchName=@3, ProjectComponentID=@4, ProjectComponentName=@5, FileID=@6, Version=@7, UpdatedDateTimeUtc=@8, UpdatedByUserName=@9", 
+                                    projectId, projectName, projectBranchId, projectBranchName, projectComponentId, projectComponentName, fileId, version, DateTime.UtcNow, _userIdentity.UserName)
+                            .Append("WHERE ID=@0", buildId);
+                db.Execute(sql);
+            }
+            return this.GetBuild(buildId);
         }
 
         public void DeleteBuild(string buildId)
         {
-            throw new NotImplementedException();
+            VerifyBuildExists(buildId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("DELETE FROM DeployBuild")
+                            .Append("WHERE ID=@0", buildId);
+                db.Execute(sql);
+            }
         }
     }
 }

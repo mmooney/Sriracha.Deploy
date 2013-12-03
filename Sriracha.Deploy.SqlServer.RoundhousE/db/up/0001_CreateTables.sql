@@ -585,3 +585,6 @@ ALTER TABLE [dbo].[DeployBuild] ADD  CONSTRAINT [DF_DeployBuild_UpdatedDateTimeU
 GO
 
 
+CREATE NONCLUSTERED INDEX IDX_DeployBuild_IDFields
+ON [dbo].[DeployBuild] ([ProjectID],[ProjectBranchID],[ProjectComponentID],[Version])
+GO

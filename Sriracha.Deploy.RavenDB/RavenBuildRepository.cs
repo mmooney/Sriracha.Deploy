@@ -198,6 +198,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			var build = this.GetBuild(buildId);
 			build.ProjectId = projectId;
+            build.ProjectName = projectName;
 			build.ProjectComponentId = projectComponentId;
 			build.ProjectComponentName = projectComponentName;
 			build.ProjectBranchId = projectBranchId;
@@ -218,7 +219,5 @@ namespace Sriracha.Deploy.RavenDB
 			this._documentSession.SaveChanges();
 
 		}
-
-		public Raven.Client.Linq.IRavenQueryable<DeployBuild> IRavenQueryable { get; set; }
 	}
 }
