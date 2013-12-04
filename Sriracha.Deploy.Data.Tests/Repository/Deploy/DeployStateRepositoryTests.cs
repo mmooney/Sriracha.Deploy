@@ -25,9 +25,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             public string DeployBatchRequestId { get; set; }
         }
 
-        private DeployState CreateTestDeployState(IDeployStateRepository sut, string environmentId=null, string buildId=null)
+        private DeployState CreateTestDeployState(IDeployStateRepository sut, string buildId=null, string environmentId=null, string machineId=null)
         {
-            var testData = this.GetCreateTestData(environmentId: environmentId, buildId: buildId);
+            var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, machineId:machineId);
             return sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
         }
 
@@ -99,20 +99,26 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                     var expectedItem = expected[i];
                     var actualItem = actual[i];
 
-                    Assert.AreEqual(expectedItem.Id, actualItem.Id);
-                    AssertDateEqual(expectedItem.DateTimeUtc, actualItem.DateTimeUtc);
-                    Assert.AreEqual(expectedItem.DeployStateId, actualItem.DeployStateId);
-                    Assert.AreEqual(expectedItem.Message, actualItem.Message);
-                    Assert.AreEqual(expectedItem.MessageUserName, actualItem.MessageUserName);
+                    AssertMessage(expectedItem, actualItem);
                 }
             }
         }
 
-        private CreateTestData GetCreateTestData(string environmentId=null, string buildId=null)
+        private void AssertMessage(DeployStateMessage expectedItem, DeployStateMessage actualItem)
+        {
+            Assert.AreEqual(expectedItem.Id, actualItem.Id);
+            AssertDateEqual(expectedItem.DateTimeUtc, actualItem.DateTimeUtc);
+            Assert.AreEqual(expectedItem.DeployStateId, actualItem.DeployStateId);
+            Assert.AreEqual(expectedItem.Message, actualItem.Message);
+            Assert.AreEqual(expectedItem.MessageUserName, actualItem.MessageUserName);
+        }
+
+        private CreateTestData GetCreateTestData(string buildId=null, string environmentId=null, string machineId=null)
         {
             string projectId = this.Fixture.Create<string>();
             string projectName = this.Fixture.Create<string>("ProjectName");
             environmentId = StringHelper.IsNullOrEmpty(environmentId, this.Fixture.Create<string>());
+            machineId = StringHelper.IsNullOrEmpty(machineId, this.Fixture.Create<string>());
             buildId = StringHelper.IsNullOrEmpty(buildId, this.Fixture.Create<string>());
             var returnValue = new CreateTestData()
             {
@@ -139,6 +145,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                 machine.EnvironmentName = returnValue.Environment.EnvironmentName;
                 machine.ProjectId = projectId;
             }
+            returnValue.Environment.ComponentList[0].MachineList[0].Id = machineId;
             returnValue.MachineList = returnValue.Environment.ComponentList[0].MachineList;
 
             returnValue.Build = this.Fixture.Build<DeployBuild>()
@@ -353,5 +360,447 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.AreEqual(0, result.Count);
         }
 
+        [Test]
+        public void FindDeployStateListForMachine_FindsList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            var resultList = sut.FindDeployStateListForMachine(buildId, environmentId, machineId);
+
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(deployStateList.Count, resultList.Count);
+            foreach (var expectedItem in deployStateList)
+            {
+                var actualItem = resultList.SingleOrDefault(i => i.Id == expectedItem.Id);
+                Assert.IsNotNull(actualItem);
+                AssertDeployState(expectedItem, actualItem);
+            }
+        }
+
+        [Test]
+        public void FindDeployStateListForMachine_MissingBuildId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => sut.FindDeployStateListForMachine(null, environmentId, machineId));
+        }
+
+        [Test]
+        public void FindDeployStateListForMachine_MissingEnvironmentId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => sut.FindDeployStateListForMachine(buildId, null, machineId));
+        }
+
+        [Test]
+        public void FindDeployStateListForMachine_MissingMachineId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => sut.FindDeployStateListForMachine(buildId, environmentId, null));
+        }
+
+        [Test]
+        public void FindDeployStateListForMachine_BadBuildID_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            var resultList = sut.FindDeployStateListForMachine(Guid.NewGuid().ToString(), environmentId, machineId);
+
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(0, resultList.Count);
+        }
+
+        [Test]
+        public void FindDeployStateListForMachine_BadEnvironmentID_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            var resultList = sut.FindDeployStateListForMachine(buildId, Guid.NewGuid().ToString(), machineId);
+
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(0, resultList.Count);
+        }
+
+
+        [Test]
+        public void FindDeployStateListForMachine_BadMachineID_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId, environmentId: environmentId, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            var resultList = sut.FindDeployStateListForMachine(buildId, environmentId, Guid.NewGuid().ToString());
+
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(0, resultList.Count);
+        }
+
+        [Test]
+        public void TryGetDeployState_GetsDeployState()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            var result = sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, environmentId, machineId, deployState.DeployBatchRequestItemId);
+
+            Assert.IsNotNull(result);
+            AssertDeployState(deployState, result);
+        }
+
+        [Test]
+        public void TryGetDeployState_MissingProjectID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetDeployState(null, deployState.Build.Id, environmentId, machineId, deployState.DeployBatchRequestItemId));
+        }
+
+        [Test]
+        public void TryGetDeployState_MissingBuildID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetDeployState(deployState.ProjectId, null, environmentId, machineId, deployState.DeployBatchRequestItemId));
+        }
+
+        [Test]
+        public void TryGetDeployState_MissingEnvironmentID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, null, machineId, deployState.DeployBatchRequestItemId));
+        }
+
+        [Test]
+        public void TryGetDeployState_MissingMachineID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, environmentId, null, deployState.DeployBatchRequestItemId));
+        }
+
+        [Test]
+        public void TryGetDeployState_MissingDeploybatchRequestItemID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            Assert.Throws<ArgumentNullException>(() => sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, environmentId, machineId, null));
+        }
+
+        [Test]
+        public void TryGetDeployState_BadProjectID_ReturnsNull()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            var result = sut.TryGetDeployState(Guid.NewGuid().ToString(), deployState.Build.Id, environmentId, machineId, deployState.DeployBatchRequestItemId);
+            
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void TryGetDeployState_BadBuildID_ReturnsNull()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            var result = sut.TryGetDeployState(deployState.ProjectId, Guid.NewGuid().ToString(), environmentId, machineId, deployState.DeployBatchRequestItemId);
+            
+            Assert.IsNull(result);
+        }
+
+
+        [Test]
+        public void TryGetDeployState_BadMachineID_ReturnsNull()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            var result = sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, environmentId, Guid.NewGuid().ToString(), deployState.DeployBatchRequestItemId);
+            
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void TryGetDeployState_BadDeployBatchRequestItemID_ReturnsNull()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string machineId = this.Fixture.Create<string>();
+            var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, machineId: machineId);
+
+            var result = sut.TryGetDeployState(deployState.ProjectId, deployState.Build.Id, environmentId, machineId, Guid.NewGuid().ToString());
+            
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void UpdateDeploymentStatus_NoError_UpdatesStatus()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var newStatus = EnumDeployStatus.Success;
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i=>i.UserName).Returns(newUserName);
+
+            var result = sut.UpdateDeploymentStatus(deployState.Id, newStatus);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Status, newStatus);
+            Assert.IsNull(result.ErrorDetails);
+            Assert.AreEqual(deployState.CreatedByUserName, result.CreatedByUserName);
+            AssertDateEqual(deployState.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+        }
+
+        [Test]
+        public void UpdateDeploymentStatus_WithError_UpdatesStatus()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var newStatus = EnumDeployStatus.Error;
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            var ex = new Exception("This is a test");
+
+            var result = sut.UpdateDeploymentStatus(deployState.Id, newStatus, ex);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Status, newStatus);
+            Assert.AreEqual(ex.ToString(), result.ErrorDetails);
+            Assert.AreEqual(deployState.CreatedByUserName, result.CreatedByUserName);
+            AssertDateEqual(deployState.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, result.UpdatedByUserName);
+            AssertIsRecent(result.UpdatedDateTimeUtc);
+        }
+
+        [Test]
+        public void UpdateDeploymentStatus_MissingDeployStateId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var newStatus = EnumDeployStatus.Success;
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateDeploymentStatus(null, newStatus));
+        }
+
+        [Test]
+        public void UpdateDeploymentStatus_BadDeployStateId_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var newStatus = EnumDeployStatus.Success;
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<RecordNotFoundException>(() => sut.UpdateDeploymentStatus(Guid.NewGuid().ToString(), newStatus));
+        }
+
+        [Test]
+        public void AddDeploymentMessage_AddsMessage()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            string message = this.Fixture.Create<string>("Message");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var result = sut.AddDeploymentMessage(deployState.Id, message);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNullOrEmpty(result.Id);
+            Assert.AreEqual(deployState.Id, result.DeployStateId);
+            Assert.AreEqual(message, result.Message);
+            Assert.AreEqual(newUserName, result.MessageUserName);
+            AssertIsRecent(result.DateTimeUtc);
+
+            var dbState = sut.GetDeployState(deployState.Id);
+            Assert.IsNotNull(dbState.MessageList);
+            Assert.AreEqual(1, dbState.MessageList.Count);
+            AssertMessage(result, dbState.MessageList[0]);
+            Assert.AreEqual(deployState.CreatedByUserName, dbState.CreatedByUserName);
+            AssertDateEqual(deployState.CreatedDateTimeUtc, dbState.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, dbState.UpdatedByUserName);
+            AssertIsRecent(deployState.UpdatedDateTimeUtc);
+        }
+
+        [Test]
+        public void AddDeploymentMessage_SecondMessage()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var firstMessage = sut.AddDeploymentMessage(deployState.Id, Guid.NewGuid().ToString());
+            string message = this.Fixture.Create<string>("Message");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var result = sut.AddDeploymentMessage(deployState.Id, message);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNullOrEmpty(result.Id);
+            Assert.AreEqual(deployState.Id, result.DeployStateId);
+            Assert.AreEqual(message, result.Message);
+            Assert.AreEqual(newUserName, result.MessageUserName);
+            AssertIsRecent(result.DateTimeUtc);
+
+            var dbState = sut.GetDeployState(deployState.Id);
+            Assert.IsNotNull(dbState.MessageList);
+            Assert.AreEqual(2, dbState.MessageList.Count);
+            Assert.AreEqual(deployState.CreatedByUserName, dbState.CreatedByUserName);
+            AssertDateEqual(deployState.CreatedDateTimeUtc, dbState.CreatedDateTimeUtc);
+            Assert.AreEqual(newUserName, dbState.UpdatedByUserName);
+            AssertIsRecent(deployState.UpdatedDateTimeUtc);
+            var expectedList = new List<DeployStateMessage> { firstMessage, result };
+            AssertMessageList(expectedList, dbState.MessageList);
+        }
+
+        [Test]
+        public void AddDeploymentMessage_MissingDeployStateID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            string message = this.Fixture.Create<string>("Message");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(()=>sut.AddDeploymentMessage(null, message));
+        }
+
+        [Test]
+        public void AddDeploymentMessage_BadDeployStateID_ThrowsRecordNotFoundException()
+        {
+            var sut = this.GetRepository();
+
+            string message = this.Fixture.Create<string>("Message");
+
+            Assert.Throws<RecordNotFoundException>(() => sut.AddDeploymentMessage(Guid.NewGuid().ToString(), message));
+        }
+
+
+        [Test]
+        public void AddDeploymentMessage_MissingMessage_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            string message = this.Fixture.Create<string>("Message");
+            string newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            Assert.Throws<ArgumentNullException>(() => sut.AddDeploymentMessage(deployState.Id, null));
+        }
     }
 }

@@ -646,6 +646,7 @@ CREATE TABLE [dbo].[DeployState](
 	[BuildJson] [nvarchar](max) NOT NULL,
 	[EnvironmentJson] [nvarchar](max) NOT NULL,
 	[ComponentJson] [nvarchar](max) NOT NULL,
+	[MessageListJson] [nvarchar](max) NULL,
 	[SubmittedDateTimeUtc] [datetime2](7) NOT NULL,
 	[DeploymentStartedDateTimeUtc] [datetime2](7) NULL,
 	[DeploymentCompleteDateTimeUtc] [datetime2](7) NULL,
@@ -708,3 +709,8 @@ ALTER TABLE [dbo].[DeployStateMachine] CHECK CONSTRAINT [FK_DeployStateMachine_D
 GO
 
 
+CREATE NONCLUSTERED INDEX IX_DeployStateMachine_DeployStateID ON dbo.DeployStateMachine
+	(
+	DeployStateID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO

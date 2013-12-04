@@ -100,6 +100,18 @@ namespace Sriracha.Deploy.RavenDB
 
         public List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId)
         {
+            if (string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
+            if(string.IsNullOrEmpty(machineId))
+            {
+                throw new ArgumentNullException("Missing machine ID");
+            }
             var tempList = _documentSession.QueryNoCache<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
             return tempList.Where(i => i.MachineList.Any(j => j.Id == machineId)).ToList(); ;
         }
@@ -164,9 +176,15 @@ namespace Sriracha.Deploy.RavenDB
 
         public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
         {
+            if(string.IsNullOrEmpty(message))
+            {
+                throw new ArgumentNullException("Missing message");
+            }
             var deployStateMessage = CreateDeploymentMessage(deployStateId, message);
             var state = _documentSession.LoadEnsure<DeployState>(deployStateId);
             state.MessageList.Add(deployStateMessage);
+            state.UpdatedDateTimeUtc = DateTime.UtcNow;
+            state.UpdatedByUserName = _userIdentity.UserName;
             this._documentSession.SaveEvict(state);
             return deployStateMessage;
         }

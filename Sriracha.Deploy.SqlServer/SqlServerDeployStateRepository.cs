@@ -31,6 +31,7 @@ namespace Sriracha.Deploy.SqlServer
             public string BuildJson { get; set; }
             public string EnvironmentJson { get; set; }
             public string ComponentJson { get; set; }
+            public string MessageListJson { get; set; }
             public DateTime SubmittedDateTimeUtc { get; set; }
             public DateTime? DeploymentStartedDateTimeUtc { get; set; }
             public DateTime? DeploymentCompleteDateTimeUtc { get; set; }
@@ -222,10 +223,26 @@ namespace Sriracha.Deploy.SqlServer
                 UpdatedByUserName = item.UpdatedByUserName,
                 UpdatedDateTimeUtc = item.UpdatedDateTimeUtc
             };
-            returnValue.Branch = JsonConvert.DeserializeObject<DeployProjectBranch>(item.BranchJson);
-            returnValue.Build = JsonConvert.DeserializeObject<DeployBuild>(item.BuildJson);
-            returnValue.Component = JsonConvert.DeserializeObject<DeployComponent>(item.ComponentJson);
-            returnValue.Environment = JsonConvert.DeserializeObject<DeployEnvironment>(item.EnvironmentJson);
+            if(!string.IsNullOrEmpty(item.BranchJson))
+            {
+                returnValue.Branch = JsonConvert.DeserializeObject<DeployProjectBranch>(item.BranchJson);
+            }
+            if(!string.IsNullOrEmpty(item.BuildJson))
+            {
+                returnValue.Build = JsonConvert.DeserializeObject<DeployBuild>(item.BuildJson);
+            }
+            if(!string.IsNullOrEmpty(item.ComponentJson))
+            {
+                returnValue.Component = JsonConvert.DeserializeObject<DeployComponent>(item.ComponentJson);
+            }
+            if(!string.IsNullOrEmpty(item.EnvironmentJson))
+            {
+                returnValue.Environment = JsonConvert.DeserializeObject<DeployEnvironment>(item.EnvironmentJson);
+            }
+            if(!string.IsNullOrEmpty(item.MessageListJson))
+            {
+                returnValue.MessageList = JsonConvert.DeserializeObject<List<DeployStateMessage>>(item.MessageListJson);
+            }
             if(loadChildren)
             {
                 PopulateDeployStateChildren(returnValue);
@@ -237,15 +254,10 @@ namespace Sriracha.Deploy.SqlServer
         {
             return PetaPoco.Sql.Builder
                         .Append("SELECT ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, ComponentID,")
-                            .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
+                            .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, MessageListJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
                             .Append("ErrorDetails, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
                         .Append("FROM DeployState");
 
-        }
-
-        public DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
-        {
-            throw new NotImplementedException();
         }
 
         public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
@@ -268,17 +280,113 @@ namespace Sriracha.Deploy.SqlServer
 
         public List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
+            if (string.IsNullOrEmpty(machineId))
+            {
+                throw new ArgumentNullException("Missing machine ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBaseDeployStateQuery()
+                            .Append("WHERE BuildID=@0 AND EnvironmentID=@1", buildId, environmentId)
+                            .Append("AND ID IN (SELECT x.DeployStateID FROM DeployStateMachine x WHERE x.MachineID=@0)", machineId);
+                var dbList = db.Fetch<SqlDeployState>(sql);
+                return dbList.Select(i => PopulateDeployState(i, true)).ToList();
+            }
+        }
+
+        public DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
+        {
+            if (string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("Missing project ID");
+            }
+            if (string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if (string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
+            if (string.IsNullOrEmpty(machineId))
+            {
+                throw new ArgumentNullException("Missing machine ID");
+            }
+            if (string.IsNullOrEmpty(deployBatchRequestItemId))
+            {
+                throw new ArgumentNullException("Missing deploy batch request item ID");
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBaseDeployStateQuery()
+                            .Append("WHERE BuildID=@0 AND EnvironmentID=@1 AND DeployBatchRequestItemID=@2 AND ProjectID=@3", buildId, environmentId, deployBatchRequestItemId, projectId)
+                            .Append("AND ID IN (SELECT x.DeployStateID FROM DeployStateMachine x WHERE x.MachineID=@0)", machineId);
+                var dbItem = db.FirstOrDefault<SqlDeployState>(sql);
+                if(dbItem == null)
+                {
+                    return null;
+                }
+                else 
+                {
+                    return PopulateDeployState(dbItem, true);
+                }
+            }
+        }
+
+        public DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus status, Exception err = null)
+        {
+            VerifyDeployStateExists(deployStateId);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                                .Append("UPDATE DeployState")
+                                .Append("SET EnumdeployStatusID=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", (int)status, _userIdentity.UserName, DateTime.UtcNow);
+                if(err != null)
+                {
+                    sql = sql.Append(", ErrorDetails=@0", err.ToString());
+                }
+                sql = sql.Append("WHERE ID=@0", deployStateId);
+                db.Execute(sql);
+            }
+            return GetDeployState(deployStateId);
         }
 
         public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(message))
+            {
+                throw new ArgumentNullException("Missing message");
+            }
+            VerifyDeployStateExists(deployStateId);
+            var deployStateMessage = new DeployStateMessage
+            {
+                Id = Guid.NewGuid().ToString(),
+                DeployStateId = deployStateId,
+                Message = message,
+                DateTimeUtc = DateTime.UtcNow,
+                MessageUserName = _userIdentity.UserName
+            };
+            var deployState = GetDeployState(deployStateId);
+            deployState.MessageList.Add(deployStateMessage);
+            var messageListJson = deployState.MessageList.ToJson();
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = PetaPoco.Sql.Builder
+                            .Append("UPDATE DeployState")
+                            .Append("SET MessageListJson=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", messageListJson, _userIdentity.UserName, DateTime.UtcNow)
+                            .Append("WHERE ID=@0", deployStateId);
+                db.Execute(sql);
+            }
+            return deployStateMessage;
         }
 
-        public DeployState UpdateDeploymentStatus(string deployStateId, Data.EnumDeployStatus enumDeployStatus, Exception err = null)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
