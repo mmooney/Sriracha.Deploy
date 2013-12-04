@@ -175,10 +175,14 @@ namespace Sriracha.Deploy.SqlServer
                 {
                     throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
                 }
-                var returnValue = PopulateDeployState(item);
-                returnValue.MachineList = GetDeployStateMachineList(deployStateId);
+                var returnValue = PopulateDeployState(item, true);
                 return returnValue;
             }
+        }
+
+        private void PopulateDeployStateChildren(DeployState deployState)
+        {
+            deployState.MachineList = GetDeployStateMachineList(deployState.Id);
         }
 
         private List<DeployMachine> GetDeployStateMachineList(string deployStateId)
@@ -201,7 +205,7 @@ namespace Sriracha.Deploy.SqlServer
                 .Append("FROM DeployStateMachine");
         }
 
-        private DeployState PopulateDeployState(SqlDeployState item)
+        private DeployState PopulateDeployState(SqlDeployState item, bool loadChildren)
         {
             var returnValue = new DeployState
             {
@@ -222,6 +226,10 @@ namespace Sriracha.Deploy.SqlServer
             returnValue.Build = JsonConvert.DeserializeObject<DeployBuild>(item.BuildJson);
             returnValue.Component = JsonConvert.DeserializeObject<DeployComponent>(item.ComponentJson);
             returnValue.Environment = JsonConvert.DeserializeObject<DeployEnvironment>(item.EnvironmentJson);
+            if(loadChildren)
+            {
+                PopulateDeployStateChildren(returnValue);
+            }
             return returnValue;
         }
 
@@ -242,7 +250,20 @@ namespace Sriracha.Deploy.SqlServer
 
         public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if(string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBaseDeployStateQuery().Append("WHERE BuildID=@0 AND EnvironmentID=@1", buildId, environmentId);
+                var dbList = db.Fetch<SqlDeployState>(sql);
+                return dbList.Select(i=>PopulateDeployState(i, true)).ToList();
+            }
         }
 
         public List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId)

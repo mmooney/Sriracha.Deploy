@@ -86,6 +86,14 @@ namespace Sriracha.Deploy.RavenDB
 
         public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
         {
+            if(string.IsNullOrEmpty(buildId))
+            {
+                throw new ArgumentNullException("Missing build ID");
+            }
+            if(string.IsNullOrEmpty(environmentId))
+            {
+                throw new ArgumentNullException("Missing environment ID");
+            }
             return _documentSession.QueryNoCache<DeployState>().Where(i => i.Build.Id == buildId && i.Environment.Id == environmentId).ToList();
         }
 

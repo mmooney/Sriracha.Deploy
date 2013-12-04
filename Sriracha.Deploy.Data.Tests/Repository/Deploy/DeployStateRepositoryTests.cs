@@ -25,9 +25,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             public string DeployBatchRequestId { get; set; }
         }
 
-        private DeployState CreateTestDeployState(IDeployStateRepository sut)
+        private DeployState CreateTestDeployState(IDeployStateRepository sut, string environmentId=null, string buildId=null)
         {
-            var testData = this.GetCreateTestData();
+            var testData = this.GetCreateTestData(environmentId: environmentId, buildId: buildId);
             return sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
         }
 
@@ -108,10 +108,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             }
         }
 
-        private CreateTestData GetCreateTestData()
+        private CreateTestData GetCreateTestData(string environmentId=null, string buildId=null)
         {
             string projectId = this.Fixture.Create<string>();
             string projectName = this.Fixture.Create<string>("ProjectName");
+            environmentId = StringHelper.IsNullOrEmpty(environmentId, this.Fixture.Create<string>());
+            buildId = StringHelper.IsNullOrEmpty(buildId, this.Fixture.Create<string>());
             var returnValue = new CreateTestData()
             {
                 ProjectId = projectId,
@@ -120,6 +122,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                                 .Create(),
                 Environment = this.Fixture.Build<DeployEnvironment>()
                                 .With(i=>i.ProjectId, projectId)
+                                .With(i=>i.Id, environmentId)
                                 .Create(),
                 Component = this.Fixture.Build<DeployComponent>()
                                 .With(i=>i.ProjectId, projectId)
@@ -139,6 +142,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             returnValue.MachineList = returnValue.Environment.ComponentList[0].MachineList;
 
             returnValue.Build = this.Fixture.Build<DeployBuild>()
+                                    .With(i=>i.Id, buildId)
                                     .With(i=>i.ProjectId, returnValue.ProjectId)
                                     .With(i=>i.ProjectBranchId, returnValue.Branch.Id)
                                     .With(i=>i.ProjectBranchName, returnValue.Branch.BranchName)
@@ -248,5 +252,106 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             Assert.Throws<RecordNotFoundException>(() => sut.GetDeployState(Guid.NewGuid().ToString()));
         }
+
+        [Test]
+        public void FindDeployStateListForEnvironment_FindsList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for(int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            var resultList = sut.FindDeployStateListForEnvironment(buildId, environmentId);
+
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(deployStateList.Count, resultList.Count);
+            foreach(var expectedItem in deployStateList)
+            {  
+                var actualItem = resultList.SingleOrDefault(i=>i.Id == expectedItem.Id);
+                Assert.IsNotNull(actualItem);
+                AssertDeployState(expectedItem, actualItem);
+            }
+        }
+
+        [Test]
+        public void FindDeployStateListForEnvironment_MissingBuildID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => sut.FindDeployStateListForEnvironment(null, environmentId));
+        }
+
+        [Test]
+        public void FindDeployStateListForEnvironment_MissingEnvironmentID_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => sut.FindDeployStateListForEnvironment(buildId, null));
+        }
+
+        [Test]
+        public void FindDeployStateListForEnvironment_BadBuildID_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.FindDeployStateListForEnvironment(Guid.NewGuid().ToString(), environmentId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
+        public void FindDeployStateListForEnvironment_BadEnvironmentID_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.FindDeployStateListForEnvironment(buildId, Guid.NewGuid().ToString());
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count);
+        }
+
     }
 }
