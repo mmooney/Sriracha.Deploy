@@ -9,6 +9,7 @@ using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 {
@@ -25,10 +26,21 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             public string DeployBatchRequestId { get; set; }
         }
 
-        private DeployState CreateTestDeployState(IDeployStateRepository sut, string buildId=null, string environmentId=null, string machineId=null)
+        private DeployState CreateTestDeployState(IDeployStateRepository sut, string buildId=null, string environmentId=null, string environmentName=null, string machineId=null, string machineName=null, string projectId=null, string branchId=null, string componentId=null, bool similateRun=false)
         {
-            var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, machineId:machineId);
-            return sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
+            var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, environmentName:environmentName, machineId: machineId, machineName: machineName, projectId: projectId, branchId: branchId, componentId: componentId);
+            var returnValue = sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
+            if(similateRun)
+            {
+                SimulateRun(sut, returnValue);
+            }
+            return returnValue;
+        }
+
+        private void SimulateRun(IDeployStateRepository sut, DeployState deployState)
+        {
+            sut.UpdateDeploymentStatus(deployState.Id, EnumDeployStatus.InProcess);
+            sut.UpdateDeploymentStatus(deployState.Id, EnumDeployStatus.Success);
         }
 
         private void AssertCreatedDeployState(IDeployStateRepository sut, DeployState result, CreateTestData testData)
@@ -113,28 +125,36 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.AreEqual(expectedItem.MessageUserName, actualItem.MessageUserName);
         }
 
-        private CreateTestData GetCreateTestData(string buildId=null, string environmentId=null, string machineId=null)
+        private CreateTestData GetCreateTestData(string buildId = null, string environmentId = null, string environmentName=null, string machineId = null, string machineName=null, string projectId = null, string branchId = null, string componentId=null)
         {
-            string projectId = this.Fixture.Create<string>();
             string projectName = this.Fixture.Create<string>("ProjectName");
+            projectId = StringHelper.IsNullOrEmpty(projectId, this.Fixture.Create<string>());
             environmentId = StringHelper.IsNullOrEmpty(environmentId, this.Fixture.Create<string>());
             machineId = StringHelper.IsNullOrEmpty(machineId, this.Fixture.Create<string>());
+            machineName = StringHelper.IsNullOrEmpty(machineName, this.Fixture.Create<string>("MachineName"));
             buildId = StringHelper.IsNullOrEmpty(buildId, this.Fixture.Create<string>());
+            branchId = StringHelper.IsNullOrEmpty(branchId, this.Fixture.Create<string>());
+            componentId = StringHelper.IsNullOrEmpty(componentId, this.Fixture.Create<string>());
+            environmentName = StringHelper.IsNullOrEmpty(environmentName, this.Fixture.Create<string>("EnvironmentName"));
             var returnValue = new CreateTestData()
             {
                 ProjectId = projectId,
                 Branch = this.Fixture.Build<DeployProjectBranch>()
                                 .With(i=>i.ProjectId, projectId)
+                                .With(i=>i.Id, branchId)
                                 .Create(),
                 Environment = this.Fixture.Build<DeployEnvironment>()
                                 .With(i=>i.ProjectId, projectId)
                                 .With(i=>i.Id, environmentId)
+                                .With(i=>i.EnvironmentName, environmentName)
                                 .Create(),
                 Component = this.Fixture.Build<DeployComponent>()
                                 .With(i=>i.ProjectId, projectId)
+                                .With(i=>i.Id, componentId)
                                 .Create(),
                 DeployBatchRequestId = this.Fixture.Create<string>()
             };
+            returnValue.Environment.ComponentList[0].Id = componentId;
             returnValue.Environment.ComponentList[0].ProjectId = projectId;
             returnValue.Environment.ComponentList[0].EnvironmentId = returnValue.Environment.Id;
             returnValue.Environment.ComponentList[0].ParentType = EnumDeployStepParentType.Component;
@@ -146,6 +166,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                 machine.ProjectId = projectId;
             }
             returnValue.Environment.ComponentList[0].MachineList[0].Id = machineId;
+            returnValue.Environment.ComponentList[0].MachineList[0].MachineName = machineName;
             returnValue.MachineList = returnValue.Environment.ComponentList[0].MachineList;
 
             returnValue.Build = this.Fixture.Build<DeployBuild>()
@@ -158,6 +179,44 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                                     .Create();
 
             return returnValue;
+        }
+
+        private void AssertComponentHistoryList(List<DeployState> expectedList, PagedSortedList<ComponentDeployHistory> actualList)
+        {
+            Assert.IsNotNull(actualList);
+            Assert.IsNotNull(actualList.Items);
+            Assert.AreEqual(expectedList.Count, actualList.Items.Count);
+            Assert.AreEqual(expectedList.Count, actualList.TotalItemCount);
+            foreach (var expectedItem in expectedList)
+            {
+                var actualItem = actualList.Items.SingleOrDefault(i => i.DeployStateId == expectedItem.Id);
+                AssertComponentHistory(expectedItem, actualItem);
+            }
+        }
+
+        private void AssertComponentHistory(DeployState expectedItem, ComponentDeployHistory actualItem)
+        {
+            Assert.IsNotNull(actualItem);
+            Assert.AreEqual(expectedItem.Id, actualItem.DeployStateId);
+            Assert.AreEqual(expectedItem.DeployBatchRequestItemId, actualItem.DeployBatchRequestItemId);
+            Assert.AreEqual(expectedItem.ProjectId, actualItem.ProjectId);
+            Assert.AreEqual(expectedItem.Build.ProjectName, actualItem.ProjectName);
+            Assert.AreEqual(expectedItem.Branch.Id, actualItem.ProjectBranchId);
+            Assert.AreEqual(expectedItem.Branch.BranchName, actualItem.ProjectBranchName);
+            Assert.AreEqual(expectedItem.Component.Id, actualItem.ProjectComponentId);
+            Assert.AreEqual(expectedItem.Component.ComponentName, actualItem.ProjectComponentName);
+
+            Assert.AreEqual(expectedItem.Build.Id, actualItem.BuildId);
+            Assert.AreEqual(expectedItem.Build.FileId, actualItem.FileId);
+            Assert.AreEqual(expectedItem.Build.Version, actualItem.Version);
+            Assert.AreEqual(expectedItem.Build.SortableVersion, actualItem.SortableVersion);
+            Assert.AreEqual(expectedItem.DeploymentStartedDateTimeUtc, actualItem.DeploymentStartedDateTimeUtc);
+            Assert.AreEqual(expectedItem.DeploymentCompleteDateTimeUtc, actualItem.DeploymentCompleteDateTimeUtc);
+            Assert.AreEqual(expectedItem.ErrorDetails, actualItem.ErrorDetails);
+
+            Assert.AreEqual(expectedItem.Environment.Id, actualItem.EnvironmentId);
+            Assert.AreEqual(expectedItem.Environment.EnvironmentName, actualItem.EnvironmentName);
+            AssertHelpers.AssertMachineList(expectedItem.MachineList, actualItem.MachineList);
         }
 
         [Test]
@@ -801,6 +860,600 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
             Assert.Throws<ArgumentNullException>(() => sut.AddDeploymentMessage(deployState.Id, null));
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null);
+
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(0, result.Items.Count);
+            Assert.AreNotEqual(0, result.TotalItemCount);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_Defaults()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(20, result.PageSize);
+            Assert.AreEqual(1, result.PageNumber);
+            Assert.AreEqual("DeploymentStartedDateTimeUtc", result.SortField);
+            Assert.IsFalse(result.SortAscending);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_PageSize()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { PageSize = 5 });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.AreEqual(5, result.Items.Count);
+            Assert.AreEqual(5, result.PageSize);
+            Assert.IsTrue(result.HasNextPage);
+            Assert.IsFalse(result.HasPreviousPage);
+            Assert.IsTrue(result.IsFirstPage);
+            Assert.IsFalse(result.IsLastPage);
+            Assert.LessOrEqual(6, result.PageCount);
+            Assert.AreEqual(1, result.PageNumber);
+            Assert.IsFalse(result.SortAscending);
+            Assert.AreEqual("DeploymentStartedDateTimeUtc", result.SortField);
+            Assert.LessOrEqual(30, result.TotalItemCount);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_PageNumber()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut, similateRun:true);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { PageNumber = 2 });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.LessOrEqual(10, result.Items.Count);
+            Assert.AreEqual(20, result.PageSize);
+            //Assert.IsTrue(buildList.HasNextPage);
+            Assert.IsTrue(result.HasPreviousPage);
+            //Assert.IsTrue(buildList.IsFirstPage);
+            //Assert.IsFalse(buildList.IsLastPage);
+            Assert.LessOrEqual(2, result.PageCount);
+            Assert.AreEqual(2, result.PageNumber);
+            Assert.IsFalse(result.SortAscending);
+            Assert.AreEqual("DeploymentStartedDateTimeUtc", result.SortField);
+            Assert.LessOrEqual(30, result.TotalItemCount);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_DeploymentStartedDateTimeUtcAsc()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut, similateRun: true);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "DeploymentStartedDateTimeUtc", SortAscending = true });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.IsTrue(result.SortAscending);
+            ComponentDeployHistory lastItem = null;
+            foreach (var item in result.Items)
+            {
+                if (lastItem != null)
+                {
+                    Assert.LessOrEqual(lastItem.DeploymentStartedDateTimeUtc.GetValueOrDefault(), item.DeploymentStartedDateTimeUtc.GetValueOrDefault());
+                }
+                lastItem = item;
+            }
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_DeploymentStartedDateTimeUtcDesc()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut, similateRun: true);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "DeploymentStartedDateTimeUtc", SortAscending = false });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.IsFalse(result.SortAscending);
+            ComponentDeployHistory lastItem = null;
+            foreach (var item in result.Items)
+            {
+                if (lastItem != null)
+                {
+                    Assert.GreaterOrEqual(lastItem.DeploymentStartedDateTimeUtc.GetValueOrDefault(), item.DeploymentStartedDateTimeUtc.GetValueOrDefault());
+                }
+                lastItem = item;
+            }
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_VersionAsc()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut, similateRun: true);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = true });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.IsTrue(result.SortAscending);
+            ComponentDeployHistory lastItem = null;
+            foreach (var item in result.Items)
+            {
+                if (lastItem != null)
+                {
+                    Assert.LessOrEqual(lastItem.SortableVersion, item.SortableVersion);
+                }
+                lastItem = item;
+            }
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_VersionDesc()
+        {
+            var sut = this.GetRepository();
+
+            for (int i = 0; i < 30; i++)
+            {
+                this.CreateTestDeployState(sut, similateRun: true);
+            }
+
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = false });
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.Items);
+            Assert.IsFalse(result.SortAscending);
+            ComponentDeployHistory lastItem = null;
+            foreach (var item in result.Items)
+            {
+                if (lastItem != null)
+                {
+                    Assert.GreaterOrEqual(lastItem.SortableVersion, item.SortableVersion);
+                }
+                lastItem = item;
+            }
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_ProjectID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string projectId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId: projectId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, projectIdList: projectId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoProjectIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string projectId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId: projectId1);
+                deployStateList.Add(deployState);
+            }
+            string projectId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId: projectId2);
+                deployStateList.Add(deployState);
+            }
+
+            var projectIdList = new List<string> { projectId1, projectId2 };
+            var result = sut.GetComponentDeployHistory(null, projectIdList: projectIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_BranchID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string branchId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, branchId: branchId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, branchIdList: branchId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+
+        [Test]
+        public void GetComponentDeployHistory_TwoBranchIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string branchId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, branchId: branchId1);
+                deployStateList.Add(deployState);
+            }
+            string branchId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, branchId: branchId2);
+                deployStateList.Add(deployState);
+            }
+
+            var branchIdList = new List<string> { branchId1, branchId2 };
+            var result = sut.GetComponentDeployHistory(null, branchIdList: branchIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_ComponentID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string componentId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, componentId: componentId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null,  componentIdList: componentId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoComponentIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string componentId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, componentId: componentId1);
+                deployStateList.Add(deployState);
+            }
+            string componentId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, componentId: componentId2);
+                deployStateList.Add(deployState);
+            }
+
+            var componentIdList = new List<string> { componentId1, componentId2 };
+            var result = sut.GetComponentDeployHistory(null, componentIdList: componentIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_BuildID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string buildId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, buildIdList: buildId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoBuildIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string buildIdId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildIdId1);
+                deployStateList.Add(deployState);
+            }
+            string buildId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, buildId: buildId2);
+                deployStateList.Add(deployState);
+            }
+
+            var buildIdList = new List<string> { buildIdId1, buildId2 };
+            var result = sut.GetComponentDeployHistory(null, buildIdList: buildIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_EnvironmentID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, environmentIdList: environmentId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoEnvironmentIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string environmentId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId1);
+                deployStateList.Add(deployState);
+            }
+            string environmentId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentId: environmentId2);
+                deployStateList.Add(deployState);
+            }
+
+            var environmentIdList = new List<string> { environmentId1, environmentId2 };
+            var result = sut.GetComponentDeployHistory(null, environmentIdList: environmentIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_EnvironmentName_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string environmentName = this.Fixture.Create<string>("EnvironmentName");
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentName: environmentName);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, environmentNameList: environmentName.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoEnvironmentNames_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string environmentName1 = this.Fixture.Create<string>("EnvironmentName");
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentName: environmentName1);
+                deployStateList.Add(deployState);
+            }
+            string environmentName2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, environmentName: environmentName2);
+                deployStateList.Add(deployState);
+            }
+
+            var environmentNameList = new List<string> { environmentName1, environmentName2 };
+            var result = sut.GetComponentDeployHistory(null, environmentNameList: environmentNameList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_MachineID_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string machineId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineId: machineId);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, machineIdList: machineId.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoMachineIDs_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string machineId1 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineId: machineId1);
+                deployStateList.Add(deployState);
+            }
+            string machineId2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineId: machineId2);
+                deployStateList.Add(deployState);
+            }
+
+            var machineIdList = new List<string> { machineId1, machineId2 };
+            var result = sut.GetComponentDeployHistory(null, machineIdList: machineIdList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_MachineName_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string machineName = this.Fixture.Create<string>("MachineName");
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineName: machineName);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, machineNameList: machineName.ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_TwoMachineNames_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string machineName1 = this.Fixture.Create<string>("MachineName");
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineName: machineName1);
+                deployStateList.Add(deployState);
+            }
+            string machineName2 = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, machineName: machineName2);
+                deployStateList.Add(deployState);
+            }
+
+            var machineNameList = new List<string> { machineName1, machineName2 };
+            var result = sut.GetComponentDeployHistory(null, machineNameList: machineNameList);
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_ProjectAndStatus_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            string projectId = this.Fixture.Create<string>();
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId: projectId, similateRun:true);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null, projectIdList:projectId.ListMe(), statusList: EnumDeployStatus.Success.ToString().ListMe());
+
+            AssertComponentHistoryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetComponentDeployHistory_ProjectAndTwoStatuses_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+
+            string projectId = this.Fixture.Create<string>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId:projectId, similateRun:true);
+                deployStateList.Add(deployState);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, projectId:projectId, similateRun:true);
+                deployStateList.Add(deployState);
+            }
+
+            var statusList = new List<string> { EnumDeployStatus.NotStarted.ToString(), EnumDeployStatus.Success.ToString() };
+            var result = sut.GetComponentDeployHistory(null, projectIdList:projectId.ListMe(), statusList:statusList);
+
+            AssertComponentHistoryList(deployStateList, result);
         }
     }
 }

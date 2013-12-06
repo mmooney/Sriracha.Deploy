@@ -1,6 +1,8 @@
 ﻿using MMDB.Shared;
 using Newtonsoft.Json;
+using PagedList;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Project;
@@ -26,12 +28,14 @@ namespace Sriracha.Deploy.SqlServer
             public string BranchID { get; set; }
             public string BuildID { get; set; }
             public string EnvironmentID { get; set; }
+            public string EnvironmentName { get; set; }
             public string ComponentID { get; set; }
             public string BranchJson { get; set; }
             public string BuildJson { get; set; }
             public string EnvironmentJson { get; set; }
             public string ComponentJson { get; set; }
             public string MessageListJson { get; set; }
+            public string SortableVersion { get; set; }
             public DateTime SubmittedDateTimeUtc { get; set; }
             public DateTime? DeploymentStartedDateTimeUtc { get; set; }
             public DateTime? DeploymentCompleteDateTimeUtc { get; set; }
@@ -115,11 +119,13 @@ namespace Sriracha.Deploy.SqlServer
                 ComponentID = component.Id,
                 ComponentJson = component.ToJson(),
                 EnvironmentID = environment.Id,
+                EnvironmentName = environment.EnvironmentName,
                 EnvironmentJson = environment.ToJson(),
                 DeployBatchRequestItemID = deployBatchRequestItemId,
                 DeploymentCompleteDateTimeUtc = null,
                 DeploymentStartedDateTimeUtc = null,
                 ErrorDetails = null,
+                SortableVersion = build.SortableVersion,
                 EnumDeployStatusID = (int)EnumDeployStatus.NotStarted,
                 CreatedByUserName = _userIdentity.UserName,
                 CreatedDateTimeUtc = DateTime.UtcNow,
@@ -134,12 +140,12 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var deployStateSql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO DeployState (ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, ComponentID,")
+                            .Append("INSERT INTO DeployState (ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, EnvironmentName, ComponentID,")
                                             .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
-                                            .Append("ErrorDetails, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
-                            .Append("VALUES (@ID, @DeployBatchRequestItemID, @EnumDeployStatusID, @ProjectID, @BranchID, @BuildID, @EnvironmentID, @ComponentID,", sqlDeployState)
+                                            .Append("ErrorDetails, SortableVersion, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)")
+                            .Append("VALUES (@ID, @DeployBatchRequestItemID, @EnumDeployStatusID, @ProjectID, @BranchID, @BuildID, @EnvironmentID, @EnvironmentName, @ComponentID,", sqlDeployState)
                                 .Append("@BranchJson, @BuildJson, @EnvironmentJson, @ComponentJson, @SubmittedDateTimeUtc, @DeploymentStartedDateTimeUtc, @DeploymentCompleteDateTimeUtc,", sqlDeployState)
-                                .Append("@ErrorDetails, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", sqlDeployState);
+                                .Append("@ErrorDetails, @SortableVersion, @CreatedByUserName, @CreatedDateTimeUtc, @UpdatedByUserName, @UpdatedDateTimeUtc)", sqlDeployState);
                 db.Execute(deployStateSql);
 
                 foreach(var machine in machineList)
@@ -149,7 +155,7 @@ namespace Sriracha.Deploy.SqlServer
                         ID = Guid.NewGuid().ToString(),
                         DeployStateID = sqlDeployState.ID,
                         MachineID = machine.Id,  
-                        MachineName = machine.CreatedByUserName,
+                        MachineName = machine.MachineName,
                         MachineJson = machine.ToJson(),
                         CreatedByUserName = _userIdentity.UserName,
                         CreatedDateTimeUtc = DateTime.UtcNow,
@@ -253,9 +259,9 @@ namespace Sriracha.Deploy.SqlServer
         private PetaPoco.Sql GetBaseDeployStateQuery()
         {
             return PetaPoco.Sql.Builder
-                        .Append("SELECT ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, ComponentID,")
+                        .Append("SELECT ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, EnvironmentName,  ComponentID,")
                             .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, MessageListJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
-                            .Append("ErrorDetails, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
+                            .Append("ErrorDetails, SortableVersion, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
                         .Append("FROM DeployState");
 
         }
@@ -348,7 +354,7 @@ namespace Sriracha.Deploy.SqlServer
             {
                 var sql = PetaPoco.Sql.Builder
                                 .Append("UPDATE DeployState")
-                                .Append("SET EnumdeployStatusID=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", (int)status, _userIdentity.UserName, DateTime.UtcNow);
+                                .Append("SET EnumDeployStatusID=@0, UpdatedByUserName=@1, UpdatedDateTimeUtc=@2", (int)status, _userIdentity.UserName, DateTime.UtcNow);
                 if(err != null)
                 {
                     sql = sql.Append(", ErrorDetails=@0", err.ToString());
@@ -388,5 +394,147 @@ namespace Sriracha.Deploy.SqlServer
             return deployStateMessage;
         }
 
+
+
+        public PagedSortedList<ComponentDeployHistory> GetComponentDeployHistory(ListOptions listOptions, List<string> projectIdList, List<string> branchIdList, List<string> componentIdList, List<string> buildIdList, List<string> environmentIdList, List<string> environmentNameList, List<string> machineIdList, List<string> machineNameList, List<string> statusList)
+        {
+            listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "DeploymentStartedDateTimeUtc", false);
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var deployStateSql = GetBaseDeployStateQuery().Append("WHERE 1=1");
+                if(projectIdList != null && projectIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND ProjectID IN (@idList)", new { idList = projectIdList });
+                }
+                if(branchIdList != null && branchIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND BranchID IN (@idList)", new { idList = branchIdList });
+                }
+                if(componentIdList != null && componentIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND ComponentID IN (@idList)", new { idList = componentIdList });
+                }
+                if(buildIdList != null && buildIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND BuildID IN (@idList)", new { idList = buildIdList });
+                }
+                if(environmentIdList != null && environmentIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND EnvironmentID IN (@idList)", new { idList = environmentIdList });
+                }
+                if (environmentNameList != null && environmentNameList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND EnvironmentName IN (@nameList)", new { nameList = environmentNameList });
+                }
+                if (machineIdList != null && machineIdList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND DeployState.ID IN (SELECT x.DeployStateID FROM DeployStateMachine x WHERE x.MachineID IN (@idList))", new { idList = machineIdList });
+                }
+                if (machineNameList != null && machineNameList.Count > 0)
+                {
+                    deployStateSql = deployStateSql.Append("AND DeployState.ID IN (SELECT x.DeployStateID FROM DeployStateMachine x WHERE x.MachineName IN (@nameList))", new { nameList = machineNameList });
+                }
+                if (statusList != null && statusList.Count > 0)
+                {
+                    List<int> statusIdList = (from i in statusList
+                                                             select (int)EnumHelper.Parse<EnumDeployStatus>(i)).ToList();
+                    deployStateSql = deployStateSql.Append("AND EnumDeployStatusID IN (@statusIdList)", new { statusIdList = statusIdList });
+                }
+                if (!string.IsNullOrEmpty(listOptions.SortField))
+                {
+                    switch(listOptions.SortField.ToLower())
+                    {
+                        case "deploymentstarteddatetimeutc":
+                            //OK
+                            break;
+                        case "version":
+                            listOptions.SortField = "SortableVersion";
+                            break;
+                        default:
+                            throw new ArgumentException("Unrecognized sort field: " + listOptions.SortField);
+                    }
+                }
+                var dbStateList = db.PageAndSort<SqlDeployState>(listOptions, deployStateSql);
+
+                var idList = dbStateList.Items.Select(i=>i.ID);
+                var dbMachineList = new List<SqlDeployStateMachine>();
+                if(idList.Count() > 0)
+                {
+                    var machineSql = GetBaseMachineQuery().Append("WHERE DeployStateID IN (@deployStateIdList)", new { deployStateIdList=idList });
+                    dbMachineList = db.Fetch<SqlDeployStateMachine>(machineSql).ToList();
+                }
+                var castedList = (from i in dbStateList.Items
+                                    select PopulateComponentDeployHistory(i, dbMachineList)
+                                 ).ToList();
+                var castedPagedList = new StaticPagedList<ComponentDeployHistory>(castedList, dbStateList.PageNumber, dbStateList.PageSize, dbStateList.TotalItemCount);
+                return new PagedSortedList<ComponentDeployHistory>(castedPagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
+            }
+        }
+
+        private ComponentDeployHistory PopulateComponentDeployHistory(SqlDeployState dbState, List<SqlDeployStateMachine> dbMachineList)
+        {
+            DeployBuild build = null;
+            if(!string.IsNullOrEmpty(dbState.BuildJson))
+            {
+                build = JsonConvert.DeserializeObject<DeployBuild>(dbState.BuildJson);
+            }
+            DeployEnvironment environment = null;
+            if(!string.IsNullOrEmpty(dbState.EnvironmentJson))
+            {
+                environment = JsonConvert.DeserializeObject<DeployEnvironment>(dbState.EnvironmentJson);
+            }
+            DeployProjectBranch branch = null;
+            if(!string.IsNullOrEmpty(dbState.BranchJson))
+            {
+                branch = JsonConvert.DeserializeObject<DeployProjectBranch>(dbState.BranchJson);
+            }
+            DeployComponent component = null;
+            if(!string.IsNullOrEmpty(dbState.ComponentJson))
+            {
+                component = JsonConvert.DeserializeObject<DeployComponent>(dbState.ComponentJson);
+            }
+            var machineList = (from m in dbMachineList
+                                where m.DeployStateID == dbState.ID && !string.IsNullOrEmpty(m.MachineJson)
+                                select JsonConvert.DeserializeObject<DeployMachine>(m.MachineJson)
+                              ).ToList();
+
+            return new ComponentDeployHistory
+            {
+                DeployStateId = dbState.ID,
+                DeployBatchRequestItemId = dbState.DeployBatchRequestItemID,
+                ProjectId = dbState.ProjectID, 
+                ProjectName = (build != null)
+                                ? build.ProjectName
+                                : null,
+                BuildId = dbState.BuildID,
+                ProjectBranchId = dbState.BranchID,
+                ProjectBranchName = (branch != null)
+                                    ? branch.BranchName
+                                    : null,
+                ProjectComponentId = dbState.ComponentID,
+                ProjectComponentName = (component != null)
+                                        ? component.ComponentName
+                                        : null,
+                Status = (EnumDeployStatus)dbState.EnumDeployStatusID,
+                StatusDisplayValue = EnumHelper.GetDisplayValue((EnumDeployStatus)dbState.EnumDeployStatusID),
+                EnvironmentId = dbState.EnvironmentID,
+                EnvironmentName = (environment != null) 
+                                    ? environment.EnvironmentName 
+                                    : null,
+                DeploymentStartedDateTimeUtc = dbState.DeploymentStartedDateTimeUtc,
+                DeploymentCompleteDateTimeUtc = dbState.DeploymentCompleteDateTimeUtc,
+                FileId = (build != null)
+                            ? build.FileId
+                            : null,
+                Version = (build != null)
+                            ? build.Version
+                            : null,
+                SortableVersion = (build != null)
+                            ? DeployBuild.GetSortableVersion(build.Version)
+                            : null,
+                MachineList = machineList,
+                ErrorDetails = dbState.ErrorDetails,
+            };
+        }
     }
 }

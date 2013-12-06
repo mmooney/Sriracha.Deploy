@@ -173,7 +173,6 @@
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
     <Compile Include="Repository\ICleanupRepository.cs" />
     <Compile Include="Repository\ICredentialsRepository.cs" />
-    <Compile Include="Repository\IDeployHistoryRepository.cs" />
     <Compile Include="Repository\IDeployStateRepository.cs" />
     <Compile Include="Repository\IMembershipRepository.cs" />
     <Compile Include="Account\AccountImpl\AccountSettingsManager.cs" />

@@ -1,4 +1,5 @@
-﻿using Sriracha.Deploy.Data.Dto.Build;
+﻿using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Project;
 using System;
@@ -17,5 +18,7 @@ namespace Sriracha.Deploy.Data.Repository
         List<DeployState> FindDeployStateListForMachine(string buildId, string environmentId, string machineId);
         DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
         DeployState UpdateDeploymentStatus(string deployStateId, EnumDeployStatus enumDeployStatus, Exception err = null);
+
+        PagedSortedList<ComponentDeployHistory> GetComponentDeployHistory(ListOptions listOptions = null, List<string> projectIdList = null, List<string> branchIdList = null, List<string> componentIdList = null, List<string> buildIdList = null, List<string> environmentIdList = null, List<string> environmentNameList = null, List<string> machineIdList = null, List<string> machineNameList = null, List<string> statusList = null);
     }
 }
