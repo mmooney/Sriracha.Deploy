@@ -187,7 +187,7 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        private void PopulateDeployStateChildren(DeployState deployState)
+        private void PopulateDeployStateChildren(DeployStateSummary deployState)
         {
             deployState.MachineList = GetDeployStateMachineList(deployState.Id);
         }
@@ -212,58 +212,74 @@ namespace Sriracha.Deploy.SqlServer
                 .Append("FROM DeployStateMachine");
         }
 
-        private DeployState PopulateDeployState(SqlDeployState item, bool loadChildren)
+        private DeployStateSummary PopulateDeployStateSummary(SqlDeployState item, bool loadChildren)
         {
-            var returnValue = new DeployState
-            {
-                Id = item.ID,
-                DeployBatchRequestItemId = item.DeployBatchRequestItemID,
-                DeploymentStartedDateTimeUtc = item.DeploymentStartedDateTimeUtc,
-                Status = (EnumDeployStatus)item.EnumDeployStatusID,
-                ErrorDetails = item.ErrorDetails,
-                ProjectId = item.ProjectID,
-                DeploymentCompleteDateTimeUtc = item.DeploymentCompleteDateTimeUtc,
-                SubmittedDateTimeUtc = item.SubmittedDateTimeUtc,
-                CreatedByUserName = item.CreatedByUserName,
-                CreatedDateTimeUtc = item.CreatedDateTimeUtc,
-                UpdatedByUserName = item.UpdatedByUserName,
-                UpdatedDateTimeUtc = item.UpdatedDateTimeUtc
-            };
-            if(!string.IsNullOrEmpty(item.BranchJson))
-            {
-                returnValue.Branch = JsonConvert.DeserializeObject<DeployProjectBranch>(item.BranchJson);
-            }
-            if(!string.IsNullOrEmpty(item.BuildJson))
-            {
-                returnValue.Build = JsonConvert.DeserializeObject<DeployBuild>(item.BuildJson);
-            }
-            if(!string.IsNullOrEmpty(item.ComponentJson))
-            {
-                returnValue.Component = JsonConvert.DeserializeObject<DeployComponent>(item.ComponentJson);
-            }
-            if(!string.IsNullOrEmpty(item.EnvironmentJson))
-            {
-                returnValue.Environment = JsonConvert.DeserializeObject<DeployEnvironment>(item.EnvironmentJson);
-            }
-            if(!string.IsNullOrEmpty(item.MessageListJson))
-            {
-                returnValue.MessageList = JsonConvert.DeserializeObject<List<DeployStateMessage>>(item.MessageListJson);
-            }
-            if(loadChildren)
-            {
-                PopulateDeployStateChildren(returnValue);
-            }
+            var returnValue = new DeployStateSummary();
+            PopulateDeployState(item, loadChildren, returnValue);
             return returnValue;
         }
 
-        private PetaPoco.Sql GetBaseDeployStateQuery()
+        private DeployState PopulateDeployState(SqlDeployState item, bool loadChildren)
         {
-            return PetaPoco.Sql.Builder
-                        .Append("SELECT ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, EnvironmentName,  ComponentID,")
-                            .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, MessageListJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
-                            .Append("ErrorDetails, SortableVersion, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc")
-                        .Append("FROM DeployState");
+            var returnValue = new DeployState();
+            PopulateDeployState(item, loadChildren, returnValue);
+            return returnValue;
+        }
 
+        private void PopulateDeployState(SqlDeployState source, bool loadChildren, DeployStateSummary target)
+        {
+            target.Id = source.ID;
+            target.DeployBatchRequestItemId = source.DeployBatchRequestItemID;
+            target.DeploymentStartedDateTimeUtc = source.DeploymentStartedDateTimeUtc;
+            target.Status = (EnumDeployStatus)source.EnumDeployStatusID;
+            target.ErrorDetails = source.ErrorDetails;
+            target.ProjectId = source.ProjectID;
+            target.DeploymentCompleteDateTimeUtc = source.DeploymentCompleteDateTimeUtc;
+            target.SubmittedDateTimeUtc = source.SubmittedDateTimeUtc;
+            target.CreatedByUserName = source.CreatedByUserName;
+            target.CreatedDateTimeUtc = source.CreatedDateTimeUtc;
+            target.UpdatedByUserName = source.UpdatedByUserName;
+            target.UpdatedDateTimeUtc = source.UpdatedDateTimeUtc;
+            if(!string.IsNullOrEmpty(source.BranchJson))
+            {
+                target.Branch = JsonConvert.DeserializeObject<DeployProjectBranch>(source.BranchJson);
+            }
+            if(!string.IsNullOrEmpty(source.BuildJson))
+            {
+                target.Build = JsonConvert.DeserializeObject<DeployBuild>(source.BuildJson);
+            }
+            if(!string.IsNullOrEmpty(source.ComponentJson))
+            {
+                target.Component = JsonConvert.DeserializeObject<DeployComponent>(source.ComponentJson);
+            }
+            if(!string.IsNullOrEmpty(source.EnvironmentJson))
+            {
+                target.Environment = JsonConvert.DeserializeObject<DeployEnvironment>(source.EnvironmentJson);
+            }
+            if(!string.IsNullOrEmpty(source.MessageListJson) && target is DeployState)
+            {
+                var deployState = (DeployState)target;
+                deployState.MessageList = JsonConvert.DeserializeObject<List<DeployStateMessage>>(source.MessageListJson);
+            }
+            if(loadChildren)
+            {
+                PopulateDeployStateChildren(target);
+            }
+        }
+
+        private PetaPoco.Sql GetBaseDeployStateQuery(bool includeMessageList=true)
+        {
+            var sql = PetaPoco.Sql.Builder
+                        .Append("SELECT ID, DeployBatchRequestItemID, EnumDeployStatusID, ProjectID, BranchID, BuildID, EnvironmentID, EnvironmentName,  ComponentID,")
+                            .Append("BranchJson, BuildJson, EnvironmentJson, ComponentJson, SubmittedDateTimeUtc, DeploymentStartedDateTimeUtc, DeploymentCompleteDateTimeUtc, ")
+                            .Append("ErrorDetails, SortableVersion, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc");
+            if(includeMessageList)
+            {
+                sql = sql.Append(", MessageListJson");
+            }
+            sql = sql.Append("FROM DeployState");
+
+            return sql;
         }
 
         public List<DeployState> FindDeployStateListForEnvironment(string buildId, string environmentId)
@@ -536,5 +552,21 @@ namespace Sriracha.Deploy.SqlServer
                 ErrorDetails = dbState.ErrorDetails,
             };
         }
+
+
+        public List<DeployStateSummary> GetDeployStateSummaryListByDeployBatchRequestItemId(string deployBatchRequestItemId)
+        {
+            if(string.IsNullOrEmpty(deployBatchRequestItemId))
+            {
+                throw new ArgumentNullException("Missing deploy batch request item ID");
+            }
+            using(var db = _sqlConnectionInfo.GetDB())
+            {
+                var sql = GetBaseDeployStateQuery(false).Append("WHERE DeployBatchRequestItemID=@0", deployBatchRequestItemId);
+                var dbList = db.Fetch<SqlDeployState>(sql);
+                return dbList.Select(i => PopulateDeployStateSummary(i, true)).ToList();
+            }
+        }
+
     }
 }

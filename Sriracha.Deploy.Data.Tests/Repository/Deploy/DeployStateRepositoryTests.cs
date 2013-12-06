@@ -26,9 +26,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             public string DeployBatchRequestId { get; set; }
         }
 
-        private DeployState CreateTestDeployState(IDeployStateRepository sut, string buildId=null, string environmentId=null, string environmentName=null, string machineId=null, string machineName=null, string projectId=null, string branchId=null, string componentId=null, bool similateRun=false)
+        private DeployState CreateTestDeployState(IDeployStateRepository sut, string buildId=null, string environmentId=null, string environmentName=null, 
+                                                        string machineId=null, string machineName=null, string projectId=null, string branchId=null,
+                                                        string deployBatchRequestItemId=null, string componentId = null, bool similateRun = false)
         {
-            var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, environmentName:environmentName, machineId: machineId, machineName: machineName, projectId: projectId, branchId: branchId, componentId: componentId);
+            var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, environmentName: environmentName, machineId: machineId, machineName: machineName, projectId: projectId, branchId: branchId, componentId: componentId, deployBatchRequestItemId: deployBatchRequestItemId);
             var returnValue = sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
             if(similateRun)
             {
@@ -73,6 +75,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
         private void AssertDeployState(DeployState expected, DeployState actual)
         {
+            AssertDeployStateSummary(expected, actual);
+            AssertMessageList(expected.MessageList, actual.MessageList);
+        }
+
+        private void AssertDeployStateSummary(DeployStateSummary expected, DeployStateSummary actual)
+        {
             Assert.IsNotNull(actual);
             Assert.AreEqual(expected.Id, actual.Id);
             AssertHelpers.AssertBranch(expected.Branch, actual.Branch);
@@ -86,7 +94,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.AreEqual(expected.DeploymentCompleteDateTimeUtc, actual.DeploymentCompleteDateTimeUtc);
             Assert.AreEqual(expected.DeploymentStartedDateTimeUtc, actual.DeploymentStartedDateTimeUtc);
             Assert.AreEqual(expected.DeployBatchRequestItemId, actual.DeployBatchRequestItemId);
-            AssertMessageList(expected.MessageList, actual.MessageList);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             AssertDateEqual(expected.SubmittedDateTimeUtc, actual.SubmittedDateTimeUtc);
 
@@ -94,6 +101,17 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
             Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
+        }
+
+        private void AssertDeployStateSummaryList(List<DeployState> expectedList, List<DeployStateSummary> actualList)
+        {
+            Assert.IsNotNull(actualList);
+            Assert.AreEqual(expectedList.Count, actualList.Count);
+            foreach(var expectedItem in expectedList)
+            {
+                var actualItem = actualList.SingleOrDefault<DeployStateSummary>(i=>i.Id == expectedItem.Id);
+                AssertDeployStateSummary(expectedItem, actualItem);
+            }
         }
 
         private void AssertMessageList(List<DeployStateMessage> expected, List<DeployStateMessage> actual)
@@ -125,7 +143,8 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.AreEqual(expectedItem.MessageUserName, actualItem.MessageUserName);
         }
 
-        private CreateTestData GetCreateTestData(string buildId = null, string environmentId = null, string environmentName=null, string machineId = null, string machineName=null, string projectId = null, string branchId = null, string componentId=null)
+        private CreateTestData GetCreateTestData(string buildId = null, string environmentId = null, string environmentName=null, string machineId = null,
+                                                    string machineName = null, string projectId = null, string branchId = null, string componentId = null, string deployBatchRequestItemId=null)
         {
             string projectName = this.Fixture.Create<string>("ProjectName");
             projectId = StringHelper.IsNullOrEmpty(projectId, this.Fixture.Create<string>());
@@ -136,6 +155,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             branchId = StringHelper.IsNullOrEmpty(branchId, this.Fixture.Create<string>());
             componentId = StringHelper.IsNullOrEmpty(componentId, this.Fixture.Create<string>());
             environmentName = StringHelper.IsNullOrEmpty(environmentName, this.Fixture.Create<string>("EnvironmentName"));
+            deployBatchRequestItemId = StringHelper.IsNullOrEmpty(deployBatchRequestItemId, this.Fixture.Create<string>());
             var returnValue = new CreateTestData()
             {
                 ProjectId = projectId,
@@ -152,7 +172,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                                 .With(i=>i.ProjectId, projectId)
                                 .With(i=>i.Id, componentId)
                                 .Create(),
-                DeployBatchRequestId = this.Fixture.Create<string>()
+                DeployBatchRequestId = deployBatchRequestItemId
             };
             returnValue.Environment.ComponentList[0].Id = componentId;
             returnValue.Environment.ComponentList[0].ProjectId = projectId;
@@ -1455,5 +1475,45 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             AssertComponentHistoryList(deployStateList, result);
         }
+
+        [Test]
+        public void GetDeployStateSummaryListByDeployBatchRequestItemId_GetsHistoryList()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+            string deployBatchRequestItemId = this.Fixture.Create<string>();
+            for(int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut, deployBatchRequestItemId: deployBatchRequestItemId);
+                deployStateList.Add(deployState);
+            }
+            
+            var result = sut.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequestItemId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(deployStateList.Count, result.Count);
+            AssertDeployStateSummaryList(deployStateList, result);
+        }
+
+        [Test]
+        public void GetDeployStateSummaryListByDeployBatchRequestItemId_MissingDeployBatchRequestItemId_ThrowsArgumentNullException()
+        {
+            var sut = this.GetRepository();
+
+            Assert.Throws<ArgumentNullException>(()=>sut.GetDeployStateSummaryListByDeployBatchRequestItemId(null));
+        }
+
+        [Test]
+        public void GetDeployStateSummaryListByDeployBatchRequestItemId_BadDeployBatchRequestItemId_ReturnsEmptyList()
+        {
+            var sut = this.GetRepository();
+
+            var result = sut.GetDeployStateSummaryListByDeployBatchRequestItemId(Guid.NewGuid().ToString());
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count);
+        }
+
     }
 }

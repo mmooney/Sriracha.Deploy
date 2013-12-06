@@ -17,15 +17,17 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly IBuildRepository _buildRepository;
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeployRepository _deployRepository;
+        private readonly IDeployStateRepository _deployStateRepository;
 		private readonly IDeploymentValidator _validator;
 		private readonly IProjectNotifier _projectNotifier;
 		private readonly IUserIdentity _userIdentity;
 
-		public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator, IProjectNotifier projectNotifier, IUserIdentity userIdentity)
+        public DeployRequestManager(IBuildRepository buildRepository, IProjectRepository projectRepository, IDeployRepository deployRepository, IDeploymentValidator validator, IProjectNotifier projectNotifier, IUserIdentity userIdentity, IDeployStateRepository deployStateRepository)
 		{
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+            _deployStateRepository = DIHelper.VerifyParameter(deployStateRepository);
 			_validator = DIHelper.VerifyParameter(validator);
 			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
@@ -51,8 +53,23 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 
 		public PagedSortedList<DeployBatchStatus> GetDeployBatchStatusList(ListOptions listOptions)
 		{
-			return _deployRepository.GetDeployBatchStatusList(listOptions);
+            var requestList = _deployRepository.GetBatchRequestList(listOptions);
+            var returnListItems = requestList.Items.Select(i => BuildDeployBatchStatus(i)).ToList();
+            var pagedList = new StaticPagedList<DeployBatchStatus>(returnListItems, requestList.PageNumber, requestList.PageSize, requestList.TotalItemCount);
+            return new PagedSortedList<DeployBatchStatus>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
+
+        private DeployBatchStatus BuildDeployBatchStatus(DeployBatchRequest deployBatchRequest)
+        {
+            var status = new DeployBatchStatus
+            {
+                Request = deployBatchRequest,
+                DeployBatchRequestId = deployBatchRequest.Id,
+                DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequest.Id)
+            };
+            return status;
+        }
+
 
 		public DeployBatchStatus GetDeployBatchStatus(string deployBatchRequestId)
 		{
@@ -60,7 +77,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				DeployBatchRequestId = deployBatchRequestId,
 				Request = _deployRepository.GetBatchRequest(deployBatchRequestId),
-				DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequestId)
+				DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequestId)
 			};
 			//foreach(var requestItem in status.Request.ItemList)
 			//{

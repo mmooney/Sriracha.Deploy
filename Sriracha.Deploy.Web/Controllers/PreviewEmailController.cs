@@ -14,6 +14,7 @@ namespace Sriracha.Deploy.Web.Controllers
     public class PreviewEmailController : Controller
     {
 		private readonly IDeployRepository _deployRepository;
+        private readonly IDeployStateRepository _deployStateRepository;
 		private readonly IBuildRepository _buildRepository;
 		private readonly IProjectRepository _projectRepository;
 		private readonly ISystemSettings _systemSettings;
@@ -21,9 +22,10 @@ namespace Sriracha.Deploy.Web.Controllers
 		private readonly IRazorTemplateRepository _razorTemplateRepository;
 		private readonly INotificationResourceViews _notificationResourceViews;
 
-		public PreviewEmailController(IDeployRepository deployRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IUrlGenerator urlGenerator, IRazorTemplateRepository razorTemplateRepository, INotificationResourceViews notificationResourceViews)
+		public PreviewEmailController(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository,  IBuildRepository buildRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IUrlGenerator urlGenerator, IRazorTemplateRepository razorTemplateRepository, INotificationResourceViews notificationResourceViews)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+            _deployStateRepository = DIHelper.VerifyParameter(deployStateRepository);
 			_buildRepository = DIHelper.VerifyParameter(buildRepository);
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
@@ -167,7 +169,7 @@ namespace Sriracha.Deploy.Web.Controllers
 					{
 						DeployBatchRequestId = deployRequest.Id,
 						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
-						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+						DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
 					},
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
@@ -194,7 +196,7 @@ namespace Sriracha.Deploy.Web.Controllers
 					{
 						DeployBatchRequestId = deployRequest.Id,
 						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
-						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+						DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
 					},
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)

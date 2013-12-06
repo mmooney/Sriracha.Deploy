@@ -22,8 +22,9 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 		private readonly ISystemSettings _systemSettings;
 		private readonly INotificationResourceViews _notificationResourceViews;
 		private readonly IDeployRepository _deployRepository;
+        private readonly IDeployStateRepository _deployStateRepository;
 
-		public ProjectNotifier(IMembershipRepository membershipRepository, IEmailQueue emailQueue, IRazorTemplateRepository razorTemplateRepository, IUrlGenerator urlGenerator, ISystemSettings systemSettings, INotificationResourceViews notificationResourceViews, IDeployRepository deployRepository)
+        public ProjectNotifier(IMembershipRepository membershipRepository, IEmailQueue emailQueue, IRazorTemplateRepository razorTemplateRepository, IUrlGenerator urlGenerator, ISystemSettings systemSettings, INotificationResourceViews notificationResourceViews, IDeployRepository deployRepository, IDeployStateRepository deployStateRepository)
 		{
 			_membershipRepository = DIHelper.VerifyParameter(membershipRepository);
 			_emailQueue = DIHelper.VerifyParameter(emailQueue);
@@ -32,6 +33,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
 			_notificationResourceViews = DIHelper.VerifyParameter(notificationResourceViews);
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+            _deployStateRepository =  DIHelper.VerifyParameter(deployStateRepository);
 		}
 
 		private List<string> GetNotificationEmailAddresses(string projectId, Func<ProjectNotificationFlags, bool> flagsFilter)
@@ -199,7 +201,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					{
 						DeployBatchRequestId = deployRequest.Id,
 						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
-						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+                        DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
 					},
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
@@ -224,7 +226,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					{
 						DeployBatchRequestId = deployRequest.Id,
 						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
-						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+                        DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
 					},
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
@@ -249,7 +251,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					{
 						DeployBatchRequestId = deployRequest.Id,
 						Request = _deployRepository.GetBatchRequest(deployRequest.Id),
-						DeployStateList = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
+                        DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployRequest.Id)
 					},
 					DisplayTimeZoneIdentifier = _systemSettings.DisplayTimeZoneIdentifier,
 					DeployStatusUrl = _urlGenerator.DeployStatusUrl(deployRequest.Id)
