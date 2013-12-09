@@ -39,7 +39,7 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 					var item = _cleanupManager.PopNextFolderCleanupTask(Environment.MachineName);
 					if(item == null)
 					{
-						item = null;
+						done = true;
 					}
 					else 
 					{
