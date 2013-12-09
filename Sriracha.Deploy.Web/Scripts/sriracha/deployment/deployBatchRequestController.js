@@ -88,7 +88,7 @@
 			}
 			else {
 				var hasConfig = false;
-				var component = _.findWhere($scope.project.componentList, { id: item.build.projectComponentId });
+				var component = _.findWhere(project.componentList, { id: item.build.projectComponentId });
 				if (component.useConfigurationGroup && component.configurationId) {
 					var environmentComponent = _.findWhere(environment.configurationList, { parentId: component.configurationId });
 					if (!environmentComponent || !environmentComponent.machineList || !environmentComponent.machineList) {
