@@ -25,5 +25,12 @@ namespace Sriracha.Deploy.Data.Dto
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
+
+		public EnumQueueStatus Status { get; set; }
+
+		public DateTime StartedDateTimeUtc { get; set; }
+		public DateTime CompletedDateTimeUtc { get; set; }
+
+		public string ErrorDetails { get; set; }
 	}
 }

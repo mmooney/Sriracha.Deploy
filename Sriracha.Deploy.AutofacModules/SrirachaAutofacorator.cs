@@ -125,6 +125,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<PurgeBuildJob>().As<IPurgeBuildJob>();
 			builder.RegisterType<EmailSenderJob>().As<IEmailSenderJob>();
 			builder.RegisterType<GCFlushJob>().As<GCFlushJob>();
+			builder.RegisterType<FolderJobCleanupJob>().As<IFolderCleanupJob>();
 
 			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
 			

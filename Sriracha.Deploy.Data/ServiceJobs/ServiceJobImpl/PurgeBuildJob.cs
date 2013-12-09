@@ -23,15 +23,6 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 
 		public void Execute(Quartz.IJobExecutionContext context)
 		{
-_logger.Info("Starting GCFlushJob.Run");
-var existingMemory = GC.GetTotalMemory(false);
-_logger.Info("GCFlushJob: existing memory: " + existingMemory.ToString());
-GC.Collect();
-GC.WaitForPendingFinalizers();
-var afterMemory = GC.GetTotalMemory(true);
-_logger.Info("GCFlushJob: memory after collection: " + afterMemory.ToString());
-_logger.Info("Done GCFlushJob.Run");
-
 			_logger.Info("Starting PurgeBuildJob.Execute");
 			try 
 			{

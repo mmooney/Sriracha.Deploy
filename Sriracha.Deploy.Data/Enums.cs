@@ -52,4 +52,12 @@ namespace Sriracha.Deploy.Data
         IsolatedPerDeployment = 1,
         NoIsolation = 2
     }
+
+	public enum EnumQueueStatus
+	{
+		New = 0,
+		InProcess = 1,
+		Completed = 2,
+		Error = 3
+	}
 }

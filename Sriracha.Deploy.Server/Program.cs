@@ -12,6 +12,7 @@ using NLog;
 using Sriracha.Deploy.AutofacModules;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.ServiceJobs;
 
 namespace Sriracha.Deploy.Server
 {
@@ -35,6 +36,9 @@ namespace Sriracha.Deploy.Server
             [Option("patchdata")]
             public bool PatchData { get; set; }
 
+			[Option("cleanupFolders")]
+			public bool CleanupFolders { get; set; }
+
 			[Option("runDeployment")]
 			public string RunDeploymentId { get; set; }
 			[ParserState]
@@ -47,6 +51,7 @@ namespace Sriracha.Deploy.Server
 					(HelpText current) =>
 						HelpText.DefaultParsingErrorsHandler(this, current));
 			}
+
 		}
 
 		//private static IKernel _kernel { get; set; }
@@ -95,6 +100,11 @@ namespace Sriracha.Deploy.Server
 			{
 				var deploymentBatchRunner = _diFactory.CreateInjectedObject<IDeployBatchRunner>();
 				deploymentBatchRunner.ForceRunDeployment(options.RunDeploymentId);
+			}
+			else if (options.CleanupFolders)
+			{
+				var job = _diFactory.CreateInjectedObject<IFolderCleanupJob>();
+				job.ForceRun();
 			}
             else if (options.Debug)
 			{
