@@ -109,9 +109,11 @@
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployHistoryReporter.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeploymentPlanBuilder.cs" />
+    <Compile Include="Deployment\DeploymentImpl\OfflineDeploymentManager.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />
     <Compile Include="Deployment\IDeployHistoryReporter.cs" />
     <Compile Include="Deployment\IDeploymentPlanBuilder.cs" />
+    <Compile Include="Deployment\IOfflineDeploymentManager.cs" />
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
     <Compile Include="Dto\Account\ProjectNotificationItem.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
     <Compile Include="Dto\CleanupTaskData.cs" />
     <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
+    <Compile Include="Dto\Deployment\OfflineDeployment.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlan.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueue.cs" />
     <Compile Include="Dto\Deployment\Plan\DeploymentPlanMachineQueueItem.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Notifications\IEmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
+    <Compile Include="Repository\IOfflineDeploymentRepository.cs" />
     <Compile Include="ServiceJobs\ICleanupJob.cs" />
     <Compile Include="ServiceJobs\IFolderCleanupJob.cs" />
     <Compile Include="ServiceJobs\IGCFlushJob.cs" />

@@ -270,6 +270,8 @@
     <Compile Include="Services\Deployment\DeployHistoryService.cs" />
     <Compile Include="Services\Deployment\DeployQueueRequest.cs" />
     <Compile Include="Services\Deployment\DeployQueueService.cs" />
+    <Compile Include="Services\Deployment\OfflineDeploymentRequest.cs" />
+    <Compile Include="Services\Deployment\OfflineDeploymentService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />

@@ -388,15 +388,25 @@
 		});
 	}
 
+	$scope.createOfflineDeployment = function () {
+		var batchRequest = $scope.createBatchDeployRequest();
+		var offlineRequest = new SrirachaResource.offlineDeployment();
+		offlineRequest.batchRequest = batchRequest;
+		offlineRequest.$save(null,
+			function () {
+				$scope.navigator.deployment.offlineStatus.go(offlineRequest.id);
+			},
+			function (err) {
+				ErrorReporter.handleResourceError(err);
+			});
+	}
+
 	$scope.submitBuildRequest = function () {
 		if (!$scope.deploymentLabel) {
 			alert("Please enter a deployment label");
 			return;
 		}
-		var request = new SrirachaResource.deployBatchRequest();
-		request.itemList = $scope.selectedItems;
-		request.status = "Requested";
-		request.deploymentLabel = $scope.deploymentLabel;
+		var request = $scope.createBatchDeployRequest();
 		request.$save(null,
 			function () {
 				$scope.navigator.deployment.batchStatus.go(request.id);
@@ -404,6 +414,14 @@
 			function (err) {
 				ErrorReporter.handleResourceError(err);
 			});
+	}
+
+	$scope.createBatchDeployRequest = function () {
+		var request = new SrirachaResource.deployBatchRequest();
+		request.itemList = $scope.selectedItems;
+		request.status = "Requested";
+		request.deploymentLabel = $scope.deploymentLabel;
+		return request;
 	}
 
 	$scope.getPermissionMessages = function () {
@@ -438,6 +456,12 @@
 	}
 
 	$scope.canSubmitDeployRequest = function () {
+		if ($scope.selectedItems) {
+			return ($scope.selectedItems.length && !$scope.getPermissionMessages().length);
+		}
+	}
+
+	$scope.canCreateOfflineDeployment = function () {
 		if ($scope.selectedItems) {
 			return ($scope.selectedItems.length && !$scope.getPermissionMessages().length);
 		}

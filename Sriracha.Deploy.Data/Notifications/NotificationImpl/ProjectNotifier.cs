@@ -120,7 +120,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployRequestedEmail", _notificationResourceViews.DeployRequestedEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i=>i.MachineList.Select(j=>j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("New Deployment Requested: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel,string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -141,7 +141,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployApprovedEmail", _notificationResourceViews.DeployApprovedEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Approved: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -162,7 +162,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployRejectedEmail", _notificationResourceViews.DeployRejectedEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Rejected: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -183,7 +183,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployStartedEmail", _notificationResourceViews.DeployStartedEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Started: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -208,7 +208,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeploySuccessEmail", _notificationResourceViews.DeploySuccessEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Succeeded: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -233,7 +233,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployFailedEmail", _notificationResourceViews.DeployFailedEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Failed: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}
@@ -258,7 +258,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 				};
 				var template = _razorTemplateRepository.GetTemplate("DeployCancelledEmail", _notificationResourceViews.DeployCancelledEmailView);
 				var machineNames = string.Join(",", deployRequest.ItemList.SelectMany(i => i.MachineList.Select(j => j.MachineName)).Distinct().ToArray());
-				string deployLabel = deployRequest.Label;
+				string deployLabel = deployRequest.DeploymentLabel;
 				string subject = string.Format("Deployment Cancelled: {0} ({1})", StringHelper.IsNullOrEmpty(deployLabel, string.Empty), machineNames);
 				_emailQueue.QueueMessage(subject, emailAddresseList, dataObject, template.ViewData);
 			}

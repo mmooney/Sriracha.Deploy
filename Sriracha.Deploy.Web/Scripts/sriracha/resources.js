@@ -24,7 +24,8 @@
 			deployState: $resource("/api/deploy/state/:deployState"),
 			deployBatchStatus: $resource("/api/deploy/batch/:id/status"),
 			deployBatchAction: $resource("/api/deploy/batch/:id/action"),
-            deployHistory: $resource("/api/deploy/history"),
+			deployHistory: $resource("/api/deploy/history"),
+			offlineDeployment: $resource("/api/deploy/offline"),
 
 			validateEnvironment: $resource("/api/validateEnvironment"),
 

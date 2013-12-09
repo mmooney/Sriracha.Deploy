@@ -9,7 +9,6 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 	public class DeployBatchRequest
 	{
 		public string Id { get; set; }
-		public string Label { get; set; }
 		public DateTime SubmittedDateTimeUtc { get; set; }
 		public string SubmittedByUserName { get; set; }
 		public List<DeployBatchRequestItem> ItemList { get; set; }

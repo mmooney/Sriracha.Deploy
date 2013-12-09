@@ -89,6 +89,7 @@
     <Compile Include="RavenHelper.cs" />
     <Compile Include="RavenEmailQueueRepository.cs" />
     <Compile Include="RavenMembershipRepository.cs" />
+    <Compile Include="RavenOfflineDeploymentRepository.cs" />
     <Compile Include="RavenProjectRepository.cs" />
     <Compile Include="RavenQueryExtensions.cs" />
     <Compile Include="RavenRazorTemplateRepository.cs" />
