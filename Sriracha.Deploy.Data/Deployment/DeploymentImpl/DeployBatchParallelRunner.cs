@@ -67,10 +67,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			}
 			var runtimeSettings = new RuntimeSystemSettings
 			{
-				LocalDeployDirectory = deployDirectory
+				LocalDeployDirectory = deployDirectory,
+				LocalMachineName = Environment.MachineName
 			};
 			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
+			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalMachineName, runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
 			var plan = _deploymentPlanBuilder.Build(deployBatchRequest);
 			//_deployStateManager.SaveDeploymentPlan(plan);
 			foreach (var parallelBatchList in plan.ParallelBatchList)

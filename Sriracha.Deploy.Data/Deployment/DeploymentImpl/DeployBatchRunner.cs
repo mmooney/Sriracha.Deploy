@@ -67,7 +67,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				LocalDeployDirectory = deployDirectory
 			};
 			Directory.CreateDirectory(runtimeSettings.LocalDeployDirectory);
-			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
+			_cleanupManager.QueueFolderForCleanup(runtimeSettings.LocalMachineName, runtimeSettings.LocalDeployDirectory, _systemSettings.DeploymentFolderCleanupMinutes);
 			foreach (var item in deployBatchRequest.ItemList)
 			{
 				foreach (var machine in item.MachineList)

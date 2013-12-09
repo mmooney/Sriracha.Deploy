@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto.Credentials;
 using System.Diagnostics;
+using Sriracha.Deploy.Data.Dto;
+using Raven.Abstractions.Data;
 
 namespace Sriracha.Deploy.RavenDB.DataPatcher
 {
@@ -32,7 +34,11 @@ namespace Sriracha.Deploy.RavenDB.DataPatcher
 			{
 				DropAllIndexes(session.Advanced.DocumentStore);
 			}
-			else 
+			if(args != null && args.Contains("--purgeSystemLog"))
+			{
+				PurgeSystemLog(session);
+			}
+			if(args == null || args.Length == 0)
 			{
 				var x = session.Query<DeployCredentials>().FirstOrDefault(i=>i.UserName == "mmoone00c");
 				if(x != null)
@@ -99,6 +105,31 @@ namespace Sriracha.Deploy.RavenDB.DataPatcher
 				}
             }
         }
+
+		private static void PurgeSystemLog(IDocumentSession session)
+		{
+			bool done = false;
+			int batchSize = 100;
+			int totalDeleted = 0;
+			while(!done)
+			{
+				var list = session.Query<SystemLog>()
+				//.Customize(i=>i.WaitForNonStaleResultsAsOfNow())
+					.Take(batchSize);
+				if(list.Count() < batchSize)
+				{
+					done = true;
+				}
+				foreach(var item in list)
+				{
+					session.Delete(item);
+					totalDeleted++;
+				}
+				session.SaveChanges();
+				Console.WriteLine(totalDeleted.ToString() + " records deleted");
+				Debug.WriteLine(totalDeleted.ToString() + " records deleted");
+			}
+		}
 
 		private static void DropAllIndexes(IDocumentStore documentStore)
 		{

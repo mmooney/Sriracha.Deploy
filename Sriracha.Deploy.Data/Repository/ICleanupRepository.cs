@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface ICleanupRepository
 	{
-		CleanupTaskData CreateCleanupTask(EnumCleanupTaskType taskType, string folderPath, int ageMinutes);
+		CleanupTaskData CreateCleanupTask(string machineName, EnumCleanupTaskType taskType, string folderPath, int ageMinutes);
 	}
 }

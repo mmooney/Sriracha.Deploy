@@ -9,6 +9,7 @@ namespace Sriracha.Deploy.Data.Tasks
 	public class RuntimeSystemSettings
 	{
 		public string LocalDeployDirectory { get; set; }
+		public string LocalMachineName { get; set; }
 
 		//public string GetLocalMachineDirectory(string machineName)
 		//{	

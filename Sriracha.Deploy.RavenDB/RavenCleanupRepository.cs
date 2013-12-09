@@ -20,14 +20,16 @@ namespace Sriracha.Deploy.RavenDB
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		public CleanupTaskData CreateCleanupTask(EnumCleanupTaskType taskType, string folderPath, int ageMinutes)
+		public CleanupTaskData CreateCleanupTask(string machineName, EnumCleanupTaskType taskType, string folderPath, int ageMinutes)
 		{
 			var task = new CleanupTaskData
 			{
 				Id = Guid.NewGuid().ToString(),
 				TaskType = taskType,
+				MachineName = machineName,
 				FolderPath = folderPath,
 				AgeMinutes = ageMinutes,
+				TargetCleanUpDateTimeUtc = DateTime.UtcNow.AddMinutes(0-ageMinutes),
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,

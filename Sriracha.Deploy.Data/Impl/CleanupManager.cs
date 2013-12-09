@@ -16,9 +16,9 @@ namespace Sriracha.Deploy.Data.Impl
 			_cleanupRepository = DIHelper.VerifyParameter(cleanupRepository);
 		}
 
-		public CleanupTaskData QueueFolderForCleanup(string folderPath, int ageMinutes)
+		public CleanupTaskData QueueFolderForCleanup(string machineName, string folderPath, int ageMinutes)
 		{
-			return _cleanupRepository.CreateCleanupTask(EnumCleanupTaskType.Folder, folderPath, ageMinutes);
+			return _cleanupRepository.CreateCleanupTask(machineName, EnumCleanupTaskType.Folder, folderPath, ageMinutes);
 		}
 	}
 }

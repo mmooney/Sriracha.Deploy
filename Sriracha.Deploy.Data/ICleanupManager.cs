@@ -8,6 +8,6 @@ namespace Sriracha.Deploy.Data
 {
 	public interface ICleanupManager
 	{
-		CleanupTaskData QueueFolderForCleanup(string folderPath, int ageMinutes);
+		CleanupTaskData QueueFolderForCleanup(string machineName, string folderPath, int ageMinutes);
 	}
 }
