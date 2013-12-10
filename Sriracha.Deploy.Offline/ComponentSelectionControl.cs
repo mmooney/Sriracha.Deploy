@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Offline
 {
@@ -33,7 +34,7 @@ namespace Sriracha.Deploy.Offline
             CheckAllMachines(selected);
         }
 
-        private void CheckAllMachines(bool selected)
+        public void CheckAllMachines(bool selected)
         {
             for (int i = 0; i < _batchRequestItem.MachineList.Count; i++)
             {
@@ -41,14 +42,60 @@ namespace Sriracha.Deploy.Offline
             }
         }
 
-        private bool AreNoMachinesSelected()
+        public void CheckSpecificMachines(List<string> machineNameList)
         {
-            return (_chkMachineCheckboxList.CheckedItems.Count == 0);
+            for (int i = 0; i < _batchRequestItem.MachineList.Count; i++)
+            {
+                var machine = (DeployMachine)_chkMachineCheckboxList.Items[i];
+                if(machineNameList.Contains(machine.MachineName, StringComparer.CurrentCultureIgnoreCase))
+                {
+                    _chkMachineCheckboxList.SetItemChecked(i, true);
+                }
+            }
         }
 
-        private bool AreAllMachinesSelected()
+        private bool AreNoMachinesSelected(int? changingItemIndex=null, CheckState? changingItemValue=null)
         {
-            return (_chkMachineCheckboxList.CheckedItems.Count == _chkMachineCheckboxList.Items.Count);
+            for(int i = 0; i < _chkMachineCheckboxList.Items.Count; i++)
+            {
+                bool selected;
+                if(changingItemIndex.HasValue && changingItemValue.HasValue
+                        && changingItemIndex.Value == i)
+                {
+                    selected = (changingItemValue.Value == CheckState.Checked);
+                }
+                else 
+                {
+                    selected = _chkMachineCheckboxList.GetItemChecked(i);
+                }
+                if(selected) 
+                {
+                    return false;
+                }   
+            }
+            return true;
+        }
+
+        private bool AreAllMachinesSelected(int? changingItemIndex=null, CheckState? changingItemValue=null)
+        {
+            for(int i = 0; i < _chkMachineCheckboxList.Items.Count; i++)
+            {
+                bool selected;
+                if(changingItemIndex.HasValue && changingItemValue.HasValue
+                        && changingItemIndex.Value == i)
+                {
+                    selected = (changingItemValue.Value == CheckState.Checked);
+                }
+                else 
+                {
+                    selected = _chkMachineCheckboxList.GetItemChecked(i);
+                }
+                if(!selected) 
+                {
+                    return false;
+                }   
+            }
+            return true;
         }
 
         private void _btnClearAllMachines_Click(object sender, EventArgs e)
@@ -56,14 +103,14 @@ namespace Sriracha.Deploy.Offline
             CheckAllMachines(false);
         }
 
-        private void _chkMachineCheckboxList_SelectedIndexChanged(object sender, EventArgs e)
+        private void _chkMachineCheckboxList_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             _chkComponentChecked.CheckStateChanged -= _chkComponentChecked_CheckStateChanged;
-            if (this.AreAllMachinesSelected())
+            if (this.AreAllMachinesSelected(e.Index, e.NewValue))
             {
                 _chkComponentChecked.CheckState = CheckState.Checked;
             }
-            else if(this.AreNoMachinesSelected())
+            else if(this.AreNoMachinesSelected(e.Index, e.NewValue))
             {
                 _chkComponentChecked.CheckState = CheckState.Unchecked;
             }
@@ -76,28 +123,27 @@ namespace Sriracha.Deploy.Offline
 
         private void _chkComponentChecked_CheckStateChanged(object sender, EventArgs e)
         {
+            _chkComponentChecked.CheckStateChanged -= _chkComponentChecked_CheckStateChanged;
             if (this.AreAllMachinesSelected())
             {
+                CheckAllMachines(false);
                 _chkComponentChecked.CheckStateChanged -= _chkComponentChecked_CheckStateChanged;
-                    CheckAllMachines(false);
-                    _chkComponentChecked.CheckState = CheckState.Unchecked;
-                _chkComponentChecked.CheckStateChanged += _chkComponentChecked_CheckStateChanged;
+                _chkComponentChecked.CheckState = CheckState.Unchecked;
             }
             else if (this.AreNoMachinesSelected())
             {
+                CheckAllMachines(true);
                 _chkComponentChecked.CheckStateChanged -= _chkComponentChecked_CheckStateChanged;
-                    CheckAllMachines(true);
-                    _chkComponentChecked.CheckState = CheckState.Checked;
-                _chkComponentChecked.CheckStateChanged += _chkComponentChecked_CheckStateChanged;
+                _chkComponentChecked.CheckState = CheckState.Checked;
             }
             else
             {
+                //Some machines were selected
+                CheckAllMachines(true);
                 _chkComponentChecked.CheckStateChanged -= _chkComponentChecked_CheckStateChanged;
-                    //Some machines wree selected
-                    CheckAllMachines(true);
-                    _chkComponentChecked.CheckState = CheckState.Checked;
-                _chkComponentChecked.CheckStateChanged += _chkComponentChecked_CheckStateChanged;
+                _chkComponentChecked.CheckState = CheckState.Checked;
             }
+            _chkComponentChecked.CheckStateChanged += _chkComponentChecked_CheckStateChanged;
         }
 
     }

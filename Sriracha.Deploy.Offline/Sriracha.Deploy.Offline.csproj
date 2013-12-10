@@ -72,6 +72,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectMachineForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectMachineForm.Designer.cs">
+      <DependentUpon>SelectMachineForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ComponentSelectionControl.resx">
       <DependentUpon>ComponentSelectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,6 +97,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SelectMachineForm.resx">
+      <DependentUpon>SelectMachineForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

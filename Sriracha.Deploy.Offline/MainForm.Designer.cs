@@ -33,6 +33,9 @@
             this._txtRequestFileName = new System.Windows.Forms.TextBox();
             this._btnRequestFileNameBrowse = new System.Windows.Forms.Button();
             this._pnlAllComponents = new System.Windows.Forms.FlowLayoutPanel();
+            this._btnSelectAll = new System.Windows.Forms.Button();
+            this._btnClearAll = new System.Windows.Forms.Button();
+            this._btnSelectMachines = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _lblRequestFileName
@@ -69,17 +72,50 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._pnlAllComponents.AutoScroll = true;
             this._pnlAllComponents.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this._pnlAllComponents.Location = new System.Drawing.Point(12, 39);
+            this._pnlAllComponents.Location = new System.Drawing.Point(12, 79);
             this._pnlAllComponents.Name = "_pnlAllComponents";
-            this._pnlAllComponents.Size = new System.Drawing.Size(706, 447);
+            this._pnlAllComponents.Size = new System.Drawing.Size(706, 407);
             this._pnlAllComponents.TabIndex = 3;
             this._pnlAllComponents.WrapContents = false;
+            // 
+            // _btnSelectAll
+            // 
+            this._btnSelectAll.Location = new System.Drawing.Point(198, 39);
+            this._btnSelectAll.Name = "_btnSelectAll";
+            this._btnSelectAll.Size = new System.Drawing.Size(75, 23);
+            this._btnSelectAll.TabIndex = 4;
+            this._btnSelectAll.Text = "Select All";
+            this._btnSelectAll.UseVisualStyleBackColor = true;
+            this._btnSelectAll.Click += new System.EventHandler(this._btnSelectAll_Click);
+            // 
+            // _btnClearAll
+            // 
+            this._btnClearAll.Location = new System.Drawing.Point(279, 39);
+            this._btnClearAll.Name = "_btnClearAll";
+            this._btnClearAll.Size = new System.Drawing.Size(75, 23);
+            this._btnClearAll.TabIndex = 5;
+            this._btnClearAll.Text = "Clear All";
+            this._btnClearAll.UseVisualStyleBackColor = true;
+            this._btnClearAll.Click += new System.EventHandler(this._btnClearAll_Click);
+            // 
+            // _btnSelectMachines
+            // 
+            this._btnSelectMachines.Location = new System.Drawing.Point(360, 39);
+            this._btnSelectMachines.Name = "_btnSelectMachines";
+            this._btnSelectMachines.Size = new System.Drawing.Size(140, 23);
+            this._btnSelectMachines.TabIndex = 6;
+            this._btnSelectMachines.Text = "Select Specific Machines";
+            this._btnSelectMachines.UseVisualStyleBackColor = true;
+            this._btnSelectMachines.Click += new System.EventHandler(this._btnSelectMachines_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(730, 524);
+            this.Controls.Add(this._btnSelectMachines);
+            this.Controls.Add(this._btnClearAll);
+            this.Controls.Add(this._btnSelectAll);
             this.Controls.Add(this._pnlAllComponents);
             this.Controls.Add(this._btnRequestFileNameBrowse);
             this.Controls.Add(this._txtRequestFileName);
@@ -98,6 +134,9 @@
         private System.Windows.Forms.TextBox _txtRequestFileName;
         private System.Windows.Forms.Button _btnRequestFileNameBrowse;
         private System.Windows.Forms.FlowLayoutPanel _pnlAllComponents;
+        private System.Windows.Forms.Button _btnSelectAll;
+        private System.Windows.Forms.Button _btnClearAll;
+        private System.Windows.Forms.Button _btnSelectMachines;
     }
 }
 

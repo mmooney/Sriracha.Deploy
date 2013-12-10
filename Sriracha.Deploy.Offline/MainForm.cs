@@ -85,5 +85,37 @@ namespace Sriracha.Deploy.Offline
                 dlg.ShowDialog();
             }
         }
+
+        private void _btnSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach(ComponentSelectionControl ctrl in _pnlAllComponents.Controls)
+            {
+                ctrl.CheckAllMachines(true);
+            }
+        }
+
+        private void _btnClearAll_Click(object sender, EventArgs e)
+        {
+            foreach (ComponentSelectionControl ctrl in _pnlAllComponents.Controls)
+            {
+                ctrl.CheckAllMachines(false);
+            }
+        }
+
+        private void _btnSelectMachines_Click(object sender, EventArgs e)
+        {
+            using(var dlg = new SelectMachineForm(_batchRequest))
+            {
+                var result = dlg.ShowDialog();
+                if(result == System.Windows.Forms.DialogResult.OK)
+                {
+                    var machineNameList = dlg.GetSelectedMachineNameList();
+                    foreach (ComponentSelectionControl ctrl in _pnlAllComponents.Controls)
+                    {
+                        ctrl.CheckSpecificMachines(machineNameList);
+                    }
+                }
+            }
+        }
     }
 }

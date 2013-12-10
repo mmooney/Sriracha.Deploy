@@ -53,7 +53,7 @@
             this._chkMachineCheckboxList.Name = "_chkMachineCheckboxList";
             this._chkMachineCheckboxList.Size = new System.Drawing.Size(505, 64);
             this._chkMachineCheckboxList.TabIndex = 1;
-            this._chkMachineCheckboxList.SelectedIndexChanged += new System.EventHandler(this._chkMachineCheckboxList_SelectedIndexChanged);
+            this._chkMachineCheckboxList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._chkMachineCheckboxList_ItemCheck);
             // 
             // _lblMachineHeader
             // 
