@@ -16,14 +16,30 @@ namespace Sriracha.Deploy.AutofacModules
 			_container = DIHelper.VerifyParameter(container);
 		}
 
-		public object CreateInjectedObject(Type t)
+        public object CreateInjectedObject(Type t, Dictionary<Type, object> parameters=null)
 		{
-			return _container.Resolve(t);
+            if(parameters != null && parameters.Count > 0)
+            {
+                var parameterArray = parameters.Select(i=>new TypedParameter(i.Key, i.Value));
+	    		return _container.Resolve(t, parameterArray);
+            }
+            else 
+            {
+                return _container.Resolve(t);
+            }
 		}
 
-		public T CreateInjectedObject<T>()
+        public T CreateInjectedObject<T>(Dictionary<Type, object> parameters=null)
 		{
-			return _container.Resolve<T>();
+            if (parameters != null && parameters.Count > 0)
+            {
+                var parameterArray = parameters.Select(i => new TypedParameter(i.Key, i.Value)).ToArray();
+                return _container.Resolve<T>(parameterArray);
+            }
+            else
+            {
+                return _container.Resolve<T>();
+            }
 		}
 	}
 }

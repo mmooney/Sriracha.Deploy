@@ -3,6 +3,7 @@ using MMDB.QuartzJobs;
 using NLog;
 using Quartz;
 using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Deployment.Offline;
 using System;
 using System.Collections.Generic;
 using System.Linq;

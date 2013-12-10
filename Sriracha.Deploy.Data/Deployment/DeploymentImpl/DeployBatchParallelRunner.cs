@@ -39,7 +39,14 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			var deployBatchRequest = _deployRequestManager.GetDeployBatchRequest(deployBatchRequestId);
 			try 
 			{
-				_deployStateManager.MarkBatchDeploymentResumed(deployBatchRequest.Id, "Force run");
+                if(deployBatchRequest.Status == EnumDeployStatus.NotStarted || deployBatchRequest.Status == EnumDeployStatus.OfflineRequested)
+                {
+                    _deployStateManager.MarkBatchDeploymentInProcess(deployBatchRequest.Id);
+                }
+                else 
+                {
+    				_deployStateManager.MarkBatchDeploymentResumed(deployBatchRequest.Id, "Force run");
+                }
 				RunDeployment(deployBatchRequest);
 			}
 			catch (Exception err)

@@ -123,5 +123,12 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		{
 			return _deployRepository.SaveDeploymentPlan(plan);
 		}
-	}
+
+
+        public void MarkBatchDeploymentInProcess(string deployBatchRequestId)
+        {
+            string statusMessage = string.Format("Deployment was started at {0} UTC", DateTime.UtcNow);
+            _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
+        }
+    }
 }

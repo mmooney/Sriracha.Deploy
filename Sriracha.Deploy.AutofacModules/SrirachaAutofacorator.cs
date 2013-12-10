@@ -31,15 +31,18 @@ using Sriracha.Deploy.Data.Project;
 using Sriracha.Deploy.Data.Credentials.CredentialsImpl;
 using Sriracha.Deploy.Data.Credentials;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Deployment.Offline;
+using Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl;
 
 namespace Sriracha.Deploy.AutofacModules
 {
-	public enum EnumDIMode
-	{
-		Web,
-		Service,
-		CommandLine
-	}
+    public enum EnumDIMode
+    {
+        Web,
+        Service,
+        CommandLine,
+        Offline
+    }
 	public class SrirachaAutofacorator : Autofac.Module
 	{
 		private readonly EnumDIMode _diMode;
@@ -139,10 +142,20 @@ namespace Sriracha.Deploy.AutofacModules
 				builder.Register(CreateScheduler).As<IScheduler>().SingleInstance();
 			}
 
-			if(_diMode != EnumDIMode.CommandLine)
+			if(_diMode != EnumDIMode.CommandLine && _diMode != EnumDIMode.Offline)
 			{
 				builder.RegisterModule(new RavenDBAutofacModule());
 			}
+            if(_diMode == EnumDIMode.Offline)
+            {
+                builder.RegisterType<OfflineDataProvider>().As<IOfflineDataProvider>().SingleInstance();
+                builder.RegisterType<OfflineDeployStateRepository>().As<Sriracha.Deploy.Data.Repository.IDeployStateRepository>();
+                builder.RegisterType<OfflineDeployRepository>().As<Sriracha.Deploy.Data.Repository.IDeployRepository>();
+                builder.RegisterType<OfflineBuildRepository>().As<Sriracha.Deploy.Data.Repository.IBuildRepository>();
+                builder.RegisterType<OfflineProjectRepository>().As<Sriracha.Deploy.Data.Repository.IProjectRepository>();
+                builder.RegisterType<OfflineCleanupRepository>().As<Sriracha.Deploy.Data.Repository.ICleanupRepository>();
+                builder.RegisterType<OfflineDeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
+            }
 			this.SetupLogging(builder);
 
 			builder.RegisterSource(new Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource());

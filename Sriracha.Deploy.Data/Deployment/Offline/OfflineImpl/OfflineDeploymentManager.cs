@@ -6,8 +6,9 @@ using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Repository;
 using System.IO;
 using Sriracha.Deploy.Data.Utility;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
-namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
+namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
 	public class OfflineDeploymentManager : IOfflineDeploymentManager
 	{

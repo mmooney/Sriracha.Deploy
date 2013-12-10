@@ -63,9 +63,9 @@ namespace Sriracha.Deploy.Offline.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap StatusAnnotations_Alert_16xSM_color {
+        internal static System.Drawing.Bitmap StatusAnnotations_Critical_32xLG_color {
             get {
-                object obj = ResourceManager.GetObject("StatusAnnotations_Alert_16xSM_color", resourceCulture);
+                object obj = ResourceManager.GetObject("StatusAnnotations_Critical_32xLG_color", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace Sriracha.Deploy.Offline.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap StatusAnnotations_Critical_32xLG_color {
+        internal static System.Drawing.Bitmap StatusAnnotations_Critical_32xMD_color {
             get {
-                object obj = ResourceManager.GetObject("StatusAnnotations_Critical_32xLG_color", resourceCulture);
+                object obj = ResourceManager.GetObject("StatusAnnotations_Critical_32xMD_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StatusAnnotations_Help_and_inconclusive_32xMD_color {
+            get {
+                object obj = ResourceManager.GetObject("StatusAnnotations_Help_and_inconclusive_32xMD_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap StatusAnnotations_Play_32xMD_color {
+            get {
+                object obj = ResourceManager.GetObject("StatusAnnotations_Play_32xMD_color", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

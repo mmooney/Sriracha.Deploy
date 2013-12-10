@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,10 +18,12 @@ namespace Sriracha.Deploy.Offline
     public partial class MainForm : Form
     {
         private DeployBatchRequest _batchRequest;
+        private readonly IDIFactory _diFactory;
 
-        public MainForm()
+        public MainForm(IDIFactory diFactory)
         {
             InitializeComponent();
+            _diFactory = diFactory;
         }
 
         private void _btnRequestFileNameBrowse_Click(object sender, EventArgs e)
@@ -115,6 +119,24 @@ namespace Sriracha.Deploy.Offline
                         ctrl.CheckSpecificMachines(machineNameList);
                     }
                 }
+            }
+        }
+
+        private void _btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void _btnContinue_Click(object sender, EventArgs e)
+        {
+            var selectionList = new List<OfflineComponentSelection>();
+            foreach (ComponentSelectionControl ctrl in _pnlAllComponents.Controls)
+            {
+                selectionList.Add(ctrl.GetComponentSelection());
+            }
+            using(var dlg = new RunDeploymentForm(_diFactory, _batchRequest, selectionList, Path.GetDirectoryName(_txtRequestFileName.Text)))
+            {
+                dlg.ShowDialog();
             }
         }
     }

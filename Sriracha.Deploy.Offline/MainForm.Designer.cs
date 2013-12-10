@@ -36,6 +36,8 @@
             this._btnSelectAll = new System.Windows.Forms.Button();
             this._btnClearAll = new System.Windows.Forms.Button();
             this._btnSelectMachines = new System.Windows.Forms.Button();
+            this._btnContinue = new System.Windows.Forms.Button();
+            this._btnExit = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _lblRequestFileName
@@ -74,7 +76,7 @@
             this._pnlAllComponents.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this._pnlAllComponents.Location = new System.Drawing.Point(12, 79);
             this._pnlAllComponents.Name = "_pnlAllComponents";
-            this._pnlAllComponents.Size = new System.Drawing.Size(706, 407);
+            this._pnlAllComponents.Size = new System.Drawing.Size(706, 389);
             this._pnlAllComponents.TabIndex = 3;
             this._pnlAllComponents.WrapContents = false;
             // 
@@ -108,11 +110,35 @@
             this._btnSelectMachines.UseVisualStyleBackColor = true;
             this._btnSelectMachines.Click += new System.EventHandler(this._btnSelectMachines_Click);
             // 
+            // _btnContinue
+            // 
+            this._btnContinue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnContinue.Location = new System.Drawing.Point(511, 489);
+            this._btnContinue.Name = "_btnContinue";
+            this._btnContinue.Size = new System.Drawing.Size(112, 23);
+            this._btnContinue.TabIndex = 7;
+            this._btnContinue.Text = "Continue";
+            this._btnContinue.UseVisualStyleBackColor = true;
+            this._btnContinue.Click += new System.EventHandler(this._btnContinue_Click);
+            // 
+            // _btnExit
+            // 
+            this._btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnExit.Location = new System.Drawing.Point(643, 489);
+            this._btnExit.Name = "_btnExit";
+            this._btnExit.Size = new System.Drawing.Size(75, 23);
+            this._btnExit.TabIndex = 8;
+            this._btnExit.Text = "Exit";
+            this._btnExit.UseVisualStyleBackColor = true;
+            this._btnExit.Click += new System.EventHandler(this._btnExit_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(730, 524);
+            this.Controls.Add(this._btnExit);
+            this.Controls.Add(this._btnContinue);
             this.Controls.Add(this._btnSelectMachines);
             this.Controls.Add(this._btnClearAll);
             this.Controls.Add(this._btnSelectAll);
@@ -137,6 +163,8 @@
         private System.Windows.Forms.Button _btnSelectAll;
         private System.Windows.Forms.Button _btnClearAll;
         private System.Windows.Forms.Button _btnSelectMachines;
+        private System.Windows.Forms.Button _btnContinue;
+        private System.Windows.Forms.Button _btnExit;
     }
 }
 

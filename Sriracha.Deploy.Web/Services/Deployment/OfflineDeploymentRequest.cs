@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using ServiceStack.ServiceHost;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
 namespace Sriracha.Deploy.Web.Services.Deployment
 {

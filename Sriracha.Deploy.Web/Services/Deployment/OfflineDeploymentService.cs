@@ -6,6 +6,8 @@ using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Deployment.Offline;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
 namespace Sriracha.Deploy.Web.Services.Deployment
 {

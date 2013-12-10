@@ -21,7 +21,8 @@ namespace Sriracha.Deploy.Data.Deployment
 		void MarkDeploymentSuccess(string deployStateId);
 		void MarkDeploymentFailed(string deployStateId, Exception err);
 
-		void MarkBatchDeploymentSuccess(string deployBatchRequestId);
+        void MarkBatchDeploymentInProcess(string deployBatchRequestId);
+        void MarkBatchDeploymentSuccess(string deployBatchRequestId);
 		void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err);
 		void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage);
 		void MarkBatchDeploymentResumed(string deployBatchRequestId, string resumeMessage);
@@ -29,5 +30,6 @@ namespace Sriracha.Deploy.Data.Deployment
 		//Impersonatator BeginImpersonation(string deployStateId, string projectId, string environmentId);
 
 		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
-	}
+
+    }
 }

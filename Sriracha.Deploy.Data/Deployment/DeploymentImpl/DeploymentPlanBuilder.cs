@@ -18,6 +18,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
             _projectManager = DIHelper.VerifyParameter(projectManager);
         }
 
+        public virtual List<DeployBatchRequestItem> FilterItemList(List<DeployBatchRequestItem> itemList)
+        {
+            return itemList;
+        }
+
         public DeploymentPlan Build(DeployBatchRequest deployBatchRequest)
         {
             var returnValue = new DeploymentPlan()
@@ -25,9 +30,10 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
                 DeployBatchRequestId = deployBatchRequest.Id
             };
             DeploymentPlanParallelBatch currentParallelBatch = null;
-            if(deployBatchRequest.ItemList != null)
+            var itemList = FilterItemList(deployBatchRequest.ItemList);
+            if(itemList != null)
             {
-                foreach(var item in deployBatchRequest.ItemList)
+                foreach (var item in itemList)
                 {
                     EnumDeploymentIsolationType isolationType = _projectManager.GetComponentIsolationType(item.Build.ProjectId, item.Build.ProjectComponentId);
                     if(isolationType == EnumDeploymentIsolationType.IsolatedPerDeployment)

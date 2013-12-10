@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
 namespace Sriracha.Deploy.Data.Repository
 {

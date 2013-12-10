@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
 namespace Sriracha.Deploy.Offline
 {
@@ -144,6 +145,15 @@ namespace Sriracha.Deploy.Offline
                 _chkComponentChecked.CheckState = CheckState.Checked;
             }
             _chkComponentChecked.CheckStateChanged += _chkComponentChecked_CheckStateChanged;
+        }
+
+        public OfflineComponentSelection GetComponentSelection()
+        {
+            return new OfflineComponentSelection
+            {
+                BatchRequestItem = _batchRequestItem,
+                SelectedMachineList = _chkMachineCheckboxList.CheckedItems.Cast<DeployMachine>().ToList()
+            };
         }
 
     }

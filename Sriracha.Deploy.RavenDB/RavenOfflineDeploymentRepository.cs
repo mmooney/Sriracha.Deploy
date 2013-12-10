@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Repository;
 using System.Transactions;
+using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 
 namespace Sriracha.Deploy.RavenDB
 {
