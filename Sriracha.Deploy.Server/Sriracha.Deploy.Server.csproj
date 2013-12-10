@@ -85,6 +85,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MMDB.QuartzJobs\MMDB.QuartzJobs.csproj">
+      <Project>{2df2898d-6f3e-4651-a225-3444c907faa0}</Project>
+      <Name>MMDB.QuartzJobs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.AutofacModules\Sriracha.Deploy.AutofacModules.csproj">
       <Project>{e525bf79-5e09-484c-9bcb-0c32e83b0f11}</Project>
       <Name>Sriracha.Deploy.AutofacModules</Name>

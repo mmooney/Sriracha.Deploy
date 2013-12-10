@@ -39,6 +39,9 @@ namespace Sriracha.Deploy.Server
 			[Option("cleanupFolders")]
 			public bool CleanupFolders { get; set; }
 
+            [Option("createOfflineDeployment")]
+            public bool CreateOfflineDeployment { get; set; }
+
 			[Option("runDeployment")]
 			public string RunDeploymentId { get; set; }
 			[ParserState]
@@ -106,6 +109,11 @@ namespace Sriracha.Deploy.Server
 				var job = _diFactory.CreateInjectedObject<IFolderCleanupJob>();
 				job.ForceRun();
 			}
+            else if (options.CreateOfflineDeployment)
+            {
+                var job = _diFactory.CreateInjectedObject<IOfflineDeploymentPackageJob>();
+                job.RunNow();
+            }
             else if (options.Debug)
 			{
 				Console.WriteLine("\t-Starting in debug mode...");

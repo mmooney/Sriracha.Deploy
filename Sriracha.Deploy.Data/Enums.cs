@@ -44,7 +44,8 @@ namespace Sriracha.Deploy.Data
 		Error = 8,
 		[EnumDisplayValue("Cancelled")]
 		Cancelled = 9,
-		OfflineRequested
+        [EnumDisplayValue("Offline Requested")]
+		OfflineRequested = 10
 	}
 
     public enum EnumDeploymentIsolationType

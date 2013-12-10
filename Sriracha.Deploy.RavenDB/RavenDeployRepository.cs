@@ -41,6 +41,7 @@ namespace Sriracha.Deploy.RavenDB
                     break;
                 case EnumDeployStatus.NotStarted:
                 case EnumDeployStatus.Requested:
+                case EnumDeployStatus.OfflineRequested:
                     //OK
                     break;
                 case EnumDeployStatus.Error:

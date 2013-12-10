@@ -127,6 +127,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<EmailSenderJob>().As<IEmailSenderJob>();
 			builder.RegisterType<GCFlushJob>().As<GCFlushJob>();
 			builder.RegisterType<FolderJobCleanupJob>().As<IFolderCleanupJob>();
+            builder.RegisterType<OfflineDeploymentPackageJob>().As<IOfflineDeploymentPackageJob>();
 
 			builder.RegisterType<ConnectionSettingsManager>().As<IConnectionSettingsManager>();
 			
@@ -187,6 +188,11 @@ namespace Sriracha.Deploy.AutofacModules
 					})
 					.As<NLog.Logger>()
 					.SingleInstance();
+            Common.Logging.LogManager.Adapter = new Common.Logging.NLog.NLogLoggerFactoryAdapter(null);
+            builder.Register(ctx=> 
+                    { return Common.Logging.LogManager.GetCurrentClassLogger(); })
+                    .As<Common.Logging.ILog>()
+                    .SingleInstance();
 		}
 	}
 }

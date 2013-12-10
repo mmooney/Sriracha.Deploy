@@ -177,5 +177,11 @@ namespace Sriracha.Deploy.Data.Impl
 			set { _deploymentFolderCleanupMinutes = value; }
 		}
 
-	}
+        private string _offlineExeDirectory;
+        public string OfflineExeDirectory
+        {
+            get { return StringHelper.IsNullOrEmpty(_offlineExeDirectory, Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "offlineExe")); }
+            set { _offlineExeDirectory = value; }
+        }
+    }
 }

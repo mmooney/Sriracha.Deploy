@@ -170,6 +170,10 @@
 			templateUrl: "templates/deployment/deployment-batchStatus-template.html",
 			controller: "deployBatchStatusController"
 		})
+        .when(navigator.deployment.offlineStatus.url, {
+            templateUrl: "templates/deployment/deployment-offlineStatus-template.html",
+            controller: "deployOfflineStatusController"
+        })
 		.when(navigator.deployment.view.url, {
 			templateUrl: "templates/deployment/deployment-view-template.html",
 			controller: "DeployController"

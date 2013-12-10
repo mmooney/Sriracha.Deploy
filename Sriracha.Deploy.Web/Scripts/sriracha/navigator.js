@@ -241,6 +241,11 @@
 				clientUrl: function (deployBatchRequestId) { return root.getUrl(this.url, { deployBatchRequestId: deployBatchRequestId }); },
 				go: function (deployBatchRequestId) { root.goTo(this.url, { deployBatchRequestId: deployBatchRequestId }); }
 			},
+			offlineStatus: {
+			    url: "/deploy/offlineStatus/:offlineDeploymentId",
+			    clientUrl: function (offlineDeploymentId) { return root.getUrl(this.url, { offlineDeploymentId: offlineDeploymentId }); },
+			    go: function (offlineDeploymentId) { root.goTo(this.url, { offlineDeploymentId: offlineDeploymentId }); }
+			},
 			submit: {
 				url: "/deploy/submit/:buildId/:environmentId",
 				clientUrl: function (buildId, environmentId) { return root.getUrl(this.url, { buildId: buildId, environmentId: environmentId }); },

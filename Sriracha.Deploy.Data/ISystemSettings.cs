@@ -31,5 +31,7 @@ namespace Sriracha.Deploy.Data
 		int GCFlushJobIntervalSeconds { get; set; }
 
 		int DeploymentFolderCleanupMinutes { get; set; }
-	}
+
+        string OfflineExeDirectory { get; set; }
+    }
 }

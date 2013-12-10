@@ -242,6 +242,7 @@
     <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\build\buildListController.js" />
     <Content Include="Scripts\sriracha\dataAccess\deployQueueDataAccess.js" />
+    <Content Include="Scripts\sriracha\deployment\deployOfflineStatusController.js" />
     <Content Include="Scripts\sriracha\directives\deployActionLinksDirective.js" />
     <Content Include="Scripts\sriracha\directives\deployQueueDirective.js" />
     <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
@@ -447,6 +448,7 @@
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\angular\_references.js" />
     <Content Include="Templates\account\account-edit-template.html" />
+    <Content Include="Templates\deployment\deployment-offlineStatus-template.html" />
     <Content Include="Templates\directives\breadcrumbs.html" />
     <Content Include="Templates\directives\deployActionLinks.html" />
     <Content Include="Templates\directives\deployQueue.html" />

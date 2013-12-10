@@ -7,6 +7,8 @@ using PagedList;
 using Raven.Client;
 using Sriracha.Deploy.Data.Dto;
 using Raven.Client.Linq;
+using System.Linq.Expressions;
+using System.Transactions;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -88,6 +90,48 @@ namespace Sriracha.Deploy.RavenDB
 			documentSession.Advanced.Evict(data);
 			return data;
 		}
+           
+        public static T Pop<T, SortKey>(this IDocumentSession documentSession, Expression<Func<T, bool>> matchExpr, Expression<Func<T, SortKey>> sortExpr, Action<T> updateAction)
+            where T: class
+        {
+            string itemId = null;
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
+            {   
+                var tempItem = documentSession.QueryNoCache<T>()
+                                        .Customize(i => i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
+                                        .OrderBy(sortExpr)
+                                        .Where(matchExpr)
+                                        .FirstOrDefault();
+                if (tempItem == null)
+                {
+                    return null;
+                }
+
+                var idProperty = documentSession.Advanced.DocumentStore.Conventions.GetIdentityProperty(tempItem.GetType());
+                itemId = (string)idProperty.GetValue(tempItem, null);
+                var reloadedItem = documentSession.LoadEnsure<T>(itemId);
+                var matchFunc = matchExpr.Compile();
+                if(!matchFunc(reloadedItem))
+                {
+                    //this._logger.Warn("Stale cleanup task found, actual status: " + reloadedItem.Status.ToString());
+                    return null;
+                }
+
+                updateAction(reloadedItem);
+                documentSession.SaveEvict(reloadedItem);
+
+                transaction.Complete();
+            }
+            if (string.IsNullOrEmpty(itemId))
+            {
+                return null;
+            }
+            else
+            {
+                return documentSession.LoadEnsureNoCache<T>(itemId);
+            }
+
+        }
 
 		public static IPagedList<T> QueryPageAndSort<T>(this IDocumentSession documentSession, ListOptions listOptions, string defaultSortField, bool defaultSortAscending = true, Func<IDocumentQuery<T>, IDocumentQuery<T>> filterFunc=null)
 		{

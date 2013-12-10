@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Common.Logging.NLog">
+      <HintPath>..\packages\Common.Logging.NLog.2.0.0\lib\2.0\Common.Logging.NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
       <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.1\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
     </Reference>
@@ -100,6 +103,10 @@
     <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
       <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
       <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MMDB.QuartzJobs\MMDB.QuartzJobs.csproj">
+      <Project>{2df2898d-6f3e-4651-a225-3444c907faa0}</Project>
+      <Name>MMDB.QuartzJobs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>

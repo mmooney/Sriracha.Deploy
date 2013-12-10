@@ -8,6 +8,10 @@ namespace Sriracha.Deploy.Data.Deployment
 {
 	public interface IOfflineDeploymentManager
 	{
-		OfflineDeployment BeginCreateOfflineDeployment(List<DeployBatchRequestItem> itemList, string deploymentLabel);
-	}
+        OfflineDeployment BeginCreateOfflineDeployment(List<DeployBatchRequestItem> itemList, string deploymentLabel);
+        OfflineDeployment GetOfflineDeployment(string offlineDeploymentId);
+
+        OfflineDeployment PopNextOfflineDeploymentToCreate();
+        void CreateOfflineDeploymentPackage(string offlineDeploymentId);
+    }
 }
