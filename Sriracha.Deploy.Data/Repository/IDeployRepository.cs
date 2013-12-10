@@ -24,11 +24,7 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus enumDeployStatus, string statusMessage);
 
 		DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage);
-		bool HasCancelRequested(string deployBatchRequestId);
 		DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage);
-
-		bool IsStopped(string deployBatchRequestId);
-		bool IsCancelled(string deployBatchRequestId);
 
 		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 	}

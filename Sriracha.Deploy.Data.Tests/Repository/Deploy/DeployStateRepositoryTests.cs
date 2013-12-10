@@ -31,7 +31,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                                                         string deployBatchRequestItemId=null, string componentId = null, bool similateRun = false)
         {
             var testData = this.GetCreateTestData(buildId: buildId, environmentId: environmentId, environmentName: environmentName, machineId: machineId, machineName: machineName, projectId: projectId, branchId: branchId, componentId: componentId, deployBatchRequestItemId: deployBatchRequestItemId);
-            var returnValue = sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
+            var returnValue = sut.CreateDeployState(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
             if(similateRun)
             {
                 SimulateRun(sut, returnValue);
@@ -246,7 +246,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            var result = sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
+            var result = sut.CreateDeployState(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId);
 
             AssertCreatedDeployState(sut, result, testData);
         }
@@ -258,7 +258,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(null, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(null, testData.Branch, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, null, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(testData.Build, null, testData.Environment, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
         }
 
         [Test]
@@ -278,7 +278,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, null, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(testData.Build, testData.Branch, null, testData.Component, testData.MachineList, testData.DeployBatchRequestId));
         }
 
         [Test]
@@ -288,7 +288,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, null, testData.MachineList, testData.DeployBatchRequestId));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(testData.Build, testData.Branch, testData.Environment, null, testData.MachineList, testData.DeployBatchRequestId));
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, null, testData.DeployBatchRequestId));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(testData.Build, testData.Branch, testData.Environment, testData.Component, null, testData.DeployBatchRequestId));
         }
 
         [Test]
@@ -308,7 +308,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
             var testData = this.GetCreateTestData();
 
-            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployment(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, null));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateDeployState(testData.Build, testData.Branch, testData.Environment, testData.Component, testData.MachineList, null));
         }
 
         [Test]
@@ -796,18 +796,19 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
             var result = sut.AddDeploymentMessage(deployState.Id, message);
+            var resultMessage = result.MessageList.First();
 
-            Assert.IsNotNull(result);
-            Assert.IsNotNullOrEmpty(result.Id);
-            Assert.AreEqual(deployState.Id, result.DeployStateId);
-            Assert.AreEqual(message, result.Message);
-            Assert.AreEqual(newUserName, result.MessageUserName);
-            AssertIsRecent(result.DateTimeUtc);
+            Assert.IsNotNull(resultMessage);
+            Assert.IsNotNullOrEmpty(resultMessage.Id);
+            Assert.AreEqual(deployState.Id, resultMessage.DeployStateId);
+            Assert.AreEqual(message, resultMessage.Message);
+            Assert.AreEqual(newUserName, resultMessage.MessageUserName);
+            AssertIsRecent(resultMessage.DateTimeUtc);
 
             var dbState = sut.GetDeployState(deployState.Id);
             Assert.IsNotNull(dbState.MessageList);
             Assert.AreEqual(1, dbState.MessageList.Count);
-            AssertMessage(result, dbState.MessageList[0]);
+            AssertMessage(resultMessage, dbState.MessageList[0]);
             Assert.AreEqual(deployState.CreatedByUserName, dbState.CreatedByUserName);
             AssertDateEqual(deployState.CreatedDateTimeUtc, dbState.CreatedDateTimeUtc);
             Assert.AreEqual(newUserName, dbState.UpdatedByUserName);
@@ -820,19 +821,20 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             var sut = this.GetRepository();
 
             var deployState = this.CreateTestDeployState(sut);
-            var firstMessage = sut.AddDeploymentMessage(deployState.Id, Guid.NewGuid().ToString());
+            var firstMessage = sut.AddDeploymentMessage(deployState.Id, Guid.NewGuid().ToString()).MessageList.First();
             string message = this.Fixture.Create<string>("Message");
             string newUserName = this.Fixture.Create<string>("UserName");
             this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
 
             var result = sut.AddDeploymentMessage(deployState.Id, message);
+            var resultMessage = result.MessageList.Skip(1).First();
 
             Assert.IsNotNull(result);
             Assert.IsNotNullOrEmpty(result.Id);
-            Assert.AreEqual(deployState.Id, result.DeployStateId);
-            Assert.AreEqual(message, result.Message);
-            Assert.AreEqual(newUserName, result.MessageUserName);
-            AssertIsRecent(result.DateTimeUtc);
+            Assert.AreEqual(deployState.Id, resultMessage.DeployStateId);
+            Assert.AreEqual(message, resultMessage.Message);
+            Assert.AreEqual(newUserName, resultMessage.MessageUserName);
+            AssertIsRecent(resultMessage.DateTimeUtc);
 
             var dbState = sut.GetDeployState(deployState.Id);
             Assert.IsNotNull(dbState.MessageList);
@@ -841,7 +843,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             AssertDateEqual(deployState.CreatedDateTimeUtc, dbState.CreatedDateTimeUtc);
             Assert.AreEqual(newUserName, dbState.UpdatedByUserName);
             AssertIsRecent(deployState.UpdatedDateTimeUtc);
-            var expectedList = new List<DeployStateMessage> { firstMessage, result };
+            var expectedList = new List<DeployStateMessage> { firstMessage, resultMessage };
             AssertMessageList(expectedList, dbState.MessageList);
         }
 

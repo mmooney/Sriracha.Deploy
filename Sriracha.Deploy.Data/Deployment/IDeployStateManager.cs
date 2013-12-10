@@ -15,7 +15,7 @@ namespace Sriracha.Deploy.Data.Deployment
 		DeployState CreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
 		DeployState GetOrCreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId);
 
-		DeployStateMessage AddDeploymentMessage(string deployStateId, string message);
+		DeployState AddDeploymentMessage(string deployStateId, string message);
 
 		void MarkDeploymentInProcess(string deployStateId);
 		void MarkDeploymentSuccess(string deployStateId);

@@ -82,7 +82,7 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
+        public DeployState CreateDeployState(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
         {
             if (build == null)
             {
@@ -381,7 +381,7 @@ namespace Sriracha.Deploy.SqlServer
             return GetDeployState(deployStateId);
         }
 
-        public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+        public DeployState AddDeploymentMessage(string deployStateId, string message)
         {
             if(string.IsNullOrEmpty(message))
             {
@@ -407,7 +407,7 @@ namespace Sriracha.Deploy.SqlServer
                             .Append("WHERE ID=@0", deployStateId);
                 db.Execute(sql);
             }
-            return deployStateMessage;
+            return deployState;
         }
 
 

@@ -11,12 +11,13 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 	{
 		private readonly Logger _logger;
 		private readonly IDeployStateManager _deployStateManager;
+        private readonly IDeployTaskStatusNotifier _deployTaskStatusNotifier;
 
 		private List<string> DebugList { get; set; }
 		private List<string> InfoList { get; set; }
 		private List<string> ErrorList { get; set; }
 
-		public DeployTaskStatusManager(Logger logger, IDeployStateManager deployStateManager)
+		public DeployTaskStatusManager(Logger logger, IDeployStateManager deployStateManager, IDeployTaskStatusNotifier deployTaskStatusNotififer)
 		{
 			this.InfoList = new List<string>();
 			this.DebugList = new List<string>();
@@ -24,7 +25,9 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 
 			_logger = DIHelper.VerifyParameter(logger);
 			_deployStateManager = DIHelper.VerifyParameter(deployStateManager);
+            _deployTaskStatusNotifier = DIHelper.VerifyParameter(deployTaskStatusNotififer);
 		}
+
 		public DeployTaskExecutionResult BuildResult()
 		{
 			var returnValue = new DeployTaskExecutionResult();
@@ -41,7 +44,8 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 
 		private void AddMessageToObject(string deployStateId, string prefix, string message)
 		{
-			_deployStateManager.AddDeploymentMessage(deployStateId, string.Format("{0}: {1}", prefix, message));
+			var state = _deployStateManager.AddDeploymentMessage(deployStateId, string.Format("{0}: {1}", prefix, message));
+            _deployTaskStatusNotifier.Notify(state);
 		}
 
 		public void Debug(string deployStateId, string message)

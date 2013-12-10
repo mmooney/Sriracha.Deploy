@@ -135,18 +135,21 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 
 		public bool HasCancelRequested(string deployBatchRequestId)
 		{
-			return _deployRepository.HasCancelRequested(deployBatchRequestId);
-		}
+            var request = GetDeployBatchRequest(deployBatchRequestId);
+            return request.CancelRequested;
+        }
 
 
 		public bool IsCancelled(string deployBatchRequestId)
 		{
-			return _deployRepository.IsCancelled(deployBatchRequestId);
-		}
+            var request = _deployRepository.GetBatchRequest(deployBatchRequestId);
+            return (request.Status == EnumDeployStatus.Cancelled);
+        }
 
 		public bool IsStopped(string deployBatchRequestId)
 		{
-			return _deployRepository.IsStopped(deployBatchRequestId);
+            var request = _deployRepository.GetBatchRequest(deployBatchRequestId);
+            return (request.Status != EnumDeployStatus.InProcess);
 		}
 	}
 }

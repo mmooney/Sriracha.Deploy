@@ -246,12 +246,6 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public bool IsStopped(string deployBatchRequestId)
-		{
-			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
-			return (item.Status != EnumDeployStatus.InProcess);
-		}
-
 		public bool IsCancelled(string deployBatchRequestId)
 		{
 			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);

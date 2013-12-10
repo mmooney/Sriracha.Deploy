@@ -182,7 +182,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				{
 					throw new Exception("Failed to find machine " + machineQueueItem.MachineId);
 				}
-				var deployState = localDeployStateManager.GetOrCreateDeployState(machineQueueItem.DeployBatchRequestItem.Build.ProjectId, machineQueueItem.DeployBatchRequestItem.Build.Id, machine.EnvironmentId, machine.Id, deployBatchRequestId);
+				var deployState = localDeployStateManager.GetOrCreateDeployState(machineQueueItem.DeployBatchRequestItem.Build.ProjectId, machineQueueItem.DeployBatchRequestItem.Build.Id, machine.EnvironmentId, machine.Id, machineQueueItem.DeployBatchRequestItem.Id);
 				if (deployState.Status != EnumDeployStatus.Success)
 				{
 					try

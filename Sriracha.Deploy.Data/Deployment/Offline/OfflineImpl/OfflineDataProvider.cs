@@ -1,5 +1,9 @@
-﻿using Sriracha.Deploy.Data.Dto.Deployment;
+﻿using MMDB.Shared;
+using Newtonsoft.Json;
+using Sriracha.Deploy.Data.Dto.Build;
+using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Deployment.Offline;
+using Sriracha.Deploy.Data.Dto.Project;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +16,6 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
     {
         private readonly IUserIdentity _userIdentity;
         private OfflineDeploymentRun _deploymentRun;
-        private List<OfflineComponentSelection> _selectionList;
         private string _workingDirectory;
         private static object _fileLocker = new Object();
 
@@ -88,6 +91,99 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             string filePath = Path.Combine(runDirectory, _deploymentRun.Id.ToString() + ".json");
             string jsonData = _deploymentRun.ToJson();
             File.WriteAllText(filePath, jsonData);
+        }
+
+        public DeployProject TryGetProject(string projectId)
+        {
+            var projectDirectory = Path.Combine(_workingDirectory, "projects");
+            var projectFilePath = Path.Combine(projectDirectory, projectId + ".json");
+            if(Directory.Exists(projectDirectory) &&  File.Exists(projectFilePath))
+            {
+                var projectJson = File.ReadAllText(projectFilePath);
+                return JsonConvert.DeserializeObject<DeployProject>(projectJson);
+            }
+            else 
+            {
+                return null;
+            }
+        }
+
+
+        public DeployFile GetFile(string fileId)
+        {
+            var packageDirectory = Path.Combine(_workingDirectory, "packages");
+            var filePath = Path.Combine(packageDirectory, fileId + ".json");
+            if(!File.Exists(filePath))
+            {
+                throw new RecordNotFoundException(typeof(DeployFile), "Id", fileId);
+            }
+            var fileJson = File.ReadAllText(filePath);
+            return JsonConvert.DeserializeObject<DeployFile>(fileJson);
+        }
+
+        public byte[] GetFileData(string fileId)
+        {
+            var file = GetFile(fileId);
+            var packageDirectory = Path.Combine(_workingDirectory, "packages");
+            var binaryPath = Path.Combine(packageDirectory, fileId + ".data");
+            if(!File.Exists(binaryPath))
+            {
+                throw new FileNotFoundException("Package file data not found", binaryPath);
+            }
+            return File.ReadAllBytes(binaryPath);
+        }
+
+
+        public DeployState TryGetDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
+        {
+            string deployStateDirectory = Path.Combine(_workingDirectory, "states");
+            if(Directory.Exists(deployStateDirectory))
+            {
+                foreach(var fileName in Directory.GetFiles(deployStateDirectory, "*.json"))
+                {
+                    var json = File.ReadAllText(fileName);
+                    var item = JsonConvert.DeserializeObject<DeployState>(json);
+                    if(item.ProjectId == projectId && item.Build.Id == buildId && item.Environment.Id == environmentId
+                                && item.MachineList.Any(i=>i.Id == machineId) && item.DeployBatchRequestItemId == deployBatchRequestItemId)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public void SaveDeployState(DeployState deployState)
+        {
+            string json = deployState.ToJson();
+
+            string deployStateDirectory = Path.Combine(_workingDirectory, "states");
+            if(!Directory.Exists(deployStateDirectory))
+            {
+                Directory.CreateDirectory(deployStateDirectory);
+            }
+            string filePath = Path.Combine(deployStateDirectory, deployState.Id + ".json");
+            File.WriteAllText(filePath, json);
+        }
+
+
+        public DeployState GetDeployState(string deployStateId)
+        {
+            string deployStateDirectory = Path.Combine(_workingDirectory, "states");
+            var filePath = Path.Combine(deployStateDirectory, deployStateId + ".json");
+            if(!File.Exists(filePath))
+            {
+                throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
+            }
+            var json = File.ReadAllText(filePath);
+            return JsonConvert.DeserializeObject<DeployState>(json);
+        }
+
+
+        public void WriteLog(string formattedMessage)
+        {
+            string logFileName = Path.Combine(_workingDirectory, "log.log");
+            File.AppendAllLines(logFileName, formattedMessage.ListMe());
         }
     }
 }

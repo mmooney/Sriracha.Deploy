@@ -111,6 +111,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployRunner>().As<IDeployRunner>();
             builder.RegisterType<DeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
 			builder.RegisterType<DeployTaskStatusManager>().As<IDeployTaskStatusManager>();
+            builder.RegisterType<DeployTaskStatusNotifier>().As<IDeployTaskStatusNotifier>().SingleInstance();
 			builder.RegisterType<DeployComponentRunner>().As<IDeployComponentRunner>();
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();
 			builder.RegisterType<DeploymentValidator>().As<IDeploymentValidator>().SingleInstance();
@@ -154,6 +155,9 @@ namespace Sriracha.Deploy.AutofacModules
                 builder.RegisterType<OfflineBuildRepository>().As<Sriracha.Deploy.Data.Repository.IBuildRepository>();
                 builder.RegisterType<OfflineProjectRepository>().As<Sriracha.Deploy.Data.Repository.IProjectRepository>();
                 builder.RegisterType<OfflineCleanupRepository>().As<Sriracha.Deploy.Data.Repository.ICleanupRepository>();
+                builder.RegisterType<OfflineCredentialsRepository>().As<Sriracha.Deploy.Data.Repository.ICredentialsRepository>();
+                builder.RegisterType<OfflineFileRepository>().As<Sriracha.Deploy.Data.Repository.IFileRepository>();
+                builder.RegisterType<OfflineSystemLogRepository>().As<Sriracha.Deploy.Data.Repository.ISystemLogRepository>();
                 builder.RegisterType<OfflineDeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
             }
 			this.SetupLogging(builder);

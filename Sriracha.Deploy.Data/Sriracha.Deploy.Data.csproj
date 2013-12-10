@@ -112,6 +112,7 @@
     <Compile Include="Deployment\Offline\IOfflineDataProvider.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineBuildRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineCleanupRepository.cs" />
+    <Compile Include="Deployment\Offline\OfflineImpl\OfflineCredentialsRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineDataProvider.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineDeploymentManager.cs" />
     <Compile Include="Deployment\IDeployBatchRunner.cs" />
@@ -122,7 +123,9 @@
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineDeployRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineDeployStateManager.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineDeployStateRepository.cs" />
+    <Compile Include="Deployment\Offline\OfflineImpl\OfflineFileRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineProjectRepository.cs" />
+    <Compile Include="Deployment\Offline\OfflineImpl\OfflineSystemLogRepository.cs" />
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
     <Compile Include="Dto\Account\ProjectNotificationItem.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="Deployment\IParameterEvaluator.cs" />
     <Compile Include="Build\IBuildPublisher.cs" />
     <Compile Include="Build\IBuildPurger.cs" />
+    <Compile Include="EventArgs.cs" />
     <Compile Include="ICleanupManager.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Deployment\IDeployQueueManager.cs" />
@@ -203,6 +207,8 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\FolderJobCleanupJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\GCFlushJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\OfflineDeploymentPackageJob.cs" />
+    <Compile Include="Tasks\IDeployTaskStatusNotifier.cs" />
+    <Compile Include="Tasks\TaskImpl\DeployTaskStatusNotifier.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="Utility\IRegexResolver.cs" />

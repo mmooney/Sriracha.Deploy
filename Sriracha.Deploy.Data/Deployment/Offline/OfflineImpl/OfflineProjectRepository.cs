@@ -1,4 +1,6 @@
-﻿using Sriracha.Deploy.Data.Repository;
+﻿using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,234 +10,288 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
     public class OfflineProjectRepository : IProjectRepository
     {
+        private IOfflineDataProvider _offlineDataProvider;
+
+        public OfflineProjectRepository(IOfflineDataProvider offlineDataProvider)
+        {
+            _offlineDataProvider = DIHelper.VerifyParameter(offlineDataProvider);
+        }
+
         public IEnumerable<Dto.Project.DeployProject> GetProjectList()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Dto.Project.DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProject TryGetProject(string projectId)
+        public DeployProject TryGetProject(string projectId)
         {
-            throw new NotImplementedException();
+            return _offlineDataProvider.TryGetProject(projectId);
         }
 
-        public Dto.Project.DeployProject GetProject(string projectId)
+        public DeployProject GetProject(string projectId)
         {
-            throw new NotImplementedException();
+            var project = _offlineDataProvider.TryGetProject(projectId);
+            if(project == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployProject), "Id", projectId);
+            }
+            return project;
         }
 
-        public Dto.Project.DeployProject GetOrCreateProject(string projectIdOrName)
+        public DeployProject GetOrCreateProject(string projectIdOrName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProject TryGetProjectByName(string projectName)
+        public DeployProject TryGetProjectByName(string projectName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProject GetProjectByName(string projectName)
+        public DeployProject GetProjectByName(string projectName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration)
+        public DeployProject UpdateProject(string projectId, string projectName, bool usesSharedComponentConfiguration)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteProject(string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public List<Dto.Project.DeployConfiguration> GetConfigurationList(string projectId)
+        public List<DeployConfiguration> GetConfigurationList(string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.ConfigurationList;
         }
 
-        public Dto.Project.DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
+        public DeployConfiguration CreateConfiguration(string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployConfiguration GetConfiguration(string configurationId, string projectId)
+        public DeployConfiguration GetConfiguration(string configurationId, string projectId)
         {
-            throw new NotImplementedException();
+            var configuration = TryGetConfiguration(configurationId, projectId);
+            if(configuration == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployConfiguration), "Id", configurationId);
+            }
+            return configuration;
         }
 
-        public Dto.Project.DeployConfiguration TryGetConfiguration(string configurationId, string projectId)
+        public DeployConfiguration TryGetConfiguration(string configurationId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.ConfigurationList.SingleOrDefault(i=>i.Id == configurationId);
         }
 
-        public Dto.Project.DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
+        public DeployConfiguration UpdateConfiguration(string configurationId, string projectId, string configurationName, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteConfiguration(string configurationId, string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public List<Dto.Project.DeployComponent> GetComponentList(string projectId)
+        public List<DeployComponent> GetComponentList(string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.ComponentList;
         }
 
-        public Dto.Project.DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
+        public DeployComponent CreateComponent(string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployComponent GetComponent(string componentId, string projectId)
+        public DeployComponent GetComponent(string componentId, string projectId)
         {
-            throw new NotImplementedException();
+            var component = TryGetComponent(componentId, projectId);
+            if(component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
+            }
+            return component;
         }
 
-        public Dto.Project.DeployComponent TryGetComponent(string componentId, string projectId)
+        public DeployComponent TryGetComponent(string componentId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.ComponentList.Single(i=>i.Id == componentId);
         }
 
-        public Dto.Project.DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName)
+        public DeployComponent GetOrCreateComponent(string projectId, string componentIdOrName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
+        public DeployComponent UpdateComponent(string componentId, string projectId, string componentName, bool useConfigurationGroup, string configurationId, EnumDeploymentIsolationType isolationType)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteComponent(string projectId, string componentId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public List<Dto.Project.DeployStep> GetComponentDeploymentStepList(string componentId, string projectId)
+        public List<DeployStep> GetComponentDeploymentStepList(string componentId, string projectId)
         {
-            throw new NotImplementedException();
+            var component = GetComponent(componentId, projectId);
+            return component.DeploymentStepList;
         }
 
-        public List<Dto.Project.DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId)
+        public List<DeployStep> GetConfigurationDeploymentStepList(string configurationId, string projectId)
         {
-            throw new NotImplementedException();
+            var configuration = GetConfiguration(configurationId, projectId);
+            return configuration.DeploymentStepList;
         }
 
-        public Dto.Project.DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+        public DeployStep CreateComponentDeploymentStep(string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+        public DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId)
+        public DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            var component = project.ComponentList.SingleOrDefault(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
+            if (component == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+            return component.DeploymentStepList.FirstOrDefault(i => i.Id == deploymentStepId);
         }
 
-        public Dto.Project.DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId)
+        public DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            var configuration = project.ConfigurationList.SingleOrDefault(i=>i.DeploymentStepList.Any(j=>j.Id == deploymentStepId));
+            if(configuration == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
+            }
+            return configuration.DeploymentStepList.FirstOrDefault(i=>i.Id == deploymentStepId);
         }
 
-        public Dto.Project.DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+        public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+        public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteComponentDeploymentStep(string deploymentStepId, string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public List<Dto.Project.DeployProjectBranch> GetBranchList(string projectId)
+        public List<DeployProjectBranch> GetBranchList(string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.BranchList;
         }
 
-        public Dto.Project.DeployProjectBranch CreateBranch(string projectId, string branchName)
+        public DeployProjectBranch CreateBranch(string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProjectBranch GetBranch(string branchId, string projectId)
+        public DeployProjectBranch GetBranch(string branchId, string projectId)
         {
-            throw new NotImplementedException();
+            var branch = TryGetBranch(branchId, projectId);
+            if(branch == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployProjectBranch), "Id", branchId);
+            }
+            return branch;
         }
 
-        public Dto.Project.DeployProjectBranch TryGetBranch(string branchId, string projectId)
+        public DeployProjectBranch TryGetBranch(string branchId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.BranchList.SingleOrDefault(i=>i.Id == branchId);
         }
 
-        public Dto.Project.DeployProjectBranch GetBranchByName(string projectId, string branchName)
+        public DeployProjectBranch GetBranchByName(string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
+        public DeployProjectBranch TryGetBranchByName(string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProjectBranch GetOrCreateBranch(string projectId, string branchIdOrName)
+        public DeployProjectBranch GetOrCreateBranch(string projectId, string branchIdOrName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
+        public DeployProjectBranch UpdateBranch(string branchId, string projectId, string branchName)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteBranch(string branchId, string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public List<Dto.Project.DeployEnvironment> GetEnvironmentList(string projectId)
+        public List<DeployEnvironment> GetEnvironmentList(string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            return project.EnvironmentList;
         }
 
-        public Dto.Project.DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<Dto.Project.DeployEnvironmentConfiguration> componentList, IEnumerable<Dto.Project.DeployEnvironmentConfiguration> configurationList)
+        public DeployEnvironment CreateEnvironment(string projectId, string enviornmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public Dto.Project.DeployEnvironment GetEnvironment(string environmentId, string projectId)
+        public DeployEnvironment GetEnvironment(string environmentId, string projectId)
         {
-            throw new NotImplementedException();
+            var project = GetProject(projectId);
+            var environment = project.EnvironmentList.SingleOrDefault(i=>i.Id == environmentId);
+            if(environment == null)
+            {
+                throw new RecordNotFoundException(typeof(DeployEnvironment), "Id", environmentId);
+            }
+            return environment;
         }
 
-        public Dto.Project.DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<Dto.Project.DeployEnvironmentConfiguration> componentList, IEnumerable<Dto.Project.DeployEnvironmentConfiguration> configurationList)
+        public DeployEnvironment UpdateEnvironment(string environmentId, string projectId, string environmentName, IEnumerable<DeployEnvironmentConfiguration> componentList, IEnumerable<DeployEnvironmentConfiguration> configurationList)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void DeleteEnvironment(string environmentId, string projectId)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

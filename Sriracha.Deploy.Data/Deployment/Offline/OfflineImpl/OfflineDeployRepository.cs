@@ -65,22 +65,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             throw new NotImplementedException();
         }
 
-        public bool HasCancelRequested(string deployBatchRequestId)
-        {
-            throw new NotImplementedException();
-        }
-
         public DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsStopped(string deployBatchRequestId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsCancelled(string deployBatchRequestId)
         {
             throw new NotImplementedException();
         }

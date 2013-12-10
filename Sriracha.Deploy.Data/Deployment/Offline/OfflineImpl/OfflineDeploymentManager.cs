@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data.Repository;
 using System.IO;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Dto.Deployment.Offline;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
@@ -16,12 +17,14 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 		private readonly IOfflineDeploymentRepository _offlineDeploymentRepository;
         private readonly ISystemSettings _systemSettings;
         private readonly IFileRepository _fileRepository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IZipper _zipper;
 
-		public OfflineDeploymentManager(IDeployRepository deployRepository, IOfflineDeploymentRepository offlineDeploymentRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper)
+		public OfflineDeploymentManager(IDeployRepository deployRepository, IOfflineDeploymentRepository offlineDeploymentRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
 			_offlineDeploymentRepository = DIHelper.VerifyParameter(offlineDeploymentRepository);
+            _projectRepository = DIHelper.VerifyParameter(projectRepository);
             _systemSettings = DIHelper.VerifyParameter(systemSettings);
             _fileRepository = DIHelper.VerifyParameter(fileRepository);
             _zipper = DIHelper.VerifyParameter(zipper);
@@ -77,9 +80,41 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
                     }
                     if(!loadedBuilds.Contains(item.Build.Id))
                     {
-                        var fileData = _fileRepository.GetFileData(item.Build.FileId);
-                        File.WriteAllBytes(Path.Combine(targetPackagePath, item.Build.Id + ".zip"), fileData);
+                        var file = _fileRepository.GetFile(item.Build.FileId);
+                        var fileJson = file.ToJson();
+                        File.WriteAllText(Path.Combine(targetPackagePath, file.Id + ".json"), fileJson);
+
+                        var fileData = _fileRepository.GetFileData(file.Id);
+                        File.WriteAllBytes(Path.Combine(targetPackagePath, file.Id + ".data"), fileData);
                     }
+                }
+
+                var projectIdList = deployBatchRequest.ItemList.Select(i=>i.Build.ProjectId).Distinct();
+                foreach(var projectId in projectIdList)
+                {
+                    var dbProject = _projectRepository.GetProject(projectId);
+                    var outputProject = AutoMapper.Mapper.Map(dbProject, new DeployProject());
+                    var environmentsToDelete = new List<DeployEnvironment>();
+                    foreach(var environment in outputProject.EnvironmentList)
+                    {
+                        if(!deployBatchRequest.ItemList.Any(i=>i.Build.ProjectId == outputProject.Id && i.MachineList.Any(j=>j.EnvironmentId == environment.Id)))
+                        {
+                            environmentsToDelete.Add(environment);
+                        }
+                    }
+                    foreach(var environment in environmentsToDelete)
+                    {   
+                        outputProject.EnvironmentList.Remove(environment);
+                    }
+
+                    var targetProjectDirectory = Path.Combine(targetDirectory, "projects");
+                    if(!Directory.Exists(targetProjectDirectory))
+                    {
+                        Directory.CreateDirectory(targetProjectDirectory);
+                    }
+                    string projectJson = outputProject.ToJson();
+                    string projectFilePath = Path.Combine(targetProjectDirectory, outputProject.Id + ".json");
+                    File.WriteAllText(projectFilePath, projectJson);
                 }
                 string targetZipPath = targetDirectory + ".zip";
                 _zipper.ZipDirectory(targetDirectory, targetZipPath);

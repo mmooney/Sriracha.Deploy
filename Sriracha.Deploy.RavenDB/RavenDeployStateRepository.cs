@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.RavenDB
             _userIdentity = DIHelper.VerifyParameter(userIdentity);
         }
 
-        public DeployState CreateDeployment(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
+        public DeployState CreateDeployState(DeployBuild build, DeployProjectBranch branch, DeployEnvironment environment, DeployComponent component, IEnumerable<DeployMachine> machineList, string deployBatchRequestItemId)
         {
             if (build == null)
             {
@@ -177,7 +177,7 @@ namespace Sriracha.Deploy.RavenDB
             return state;
         }
 
-        public DeployStateMessage AddDeploymentMessage(string deployStateId, string message)
+        public DeployState AddDeploymentMessage(string deployStateId, string message)
         {
             if(string.IsNullOrEmpty(message))
             {
@@ -189,7 +189,7 @@ namespace Sriracha.Deploy.RavenDB
             state.UpdatedDateTimeUtc = DateTime.UtcNow;
             state.UpdatedByUserName = _userIdentity.UserName;
             this._documentSession.SaveEvict(state);
-            return deployStateMessage;
+            return state;
         }
 
         private DeployStateMessage CreateDeploymentMessage(string deployStateId, string message)
