@@ -30,6 +30,12 @@ namespace Sriracha.Deploy.Offline
         {
             _pnlDeploymentInfo.Visible = false;
             _btnContinue.Visible = false;
+
+            string defaultFile = Path.Combine(Environment.CurrentDirectory, "request.json");
+            if(File.Exists(defaultFile))
+            {
+                this.LoadBatchRequestFile(defaultFile);
+            }
         }
 
         private void _btnRequestFileNameBrowse_Click(object sender, EventArgs e)
@@ -133,6 +139,11 @@ namespace Sriracha.Deploy.Offline
             foreach (ComponentSelectionControl ctrl in _pnlAllComponents.Controls)
             {
                 selectionList.Add(ctrl.GetComponentSelection());
+            }
+            if(!selectionList.Any(i=>i.SelectedMachineList.Any()))
+            {
+                MessageBox.Show("Please select at least one component/machine to deploy");
+                return;
             }
             using(var dlg = new RunDeploymentForm(_diFactory, _batchRequest, selectionList, Path.GetDirectoryName(_txtRequestFileName.Text)))
             {
