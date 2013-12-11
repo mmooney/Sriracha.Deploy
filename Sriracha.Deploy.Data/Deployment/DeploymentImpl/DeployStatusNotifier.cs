@@ -8,14 +8,25 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
     public class DeployStatusNotifier : IDeployStatusNotifier
     {
-        public event EventHandler<EventArgs<DeployState>> NotificationReceived;
+        public event EventHandler<EventArgs<DeployState>> DeployStateNotificationReceived;
+        public event EventHandler<EventArgs<DeployBatchRequest>> BatchRequestNotificationReceived;
 
         public void Notify(DeployState state)
         {
-            if (this.NotificationReceived != null)
+            if (this.DeployStateNotificationReceived != null)
             {
                 var args = new EventArgs<DeployState>(state);
-                this.NotificationReceived(this, args);
+                this.DeployStateNotificationReceived(this, args);
+            }
+        }
+
+
+        public void Notify(DeployBatchRequest batchRequest)
+        {
+            if(this.BatchRequestNotificationReceived != null)
+            {
+                var args = new EventArgs<DeployBatchRequest>(batchRequest);
+                this.BatchRequestNotificationReceived(this, args);
             }
         }
     }

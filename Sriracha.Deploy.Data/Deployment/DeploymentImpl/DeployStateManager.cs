@@ -96,13 +96,15 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
 		{
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Success, statusMessage:"Deployment completed successfully");
+            _deployStatusNotifier.Notify(deployRequest);
 			_projectNotifier.SendDeploySuccessNotification(deployRequest);
 		}
 
 		public void MarkBatchDeploymentFailed(string deployBatchRequestId, Exception err)
 		{
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, err, "Deployment error");
-			_projectNotifier.SendDeployFailedNotification(deployRequest);
+            _deployStatusNotifier.Notify(deployRequest);
+            _projectNotifier.SendDeployFailedNotification(deployRequest);
 		}
 
 		public void MarkBatchDeploymentCancelled(string deployBatchRequestId, string cancelMessage)
@@ -113,7 +115,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				statusMessage += ", Notes: " + cancelMessage;
 			}
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Cancelled, statusMessage: statusMessage);
-			_projectNotifier.SendDeployCancelledNotification(deployRequest);
+            _deployStatusNotifier.Notify(deployRequest);
+            _projectNotifier.SendDeployCancelledNotification(deployRequest);
 		}
 
 
@@ -125,7 +128,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				statusMessage += ", Notes: " + resumeMessage;
 			}
 			var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
-		}
+            _deployStatusNotifier.Notify(deployRequest);
+        }
 
 
 		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
@@ -137,7 +141,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
         public void MarkBatchDeploymentInProcess(string deployBatchRequestId)
         {
             string statusMessage = string.Format("Deployment was started at {0} UTC", DateTime.UtcNow);
-            _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
+            var deployRequest = _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.InProcess, statusMessage: statusMessage);
+            _deployStatusNotifier.Notify(deployRequest);
         }
     }
 }

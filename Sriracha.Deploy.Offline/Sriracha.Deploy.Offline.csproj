@@ -108,6 +108,7 @@
     <Compile Include="ViewDeployStateForm.Designer.cs">
       <DependentUpon>ViewDeployStateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinFormsHelper.cs" />
     <EmbeddedResource Include="ComponentSelectionControl.resx">
       <DependentUpon>ComponentSelectionControl.cs</DependentUpon>
     </EmbeddedResource>

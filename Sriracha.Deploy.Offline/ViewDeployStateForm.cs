@@ -35,27 +35,22 @@ namespace Sriracha.Deploy.Offline
             {
                 if(_deployState.DeploymentStartedDateTimeUtc.HasValue)
                 {
-                    _lblStartedDate.Text = LocalDateText(_deployState.DeploymentStartedDateTimeUtc.Value);
+                    _lblStartedDate.Text = WinFormsHelper.LocalDateText(_deployState.DeploymentStartedDateTimeUtc.Value);
                 }
                 if(_deployState.DeploymentCompleteDateTimeUtc.HasValue)
                 {
-                    _lblCompletedDate.Text = LocalDateText(_deployState.DeploymentCompleteDateTimeUtc.Value);
+                    _lblCompletedDate.Text = WinFormsHelper.LocalDateText(_deployState.DeploymentCompleteDateTimeUtc.Value);
                 }
                 _lblStatus.Text = _deployState.StatusDisplayValue;
 
                 var messageList = _deployState.MessageList.OrderByDescending(i=>i.DateTimeUtc);
                 foreach(var message in messageList)
-                {   
-                    string displayValue = string.Format("{0} - {1}", LocalDateText(message.DateTimeUtc), message.Message);
+                {
+                    string displayValue = string.Format("{0} - {1}", WinFormsHelper.LocalDateText(message.DateTimeUtc), message.Message);
                     _txtMessageList.AppendText(displayValue + Environment.NewLine);
                     _txtMessageList.AppendText("---------------------------" + Environment.NewLine);
                 }
             }
-        }
-
-        private string LocalDateText(DateTime dateTime)
-        {
-            return DateTimeHelper.FromUtcToTimeZone(dateTime, TimeZone.CurrentTimeZone.StandardName).ToString();
         }
     }
 }

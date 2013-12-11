@@ -81,23 +81,6 @@ namespace Sriracha.Deploy.Offline
             _runDeploymentWorker.WorkerSupportsCancellation = true;
             _runDeploymentWorker.RunWorkerCompleted += _runDeploymentWorker_RunWorkerCompleted;
 
-            _gridItemList = new List<GridItem>();
-            foreach(var component in selectionList)
-            {
-                foreach(var machine in component.SelectedMachineList)
-                {
-                    var item = new GridItem
-                    {
-                        BuildDisplayValue = component.BatchRequestItem.Build.DisplayValue,
-                        MachineName = machine.MachineName,
-                        DeployBatchRequestItemId = component.BatchRequestItem.Id
-                    };
-                    item.SetStatus(EnumDeployStatus.NotStarted);
-                    _gridItemList.Add(item);
-                }
-            }
-            this._grdStatus.AutoGenerateColumns = false;
-            _grdStatus.DataSource = _gridItemList;
         }
 
         void _runDeploymentWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -108,19 +91,28 @@ namespace Sriracha.Deploy.Offline
 
         void _runDeploymentWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            var state = (DeployState)e.UserState;
-            var item = _gridItemList.FirstOrDefault(i=>i.DeployBatchRequestItemId == state.DeployBatchRequestItemId);
-            if(item != null)
+            if(e.UserState is DeployState)
             {
-                item.Update(state);
-                _grdStatus.Refresh();
+                var state = (DeployState)e.UserState;
+                var item = _gridItemList.FirstOrDefault(i=>i.DeployBatchRequestItemId == state.DeployBatchRequestItemId);
+                if(item != null)
+                {
+                    item.Update(state);
+                    _grdStatus.Refresh();
+                }
+            }
+            else if(e.UserState is DeployBatchRequest)
+            {
+                _batchRequest = (DeployBatchRequest)e.UserState;
+                this.UpdateBatchDetails();
             }
         }
 
         void _runDeploymentWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var notifier = _diFactory.CreateInjectedObject<IDeployStatusNotifier>();
-            notifier.NotificationReceived += notifier_NotificationReceived;
+            notifier.DeployStateNotificationReceived += notifier_DeployStateNotificationReceived;
+            notifier.BatchRequestNotificationReceived += notifier_BatchRequestNotificationReceived;
 
             IDeployBatchRunner batchRunner = _diFactory.CreateInjectedObject<IDeployBatchRunner>();
             batchRunner.ForceRunDeployment(_batchRequest.Id);
@@ -129,9 +121,6 @@ namespace Sriracha.Deploy.Offline
         private void _btnStart_Click(object sender, EventArgs e)
         {
             var dataProvider = _diFactory.CreateInjectedObject<IOfflineDataProvider>();
-            //because threading ouch
-            //var copiedBatchRequest = AutoMapper.Mapper.Map(_batchRequest, new DeployBatchRequest());
-            //var copiedSelectionList = AutoMapper.Mapper.Map(_selectionList, new List<OfflineComponentSelection>());
             dataProvider.Initialize(_batchRequest, _selectionList, _workingDirectory);
 
             var systemSettings = _diFactory.CreateInjectedObject<ISystemSettings>();
@@ -142,10 +131,16 @@ namespace Sriracha.Deploy.Offline
             _runDeploymentWorker.RunWorkerAsync(_batchRequest.Id);
         }
 
-        void notifier_NotificationReceived(object sender, EventArgs<DeployState> e)
+        void notifier_DeployStateNotificationReceived(object sender, EventArgs<DeployState> e)
         {
             _runDeploymentWorker.ReportProgress(0, e.Value);
         }
+
+        void notifier_BatchRequestNotificationReceived(object sender, EventArgs<DeployBatchRequest> e)
+        {
+            _runDeploymentWorker.ReportProgress(0, e.Value);
+        }
+
 
         private void _btnCancel_Click(object sender, EventArgs e)
         {
@@ -163,6 +158,51 @@ namespace Sriracha.Deploy.Offline
                 {
                     dlg.ShowDialog();
                 }
+            }
+        }
+
+        private void RunDeploymentForm_Load(object sender, EventArgs e)
+        {
+            UpdateBatchDetails();
+
+            _gridItemList = new List<GridItem>();
+            foreach(var component in _selectionList)
+            {
+                foreach(var machine in component.SelectedMachineList)
+                {
+                    var item = new GridItem
+                    {
+                        BuildDisplayValue = component.BatchRequestItem.Build.DisplayValue,
+                        MachineName = machine.MachineName,
+                        DeployBatchRequestItemId = component.BatchRequestItem.Id
+                    };
+                    item.SetStatus(EnumDeployStatus.NotStarted);
+                    _gridItemList.Add(item);
+                }
+            }
+            this._grdStatus.AutoGenerateColumns = false;
+            _grdStatus.DataSource = _gridItemList;
+        }
+
+        private void UpdateBatchDetails()
+        {
+            _lblLabel.Text = _batchRequest.DeploymentLabel;
+            _lblStatus.Text = _batchRequest.StatusDisplayValue;
+            if (_batchRequest.StartedDateTimeUtc.HasValue)
+            {
+                _lblStarted.Text = WinFormsHelper.LocalDateText(_batchRequest.StartedDateTimeUtc.Value);
+            }
+            else
+            {
+                _lblStarted.Text = "N/A";
+            }
+            if (_batchRequest.CompleteDateTimeUtc.HasValue)
+            {
+                _lblCompleted.Text = WinFormsHelper.LocalDateText(_batchRequest.CompleteDateTimeUtc.Value);
+            }
+            else
+            {
+                _lblCompleted.Text = "N/A";
             }
         }
     }
