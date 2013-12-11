@@ -13,7 +13,8 @@
 				<button class="btn btn-danger" ng-click="startRejection()">Reject</button>
 			</span>
 			<span ng-show="canBeginDeployment()">
-				<button class="btn btn-primary" ng-click="startBeginDeployment()">Begin Deployment</button>
+                <button class="btn btn-primary" ng-click="startBeginDeployment()">Begin Deployment</button>
+                <button class="btn btn-primary" ng-click="createOfflineDeployment()">Create Offline Deployment</button>
 			</span>
 		</td>
 	</tr>
@@ -33,6 +34,13 @@
 		<th>Actions:</th>
 		<td><deploy-action-links deploy-batch-request="deployBatchStatus.request" refresh-data-callback="refreshData"></deploy-action-links></td>
 	</tr>
+    <tr ng-show="deployBatchStatus.request.status=='OfflineRequested'">
+        <th>Offline:</th>
+        <td>
+            {{offlineDeployment.statusDisplayValue}}
+            <div ng-show="offlineDeployment.status=='ReadyForDownload'"><a ng-href="/api/file/{{offlineDeployment.fileId}}?rawData=true" target="_blank" >Download</a></div>
+        </td>
+    </tr>
 </table>
 <div ng-show="deployBatchStatus.request.errorDetails" class="error">
 	<h3>Error Details: </h3> 

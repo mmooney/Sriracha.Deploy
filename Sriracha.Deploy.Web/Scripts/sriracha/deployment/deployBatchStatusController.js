@@ -14,7 +14,20 @@
 	$scope.refreshData = function () {
 		$scope.deployBatchStatus = SrirachaResource.deployBatchStatus.get({ id: $routeParams.deployBatchRequestId },
 			function () {
-				if ($scope.deployBatchStatus.request.status == "Success" ||
+			    if ($scope.deployBatchStatus.request.status == "OfflineRequested") {
+			        $scope.offlineDeployment = SrirachaResource.offlineDeployment.get({deployBatchRequestId: $routeParams.deployBatchRequestId}, 
+                        function() {
+                            console.log("offlineDeployment", $scope.offlineDeployment);
+                        },
+                        function(error) {
+                            if ($scope.refreshInterval) {
+                                clearInterval($scope.refreshInterval);
+                                $scope.refreshInterval = null;
+                            }
+                            ErrorReporter.handleResourceError(error);
+                        });
+			    }
+			    if ($scope.deployBatchStatus.request.status == "Success" ||
 						($scope.deployBatchStatus.request.status == "Error" && !$scope.deployBatchStatus.request.resumeRequested)) {
 					if ($scope.refreshInterval) {
 						clearInterval($scope.refreshInterval);
@@ -168,4 +181,17 @@
 		});
 		return isValid;
 	}
+
+	$scope.createOfflineDeployment = function () {
+	    var offlineRequest = new SrirachaResource.offlineDeployment();
+	    offlineRequest.deployBatchRequestId = $scope.deployBatchStatus.request.id;
+	    offlineRequest.$save(null,
+			function () {
+			    $scope.refreshData();
+			},
+			function (err) {
+			    ErrorReporter.handleResourceError(err);
+			});
+	}
+
 }]);

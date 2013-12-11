@@ -57,21 +57,31 @@ namespace Sriracha.Deploy.RavenDB
 			this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.PutAttachment(attachmentId, null, stream, new Raven.Json.Linq.RavenJObject());
 		}
 
-		public byte[] GetAttachment(string attachmentId)
-		{
-			var attachment = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachment(attachmentId);
-			if(attachment == null)
-			{
-				throw new Exception("Attachment Not Found: " + attachmentId);
-			}
-			using(var memoryStream = new MemoryStream())
-			{
-				attachment.Data().CopyTo(memoryStream);
-				return memoryStream.ToArray();
-			}
-		}
+        public byte[] GetAttachment(string attachmentId)
+        {
+            var attachment = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachment(attachmentId);
+            if (attachment == null)
+            {
+                throw new Exception("Attachment Not Found: " + attachmentId);
+            }
+            using (var memoryStream = new MemoryStream())
+            {
+                attachment.Data().CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
-		public IEnumerable<Raven.Abstractions.Data.Attachment> GetAttachmentList()
+        public Stream GetAttachmentStream(string attachmentId)
+        {
+            var attachment = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachment(attachmentId);
+            if (attachment == null)
+            {
+                throw new Exception("Attachment Not Found: " + attachmentId);
+            }
+            return attachment.Data();
+        }
+
+        public IEnumerable<Raven.Abstractions.Data.Attachment> GetAttachmentList()
 		{
 			return this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachmentHeadersStartingWith("",0,int.MaxValue).ToList();
 		}

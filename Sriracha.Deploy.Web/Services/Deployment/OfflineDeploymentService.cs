@@ -14,10 +14,12 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 	public class OfflineDeploymentService : Service
 	{
 		private readonly IOfflineDeploymentManager _offlineDeploymentManager;
+        private readonly IDeployRequestManager _deployRequestManager;
 
-		public OfflineDeploymentService(IOfflineDeploymentManager offlineDeploymentManager)
+		public OfflineDeploymentService(IOfflineDeploymentManager offlineDeploymentManager, IDeployRequestManager deployRequestManager)
 		{
 			_offlineDeploymentManager = DIHelper.VerifyParameter(offlineDeploymentManager);
+            _deployRequestManager = DIHelper.VerifyParameter(deployRequestManager);
 		}
 
 		public object Get(OfflineDeploymentRequest request)
@@ -26,11 +28,19 @@ namespace Sriracha.Deploy.Web.Services.Deployment
             {
                 throw new ArgumentNullException("request is null");
             }
-            if(string.IsNullOrEmpty(request.Id))
+            if(!string.IsNullOrEmpty(request.Id))
             {
-                throw new ArgumentNullException("request.id is null");
+                return _offlineDeploymentManager.GetOfflineDeployment(request.Id);
             }
-            return _offlineDeploymentManager.GetOfflineDeployment(request.Id);
+            else if(!string.IsNullOrEmpty(request.DeployBatchRequestId))
+            {
+                return _offlineDeploymentManager.GetOfflineDeploymentForDeploymentBatchRequestId(request.DeployBatchRequestId);
+            }
+            else 
+            {
+                throw new ArgumentNullException("request.id and request.deployBatchRequestId are null");
+            }
+            
 		}
 
 		public object Put(OfflineDeploymentRequest data)
@@ -45,7 +55,15 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 
 		private OfflineDeployment Save(OfflineDeploymentRequest data)
 		{
-			return _offlineDeploymentManager.BeginCreateOfflineDeployment(data.BatchRequest.ItemList, data.BatchRequest.DeploymentLabel);
+            if(data == null)
+            {
+                throw new ArgumentNullException("request is null");
+            }
+            if(string.IsNullOrEmpty(data.DeployBatchRequestId))
+            {
+                throw new ArgumentNullException("request.deployBatchRequestId is null");
+            }
+            return _offlineDeploymentManager.BeginCreateOfflineDeployment(data.DeployBatchRequestId);
 		}
 	}
 }

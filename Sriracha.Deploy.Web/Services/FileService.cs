@@ -9,6 +9,7 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Dto.Build;
+using ServiceStack.Common.Web;
 
 namespace Sriracha.Deploy.Web.Services
 {
@@ -25,7 +26,17 @@ namespace Sriracha.Deploy.Web.Services
 		{
 			if (!string.IsNullOrEmpty(request.Id))
 			{
-				return this._fileManager.GetFile(request.Id);
+				var file = this._fileManager.GetFile(request.Id);
+                if(request.RawData)
+                {
+                    var result = new HttpResult(_fileManager.GetFileDataStream(request.Id), "application/octet-stream");
+                    result.Headers.Add("Content-Disposition", "attachment; filename=" + file.FileName);
+                    return result;
+                }
+                else 
+                {
+				    return file;
+                }
 			}
 			else
 			{

@@ -42,6 +42,10 @@ namespace Sriracha.Deploy.RavenDB
             return _documentSession.LoadEnsureNoCache<OfflineDeployment>(offlineDeploymentId);
         }
 
+        public OfflineDeployment GetOfflineDeploymentForDeploymentBatchRequestId(string deployBatchRequestId)
+        {
+            return _documentSession.QueryNoCache<OfflineDeployment>().FirstOrDefault(i=>i.DeployBatchRequestId == deployBatchRequestId);
+        }
 
         public OfflineDeployment UpdateStatus(string offlineDeploymentId, EnumOfflineDeploymentStatus status, Exception err = null)
         {

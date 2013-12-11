@@ -56,5 +56,11 @@ namespace Sriracha.Deploy.RavenDB
 			_documentSession.Delete(item);
 			_documentSession.SaveChanges();
 		}
-	}
+
+
+        public System.IO.Stream GetFileStream(string fileStorageId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

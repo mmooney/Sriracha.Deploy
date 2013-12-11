@@ -29,9 +29,11 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             _fileRepository = DIHelper.VerifyParameter(fileRepository);
             _zipper = DIHelper.VerifyParameter(zipper);
 		}
-		public OfflineDeployment BeginCreateOfflineDeployment(List<DeployBatchRequestItem> itemList, string deploymentLabel)
+
+		public OfflineDeployment BeginCreateOfflineDeployment(string deployBatchRequestId)
 		{
-			var batchRequest = _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, EnumDeployStatus.OfflineRequested, deploymentLabel);
+            var batchRequest = _deployRepository.GetBatchRequest(deployBatchRequestId);
+            batchRequest = _deployRepository.UpdateBatchDeploymentStatus(batchRequest.Id, EnumDeployStatus.OfflineRequested);
 			return _offlineDeploymentRepository.CreateOfflineDeployment(batchRequest.Id, EnumOfflineDeploymentStatus.CreateRequested);
 		}
 
@@ -40,6 +42,11 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             return _offlineDeploymentRepository.GetOfflineDeployment(offlineDeploymentId);
         }
 
+
+        public OfflineDeployment GetOfflineDeploymentForDeploymentBatchRequestId(string deployBatchRequestId)
+        {
+            return _offlineDeploymentRepository.GetOfflineDeploymentForDeploymentBatchRequestId(deployBatchRequestId);
+        }
 
         public OfflineDeployment PopNextOfflineDeploymentToCreate()
         {

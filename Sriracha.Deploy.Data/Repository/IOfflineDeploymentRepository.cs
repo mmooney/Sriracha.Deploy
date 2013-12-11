@@ -11,6 +11,7 @@ namespace Sriracha.Deploy.Data.Repository
 	{
 		OfflineDeployment CreateOfflineDeployment(string deployBatchRequestId, EnumOfflineDeploymentStatus initialStatus);
         OfflineDeployment GetOfflineDeployment(string offlineDeploymentId);
+        OfflineDeployment GetOfflineDeploymentForDeploymentBatchRequestId(string deployBatchRequestId);
         OfflineDeployment SetReadyForDownload(string offlineDeploymentId, string fileId);
         OfflineDeployment UpdateStatus(string offlineDeploymentId, EnumOfflineDeploymentStatus status, Exception err = null);
         OfflineDeployment PopNextOfflineDeploymentToCreate();

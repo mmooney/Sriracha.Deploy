@@ -388,19 +388,6 @@
 		});
 	}
 
-	$scope.createOfflineDeployment = function () {
-		var batchRequest = $scope.createBatchDeployRequest();
-		var offlineRequest = new SrirachaResource.offlineDeployment();
-		offlineRequest.batchRequest = batchRequest;
-		offlineRequest.$save(null,
-			function () {
-				$scope.navigator.deployment.offlineStatus.go(offlineRequest.id);
-			},
-			function (err) {
-				ErrorReporter.handleResourceError(err);
-			});
-	}
-
 	$scope.submitBuildRequest = function () {
 		if (!$scope.deploymentLabel) {
 			alert("Please enter a deployment label");

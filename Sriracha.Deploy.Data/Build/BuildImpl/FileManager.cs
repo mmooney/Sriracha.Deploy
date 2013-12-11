@@ -6,6 +6,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Dto.Build;
+using System.IO;
 
 namespace Sriracha.Deploy.Data.Build.BuildImpl
 {
@@ -40,6 +41,16 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			return _fileRepository.GetFile(fileId);
 		}
 
+        public byte[] GetFileData(string fileId)
+        {
+            return _fileRepository.GetFileData(fileId);
+        }
+
+        public Stream GetFileDataStream(string fileId)
+        {
+            return _fileRepository.GetFileDataStream(fileId);
+        }
+
 		public void DeleteFile(string fileId)
 		{
 			_fileRepository.DeleteFile(fileId);
@@ -51,5 +62,5 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			var data = _fileRepository.GetFileData(fileId);
 			_fileWriter.WriteBytes(targetFilePath, data);
 		}
-	}
+    }
 }

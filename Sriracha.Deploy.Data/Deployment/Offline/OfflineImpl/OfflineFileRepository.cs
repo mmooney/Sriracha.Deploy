@@ -3,6 +3,7 @@ using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -45,6 +46,12 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
         public byte[] GetFileData(string fileId)
         {
             return _offlineDataProvider.GetFileData(fileId);
+        }
+
+
+        public Stream GetFileDataStream(string fileId)
+        {
+            return new MemoryStream(_offlineDataProvider.GetFileData(fileId));
         }
     }
 }

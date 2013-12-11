@@ -12,6 +12,6 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 	[Route("/deploy/offline/{id}")]
 	public class OfflineDeploymentRequest : RequestBase<OfflineDeployment>
 	{
-		public DeployBatchRequest BatchRequest { get; set; }
+		public string DeployBatchRequestId { get; set; }
 	}
 }

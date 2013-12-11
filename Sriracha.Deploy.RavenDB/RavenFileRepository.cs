@@ -10,6 +10,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Dto.Build;
+using System.IO;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -103,10 +104,16 @@ namespace Sriracha.Deploy.RavenDB
 		}
 
 
-		public byte[] GetFileData(string fileId)
-		{
-			var file = this.GetFile(fileId);
-			return _fileStorage.GetFile(file.FileStorageId);
-		}
-	}
+        public byte[] GetFileData(string fileId)
+        {
+            var file = this.GetFile(fileId);
+            return _fileStorage.GetFile(file.FileStorageId);
+        }
+
+        public Stream GetFileDataStream(string fileId)
+        {
+            var file = this.GetFile(fileId);
+            return _fileStorage.GetFileStream(file.FileStorageId);
+        }
+    }
 }
