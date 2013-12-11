@@ -57,5 +57,8 @@ namespace Sriracha.Deploy.SelfDeploy
 		public string SourceCommandLinePath { get; set; }
 		public string TargetCommandLinePath { get; set; }
 		public string CommandLineExeName { get; set; }
-	}
+
+        //Offline Deployment Tool
+        public string SourceOfflineToolPath { get; set; }
+    }
 }

@@ -104,21 +104,13 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
-                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName))
+                                        if(!string.IsNullOrEmpty(settings.SourceOfflineToolPath))
                                         {
-                                            s.Note("TargetMachineUserName: {0}", settings.TargetMachineUserName, "(None)");
+                                            throw new Exception("Missing setting SourceOfflineToolPath");
                                         }
-                                        else 
+                                        if(!string.IsNullOrEmpty(settings.ServiceTargetPath))
                                         {
-                                            s.Note("TargetMachineUserName: (None)");
-                                        }
-                                        if(!string.IsNullOrEmpty(settings.TargetMachinePassword))
-                                        {
-                                            s.Note("TargetMachinePassword: Exists");
-                                        }
-                                        else
-                                        {
-                                            s.Note("TargetMachinePassword: Does not exists");
+                                            throw new Exception("Missing setting ServiceTargetPath");
                                         }
 										var serviceName = settings.ServiceName;
                                         var serviceOptions = s.WinService(serviceName);
@@ -132,6 +124,7 @@ namespace Sriracha.Deploy.SelfDeploy
 										serviceOptions.Stop();
                                         s.CreateEmptyFolder(@"{{ServiceTargetPath}}");
                                         s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
+                                        s.CopyDirectory(settings.SourceOfflineToolPath).To(@"{{ServiceTargetPath}}\offlineExe").DeleteDestinationBeforeDeploying();
 
 										ApplySettings(s, settings, @"{{ServiceTargetPath}}\{{ServiceExeName}}.config");
 
