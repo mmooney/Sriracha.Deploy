@@ -348,6 +348,36 @@ namespace Sriracha.Deploy.RavenDB
 			return returnList;
 #endif
         }
+
+
+        public DeployState ImportDeployState(DeployState newDeployState)
+        {
+            var existingDeployState = this.TryGetDeployState(newDeployState.ProjectId, newDeployState.Build.Id, newDeployState.Environment.Id, newDeployState.MachineList.First().Id, newDeployState.DeployBatchRequestItemId);
+            if(existingDeployState == null)
+            {
+                var existingIdItem = _documentSession.Load<DeployState>(newDeployState.Id);
+                if(existingIdItem != null)
+                {
+                    newDeployState.Id = Guid.NewGuid().ToString();
+                }
+                return _documentSession.StoreSaveEvict(newDeployState);
+            }
+            else 
+            {
+                foreach(var newMessage in newDeployState.MessageList)
+                {
+                    if(!existingDeployState.MessageList.Any(i=>i.Id == newMessage.Id))
+                    {
+                        var messageCopy = AutoMapper.Mapper.Map(newMessage, new DeployStateMessage());
+                        existingDeployState.MessageList.Add(messageCopy);
+                    }
+                }
+                existingDeployState.UpdatedByUserName = newDeployState.UpdatedByUserName;
+                existingDeployState.UpdatedDateTimeUtc = newDeployState.UpdatedDateTimeUtc;
+                existingDeployState.Status = newDeployState.Status;
+                return _documentSession.SaveEvict(existingDeployState);
+            }
+        }
     }
 
 }

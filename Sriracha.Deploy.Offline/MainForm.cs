@@ -86,15 +86,7 @@ namespace Sriracha.Deploy.Offline
             }
             catch(Exception err)
             {
-                this.DisplayError(string.Format("Error loading batch file name \"{0}\": {1}", filePath, err.Message), err);
-            }
-        }
-
-        private void DisplayError(string message, Exception err)
-        {
-            using(var dlg = new ErrorForm(message, err))
-            {
-                dlg.ShowDialog();
+                WinFormsHelper.DisplayError(string.Format("Error loading batch file name \"{0}\": {1}", filePath, err.Message), err);
             }
         }
 
@@ -153,6 +145,14 @@ namespace Sriracha.Deploy.Offline
             using (var dlg = new ViewDeploymentHistoryForm(_diFactory, _batchRequest, Path.GetDirectoryName(_txtRequestFileName.Text)))
             {
                 dlg.ShowDialog();                
+            }
+        }
+
+        private void _btnExportHistory_Click(object sender, EventArgs e)
+        {
+            using(var dlg = new ExportHistoryForm(_diFactory, _batchRequest, Path.GetDirectoryName(_txtRequestFileName.Text)))
+            {
+                dlg.ShowDialog();
             }
         }
     }

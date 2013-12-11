@@ -568,5 +568,11 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
+
+
+        public DeployState ImportDeployState(DeployState newDeployState)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

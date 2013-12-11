@@ -23,30 +23,32 @@ namespace Sriracha.Deploy.Data
 		Archive
 	}
 
-	public enum EnumDeployStatus
-	{
-		Unknown = 0,
-		[EnumDisplayValue("Requested")]
-		Requested = 1,
-		[EnumDisplayValue("Approved")]
-		Approved = 2,
-		[EnumDisplayValue("Rejected")]
-		Rejected = 3,
-		[EnumDisplayValue("Not Started")]
-		NotStarted = 4,
-		[EnumDisplayValue("In Process")]
-		InProcess = 5,
-		[EnumDisplayValue("Warning")]
-		Warning = 6,
-		[EnumDisplayValue("Success")]
-		Success = 7,
-		[EnumDisplayValue("Error")]
-		Error = 8,
-		[EnumDisplayValue("Cancelled")]
-		Cancelled = 9,
+    public enum EnumDeployStatus
+    {
+        Unknown = 0,
+        [EnumDisplayValue("Requested")]
+        Requested = 1,
+        [EnumDisplayValue("Approved")]
+        Approved = 2,
+        [EnumDisplayValue("Rejected")]
+        Rejected = 3,
+        [EnumDisplayValue("Not Started")]
+        NotStarted = 4,
+        [EnumDisplayValue("In Process")]
+        InProcess = 5,
+        [EnumDisplayValue("Warning")]
+        Warning = 6,
+        [EnumDisplayValue("Success")]
+        Success = 7,
+        [EnumDisplayValue("Error")]
+        Error = 8,
+        [EnumDisplayValue("Cancelled")]
+        Cancelled = 9,
         [EnumDisplayValue("Offline Requested")]
-		OfflineRequested = 10
-	}
+        OfflineRequested = 10,
+        [EnumDisplayValue("Offline Deployment Complete")]
+        OfflineComplete
+    }
 
     public enum EnumDeploymentIsolationType
     {

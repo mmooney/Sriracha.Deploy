@@ -8,6 +8,7 @@ using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Repository;
 using System.Transactions;
 using Sriracha.Deploy.Data.Dto.Deployment.Offline;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -32,7 +33,7 @@ namespace Sriracha.Deploy.RavenDB
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
-				UpdatedDateTimeUtc = DateTime.UtcNow
+				UpdatedDateTimeUtc = DateTime.UtcNow,
 			};
 			return _documentSession.StoreSaveEvict(item);
 		}

@@ -9,7 +9,7 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IOfflineDeploymentRepository
 	{
-		OfflineDeployment CreateOfflineDeployment(string deployBatchRequestId, EnumOfflineDeploymentStatus initialStatus);
+        OfflineDeployment CreateOfflineDeployment(string deployBatchRequestId, EnumOfflineDeploymentStatus initialStatus);
         OfflineDeployment GetOfflineDeployment(string offlineDeploymentId);
         OfflineDeployment GetOfflineDeploymentForDeploymentBatchRequestId(string deployBatchRequestId);
         OfflineDeployment SetReadyForDownload(string offlineDeploymentId, string fileId);

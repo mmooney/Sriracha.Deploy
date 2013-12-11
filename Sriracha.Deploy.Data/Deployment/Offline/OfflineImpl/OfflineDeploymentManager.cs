@@ -8,21 +8,27 @@ using System.IO;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Dto.Deployment.Offline;
 using Sriracha.Deploy.Data.Dto.Project;
+using MMDB.Shared;
+using System.Xml;
+using Ionic.Zip;
+using Newtonsoft.Json;
 
 namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
 	public class OfflineDeploymentManager : IOfflineDeploymentManager
 	{
 		private readonly IDeployRepository _deployRepository;
+        private readonly IDeployStateRepository _deployStateRepository;
 		private readonly IOfflineDeploymentRepository _offlineDeploymentRepository;
         private readonly ISystemSettings _systemSettings;
         private readonly IFileRepository _fileRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IZipper _zipper;
 
-		public OfflineDeploymentManager(IDeployRepository deployRepository, IOfflineDeploymentRepository offlineDeploymentRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper)
+		public OfflineDeploymentManager(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository, IOfflineDeploymentRepository offlineDeploymentRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
+            _deployStateRepository = DIHelper.VerifyParameter(deployStateRepository);
 			_offlineDeploymentRepository = DIHelper.VerifyParameter(offlineDeploymentRepository);
             _projectRepository = DIHelper.VerifyParameter(projectRepository);
             _systemSettings = DIHelper.VerifyParameter(systemSettings);
@@ -71,6 +77,25 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
                 foreach(var fileName in Directory.GetFiles(_systemSettings.OfflineExeDirectory))
                 {
                     File.Copy(fileName, Path.Combine(targetDirectory, Path.GetFileName(fileName)));
+                }
+                foreach(var exeConfigFileName in Directory.GetFiles(targetDirectory, "*.exe.config"))
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.Load(exeConfigFileName);
+                    bool anyUpdates = false;
+                    var siteUrlAppSettingNodes = xmlDoc.SelectNodes("//appSettings/add[@key='SiteUrl']/@value");
+                    if(siteUrlAppSettingNodes != null)
+                    {
+                        foreach(XmlNode node in siteUrlAppSettingNodes)
+                        {
+                            node.Value = AppSettingsHelper.GetSetting("SiteUrl");
+                            anyUpdates = true;
+                        }
+                    }
+                    if(anyUpdates)
+                    {
+                        xmlDoc.Save(exeConfigFileName);
+                    }
                 }
                 var deployBatchRequest = _deployRepository.GetBatchRequest(offlineDeployment.DeployBatchRequestId);
                 var requestJson = deployBatchRequest.ToJson();
@@ -144,6 +169,33 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             {
                 _offlineDeploymentRepository.UpdateStatus(offlineDeploymentId, EnumOfflineDeploymentStatus.CreateFailed, err);
             }
+        }
+
+        public OfflineDeployment ImportHistory(string offlineDeploymentId, string fileId)
+        {
+            var offlineDeployment = _offlineDeploymentRepository.GetOfflineDeployment(offlineDeploymentId);
+            var fileMetadata = _fileRepository.GetFile(fileId);
+
+            using(var fileStream = _fileRepository.GetFileDataStream(fileId))
+            using(var zipFile = ZipFile.Read(fileStream))
+            {
+                foreach(var entry in zipFile)
+                {
+                    if(!entry.IsDirectory && !entry.IsText)
+                    {
+                        using(var entryStream = entry.OpenReader()) 
+                        using(var entryStreamReader = new StreamReader(entryStream))
+                        {
+                            string json = entryStreamReader.ReadToEnd();
+                            var newDeployState = JsonConvert.DeserializeObject<DeployState>(json);
+                            newDeployState.DeployBatchRequestItemId = offlineDeployment.DeployBatchRequestId;
+                            _deployStateRepository.ImportDeployState(newDeployState);
+                        }
+                    }
+                }
+            }
+            _deployRepository.UpdateBatchDeploymentStatus(offlineDeployment.DeployBatchRequestId, EnumDeployStatus.OfflineComplete);
+            return offlineDeployment;
         }
     }
 }

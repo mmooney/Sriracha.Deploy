@@ -35,5 +35,6 @@ namespace Sriracha.Deploy.Data.Dto.Deployment.Offline
 		public string UpdatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 
+        public string ResultFileId { get; set; }
     }
 }

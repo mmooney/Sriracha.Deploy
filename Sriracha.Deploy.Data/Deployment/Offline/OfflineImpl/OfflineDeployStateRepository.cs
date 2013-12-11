@@ -126,5 +126,11 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
         {
             throw new NotImplementedException();
         }
+
+
+        public DeployState ImportDeployState(DeployState newDeployState)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

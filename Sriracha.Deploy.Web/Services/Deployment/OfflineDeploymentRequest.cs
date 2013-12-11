@@ -13,5 +13,6 @@ namespace Sriracha.Deploy.Web.Services.Deployment
 	public class OfflineDeploymentRequest : RequestBase<OfflineDeployment>
 	{
 		public string DeployBatchRequestId { get; set; }
-	}
+        public string ResultFileId { get; set; }
+    }
 }

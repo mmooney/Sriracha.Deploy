@@ -16,5 +16,6 @@ namespace Sriracha.Deploy.Data.Deployment.Offline
         OfflineDeployment PopNextOfflineDeploymentToCreate();
         void CreateOfflineDeploymentPackage(string offlineDeploymentId);
 
+        OfflineDeployment ImportHistory(string offlineDeploymentId, string fileId);
     }
 }

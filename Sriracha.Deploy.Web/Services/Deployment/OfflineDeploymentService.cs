@@ -59,11 +59,22 @@ namespace Sriracha.Deploy.Web.Services.Deployment
             {
                 throw new ArgumentNullException("request is null");
             }
-            if(string.IsNullOrEmpty(data.DeployBatchRequestId))
+            if(!string.IsNullOrEmpty(data.Id))
             {
-                throw new ArgumentNullException("request.deployBatchRequestId is null");
+                if(string.IsNullOrEmpty(data.ResultFileId))
+                {
+                    throw new ArgumentNullException("request.resultFileId is null");
+                }
+                return _offlineDeploymentManager.ImportHistory(data.Id, data.ResultFileId);
             }
-            return _offlineDeploymentManager.BeginCreateOfflineDeployment(data.DeployBatchRequestId);
+            else if (!string.IsNullOrEmpty(data.DeployBatchRequestId))
+            {
+                return _offlineDeploymentManager.BeginCreateOfflineDeployment(data.DeployBatchRequestId);
+            }
+            else 
+            {
+                throw new ArgumentNullException("request.id and request.deployBatchRequestId are null");
+            }
 		}
 	}
 }

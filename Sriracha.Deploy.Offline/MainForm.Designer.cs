@@ -39,8 +39,9 @@
             this._btnContinue = new System.Windows.Forms.Button();
             this._btnExit = new System.Windows.Forms.Button();
             this._pnlDeploymentInfo = new System.Windows.Forms.Panel();
-            this._lblRunDeploymentHeader = new System.Windows.Forms.Label();
+            this._btnExportHistory = new System.Windows.Forms.Button();
             this._btnViewDeploymentHistory = new System.Windows.Forms.Button();
+            this._lblRunDeploymentHeader = new System.Windows.Forms.Label();
             this._pnlDeploymentInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -141,6 +142,7 @@
             this._pnlDeploymentInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this._pnlDeploymentInfo.Controls.Add(this._btnExportHistory);
             this._pnlDeploymentInfo.Controls.Add(this._btnViewDeploymentHistory);
             this._pnlDeploymentInfo.Controls.Add(this._lblRunDeploymentHeader);
             this._pnlDeploymentInfo.Controls.Add(this._btnClearAll);
@@ -152,6 +154,26 @@
             this._pnlDeploymentInfo.Size = new System.Drawing.Size(702, 434);
             this._pnlDeploymentInfo.TabIndex = 9;
             // 
+            // _btnExportHistory
+            // 
+            this._btnExportHistory.Location = new System.Drawing.Point(313, 13);
+            this._btnExportHistory.Name = "_btnExportHistory";
+            this._btnExportHistory.Size = new System.Drawing.Size(149, 23);
+            this._btnExportHistory.TabIndex = 9;
+            this._btnExportHistory.Text = "Export History";
+            this._btnExportHistory.UseVisualStyleBackColor = true;
+            this._btnExportHistory.Click += new System.EventHandler(this._btnExportHistory_Click);
+            // 
+            // _btnViewDeploymentHistory
+            // 
+            this._btnViewDeploymentHistory.Location = new System.Drawing.Point(142, 13);
+            this._btnViewDeploymentHistory.Name = "_btnViewDeploymentHistory";
+            this._btnViewDeploymentHistory.Size = new System.Drawing.Size(149, 23);
+            this._btnViewDeploymentHistory.TabIndex = 8;
+            this._btnViewDeploymentHistory.Text = "View Deployment History";
+            this._btnViewDeploymentHistory.UseVisualStyleBackColor = true;
+            this._btnViewDeploymentHistory.Click += new System.EventHandler(this._btnViewDeploymentHistory_Click);
+            // 
             // _lblRunDeploymentHeader
             // 
             this._lblRunDeploymentHeader.AutoSize = true;
@@ -161,16 +183,6 @@
             this._lblRunDeploymentHeader.Size = new System.Drawing.Size(104, 13);
             this._lblRunDeploymentHeader.TabIndex = 7;
             this._lblRunDeploymentHeader.Text = "Run Deployment:";
-            // 
-            // _btnViewDeploymentHistory
-            // 
-            this._btnViewDeploymentHistory.Location = new System.Drawing.Point(149, 17);
-            this._btnViewDeploymentHistory.Name = "_btnViewDeploymentHistory";
-            this._btnViewDeploymentHistory.Size = new System.Drawing.Size(149, 23);
-            this._btnViewDeploymentHistory.TabIndex = 8;
-            this._btnViewDeploymentHistory.Text = "View Deployment History";
-            this._btnViewDeploymentHistory.UseVisualStyleBackColor = true;
-            this._btnViewDeploymentHistory.Click += new System.EventHandler(this._btnViewDeploymentHistory_Click);
             // 
             // MainForm
             // 
@@ -208,6 +220,7 @@
         private System.Windows.Forms.Panel _pnlDeploymentInfo;
         private System.Windows.Forms.Label _lblRunDeploymentHeader;
         private System.Windows.Forms.Button _btnViewDeploymentHistory;
+        private System.Windows.Forms.Button _btnExportHistory;
     }
 }
 
