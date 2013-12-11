@@ -43,6 +43,8 @@
             this._lblMessagesHeader = new System.Windows.Forms.Label();
             this._txtMessageList = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
+            this._txtErrorDetails = new System.Windows.Forms.TextBox();
+            this._lblErrorDetailsHeader = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _lblProjectComponentBranchHeader
@@ -163,7 +165,7 @@
             // 
             this._lblMessagesHeader.AutoSize = true;
             this._lblMessagesHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this._lblMessagesHeader.Location = new System.Drawing.Point(16, 176);
+            this._lblMessagesHeader.Location = new System.Drawing.Point(16, 271);
             this._lblMessagesHeader.Name = "_lblMessagesHeader";
             this._lblMessagesHeader.Size = new System.Drawing.Size(67, 13);
             this._lblMessagesHeader.TabIndex = 14;
@@ -174,24 +176,46 @@
             this._txtMessageList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._txtMessageList.Location = new System.Drawing.Point(19, 193);
+            this._txtMessageList.Location = new System.Drawing.Point(19, 285);
             this._txtMessageList.Multiline = true;
             this._txtMessageList.Name = "_txtMessageList";
             this._txtMessageList.ReadOnly = true;
             this._txtMessageList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._txtMessageList.Size = new System.Drawing.Size(638, 259);
+            this._txtMessageList.Size = new System.Drawing.Size(638, 125);
             this._txtMessageList.TabIndex = 15;
             // 
             // _btnOK
             // 
             this._btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._btnOK.Location = new System.Drawing.Point(582, 458);
+            this._btnOK.Location = new System.Drawing.Point(582, 416);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 16;
             this._btnOK.Text = "OK";
             this._btnOK.UseVisualStyleBackColor = true;
+            // 
+            // _txtErrorDetails
+            // 
+            this._txtErrorDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._txtErrorDetails.Location = new System.Drawing.Point(19, 196);
+            this._txtErrorDetails.Multiline = true;
+            this._txtErrorDetails.Name = "_txtErrorDetails";
+            this._txtErrorDetails.ReadOnly = true;
+            this._txtErrorDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._txtErrorDetails.Size = new System.Drawing.Size(638, 60);
+            this._txtErrorDetails.TabIndex = 18;
+            // 
+            // _lblErrorDetailsHeader
+            // 
+            this._lblErrorDetailsHeader.AutoSize = true;
+            this._lblErrorDetailsHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblErrorDetailsHeader.Location = new System.Drawing.Point(16, 180);
+            this._lblErrorDetailsHeader.Name = "_lblErrorDetailsHeader";
+            this._lblErrorDetailsHeader.Size = new System.Drawing.Size(81, 13);
+            this._lblErrorDetailsHeader.TabIndex = 17;
+            this._lblErrorDetailsHeader.Text = "Error Details:";
             // 
             // ViewDeployStateForm
             // 
@@ -199,7 +223,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._btnOK;
-            this.ClientSize = new System.Drawing.Size(669, 493);
+            this.ClientSize = new System.Drawing.Size(669, 451);
+            this.Controls.Add(this._txtErrorDetails);
+            this.Controls.Add(this._lblErrorDetailsHeader);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._txtMessageList);
             this.Controls.Add(this._lblMessagesHeader);
@@ -240,5 +266,7 @@
         private System.Windows.Forms.Label _lblMessagesHeader;
         private System.Windows.Forms.TextBox _txtMessageList;
         private System.Windows.Forms.Button _btnOK;
+        private System.Windows.Forms.TextBox _txtErrorDetails;
+        private System.Windows.Forms.Label _lblErrorDetailsHeader;
     }
 }

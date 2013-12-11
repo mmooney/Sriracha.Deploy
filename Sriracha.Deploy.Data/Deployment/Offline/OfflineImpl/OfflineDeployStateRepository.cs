@@ -100,6 +100,15 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             }
             if (err != null)
             {
+                var message = new DeployStateMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    DateTimeUtc = DateTime.UtcNow,
+                    DeployStateId = state.Id,
+                    Message = "ERROR: " + err.ToString(),
+                    MessageUserName = _userIdentity.UserName
+                };
+                state.MessageList.Add(message);
                 state.ErrorDetails = err.ToString();
             }
             state.UpdatedDateTimeUtc = DateTime.UtcNow;

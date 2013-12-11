@@ -43,6 +43,8 @@ namespace Sriracha.Deploy.Offline
                 }
                 _lblStatus.Text = _deployState.StatusDisplayValue;
 
+                _txtErrorDetails.Text = StringHelper.IsNullOrEmpty(_deployState.ErrorDetails, "No errors");
+    
                 var messageList = _deployState.MessageList.OrderByDescending(i=>i.DateTimeUtc);
                 foreach(var message in messageList)
                 {
