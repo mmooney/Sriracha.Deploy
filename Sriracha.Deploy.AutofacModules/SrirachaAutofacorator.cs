@@ -111,7 +111,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployRunner>().As<IDeployRunner>();
             builder.RegisterType<DeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
 			builder.RegisterType<DeployTaskStatusManager>().As<IDeployTaskStatusManager>();
-            builder.RegisterType<DeployTaskStatusNotifier>().As<IDeployTaskStatusNotifier>().SingleInstance();
+            builder.RegisterType<DeployStatusNotifier>().As<IDeployStatusNotifier>().SingleInstance();
 			builder.RegisterType<DeployComponentRunner>().As<IDeployComponentRunner>();
 			builder.RegisterType<DeployTaskFactory>().As<IDeployTaskFactory>().SingleInstance();
 			builder.RegisterType<DeploymentValidator>().As<IDeploymentValidator>().SingleInstance();

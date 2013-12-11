@@ -22,17 +22,17 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 
         public PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public DeployBatchRequest PopNextBatchDeployment()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public DeployBatchRequest GetBatchRequest(string id)
@@ -52,27 +52,31 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 
         public PagedSortedList<DeployBatchRequest> GetDeployQueue(ListOptions listOptions, List<EnumDeployStatus> statusList = null, List<string> environmentIds = null, bool includeResumeRequested = true)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus enumDeployStatus, string statusMessage)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage)
         {
-            throw new NotImplementedException();
+            var request = this.GetBatchRequest(deployBatchRequestId);
+            request.CancelRequested = true;
+            return request;
         }
 
         public DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage)
         {
-            throw new NotImplementedException();
+            var request = this.GetBatchRequest(deployBatchRequestId);
+            request.ResumeRequested = true;
+            return request;
         }
 
         public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

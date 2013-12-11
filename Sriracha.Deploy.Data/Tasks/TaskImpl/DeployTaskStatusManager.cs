@@ -11,13 +11,13 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 	{
 		private readonly Logger _logger;
 		private readonly IDeployStateManager _deployStateManager;
-        private readonly IDeployTaskStatusNotifier _deployTaskStatusNotifier;
+        private readonly IDeployStatusNotifier _deployTaskStatusNotifier;
 
 		private List<string> DebugList { get; set; }
 		private List<string> InfoList { get; set; }
 		private List<string> ErrorList { get; set; }
 
-		public DeployTaskStatusManager(Logger logger, IDeployStateManager deployStateManager, IDeployTaskStatusNotifier deployTaskStatusNotififer)
+		public DeployTaskStatusManager(Logger logger, IDeployStateManager deployStateManager, IDeployStatusNotifier deployTaskStatusNotififer)
 		{
 			this.InfoList = new List<string>();
 			this.DebugList = new List<string>();

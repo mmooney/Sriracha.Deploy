@@ -20,8 +20,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 		private readonly IProjectRepository _projectRepository;
 		private readonly IDeploymentValidator _validator;
 		private readonly IProjectNotifier _projectNotifier;
+        private readonly IDeployStatusNotifier _deployStatusNotifier;
 
-		public DeployStateManager(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator, IProjectNotifier projectNotifier)
+		public DeployStateManager(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository, IBuildRepository buildRepository, IProjectRepository projectRepository, IDeploymentValidator deploymentValidator, IProjectNotifier projectNotifier, IDeployStatusNotifier deployStatusNotifier)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
             _deployStateRepository = DIHelper.VerifyParameter(deployStateRepository);
@@ -29,6 +30,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			_projectRepository = DIHelper.VerifyParameter(projectRepository);
 			_validator = DIHelper.VerifyParameter(deploymentValidator);
 			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
+            _deployStatusNotifier = DIHelper.VerifyParameter(deployStatusNotifier);
 		}
 
 		public DeployState GetDeployState(string deployStateId)
@@ -48,7 +50,9 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				project.GetMachine(machineId)
 			};
-			return _deployStateRepository.CreateDeployState(build, branch, environment, component, machineList, deployBatchRequestItemId);
+			var returnValue = _deployStateRepository.CreateDeployState(build, branch, environment, component, machineList, deployBatchRequestItemId);
+            _deployStatusNotifier.Notify(returnValue);
+            return returnValue;
 		}
 
 		public DeployState GetOrCreateDeployState(string projectId, string buildId, string environmentId, string machineId, string deployBatchRequestItemId)
@@ -66,23 +70,28 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 
 		public DeployState AddDeploymentMessage(string deployStateId, string message)
 		{
-			return _deployStateRepository.AddDeploymentMessage(deployStateId, message);
-		}
+			var state = _deployStateRepository.AddDeploymentMessage(deployStateId, message);
+            _deployStatusNotifier.Notify(state);
+            return state;
+        }
 
 		public void MarkDeploymentInProcess(string deployStateId)
 		{
-			_deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.InProcess);
-		}
+			var state = _deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.InProcess);
+            _deployStatusNotifier.Notify(state);
+        }
 
 		public void MarkDeploymentSuccess(string deployStateId)
 		{
-            _deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Success);
-		}
+            var state = _deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Success);
+            _deployStatusNotifier.Notify(state);
+        }
 
 		public void MarkDeploymentFailed(string deployStateId, Exception err)
 		{
-            _deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
-		}
+            var state = _deployStateRepository.UpdateDeploymentStatus(deployStateId, EnumDeployStatus.Error, err);
+            _deployStatusNotifier.Notify(state);
+        }
 
 		public void MarkBatchDeploymentSuccess(string deployBatchRequestId)
 		{

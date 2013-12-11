@@ -207,8 +207,8 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\FolderJobCleanupJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\GCFlushJob.cs" />
     <Compile Include="ServiceJobs\ServiceJobImpl\OfflineDeploymentPackageJob.cs" />
-    <Compile Include="Tasks\IDeployTaskStatusNotifier.cs" />
-    <Compile Include="Tasks\TaskImpl\DeployTaskStatusNotifier.cs" />
+    <Compile Include="Deployment\IDeployStatusNotifier.cs" />
+    <Compile Include="Deployment\DeploymentImpl\DeployStatusNotifier.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="Utility\IRegexResolver.cs" />

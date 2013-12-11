@@ -78,6 +78,8 @@ namespace Sriracha.Deploy.Offline
             _runDeploymentWorker.DoWork += _runDeploymentWorker_DoWork;
             _runDeploymentWorker.WorkerReportsProgress = true;
             _runDeploymentWorker.ProgressChanged += _runDeploymentWorker_ProgressChanged;
+            _runDeploymentWorker.WorkerSupportsCancellation = true;
+            _runDeploymentWorker.RunWorkerCompleted += _runDeploymentWorker_RunWorkerCompleted;
 
             _gridItemList = new List<GridItem>();
             foreach(var component in selectionList)
@@ -94,7 +96,14 @@ namespace Sriracha.Deploy.Offline
                     _gridItemList.Add(item);
                 }
             }
+            this._grdStatus.AutoGenerateColumns = false;
             _grdStatus.DataSource = _gridItemList;
+        }
+
+        void _runDeploymentWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _btnStart.Enabled = true;
+            _btnCancel.Enabled = false;
         }
 
         void _runDeploymentWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -104,12 +113,13 @@ namespace Sriracha.Deploy.Offline
             if(item != null)
             {
                 item.Update(state);
+                _grdStatus.Refresh();
             }
         }
 
         void _runDeploymentWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            var notifier = _diFactory.CreateInjectedObject<IDeployTaskStatusNotifier>();
+            var notifier = _diFactory.CreateInjectedObject<IDeployStatusNotifier>();
             notifier.NotificationReceived += notifier_NotificationReceived;
 
             IDeployBatchRunner batchRunner = _diFactory.CreateInjectedObject<IDeployBatchRunner>();
@@ -127,12 +137,33 @@ namespace Sriracha.Deploy.Offline
             var systemSettings = _diFactory.CreateInjectedObject<ISystemSettings>();
             systemSettings.DeployWorkingDirectory = _workingDirectory;
 
+            _btnStart.Enabled = false;
+            _btnCancel.Enabled = true;
             _runDeploymentWorker.RunWorkerAsync(_batchRequest.Id);
         }
 
         void notifier_NotificationReceived(object sender, EventArgs<DeployState> e)
         {
             _runDeploymentWorker.ReportProgress(0, e.Value);
+        }
+
+        private void _btnCancel_Click(object sender, EventArgs e)
+        {
+            var deployRequestManager = _diFactory.CreateInjectedObject<IDeployRequestManager>();
+            deployRequestManager.PerformAction(_batchRequest.Id, EnumDeployBatchAction.Cancel, null);
+        }
+
+        private void _grdStatus_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(e.ColumnIndex == _colViewDetails.Index)
+            {
+                var item = _gridItemList[e.RowIndex];
+                var deployBatchRequestItem = _batchRequest.ItemList.Single(i=>i.Id == item.DeployBatchRequestItemId);
+                using(var dlg = new ViewDeployStateForm(deployBatchRequestItem, item.DeployState))
+                {
+                    dlg.ShowDialog();
+                }
+            }
         }
     }
 }

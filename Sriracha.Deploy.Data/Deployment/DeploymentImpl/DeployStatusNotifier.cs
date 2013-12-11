@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.Data.Tasks.TaskImpl
+namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
-    public class DeployTaskStatusNotifier : IDeployTaskStatusNotifier
+    public class DeployStatusNotifier : IDeployStatusNotifier
     {
         public event EventHandler<EventArgs<DeployState>> NotificationReceived;
 
