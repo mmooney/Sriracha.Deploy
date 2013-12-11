@@ -11,7 +11,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline
 {
     public interface IOfflineDataProvider
     {
-        void Initialize(DeployBatchRequest deployBatchRequest, List<OfflineComponentSelection> selectionList, string workingDirectory);
+        void Initialize(string offlineDeploymentRunId, DeployBatchRequest deployBatchRequest, List<OfflineComponentSelection> selectionList, string workingDirectory);
 
         DeployBatchRequest GetBatchRequest();
         List<OfflineComponentSelection> GetSelectionList();
@@ -28,5 +28,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline
         DeployState GetDeployState(string deployStateId);
 
         void WriteLog(string formattedMessage);
+
+        List<OfflineDeploymentRun> GetDeployHistoryList(string _workingDirectory);
     }
 }

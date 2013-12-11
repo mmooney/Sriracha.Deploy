@@ -102,6 +102,12 @@
     <Compile Include="SelectMachineForm.Designer.cs">
       <DependentUpon>SelectMachineForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewDeploymentHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewDeploymentHistoryForm.Designer.cs">
+      <DependentUpon>ViewDeploymentHistoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewDeployStateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectMachineForm.resx">
       <DependentUpon>SelectMachineForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewDeploymentHistoryForm.resx">
+      <DependentUpon>ViewDeploymentHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ViewDeployStateForm.resx">
       <DependentUpon>ViewDeployStateForm.cs</DependentUpon>
@@ -167,6 +176,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MMDB.ico" />
+    <None Include="Resources\StatusAnnotations_Alert_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Information_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Play_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Stop_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Complete_and_ok_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Help_and_inconclusive_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Critical_32xSM_color.png" />
+    <None Include="Resources\StatusAnnotations_Help_and_inconclusive_16xLG_color.png" />
     <None Include="Resources\StatusAnnotations_Help_and_inconclusive_32xMD_color.png" />
     <None Include="Resources\StatusAnnotations_Critical_32xMD_color.png" />
     <None Include="Resources\StatusAnnotations_Play_32xMD_color.png" />

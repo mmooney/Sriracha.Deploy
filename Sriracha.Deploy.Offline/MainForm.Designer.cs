@@ -38,6 +38,10 @@
             this._btnSelectMachines = new System.Windows.Forms.Button();
             this._btnContinue = new System.Windows.Forms.Button();
             this._btnExit = new System.Windows.Forms.Button();
+            this._pnlDeploymentInfo = new System.Windows.Forms.Panel();
+            this._lblRunDeploymentHeader = new System.Windows.Forms.Label();
+            this._btnViewDeploymentHistory = new System.Windows.Forms.Button();
+            this._pnlDeploymentInfo.SuspendLayout();
             this.SuspendLayout();
             // 
             // _lblRequestFileName
@@ -74,15 +78,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._pnlAllComponents.AutoScroll = true;
             this._pnlAllComponents.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this._pnlAllComponents.Location = new System.Drawing.Point(12, 79);
+            this._pnlAllComponents.Location = new System.Drawing.Point(3, 77);
             this._pnlAllComponents.Name = "_pnlAllComponents";
-            this._pnlAllComponents.Size = new System.Drawing.Size(706, 389);
+            this._pnlAllComponents.Size = new System.Drawing.Size(696, 345);
             this._pnlAllComponents.TabIndex = 3;
             this._pnlAllComponents.WrapContents = false;
             // 
             // _btnSelectAll
             // 
-            this._btnSelectAll.Location = new System.Drawing.Point(198, 39);
+            this._btnSelectAll.Location = new System.Drawing.Point(397, 48);
             this._btnSelectAll.Name = "_btnSelectAll";
             this._btnSelectAll.Size = new System.Drawing.Size(75, 23);
             this._btnSelectAll.TabIndex = 4;
@@ -92,7 +96,7 @@
             // 
             // _btnClearAll
             // 
-            this._btnClearAll.Location = new System.Drawing.Point(279, 39);
+            this._btnClearAll.Location = new System.Drawing.Point(478, 48);
             this._btnClearAll.Name = "_btnClearAll";
             this._btnClearAll.Size = new System.Drawing.Size(75, 23);
             this._btnClearAll.TabIndex = 5;
@@ -102,7 +106,7 @@
             // 
             // _btnSelectMachines
             // 
-            this._btnSelectMachines.Location = new System.Drawing.Point(360, 39);
+            this._btnSelectMachines.Location = new System.Drawing.Point(559, 48);
             this._btnSelectMachines.Name = "_btnSelectMachines";
             this._btnSelectMachines.Size = new System.Drawing.Size(140, 23);
             this._btnSelectMachines.TabIndex = 6;
@@ -132,23 +136,59 @@
             this._btnExit.UseVisualStyleBackColor = true;
             this._btnExit.Click += new System.EventHandler(this._btnExit_Click);
             // 
+            // _pnlDeploymentInfo
+            // 
+            this._pnlDeploymentInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._pnlDeploymentInfo.Controls.Add(this._btnViewDeploymentHistory);
+            this._pnlDeploymentInfo.Controls.Add(this._lblRunDeploymentHeader);
+            this._pnlDeploymentInfo.Controls.Add(this._btnClearAll);
+            this._pnlDeploymentInfo.Controls.Add(this._btnSelectAll);
+            this._pnlDeploymentInfo.Controls.Add(this._pnlAllComponents);
+            this._pnlDeploymentInfo.Controls.Add(this._btnSelectMachines);
+            this._pnlDeploymentInfo.Location = new System.Drawing.Point(16, 49);
+            this._pnlDeploymentInfo.Name = "_pnlDeploymentInfo";
+            this._pnlDeploymentInfo.Size = new System.Drawing.Size(702, 434);
+            this._pnlDeploymentInfo.TabIndex = 9;
+            // 
+            // _lblRunDeploymentHeader
+            // 
+            this._lblRunDeploymentHeader.AutoSize = true;
+            this._lblRunDeploymentHeader.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this._lblRunDeploymentHeader.Location = new System.Drawing.Point(3, 53);
+            this._lblRunDeploymentHeader.Name = "_lblRunDeploymentHeader";
+            this._lblRunDeploymentHeader.Size = new System.Drawing.Size(104, 13);
+            this._lblRunDeploymentHeader.TabIndex = 7;
+            this._lblRunDeploymentHeader.Text = "Run Deployment:";
+            // 
+            // _btnViewDeploymentHistory
+            // 
+            this._btnViewDeploymentHistory.Location = new System.Drawing.Point(149, 17);
+            this._btnViewDeploymentHistory.Name = "_btnViewDeploymentHistory";
+            this._btnViewDeploymentHistory.Size = new System.Drawing.Size(149, 23);
+            this._btnViewDeploymentHistory.TabIndex = 8;
+            this._btnViewDeploymentHistory.Text = "View Deployment History";
+            this._btnViewDeploymentHistory.UseVisualStyleBackColor = true;
+            this._btnViewDeploymentHistory.Click += new System.EventHandler(this._btnViewDeploymentHistory_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(730, 524);
+            this.Controls.Add(this._pnlDeploymentInfo);
             this.Controls.Add(this._btnExit);
             this.Controls.Add(this._btnContinue);
-            this.Controls.Add(this._btnSelectMachines);
-            this.Controls.Add(this._btnClearAll);
-            this.Controls.Add(this._btnSelectAll);
-            this.Controls.Add(this._pnlAllComponents);
             this.Controls.Add(this._btnRequestFileNameBrowse);
             this.Controls.Add(this._txtRequestFileName);
             this.Controls.Add(this._lblRequestFileName);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Sriracha Offline Deployment Tool";
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this._pnlDeploymentInfo.ResumeLayout(false);
+            this._pnlDeploymentInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,6 +205,9 @@
         private System.Windows.Forms.Button _btnSelectMachines;
         private System.Windows.Forms.Button _btnContinue;
         private System.Windows.Forms.Button _btnExit;
+        private System.Windows.Forms.Panel _pnlDeploymentInfo;
+        private System.Windows.Forms.Label _lblRunDeploymentHeader;
+        private System.Windows.Forms.Button _btnViewDeploymentHistory;
     }
 }
 

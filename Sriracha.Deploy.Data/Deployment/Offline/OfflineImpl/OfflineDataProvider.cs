@@ -24,15 +24,29 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             _userIdentity = DIHelper.VerifyParameter(userIdentity);
         }
 
-        public void Initialize(DeployBatchRequest deployBatchRequest, List<OfflineComponentSelection> selectionList, string workingDirectory)
+        public void Initialize(string offlineDeploymentRunId, DeployBatchRequest deployBatchRequest, List<OfflineComponentSelection> selectionList, string workingDirectory)
         {
-            _workingDirectory = workingDirectory;
-            _deploymentRun = new OfflineDeploymentRun
+            if(!string.IsNullOrEmpty(offlineDeploymentRunId))
             {
-                Id = Guid.NewGuid().ToString(),
-                DeployBatchRequest = deployBatchRequest,
-                SelectionList = selectionList
-            };
+                string runDirectory = Path.Combine(workingDirectory, "runs");
+                string runFileName = Path.Combine(runDirectory, offlineDeploymentRunId + ".json");
+                if (!File.Exists(runFileName))
+                {
+                    throw new FileNotFoundException("Missing run file", runFileName);
+                }
+                var json = File.ReadAllText(runFileName);
+                _deploymentRun = JsonConvert.DeserializeObject<OfflineDeploymentRun>(json);
+            }
+            else 
+            {
+                _deploymentRun = new OfflineDeploymentRun
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    DeployBatchRequest = deployBatchRequest,
+                    SelectionList = selectionList
+                };
+            }
+            _workingDirectory = workingDirectory;
         }
 
         public DeployBatchRequest GetBatchRequest()
@@ -91,6 +105,22 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             string filePath = Path.Combine(runDirectory, _deploymentRun.Id.ToString() + ".json");
             string jsonData = _deploymentRun.ToJson();
             File.WriteAllText(filePath, jsonData);
+        }
+
+        public List<OfflineDeploymentRun> GetDeployHistoryList(string workingDirectory)
+        {
+            var returnList = new List<OfflineDeploymentRun>();
+            string runDirectory = Path.Combine(workingDirectory, "runs");
+            if (Directory.Exists(runDirectory))
+            {
+                foreach(string fileName in Directory.GetFiles(runDirectory, "*.json"))
+                {
+                    var json = File.ReadAllText(fileName);
+                    var runData = JsonConvert.DeserializeObject<OfflineDeploymentRun>(json);
+                    returnList.Add(runData);
+                }
+            }
+            return returnList;
         }
 
         public DeployProject TryGetProject(string projectId)

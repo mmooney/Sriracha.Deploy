@@ -26,6 +26,12 @@ namespace Sriracha.Deploy.Offline
             _diFactory = diFactory;
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            _pnlDeploymentInfo.Visible = false;
+            _btnContinue.Visible = false;
+        }
+
         private void _btnRequestFileNameBrowse_Click(object sender, EventArgs e)
         {
             using(var dlg = new OpenFileDialog())
@@ -75,6 +81,8 @@ namespace Sriracha.Deploy.Offline
                     _pnlAllComponents.Controls.Add(ctrl);
                 }
                 
+                _pnlDeploymentInfo.Visible = true;
+                _btnContinue.Visible = true;
             }
             catch(Exception err)
             {
@@ -137,6 +145,14 @@ namespace Sriracha.Deploy.Offline
             using(var dlg = new RunDeploymentForm(_diFactory, _batchRequest, selectionList, Path.GetDirectoryName(_txtRequestFileName.Text)))
             {
                 dlg.ShowDialog();
+            }
+        }
+
+        private void _btnViewDeploymentHistory_Click(object sender, EventArgs e)
+        {
+            using (var dlg = new ViewDeploymentHistoryForm(_diFactory, _batchRequest, Path.GetDirectoryName(_txtRequestFileName.Text)))
+            {
+                dlg.ShowDialog();                
             }
         }
     }

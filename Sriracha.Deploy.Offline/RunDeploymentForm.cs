@@ -33,13 +33,13 @@ namespace Sriracha.Deploy.Offline
                 switch(status)
                 {
                     case EnumDeployStatus.NotStarted:
-                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Help_and_inconclusive_32xMD_color;
+                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Help_and_inconclusive_32xSM_color;
                         break;
                     case EnumDeployStatus.InProcess:
-                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Play_32xMD_color;
+                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Play_32xSM_color;
                         break;
                     case EnumDeployStatus.Error:
-                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Critical_32xMD_color;
+                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Critical_32xSM_color;
                         break;
                     default:
                         throw new UnknownEnumValueException(status);
@@ -59,12 +59,13 @@ namespace Sriracha.Deploy.Offline
             }
         }
 
+        private string _offlineDeploymentRunId;
         private DeployBatchRequest _batchRequest;
         private List<OfflineComponentSelection> _selectionList;
         private List<GridItem> _gridItemList;
         private string _workingDirectory;
         private readonly IDIFactory _diFactory;
-        private readonly BackgroundWorker _runDeploymentWorker;
+        private readonly BackgroundWorker _runDeploymentWorker = new BackgroundWorker();
 
         public RunDeploymentForm(IDIFactory diFactory, DeployBatchRequest batchRequest, List<OfflineComponentSelection> selectionList, string workingDirectory)
         {
@@ -73,15 +74,58 @@ namespace Sriracha.Deploy.Offline
             _selectionList = selectionList;
             _workingDirectory = workingDirectory;
             _diFactory = diFactory;
+        }
 
-            _runDeploymentWorker = new BackgroundWorker();
+        public RunDeploymentForm(IDIFactory diFactory, OfflineDeploymentRun offlineDeploymentRun, string workingDirectory)
+        {
+            InitializeComponent();
+            _offlineDeploymentRunId = offlineDeploymentRun.Id;
+            _batchRequest = offlineDeploymentRun.DeployBatchRequest;
+            _selectionList = offlineDeploymentRun.SelectionList;
+            _workingDirectory = workingDirectory;
+            _diFactory = diFactory;
+        }
+
+        private void RunDeploymentForm_Load(object sender, EventArgs e)
+        {
             _runDeploymentWorker.DoWork += _runDeploymentWorker_DoWork;
             _runDeploymentWorker.WorkerReportsProgress = true;
             _runDeploymentWorker.ProgressChanged += _runDeploymentWorker_ProgressChanged;
             _runDeploymentWorker.WorkerSupportsCancellation = true;
             _runDeploymentWorker.RunWorkerCompleted += _runDeploymentWorker_RunWorkerCompleted;
 
+            UpdateBatchDetails();
+
+            var dataProvider = _diFactory.CreateInjectedObject<IOfflineDataProvider>();
+            dataProvider.Initialize(_offlineDeploymentRunId, _batchRequest, _selectionList, _workingDirectory);
+            _gridItemList = new List<GridItem>();
+            foreach (var component in _selectionList)
+            {
+                foreach (var machine in component.SelectedMachineList)
+                {
+                    var item = new GridItem
+                    {
+                        BuildDisplayValue = component.BatchRequestItem.Build.DisplayValue,
+                        MachineName = machine.MachineName,
+                        DeployBatchRequestItemId = component.BatchRequestItem.Id
+                    };
+
+                    var deployState = dataProvider.TryGetDeployState(component.BatchRequestItem.Build.ProjectId, component.BatchRequestItem.Build.Id, machine.EnvironmentId, machine.Id, component.BatchRequestItem.Id);
+                    if(deployState == null)
+                    {
+                        item.SetStatus(EnumDeployStatus.NotStarted);
+                    }
+                    else 
+                    {
+                        item.Update(deployState);
+                    }
+                    _gridItemList.Add(item);
+                }
+            }
+            this._grdStatus.AutoGenerateColumns = false;
+            _grdStatus.DataSource = _gridItemList;
         }
+
 
         void _runDeploymentWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -121,7 +165,7 @@ namespace Sriracha.Deploy.Offline
         private void _btnStart_Click(object sender, EventArgs e)
         {
             var dataProvider = _diFactory.CreateInjectedObject<IOfflineDataProvider>();
-            dataProvider.Initialize(_batchRequest, _selectionList, _workingDirectory);
+            dataProvider.Initialize(_offlineDeploymentRunId, _batchRequest, _selectionList, _workingDirectory);
 
             var systemSettings = _diFactory.CreateInjectedObject<ISystemSettings>();
             systemSettings.DeployWorkingDirectory = _workingDirectory;
@@ -161,29 +205,6 @@ namespace Sriracha.Deploy.Offline
             }
         }
 
-        private void RunDeploymentForm_Load(object sender, EventArgs e)
-        {
-            UpdateBatchDetails();
-
-            _gridItemList = new List<GridItem>();
-            foreach(var component in _selectionList)
-            {
-                foreach(var machine in component.SelectedMachineList)
-                {
-                    var item = new GridItem
-                    {
-                        BuildDisplayValue = component.BatchRequestItem.Build.DisplayValue,
-                        MachineName = machine.MachineName,
-                        DeployBatchRequestItemId = component.BatchRequestItem.Id
-                    };
-                    item.SetStatus(EnumDeployStatus.NotStarted);
-                    _gridItemList.Add(item);
-                }
-            }
-            this._grdStatus.AutoGenerateColumns = false;
-            _grdStatus.DataSource = _gridItemList;
-        }
-
         private void UpdateBatchDetails()
         {
             _lblLabel.Text = _batchRequest.DeploymentLabel;
@@ -204,6 +225,13 @@ namespace Sriracha.Deploy.Offline
             {
                 _lblCompleted.Text = "N/A";
             }
+        }
+
+        private void RunDeploymentForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var notifier = _diFactory.CreateInjectedObject<IDeployStatusNotifier>();
+            notifier.DeployStateNotificationReceived -= notifier_DeployStateNotificationReceived;
+            notifier.BatchRequestNotificationReceived -= notifier_BatchRequestNotificationReceived;
         }
     }
 }

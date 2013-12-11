@@ -51,7 +51,7 @@
             this._chkMachineCheckboxList.Location = new System.Drawing.Point(40, 52);
             this._chkMachineCheckboxList.MultiColumn = true;
             this._chkMachineCheckboxList.Name = "_chkMachineCheckboxList";
-            this._chkMachineCheckboxList.Size = new System.Drawing.Size(505, 64);
+            this._chkMachineCheckboxList.Size = new System.Drawing.Size(505, 49);
             this._chkMachineCheckboxList.TabIndex = 1;
             this._chkMachineCheckboxList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this._chkMachineCheckboxList_ItemCheck);
             // 
@@ -108,7 +108,7 @@
             this.Controls.Add(this._lblMachineHeader);
             this.Controls.Add(this._chkMachineCheckboxList);
             this.Name = "ComponentSelectionControl";
-            this.Size = new System.Drawing.Size(585, 131);
+            this.Size = new System.Drawing.Size(585, 111);
             this.Load += new System.EventHandler(this.ComponentSelectionControl_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -222,6 +222,7 @@
             this.Controls.Add(this._grdStatus);
             this.Name = "RunDeploymentForm";
             this.Text = "Run Deployment";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RunDeploymentForm_FormClosing);
             this.Load += new System.EventHandler(this.RunDeploymentForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this._grdStatus)).EndInit();
             this.ResumeLayout(false);
