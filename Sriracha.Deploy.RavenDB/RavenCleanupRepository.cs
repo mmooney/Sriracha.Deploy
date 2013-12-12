@@ -34,7 +34,7 @@ namespace Sriracha.Deploy.RavenDB
 				FolderPath = folderPath,
 				AgeMinutes = ageMinutes,
 				Status = EnumQueueStatus.New,
-				TargetCleanUpDateTimeUtc = DateTime.UtcNow.AddMinutes(0-ageMinutes),
+				TargetCleanUpDateTimeUtc = DateTime.UtcNow.AddMinutes(ageMinutes),
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
