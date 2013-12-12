@@ -104,13 +104,9 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
-                                        if(!string.IsNullOrEmpty(settings.SourceOfflineToolPath))
+                                        if(string.IsNullOrEmpty(settings.SourceOfflineToolPath))
                                         {
                                             throw new Exception("Missing setting SourceOfflineToolPath");
-                                        }
-                                        if(!string.IsNullOrEmpty(settings.ServiceTargetPath))
-                                        {
-                                            throw new Exception("Missing setting ServiceTargetPath");
                                         }
 										var serviceName = settings.ServiceName;
                                         var serviceOptions = s.WinService(serviceName);
