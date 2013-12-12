@@ -55,7 +55,8 @@ namespace Sriracha.Deploy.RavenDB
 										.OrderBy(i => i.TargetCleanUpDateTimeUtc)
 										.Where(i => i.Status == EnumQueueStatus.New 
 												&& i.MachineName == machineName 
-												&& i.TaskType == EnumCleanupTaskType.Folder)
+												&& i.TaskType == EnumCleanupTaskType.Folder
+												&& i.TargetCleanUpDateTimeUtc < DateTime.UtcNow)
 										.FirstOrDefault();
 				if (tempItem == null)
 				{
