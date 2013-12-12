@@ -212,7 +212,8 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 
         public void WriteLog(string formattedMessage)
         {
-            string logFileName = Path.Combine(_workingDirectory, "log.log");
+			string directory = StringHelper.IsNullOrEmpty(_workingDirectory, Environment.CurrentDirectory);
+            string logFileName = Path.Combine(directory, "log.log");
             File.AppendAllLines(logFileName, formattedMessage.ListMe());
         }
     }

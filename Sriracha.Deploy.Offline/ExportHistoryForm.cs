@@ -72,7 +72,8 @@ namespace Sriracha.Deploy.Offline
                 using(var client = new JsonServiceClient(rootUrl))
                 {
                     client.AllowAutoRedirect = false;
-                    if (authCookie != null)
+					client.Credentials = System.Net.CredentialCache.DefaultCredentials;
+					if (authCookie != null)
                     {
                         client.CookieContainer.Add(authCookie);
                     }
@@ -203,6 +204,7 @@ namespace Sriracha.Deploy.Offline
                     using (var client = new JsonServiceClient(url))
 			        {
 				        var fileToUpload = new FileInfo(zipPath);
+						client.AllowAutoRedirect = false;
 				        client.Credentials = System.Net.CredentialCache.DefaultCredentials;
 				        client.Timeout = TimeSpan.FromMinutes(2);
 				        client.ReadWriteTimeout = TimeSpan.FromMinutes(2);
