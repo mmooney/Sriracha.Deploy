@@ -25,7 +25,14 @@ namespace Sriracha.Deploy.Data.Impl
 			set { _emailSenderPollingIntervalSeconds = value; }
 		}
 
-        private int? _packageOfflineDeploymentPollingIntervalSeconds;
+		private int? _folderCleanupPollingIntervalSeconds;
+		public int FolderCleanupPollingIntervalSeconds
+		{
+			get { return _folderCleanupPollingIntervalSeconds.GetValueOrDefault(60*60); }
+			set { _folderCleanupPollingIntervalSeconds = value; }
+		}
+		
+		private int? _packageOfflineDeploymentPollingIntervalSeconds;
         public int PackageOfflineDeploymentPollingIntervalSeconds
         {
             get { return _packageOfflineDeploymentPollingIntervalSeconds.GetValueOrDefault(60); }
@@ -189,6 +196,5 @@ namespace Sriracha.Deploy.Data.Impl
             get { return StringHelper.IsNullOrEmpty(_offlineExeDirectory, Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "offlineExe")); }
             set { _offlineExeDirectory = value; }
         }
-
-    }
+	}
 }

@@ -10,7 +10,8 @@ namespace Sriracha.Deploy.Data
 	{
 		int EmailSenderPollingIntervalSeconds { get; set; }
         int PackageOfflineDeploymentPollingIntervalSeconds { get; set; }
-        int RunDeploymentPollingIntervalSeconds { get; set; }
+		int FolderCleanupPollingIntervalSeconds { get; set; }
+		int RunDeploymentPollingIntervalSeconds { get; set; }
 		string DeployWorkingDirectory { get; set; }
 
 		string FromEmailAddress { get; set; }
@@ -34,5 +35,5 @@ namespace Sriracha.Deploy.Data
 		int DeploymentFolderCleanupMinutes { get; set; }
 
         string OfflineExeDirectory { get; set; }
-    }
+	}
 }

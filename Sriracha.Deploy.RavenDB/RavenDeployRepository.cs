@@ -129,7 +129,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployBatchRequest GetBatchRequest(string id)
 		{
-			return _documentSession.LoadNoCache<DeployBatchRequest>(id);
+			return _documentSession.LoadEnsureNoCache<DeployBatchRequest>(id);
 		}
 
 		public DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage=null, bool addToMessageHistory=true)

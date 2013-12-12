@@ -79,6 +79,20 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 				Request = _deployRepository.GetBatchRequest(deployBatchRequestId),
 				DeployStateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequestId)
 			};
+			if(status.Request != null && status.Request.ItemList != null)
+			{
+				foreach(var item in status.Request.ItemList)
+				{
+					var stateList = _deployStateRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(item.Id);
+					foreach(var deployState in stateList)
+					{
+						if(!status.DeployStateList.Any(i=>i.Id == deployState.Id))
+						{
+							status.DeployStateList.Add(deployState);
+						}
+					}
+				}
+			}
 			//foreach(var requestItem in status.Request.ItemList)
 			//{
 			//	var state = _deployRepository.GetDeployStateSummaryListByDeployBatchRequestItemId(deployBatchRequestId);
