@@ -42,8 +42,9 @@ namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 			else 
 			{
 				this._logger.Info("Starting jobs");
-				this.ScheduleJob("EmailSender", typeof(IEmailSenderJob), _systemSettings.EmailSenderPollingIntervalSeconds);
-				this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
+                this.ScheduleJob("EmailSender", typeof(IEmailSenderJob), _systemSettings.EmailSenderPollingIntervalSeconds);
+                this.ScheduleJob("PackageOfflineDeployment", typeof(IOfflineDeploymentPackageJob), _systemSettings.PackageOfflineDeploymentPollingIntervalSeconds);
+                this.ScheduleJob("RunBatchDeployment", typeof(IRunBatchDeploymentJob), _systemSettings.RunDeploymentPollingIntervalSeconds);
 				this.ScheduleJob("PurgeSystemLogs", typeof(IPurgeSystemLogJob), _systemSettings.LogPurgeJobIntervalSeconds, 60*60);
 				this.ScheduleJob("PurgeBuilds", typeof(IPurgeBuildJob), _systemSettings.BuildPurgeJobIntervalSeconds, 60*60);
 				this.ScheduleJob("GCFlushJob", typeof(IGCFlushJob), _systemSettings.GCFlushJobIntervalSeconds, 5 * 60);

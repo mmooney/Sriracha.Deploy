@@ -9,7 +9,8 @@ namespace Sriracha.Deploy.Data
 	public interface ISystemSettings
 	{
 		int EmailSenderPollingIntervalSeconds { get; set; }
-		int RunDeploymentPollingIntervalSeconds { get; set; }
+        int PackageOfflineDeploymentPollingIntervalSeconds { get; set; }
+        int RunDeploymentPollingIntervalSeconds { get; set; }
 		string DeployWorkingDirectory { get; set; }
 
 		string FromEmailAddress { get; set; }
