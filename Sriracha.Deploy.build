@@ -11,13 +11,20 @@
 	<target name="PackageSolution" description="Package Solution">
 		<delete dir=".\Publish"/>
 		<delete dir=".\PublishTemp"/>
-		<copy todir=".\Publish\WindowsService">
-			<fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
-				<include name="*.config"/>
-				<include name="*.dll"/>
-				<include name="*.exe"/>
-			</fileset>
-		</copy>
+    <copy todir=".\Publish\WindowsService">
+      <fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\OfflineExe">
+      <fileset basedir=".\Sriracha.Deploy.Offline\bin\Release">
+        <include name="*.config"/>
+        <include name="*.dll"/>
+        <include name="*.exe"/>
+      </fileset>
+    </copy>
     <copy todir=".\Publish\SelfDeploy">
       <fileset basedir=".\Sriracha.Deploy.SelfDeploy\bin\Release">
         <include name="*.config"/>

@@ -104,9 +104,9 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
-                                        if(string.IsNullOrEmpty(settings.SourceOfflineToolPath))
+                                        if(string.IsNullOrEmpty(settings.SourceOfflineExePath))
                                         {
-                                            throw new Exception("Missing setting SourceOfflineToolPath");
+                                            throw new Exception("Missing setting SourceOfflineExePath");
                                         }
 										var serviceName = settings.ServiceName;
                                         var serviceOptions = s.WinService(serviceName);
@@ -120,7 +120,7 @@ namespace Sriracha.Deploy.SelfDeploy
 										serviceOptions.Stop();
                                         s.CreateEmptyFolder(@"{{ServiceTargetPath}}");
                                         s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
-                                        s.CopyDirectory(settings.SourceOfflineToolPath).To(@"{{ServiceTargetPath}}\offlineExe").DeleteDestinationBeforeDeploying();
+                                        s.CopyDirectory(settings.SourceOfflineExePath).To(@"{{ServiceTargetPath}}\offlineExe").DeleteDestinationBeforeDeploying();
 
 										ApplySettings(s, settings, @"{{ServiceTargetPath}}\{{ServiceExeName}}.config");
 
