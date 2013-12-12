@@ -41,8 +41,12 @@ namespace Sriracha.Deploy.Offline
                     case EnumDeployStatus.Error:
                         this.StatusIconImage = Properties.Resources.StatusAnnotations_Critical_32xSM_color;
                         break;
+                    case EnumDeployStatus.Success:
+                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Complete_and_ok_32xSM_color;
+                        break;
                     default:
-                        throw new UnknownEnumValueException(status);
+                        this.StatusIconImage = Properties.Resources.StatusAnnotations_Alert_32xSM_color;
+                        break;
                 }
             }
             public Image StatusIconImage { get; set; }
