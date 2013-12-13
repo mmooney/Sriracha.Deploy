@@ -9,6 +9,7 @@ using System.Text;
 namespace Sriracha.Deploy.Data.Tests.Repository
 {
     [TestFixture]
+    [Category("DBIntegration")]
     public abstract class RepositoryTestBase<T>
 	{
         [SetUp]
