@@ -292,6 +292,8 @@
     <Compile Include="Services\SystemSettings\CredentialsService.cs" />
     <Compile Include="Services\SystemSettings\CredentialsTestRequest.cs" />
     <Compile Include="Services\SystemSettings\CredentialsTestService.cs" />
+    <Compile Include="Services\SystemSettings\UserRequest.cs" />
+    <Compile Include="Services\SystemSettings\UserService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentRequest.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />
@@ -446,6 +448,7 @@
     <Content Include="Scripts\sriracha\router.js" />
     <Content Include="Scripts\sriracha\shared.js" />
     <Content Include="Scripts\sriracha\systemLogController.js" />
+    <Content Include="Scripts\sriracha\systemSettings\usersController.js" />
     <Content Include="Scripts\sriracha\systemSettings\credentialsController.js" />
     <Content Include="Scripts\sriracha\systemSettings\systemSettingsController.js" />
     <Content Include="Scripts\underscore.js" />
@@ -486,6 +489,10 @@
     <Content Include="Templates\project\project-edit-template.html" />
     <Content Include="Templates\project\project-list-template.html" />
     <Content Include="Templates\project\project-view-template.html" />
+    <Content Include="Templates\systemSettings\systemSettings-users-create.html" />
+    <Content Include="Templates\systemSettings\systemSettings-users-delete.html" />
+    <Content Include="Templates\systemSettings\systemSettings-users-edit.html" />
+    <Content Include="Templates\systemSettings\systemSettings-users-list.html" />
     <Content Include="Templates\systemSettings\systemSettings-credentials-edit.html" />
     <Content Include="Templates\systemSettings\systemSettings-credentials-create.html" />
     <Content Include="Templates\systemSettings\systemSettings-credentials-list.html" />

@@ -63,21 +63,21 @@ namespace Sriracha.Deploy.Web.Tests
 						UpdatedByUserName = "UserTestData"
 					};
 					testData.SrirachaUser.EncryptedPassword = testData.EncryptedPassword;
-					testData.Repository.Setup(i => i.LoadUserByUserName(It.Is<string>(j => j == testData.UserName))).Returns(testData.SrirachaUser);
-					testData.Repository.Setup(i => i.TryLoadUserByUserName(It.Is<string>(j => j == testData.UserName))).Returns(testData.SrirachaUser);
-					testData.Repository.Setup(i => i.LoadUserByUserGuid(It.Is<Guid>(j => j == testData.ProviderUserKey))).Returns(testData.SrirachaUser);
-					testData.Repository.Setup(i => i.TryLoadUserByUserGuid(It.Is<Guid>(j => j == testData.ProviderUserKey))).Returns(testData.SrirachaUser);
-					testData.Repository.Setup(i => i.LoadUserByEmailAddress(It.Is<string>(j => j == testData.EmailAddress))).Returns(testData.SrirachaUser);
-					testData.Repository.Setup(i => i.TryLoadUserByEmailAddress(It.Is<string>(j => j == testData.EmailAddress))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.GetUserByUserName(It.Is<string>(j => j == testData.UserName))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.TryGetUserByUserName(It.Is<string>(j => j == testData.UserName))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.GetUserByUserGuid(It.Is<Guid>(j => j == testData.ProviderUserKey))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.TryGetUserByUserGuid(It.Is<Guid>(j => j == testData.ProviderUserKey))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.GetUserByEmailAddress(It.Is<string>(j => j == testData.EmailAddress))).Returns(testData.SrirachaUser);
+					testData.Repository.Setup(i => i.TryGetUserByEmailAddress(It.Is<string>(j => j == testData.EmailAddress))).Returns(testData.SrirachaUser);
 				}
 				else 
 				{
-					testData.Repository.Setup(i => i.LoadUserByUserName(It.IsAny<string>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "UserName", testData.UserName));
-					testData.Repository.Setup(i => i.TryLoadUserByUserName(It.IsAny<string>())).Returns((SrirachaUser)null);
-					testData.Repository.Setup(i => i.LoadUserByUserGuid(It.IsAny<Guid>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "UserGuid", (Guid)testData.ProviderUserKey));
-					testData.Repository.Setup(i => i.TryLoadUserByUserGuid(It.IsAny<Guid>())).Returns((SrirachaUser)null);
-					testData.Repository.Setup(i => i.LoadUserByEmailAddress(It.IsAny<string>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "EmailAddress", testData.EmailAddress));
-					testData.Repository.Setup(i => i.TryLoadUserByEmailAddress(It.IsAny<string>())).Returns((SrirachaUser)null);
+					testData.Repository.Setup(i => i.GetUserByUserName(It.IsAny<string>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "UserName", testData.UserName));
+					testData.Repository.Setup(i => i.TryGetUserByUserName(It.IsAny<string>())).Returns((SrirachaUser)null);
+					testData.Repository.Setup(i => i.GetUserByUserGuid(It.IsAny<Guid>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "UserGuid", (Guid)testData.ProviderUserKey));
+					testData.Repository.Setup(i => i.TryGetUserByUserGuid(It.IsAny<Guid>())).Returns((SrirachaUser)null);
+					testData.Repository.Setup(i => i.GetUserByEmailAddress(It.IsAny<string>())).Throws(new RecordNotFoundException(typeof(SrirachaUser), "EmailAddress", testData.EmailAddress));
+					testData.Repository.Setup(i => i.TryGetUserByEmailAddress(It.IsAny<string>())).Returns((SrirachaUser)null);
 				}
 				testData.Repository.Setup(i=>i.CreateUser(It.IsAny<SrirachaUser>())).Returns((SrirachaUser inputUser)=>{inputUser.Id=inputUser.UserName; return inputUser;});
 				return testData;
@@ -413,7 +413,7 @@ namespace Sriracha.Deploy.Web.Tests
 				string emailToMatch = "test1@example.com";
 				var matchedList = userList.Where(i=>i.EmailAddress.Contains(emailToMatch));
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(matchedList,  1, int.MaxValue, matchedList.Count()), string.Empty, true);
-				testData.Repository.Setup(i => i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
+                testData.Repository.Setup(i => i.GetUserList_old(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;
@@ -443,7 +443,7 @@ namespace Sriracha.Deploy.Web.Tests
 				string userNameToMatch = "test1";
 				var matchedList = userList.Where(i=>i.EmailAddress.Contains(userNameToMatch));
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(matchedList,  1, int.MaxValue, matchedList.Count()), string.Empty, true);
-				testData.Repository.Setup(i => i.GetUserList(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
+                testData.Repository.Setup(i => i.GetUserList_old(It.IsAny<ListOptions>(), It.IsAny<Expression<Func<SrirachaUser, bool>>>())).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;
@@ -471,7 +471,7 @@ namespace Sriracha.Deploy.Web.Tests
 					new SrirachaUser { UserName="test5", EmailAddress = "test5@example.com" },
 				};
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(userList,  1, int.MaxValue, userList.Count()), string.Empty, true);
-				testData.Repository.Setup(i => i.GetUserList(It.Is<ListOptions>(j=>j.PageNumber==1 && j.PageSize==10), null)).Returns(pagedList);
+                testData.Repository.Setup(i => i.GetUserList_old(It.Is<ListOptions>(j => j.PageNumber == 1 && j.PageSize == 10), null)).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;

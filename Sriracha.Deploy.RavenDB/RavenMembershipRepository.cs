@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.RavenDB
 		public SrirachaUser CreateUser(SrirachaUser user)
 		{
 			var dbUser = AutoMapper.Mapper.Map(user, new SrirachaUser());
-			var existingItem = TryLoadUserByUserName(user.UserName);
+			var existingItem = TryGetUserByUserName(user.UserName);
 			if(existingItem != null)
 			{
 				throw new ArgumentException(string.Format("User with username {0} already exists", user.UserName));
@@ -57,12 +57,13 @@ namespace Sriracha.Deploy.RavenDB
 
 		public SrirachaUser UpdateUser(SrirachaUser user)
 		{
-			var dbUser = this.LoadUserByUserName(user.UserName);
-			AutoMapper.Mapper.Map(dbUser, user.UserName);
-			user.UpdatedByUserName = _userIdentity.UserName;
-			user.UpdatedDateTimeUtc = DateTime.UtcNow;
+            var sourceUser = _documentSession.LoadEnsureNoCache<SrirachaUser>(FormatId(user.UserName));
+			var targetUser = AutoMapper.Mapper.Map(user, sourceUser);
+            targetUser.UpdatedByUserName = _userIdentity.UserName;
+            targetUser.UpdatedDateTimeUtc = DateTime.UtcNow;
+            _documentSession.Store(targetUser); //replace existing record
 			_documentSession.SaveChanges();
-			return dbUser;
+            return targetUser;
 		}
 
 		public SrirachaUser TryUpdateUser(SrirachaUser user)
@@ -77,17 +78,28 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public SrirachaUser DeleteUser(SrirachaUser user)
-		{
-			var dbUser = this.LoadUserByUserName(user.UserName);
-			_documentSession.Delete(dbUser);
-			_documentSession.SaveChanges();
-			return dbUser;
-		}
+        public SrirachaUser DeleteUser(SrirachaUser user)
+        {
+            var dbUser = this.GetUserByUserName(user.UserName);
+            _documentSession.Delete(dbUser);
+            _documentSession.SaveChanges();
+            return dbUser;
+        }
 
-		public SrirachaUser LoadUserByUserName(string userName)
+        public SrirachaUser DeleteUser(string userId)
+        {
+            var dbUser = _documentSession.LoadEnsure<SrirachaUser>(userId);
+            return _documentSession.DeleteSaveEvict(dbUser);
+        }
+
+        public SrirachaUser GetUser(string userId)
+        {
+            return _documentSession.LoadEnsureNoCache<SrirachaUser>(userId);
+        }
+
+        public SrirachaUser GetUserByUserName(string userName)
 		{
-			var user = this.TryLoadUserByUserName(userName);
+			var user = this.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				throw new RecordNotFoundException(typeof(SrirachaUser), "UserName", userName);
@@ -95,14 +107,14 @@ namespace Sriracha.Deploy.RavenDB
 			return user;
 		}
 
-		public SrirachaUser TryLoadUserByUserName(string userName)
+		public SrirachaUser TryGetUserByUserName(string userName)
 		{
 			return _documentSession.Load<SrirachaUser>(FormatId(userName));
 		}
 
-		public SrirachaUser LoadUserByUserGuid(Guid userGuid)
+		public SrirachaUser GetUserByUserGuid(Guid userGuid)
 		{
-			var user = this.TryLoadUserByUserGuid(userGuid);
+			var user = this.TryGetUserByUserGuid(userGuid);
 			if(user == null)
 			{
 				throw new RecordNotFoundException(typeof(SrirachaUser), "UserGuid", userGuid);
@@ -110,14 +122,14 @@ namespace Sriracha.Deploy.RavenDB
 			return user;
 		}
 
-		public SrirachaUser TryLoadUserByUserGuid(Guid userGuid)
+		public SrirachaUser TryGetUserByUserGuid(Guid userGuid)
 		{
 			return _documentSession.Query<SrirachaUser>().FirstOrDefault(i=>i.UserGuid == userGuid);
 		}
 
-		public SrirachaUser LoadUserByEmailAddress(string emailAddress)
+		public SrirachaUser GetUserByEmailAddress(string emailAddress)
 		{
-			var user = this.TryLoadUserByEmailAddress(emailAddress);
+			var user = this.TryGetUserByEmailAddress(emailAddress);
 			if(user == null)
 			{
 				throw new RecordNotFoundException(typeof(SrirachaUser), "EmailAddress", emailAddress);
@@ -125,14 +137,14 @@ namespace Sriracha.Deploy.RavenDB
 			return user;
 		}
 
-		public SrirachaUser TryLoadUserByEmailAddress(string emailAddress)
+		public SrirachaUser TryGetUserByEmailAddress(string emailAddress)
 		{
 			return _documentSession.Query<SrirachaUser>().FirstOrDefault(i=>i.EmailAddress == emailAddress);
 		}
 
 		public bool UserNameExists(string userName)
 		{
-			var item = TryLoadUserByUserName(userName);
+			var item = TryGetUserByUserName(userName);
 			return (item != null);
 		}
 
@@ -141,11 +153,35 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<SrirachaUser>().Any(i=>i.EmailAddress == email);
 		}
 
-		public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter = null)
+        public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, List<string> userNameList=null)
+        {
+            var query = _documentSession.QueryNoCache<SrirachaUser>();
+            if(userNameList != null && userNameList.Count > 0)
+            {
+                query = query.Where(i=>i.UserName.In(userNameList));
+            }
+            PagedList.IPagedList<SrirachaUser> pagedList;
+            listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UserName", true);
+            switch (listOptions.SortField)
+            {
+                case "UserName":
+                    var temp = query.OrderBy(i => i.UserName);
+                    pagedList = query.PageAndSort(listOptions, i => i.UserName);
+                    break;
+                case "EmailAddress":
+                    pagedList = query.PageAndSort(listOptions, i => i.EmailAddress);
+                    break;
+                default:
+                    throw new Exception("Unsupported sort field " + listOptions.SortField);
+            }
+            return new PagedSortedList<SrirachaUser>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
+        }
+
+        public PagedSortedList<SrirachaUser> GetUserList_old(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter)
 		{
 			var query = GetQuery(filter);
 			PagedList.IPagedList<SrirachaUser> pagedList;
-			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, "UserName");
+            listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UserName", true);
 			switch(listOptions.SortField)
 			{
 				case "UserName":
@@ -178,6 +214,5 @@ namespace Sriracha.Deploy.RavenDB
 				return query;
 			}
 		}
-
-	}
+    }
 }

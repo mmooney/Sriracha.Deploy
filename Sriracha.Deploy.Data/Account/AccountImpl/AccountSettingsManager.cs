@@ -32,7 +32,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
 			{
 				UserName = userName
 			};
-			var user = _membershipRepository.TryLoadUserByUserName(userName);
+			var user = _membershipRepository.TryGetUserByUserName(userName);
 			if(user != null)
 			{
 				settings.EmailAddress = user.EmailAddress;
@@ -76,7 +76,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
 		public AccountSettings UpdateCurrentUserSettings(string emailAddress, List<ProjectNotificationItem> projectNotificationItemList)
 		{
 			UpdateNotificationList(_userIdentity.UserName, projectNotificationItemList);
-			var user = _membershipRepository.TryLoadUserByUserName(_userIdentity.UserName);
+			var user = _membershipRepository.TryGetUserByUserName(_userIdentity.UserName);
 			if(user == null)
 			{
 				user = new SrirachaUser
@@ -105,7 +105,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
 
 		public void EnsureUserAccount(string userName)
 		{
-			var user = _membershipRepository.TryLoadUserByUserName(userName);
+			var user = _membershipRepository.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				user = new SrirachaUser

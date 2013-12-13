@@ -74,6 +74,7 @@ namespace Sriracha.Deploy.Web.Security
 		{
 			return Crypto.HashPassword(userName.ToLower() + password);
 		}
+
 		private MembershipUser CreateMembershipUser(SrirachaUser user)
 		{
 			return new MembershipUser(providerName: SrirachaMembershipProvider.ProviderName,
@@ -108,7 +109,7 @@ namespace Sriracha.Deploy.Web.Security
 			try 
 			{
 				var repository = this.GetRepository();
-				var user = repository.LoadUserByUserName(userName);
+				var user = repository.GetUserByUserName(userName);
 				if(!this.VerifyPassword(user.EncryptedPassword, userName.ToLower(), oldPassword))
 				{
 					this.LogInfo("Failed to changed password for user {0}, invalid password provided", userName);
@@ -141,7 +142,7 @@ namespace Sriracha.Deploy.Web.Security
 			try 
 			{
 				var repository = this.GetRepository();
-				var user = repository.LoadUserByUserName(userName);
+				var user = repository.GetUserByUserName(userName);
 				if(!this.VerifyPassword(user.EncryptedPassword, userName, password))
 				{
 					this.LogInfo("Failed to changed password for user {0}, invalid password provided", userName);
@@ -216,7 +217,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override bool DeleteUser(string userName, bool deleteAllRelatedData)
 		{
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByUserName(userName);
+			var user = repository.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				return false;
@@ -249,7 +250,7 @@ namespace Sriracha.Deploy.Web.Security
 				SortField="EmailAddress", 
 				SortAscending = true
 			};
-			var pagedList = repository.GetUserList(listOptions, (i)=>i.UserName.Contains(emailToMatch));
+            var pagedList = repository.GetUserList_old(listOptions, (i) => i.UserName.Contains(emailToMatch));
 			totalRecords = pagedList.TotalItemCount;
 			return CreateMembershipCollection(pagedList);
 		}
@@ -264,7 +265,7 @@ namespace Sriracha.Deploy.Web.Security
 				SortField="UserName", 
 				SortAscending = true
 			};
-			var pagedList = repository.GetUserList(listOptions, (i)=>i.UserName.Contains(userNameToMatch));
+            var pagedList = repository.GetUserList_old(listOptions, (i) => i.UserName.Contains(userNameToMatch));
 			totalRecords = pagedList.TotalItemCount;
 			return CreateMembershipCollection(pagedList);
 		}
@@ -299,7 +300,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override MembershipUser GetUser(string userName, bool userIsOnline)
 		{
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByUserName(userName);
+			var user = repository.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				return null;
@@ -320,7 +321,7 @@ namespace Sriracha.Deploy.Web.Security
 		{
 			Guid userGuid = (Guid)providerUserKey;
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByUserGuid(userGuid);
+			var user = repository.TryGetUserByUserGuid(userGuid);
 			if (user == null)
 			{
 				return null;
@@ -340,7 +341,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override string GetUserNameByEmail(string email)
 		{
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByEmailAddress(email);
+			var user = repository.TryGetUserByEmailAddress(email);
 			if(user == null)
 			{
 				return string.Empty;
@@ -397,7 +398,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override bool UnlockUser(string userName)
 		{
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByUserName(userName);
+			var user = repository.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				return false;
@@ -417,7 +418,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override void UpdateUser(MembershipUser membershipUser)
 		{
 			var repository = this.GetRepository();
-			var user = repository.LoadUserByUserName(membershipUser.UserName);
+			var user = repository.GetUserByUserName(membershipUser.UserName);
 			user.EmailAddress = membershipUser.Email;
 			repository.UpdateUser(user);
 		}
@@ -425,7 +426,7 @@ namespace Sriracha.Deploy.Web.Security
 		public override bool ValidateUser(string userName, string password)
 		{
 			var repository = this.GetRepository();
-			var user = repository.TryLoadUserByUserName(userName);
+			var user = repository.TryGetUserByUserName(userName);
 			if(user == null)
 			{
 				return false;

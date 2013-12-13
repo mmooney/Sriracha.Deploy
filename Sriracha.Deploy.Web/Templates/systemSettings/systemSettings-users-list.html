@@ -1,0 +1,32 @@
+﻿<h2><a ng-href="{{navigator.user.list.clientUrl()}}">User List</a></h2>
+
+<div style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.users.create.go()">Create User</button>
+</div>
+
+<table class="table table-striped" ng-show="userList.items.length">
+    <thead>
+        <tr>
+            <th sort-header sort-field="UserName" apply-sort="applySort" paged-list="userList">User Name</th>
+            <th sort-header sort-field="EmailAddress" apply-sort="applySort" paged-list="userList">Email Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="user in userList.items">
+            <td><a ng-href="{{navigator.systemSettings.users.edit.clientUrl(user.id)}}">{{user.userName}}</a></td>
+            <td>{{user.emailAddress}}</td>
+            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.users.remove.clientUrl(user.id)}}">Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+<div ng-hide="userList.items.length">
+    No users
+</div>
+<div>
+    <pager paged-list="userList" go-to-page="goToPage"></pager>
+</div>
+
+<div style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.users.create.go()">Create User</button>
+</div>

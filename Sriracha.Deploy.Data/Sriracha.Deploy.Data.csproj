@@ -84,6 +84,10 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BinDeploy\System.Web.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
@@ -180,6 +184,8 @@
     <Compile Include="Deployment\DeploymentImpl\DeployQueueManager.cs" />
     <Compile Include="Impl\CleanupManager.cs" />
     <Compile Include="Impl\PermissionValidator.cs" />
+    <Compile Include="Impl\UserManager.cs" />
+    <Compile Include="IUserManager.cs" />
     <Compile Include="Project\ProjectImpl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
     <Compile Include="IPermissionValidator.cs" />

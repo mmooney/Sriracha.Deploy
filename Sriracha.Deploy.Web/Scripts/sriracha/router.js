@@ -182,26 +182,42 @@
 		//System Log
 		.when(navigator.systemLog.list.url, {
 			templateUrl: "templates/systemlog-list-template.html",
-			controller: "SystemLogController"
+			controller: "systemLogController"
 		})
 
 		//System Settings
 		.when(navigator.systemSettings.list.url, {
 			templateUrl: "templates/systemSettings/systemSettings-list.html",
-			controller: "SystemSettingsController"
+			controller: "systemSettingsController"
 		})
 		.when(navigator.systemSettings.credentials.list.url, {
 			templateUrl: "templates/systemSettings/systemSettings-credentials-list.html",
-			controller: "CredentialsController"
+			controller: "credentialsController"
 		})
 		.when(navigator.systemSettings.credentials.create.url, {
 			templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
-			controller: "CredentialsController"
+			controller: "credentialsController"
 		})
 		.when(navigator.systemSettings.credentials.edit.url, {
 			templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
-			controller: "CredentialsController"
+			controller: "credentialsController"
 		})
+        .when(navigator.systemSettings.users.list.url, {
+            templateUrl: "templates/systemSettings/systemSettings-users-list.html",
+            controller: "usersController"
+        })
+        .when(navigator.systemSettings.users.create.url, {
+            templateUrl: "templates/systemSettings/systemSettings-users-create.html",
+            controller: "usersController"
+        })
+        .when(navigator.systemSettings.users.edit.url, {
+            templateUrl: "templates/systemSettings/systemSettings-users-edit.html",
+            controller: "usersController"
+        })
+        .when(navigator.systemSettings.users.remove.url, {
+            templateUrl: "templates/systemSettings/systemSettings-users-delete.html",
+            controller: "usersController"
+        })
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"

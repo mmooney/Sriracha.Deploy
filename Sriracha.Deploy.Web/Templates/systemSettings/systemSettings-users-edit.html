@@ -1,0 +1,30 @@
+﻿<h2>User Details</h2>
+<table class="table">
+	<tr>
+		<th>User Name:</th>
+		<td>{{editForm.userName}}</td>
+	</tr>
+	<tr>
+		<th>Email Address:</th>
+		<td>
+            <input type="text" ng-model="editForm.emailAddress"/>
+		</td>
+	</tr>
+    <tr>
+        <th>Password:</th>
+        <td>
+            <input type="password" ng-required="true" ng-model="editForm.password">
+            <span class="alert alert-error" ng-show="editForm.passwordError">{{editForm.passwordError}}</span>
+        </td>
+    </tr>
+    <tr>
+        <th>Confirm Password:</th>
+        <td>
+            <input type="password" ng-required="true" ng-model="editForm.confirmPassword">
+            <span class="alert alert-error" ng-show="editForm.confirmPasswordError">{{editForm.confirmPasswordError}}</span>
+        </td>
+    </tr>
+</table>
+<button class="btn" ng-click="navigator.systemSettings.users.list.go()">Cancel</button>
+<button class="btn btn-primary" ng-click="saveUser()">Save</button>
+

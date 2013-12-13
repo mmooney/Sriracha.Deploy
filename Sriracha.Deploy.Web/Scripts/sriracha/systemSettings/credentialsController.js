@@ -1,4 +1,4 @@
-﻿ngSriracha.controller("CredentialsController",
+﻿ngSriracha.controller("credentialsController",
 	['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter', 'PermissionVerifier',
 	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 

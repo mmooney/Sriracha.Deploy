@@ -83,6 +83,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<CleanupManager>().As<ICleanupManager>();
             builder.RegisterType<DeployHistoryReporter>().As<IDeployHistoryReporter>();
 			builder.RegisterType<BuildPublisher>().As<IBuildPublisher>();
+            builder.RegisterType<UserManager>().As<IUserManager>();
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
 			//builder.RegisterType<ProjectNotifier>().As<IProjectNotifier>();

@@ -1,4 +1,4 @@
-﻿ngSriracha.controller("SystemSettingsController",
+﻿ngSriracha.controller("systemSettingsController",
 	['$scope', '$location', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter','PermissionVerifier',
 	function ($scope, $location,$routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 

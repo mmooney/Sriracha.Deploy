@@ -51,7 +51,7 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					SortField = "UserName"
 				};
 
-				var userList = _membershipRepository.GetUserList(listOptions,
+				var userList = _membershipRepository.GetUserList_old(listOptions,
 									//i => i.ProjectNotificationItemList.Any(j => j.ProjectId == projectId && flagsFilter(j.Flags)));
 									i=>i.ProjectNotificationItemList.Any(j=>j.ProjectId == projectId && j.Flags.DeployRequested));
 				foreach (var user in userList.Items)
