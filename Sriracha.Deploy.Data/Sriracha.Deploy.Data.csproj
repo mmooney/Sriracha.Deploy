@@ -200,6 +200,7 @@
     <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
     <Compile Include="Repository\IOfflineDeploymentRepository.cs" />
+    <Compile Include="Repository\ISystemSettingsRepository.cs" />
     <Compile Include="ServiceJobs\ICleanupJob.cs" />
     <Compile Include="ServiceJobs\IFolderCleanupJob.cs" />
     <Compile Include="ServiceJobs\IGCFlushJob.cs" />

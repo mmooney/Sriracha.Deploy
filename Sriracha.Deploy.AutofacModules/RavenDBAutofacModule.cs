@@ -37,6 +37,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
 			builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();
 			builder.RegisterType<RavenCredentialRepository>().As<ICredentialsRepository>();
+            builder.RegisterType<RavenSystemSettingsRepository>().As<ISystemSettingsRepository>();
 			builder.RegisterType<RavenRazorTemplateRepository>().As<IRazorTemplateRepository>();
 			builder.RegisterType<RavenCleanupRepository>().As<ICleanupRepository>();
 			builder.RegisterType<RavenOfflineDeploymentRepository>().As<IOfflineDeploymentRepository>();

@@ -33,7 +33,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 		public void PurgeBuildIfNecessary(DeployBuild build)
 		{
 			var ruleList = _systemSettings.BuildPurgeRetentionRuleList;
-			int maxRetentionMinutes = _systemSettings.DefaultBuildRetentionMinutes.GetValueOrDefault(0);
+			int maxRetentionMinutes = _systemSettings.DefaultBuildRetentionMinutes;
 			bool keepForever = false;
 			if(ruleList != null)
 			{

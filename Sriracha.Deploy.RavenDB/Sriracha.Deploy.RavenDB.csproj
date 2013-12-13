@@ -94,6 +94,7 @@
     <Compile Include="RavenQueryExtensions.cs" />
     <Compile Include="RavenRazorTemplateRepository.cs" />
     <Compile Include="RavenSystemLogRepository.cs" />
+    <Compile Include="RavenSystemSettingsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">

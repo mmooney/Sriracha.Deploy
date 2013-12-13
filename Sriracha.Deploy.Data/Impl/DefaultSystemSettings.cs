@@ -6,195 +6,161 @@ using System.Reflection;
 using System.Text;
 using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
+using Sriracha.Deploy.Data.Repository;
 
 namespace Sriracha.Deploy.Data.Impl
 {
 	public class DefaultSystemSettings : ISystemSettings
 	{
-		private string _fromEmailAddress;
+        private readonly ISystemSettingsRepository _repository;
+
+        public DefaultSystemSettings(ISystemSettingsRepository repository)
+        {
+            _repository = DIHelper.VerifyParameter(repository);
+        }
+
 		public string FromEmailAddress 
 		{
-			get { return StringHelper.IsNullOrEmpty(_fromEmailAddress, "sriracha@mmdbsolutions.com"); }
-			set { _fromEmailAddress = value; }
+			get { return _repository.GetStringSetting("FromEmailAddress", "sriracha@mmdbsolutions.com"); }
+			set { _repository.SetStringSetting("FromEmailAddress", value); }
 		}
 
-		private int? _emailSenderPollingIntervalSeconds;
 		public int EmailSenderPollingIntervalSeconds
 		{
-			get { return _emailSenderPollingIntervalSeconds.GetValueOrDefault(60); }
-			set { _emailSenderPollingIntervalSeconds = value; }
+			get { return _repository.GetIntSetting("EmailSenderPollingIntervalSeconds",60); }
+			set { _repository.SetIntSetting("EmailSenderPollingIntervalSeconds", value); }
 		}
 
-		private int? _folderCleanupPollingIntervalSeconds;
+        public int GCFlushJobIntervalSeconds
+        {
+            get { return _repository.GetIntSetting("GCFlushJobIntervalSeconds", 60 * 60); }
+            set { _repository.SetIntSetting("GCFlushJobIntervalSeconds", value); }
+        }
+
 		public int FolderCleanupPollingIntervalSeconds
 		{
-			get { return _folderCleanupPollingIntervalSeconds.GetValueOrDefault(60*60); }
-			set { _folderCleanupPollingIntervalSeconds = value; }
+			get { return _repository.GetIntSetting("FolderCleanupPollingIntervalSeconds", 60*60); }
+			set { _repository.SetIntSetting("FolderCleanupPollingIntervalSeconds", value); }
 		}
 		
-		private int? _packageOfflineDeploymentPollingIntervalSeconds;
         public int PackageOfflineDeploymentPollingIntervalSeconds
         {
-            get { return _packageOfflineDeploymentPollingIntervalSeconds.GetValueOrDefault(60); }
-            set { _packageOfflineDeploymentPollingIntervalSeconds = value; }
+            get { return _repository.GetIntSetting("PackageOfflineDeploymentPollingIntervalSeconds", 60); }
+            set { _repository.SetIntSetting("PackageOfflineDeploymentPollingIntervalSeconds", value); }
         }
-		private int? _runDeploymentPollingIntervalSeconds;
-		public int RunDeploymentPollingIntervalSeconds
+		
+        public int RunDeploymentPollingIntervalSeconds
 		{
-			get { return _runDeploymentPollingIntervalSeconds.GetValueOrDefault(60); }
-			set { _runDeploymentPollingIntervalSeconds = value; }
+			get { return _repository.GetIntSetting("RunDeploymentPollingIntervalSeconds", 60); }
+			set { _repository.SetIntSetting("RunDeploymentPollingIntervalSeconds", value); }
 		}
 
-		private string _deployWorkingDirectory;
 		public string DeployWorkingDirectory
 		{
-			get 
-			{
-				if(!string.IsNullOrEmpty(_deployWorkingDirectory))
-				{
-					return _deployWorkingDirectory;
-				}
-				else 
-				{
-					return Path.Combine("C:\\Temp\\Sriracha\\", "WorkingDirectory"); 
-				}
-			}
-			set 
-			{
-				_deployWorkingDirectory = value;
-			}
+			get { return _repository.GetStringSetting("DeployWorkingDirectory", Path.Combine("C:\\Temp\\Sriracha\\", "WorkingDirectory")); }
+			set { _repository.SetStringSetting("DeployWorkingDirectory", value); }
 		}
 
-		private string _displayTimeZoneIdentifier;
 		public string DisplayTimeZoneIdentifier
 		{
-			get 
+			get { return _repository.GetStringSetting("DisplayTimeZoneIdentifier", DateTimeHelper.TimeZoneIdentifier_EasternStandardTime); }
+			set { _repository.SetStringSetting("DisplayTimeZoneIdentifier",  value); }
+		}
+
+		public int LogPurgeJobIntervalSeconds 
+        {
+			get { return _repository.GetIntSetting("LogPurgeJobIntervalSeconds", 60*60); }
+			set { _repository.SetIntSetting("LogPurgeJobIntervalSeconds", value); }
+		}
+
+        public int BuildPurgeJobIntervalSeconds
+        {
+            get { return _repository.GetIntSetting("BuildPurgeJobIntervalSeconds", 60 * 60); }
+            set { _repository.GetIntSetting("BuildPurgeJobIntervalSeconds", value); }
+        }
+        
+        public int LogPurgeTraceAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeTraceAgeMinutes", 60); }
+			set { _repository.SetIntSetting("LogPurgeTraceAgeMinutes", value); }
+		}
+
+		public int LogPurgeDebugAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeDebugAgeMinutes", 60); }
+			set { _repository.GetIntSetting("LogPurgeDebugAgeMinutes", value); }
+		}
+
+		public int LogPurgeInfoAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeInfoAgeMinutes", 60*24); }
+			set { _repository.SetIntSetting("LogPurgeInfoAgeMinutes", value); }
+		}
+
+		public int LogPurgeWarnAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeWarnAgeMinutes", 60*24*7); }
+			set { _repository.SetIntSetting("LogPurgeWarnAgeMinutes", value); }
+		}
+
+		public int LogPurgeErrorAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeErrorAgeMinutes", 60*24*30); }
+			set { _repository.SetIntSetting("LogPurgeErrorAgeMinutes", value); }
+		}
+
+		public int LogPurgeFatalAgeMinutes
+		{
+			get { return _repository.GetIntSetting("LogPurgeFatalAgeMinutes", 60*24*30); }
+			set { _repository.SetIntSetting("LogPurgeFatalAgeMinutes", value); }
+		}
+
+		public int DefaultBuildRetentionMinutes
+		{
+			get { return _repository.GetIntSetting("DefaultBuildRetentionMinutes", 60*24); }
+			set { _repository.SetIntSetting("DefaultBuildRetentionMinutes", value); }
+		}
+
+        private new List<BaseBuildPurgeRetentionRule> _defaultBuildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
+		{
+			new DeployHistoryBuildRetentionRule 
+			{ 
+				BuildRetentionMinutes = 60*24*7,
+				EnvironmentNameList = new List<string> { "DEV" }
+			},
+			new DeployHistoryBuildRetentionRule 
 			{
-				return StringHelper.IsNullOrEmpty(_displayTimeZoneIdentifier, DateTimeHelper.TimeZoneIdentifier_EasternStandardTime);
-			}
-			set 
+				BuildRetentionMinutes = 60*24*30,
+				EnvironmentNameList = new List<string> { "QA", "INT" }
+			},
+			new DeployHistoryBuildRetentionRule 
 			{
-				_displayTimeZoneIdentifier = value;
+				BuildRetentionMinutes = null,
+				EnvironmentNameList = new List<string> { "PROD" }
 			}
-		}
+		};
 
-		private int? _logPurgeJobIntervalSeconds;
-		public int LogPurgeJobIntervalSeconds
-		{
-			get { return _logPurgeJobIntervalSeconds.GetValueOrDefault(60*60); }
-			set { _logPurgeJobIntervalSeconds = value; }
-		}
-
-		private int? _logPurgeTraceAgeMinutes;
-		public int? LogPurgeTraceAgeMinutes
-		{
-			get { return _logPurgeTraceAgeMinutes.GetValueOrDefault(60); }
-			set { _logPurgeTraceAgeMinutes = value; }
-		}
-
-		private int? _logPurgeDebugAgeMinutes;
-		public int? LogPurgeDebugAgeMinutes
-		{
-			get { return _logPurgeDebugAgeMinutes.GetValueOrDefault(60); }
-			set { _logPurgeDebugAgeMinutes = value; }
-		}
-
-		private int? _logPurgeInfoAgeMinutes;
-		public int? LogPurgeInfoAgeMinutes
-		{
-			get { return _logPurgeInfoAgeMinutes.GetValueOrDefault(60*24); }
-			set { _logPurgeInfoAgeMinutes = value; }
-		}
-
-		private int? _logPurgeWarnAgeMinutes;
-		public int? LogPurgeWarnAgeMinutes
-		{
-			get { return _logPurgeWarnAgeMinutes.GetValueOrDefault(60*24*7); }
-			set { _logPurgeWarnAgeMinutes = value; }
-		}
-
-		private int? _logPurgeErrorAgeMinutes;
-		public int? LogPurgeErrorAgeMinutes
-		{
-			get { return _logPurgeErrorAgeMinutes.GetValueOrDefault(60*24*30); }
-			set { _logPurgeErrorAgeMinutes = value; }
-		}
-
-		private int? _logPurgeFatalAgeMinutes;
-		public int? LogPurgeFatalAgeMinutes
-		{
-			get { return _logPurgeFatalAgeMinutes.GetValueOrDefault(60*24*30); }
-			set { _logPurgeFatalAgeMinutes = value; }
-		}
-
-		private int? _buildPurgeJobIntervalSeconds;
-		public int BuildPurgeJobIntervalSeconds
-		{
-			get { return _buildPurgeJobIntervalSeconds.GetValueOrDefault(60*60); }
-			set { _buildPurgeJobIntervalSeconds = value; }
-		}
-
-		private int? _defaultBuildRetentionMinutes;
-		public int? DefaultBuildRetentionMinutes
-		{
-			get { return _defaultBuildRetentionMinutes.GetValueOrDefault(60*24); }
-			set { _defaultBuildRetentionMinutes = value; }
-		}
-
-		private List<BaseBuildPurgeRetentionRule> _buildPurgeRetentionRuleList;
 		public List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList
 		{
-			get
-			{
-				if (_buildPurgeRetentionRuleList == null)
-				{
-					_buildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
-					{
-						new DeployHistoryBuildRetentionRule 
-						{ 
-							BuildRetentionMinutes = 60*24*7,
-							EnvironmentNameList = new List<string> { "DEV" }
-						},
-						new DeployHistoryBuildRetentionRule 
-						{
-							BuildRetentionMinutes = 60*24*30,
-							EnvironmentNameList = new List<string> { "QA", "INT" }
-						},
-						new DeployHistoryBuildRetentionRule 
-						{
-							BuildRetentionMinutes = null,
-							EnvironmentNameList = new List<string> { "PROD" }
-						}
-					};
-				}
-				return _buildPurgeRetentionRuleList;
-			}
-			set
-			{
-				_buildPurgeRetentionRuleList = value;
-			}
+			get { return _repository.GetBuildPurgeRetentionRuleList(_defaultBuildPurgeRetentionRuleList); }
+			set { _repository.SetBuildPurgeRetentionRuleList(value); }
 		}
 
-		private int? _gcFlushJobIntervalSeconds;
+        public List<BaseBuildPurgeRetentionRule> SaveBuildPurgeRetentionRuleList()
+        {
+            return _repository.SetBuildPurgeRetentionRuleList(this.BuildPurgeRetentionRuleList);
+        }
 
-		public int GCFlushJobIntervalSeconds
-		{
-			get { return _gcFlushJobIntervalSeconds.GetValueOrDefault(60*60); }
-			set { _gcFlushJobIntervalSeconds = value; }
-		}
-
-		private int? _deploymentFolderCleanupMinutes;
 		public int DeploymentFolderCleanupMinutes 
 		{ 
-			get { return _deploymentFolderCleanupMinutes.GetValueOrDefault(60*24); }
-			set { _deploymentFolderCleanupMinutes = value; }
+			get { return _repository.GetIntSetting("DeploymentFolderCleanupMinutes", 60*24); }
+			set { _repository.SetIntSetting("DeploymentFolderCleanupMinutes", value); }
 		}
 
-        private string _offlineExeDirectory;
         public string OfflineExeDirectory
         {
-            get { return StringHelper.IsNullOrEmpty(_offlineExeDirectory, Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "offlineExe")); }
-            set { _offlineExeDirectory = value; }
+            get { return _repository.GetStringSetting("_offlineExeDirectory", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "offlineExe")); }
+            set { _repository.SetStringSetting("OfflineExeDirectory", value); }
         }
 	}
 }
