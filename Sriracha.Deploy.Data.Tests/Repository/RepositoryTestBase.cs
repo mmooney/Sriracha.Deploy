@@ -10,7 +10,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 {
     [TestFixture]
     [Category("DBIntegration")]
-    public abstract class RepositoryTestBase<T>
+F    public abstract class RepositoryTestBase<T>
 	{
         [SetUp]
         public void SetUp()
