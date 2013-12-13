@@ -13,7 +13,6 @@ using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 {
-    [Category("DBIntegration")]
     public abstract class DeployStateRepositoryTests : RepositoryTestBase<IDeployStateRepository>
     {
         private class CreateTestData
