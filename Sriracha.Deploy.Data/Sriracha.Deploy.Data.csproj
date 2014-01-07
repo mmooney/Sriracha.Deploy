@@ -99,7 +99,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\AccountImpl\SystemRoleManager.cs" />
     <Compile Include="Account\AuthResponse.cs" />
+    <Compile Include="Account\ISystemRoleManager.cs" />
     <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
     <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
     <Compile Include="Credentials\CredentialsImpl\ProcessSample.cs" />
@@ -133,6 +135,9 @@
     <Compile Include="Dto\Account\AccountSettings.cs" />
     <Compile Include="Dto\Account\ProjectNotificationFlags.cs" />
     <Compile Include="Dto\Account\ProjectNotificationItem.cs" />
+    <Compile Include="Dto\Account\SystemRole.cs" />
+    <Compile Include="Dto\Account\SystemRoleAssignments.cs" />
+    <Compile Include="Dto\Account\SystemRolePermissions.cs" />
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
@@ -177,6 +182,7 @@
     <Compile Include="Build\IBuildPublisher.cs" />
     <Compile Include="Build\IBuildPurger.cs" />
     <Compile Include="EventArgs.cs" />
+    <Compile Include="Exceptions\SystemPermissionDeniedException.cs" />
     <Compile Include="ICleanupManager.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Deployment\IDeployQueueManager.cs" />
@@ -206,6 +212,7 @@
     <Compile Include="Notifications\NotificationImpl\EmailQueue.cs" />
     <Compile Include="Notifications\NotificationImpl\ProjectNotifier.cs" />
     <Compile Include="Repository\IOfflineDeploymentRepository.cs" />
+    <Compile Include="Repository\ISystemRoleRepository.cs" />
     <Compile Include="Repository\ISystemSettingsRepository.cs" />
     <Compile Include="ServiceJobs\ICleanupJob.cs" />
     <Compile Include="ServiceJobs\IFolderCleanupJob.cs" />

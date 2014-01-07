@@ -11,12 +11,12 @@ using System.Text;
 
 namespace Sriracha.Deploy.RavenDB
 {
-	public class RavenDBPermissionRepository : IPermissionRepository
+	public class RavenPermissionRepository : IPermissionRepository
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
 
-		public RavenDBPermissionRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
+		public RavenPermissionRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);

@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Sriracha.Deploy.Data.Account;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Project.Roles;
@@ -56,6 +57,7 @@ namespace Sriracha.Deploy.Data.Tests
 				public Fixture Fixture { get; set; }
 				public string UserName { get; set; }
 				public Mock<IProjectRoleManager> ProjectRoleManager { get; set; }
+                public Mock<ISystemRoleManager> SystemRoleManager { get; set; }
 				public Mock<IUserIdentity> UserIdentity { get; set; }
 				public List<DeployProjectRole> DeployProjectRoleList { get; set; }
 				public List<DeployProject> ProjectList { get; set; }
@@ -70,6 +72,7 @@ namespace Sriracha.Deploy.Data.Tests
 						UserName = fixture.Create<string>("UserName"),
 						ProjectList = fixture.CreateMany<DeployProject>(projectCount).ToList(),
 						ProjectRoleManager = new Mock<IProjectRoleManager>(),
+                        SystemRoleManager = new Mock<ISystemRoleManager>(),
 						UserIdentity = new Mock<IUserIdentity>()
 					};
 					returnValue.DeployProjectRoleList = 
@@ -84,7 +87,7 @@ namespace Sriracha.Deploy.Data.Tests
 
 					returnValue.UserIdentity.Setup(i=>i.UserName).Returns(returnValue.UserName);
 
-					returnValue.Sut = new PermissionValidator(returnValue.ProjectRoleManager.Object, returnValue.UserIdentity.Object);
+					returnValue.Sut = new PermissionValidator(returnValue.ProjectRoleManager.Object, returnValue.SystemRoleManager.Object, returnValue.UserIdentity.Object);
 
 					return returnValue;
 				}

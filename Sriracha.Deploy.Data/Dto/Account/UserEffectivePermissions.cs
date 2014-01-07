@@ -10,6 +10,7 @@ namespace Sriracha.Deploy.Data.Dto.Account
 	{
 		public string UserName { get; set;  }
 		public List<DeployProjectRolePermissions> ProjectPermissionList { get; set; }
+        public SystemRolePermissions SystemPermissions { get; set; }
 
 		public UserEffectivePermissions()
 		{

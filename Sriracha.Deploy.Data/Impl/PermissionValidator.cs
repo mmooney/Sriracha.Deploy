@@ -1,7 +1,9 @@
 ﻿using MMDB.Shared;
+using Sriracha.Deploy.Data.Account;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Dto.Project.Roles;
+using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Project;
 using System;
 using System.Collections.Generic;
@@ -13,11 +15,13 @@ namespace Sriracha.Deploy.Data.Impl
 	public class PermissionValidator : IPermissionValidator
 	{
 		private readonly IProjectRoleManager _projectRoleManager;
+        private readonly ISystemRoleManager _systemRoleManager;
 		private readonly IUserIdentity _userIdentity;
 
-		public PermissionValidator(IProjectRoleManager projectRoleManager, IUserIdentity userIdentity)
+		public PermissionValidator(IProjectRoleManager projectRoleManager, ISystemRoleManager systemRoleManager, IUserIdentity userIdentity)
 		{
 			_projectRoleManager = DIHelper.VerifyParameter(projectRoleManager);
+            _systemRoleManager = DIHelper.VerifyParameter(systemRoleManager);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
@@ -60,6 +64,21 @@ namespace Sriracha.Deploy.Data.Impl
 				returnValue.ProjectPermissionList.Add(effectiveProjectPermissions);
 			}
 
+            var userSystemRoleList = _systemRoleManager.GetSystemRoleListForUser(userName);
+            returnValue.SystemPermissions = new SystemRolePermissions
+            {
+                EditSystemPermissionsAccess = userSystemRoleList.Any(i => i.Permissions.EditSystemPermissionsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+                                                : userSystemRoleList.Any(i => i.Permissions.EditSystemPermissionsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+                                                : EnumPermissionAccess.None,
+                EditUsersAccess = userSystemRoleList.Any(i => i.Permissions.EditUsersAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+                                                : userSystemRoleList.Any(i => i.Permissions.EditUsersAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+                                                : EnumPermissionAccess.None,
+                ManageDeploymentCredentialsAccess = userSystemRoleList.Any(i => i.Permissions.ManageDeploymentCredentialsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+                                                : userSystemRoleList.Any(i => i.Permissions.ManageDeploymentCredentialsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+                                                : EnumPermissionAccess.None,
+            };
+
+
 			return returnValue;
 		}
 
@@ -84,6 +103,47 @@ namespace Sriracha.Deploy.Data.Impl
 			return returnList;
 		}
 
+        public void VerifyCurrentUserSystemPermission(EnumSystemPermission permission)
+        {
+            this.VerifySystemPermission(_userIdentity.UserName, permission);
+        }
 
-	}
+        public bool CurrentUserHasSystemPermission(EnumSystemPermission permission)
+        {
+            return this.HasSystemPermission(_userIdentity.UserName, permission);
+        }
+
+        public void VerifySystemPermission(string userName, EnumSystemPermission permission)
+        {
+            if(!this.HasSystemPermission(userName, permission))
+            {
+                throw new SystemPermissionDeniedException(userName, permission);
+            }
+        }
+
+        public bool HasSystemPermission(string userName, EnumSystemPermission permission)
+        {
+            var permissionData = this.GetUserEffectivePermissions(this._userIdentity.UserName);
+            if(permissionData == null || permissionData.SystemPermissions == null)
+            {
+                return false;
+            }
+            EnumPermissionAccess access;
+            switch(permission)
+            {
+                case EnumSystemPermission.EditSystemPermissions:
+                    access = permissionData.SystemPermissions.EditSystemPermissionsAccess;
+                    break;
+                case EnumSystemPermission.EditUsers:
+                    access = permissionData.SystemPermissions.EditUsersAccess;
+                    break;
+                case EnumSystemPermission.ManageDeploymentCredentials:
+                    access = permissionData.SystemPermissions.ManageDeploymentCredentialsAccess;
+                    break;
+                default:
+                    throw new UnknownEnumValueException(permission);
+            }
+            return (access == EnumPermissionAccess.Grant);
+        }
+    }
 }

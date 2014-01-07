@@ -64,4 +64,19 @@ namespace Sriracha.Deploy.Data
 		Completed = 2,
 		Error = 3
 	}
+
+    public enum EnumPermissionAccess
+    {
+        Grant = 0,
+        None = 1,
+        Deny = 2
+    }
+
+    public enum EnumSystemPermission
+    {
+        Unknown = 0,
+        EditSystemPermissions,
+        EditUsers,
+        ManageDeploymentCredentials
+    }
 }

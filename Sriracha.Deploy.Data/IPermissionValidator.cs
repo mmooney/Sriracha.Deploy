@@ -11,5 +11,11 @@ namespace Sriracha.Deploy.Data
 	{
 		UserEffectivePermissions GetUserEffectivePermissions(string userName);
 		UserEffectivePermissions GetCurrentUserEffectivePermissions();
-	}
+
+        void VerifyCurrentUserSystemPermission(EnumSystemPermission permission);
+        bool CurrentUserHasSystemPermission(EnumSystemPermission permission);
+
+        void VerifySystemPermission(string userName, EnumSystemPermission permission);
+        bool HasSystemPermission(string userName, EnumSystemPermission permission);
+    }
 }

@@ -5,13 +5,6 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Dto.Project.Roles
 {
-	public enum EnumPermissionAccess
-	{
-		Grant,
-		None,
-		Deny
-	}
-
 	public class DeployProjectRoleEnvironmentPermission
 	{
 		public string Id { get; set; }

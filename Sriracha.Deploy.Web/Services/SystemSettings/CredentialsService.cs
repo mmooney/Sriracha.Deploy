@@ -11,10 +11,12 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 	public class CredentialsService : Service
 	{
 		private readonly ICredentialsManager _credentialsManager;
+        private readonly IPermissionValidator _permissionValidator;
 
-		public CredentialsService(ICredentialsManager credentialsManager)
+		public CredentialsService(ICredentialsManager credentialsManager, IPermissionValidator permissionValidator)
 		{
 			_credentialsManager = DIHelper.VerifyParameter(credentialsManager);
+            _permissionValidator = DIHelper.VerifyParameter(permissionValidator);
 		}
 
 		public object Get(CredentialsRequest request)
@@ -25,6 +27,7 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 			}
 			else if (!string.IsNullOrEmpty(request.Id))
 			{
+                _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.ManageDeploymentCredentials);
 				return _credentialsManager.GetMaskedCredentials(request.Id);
 			}
 			else 

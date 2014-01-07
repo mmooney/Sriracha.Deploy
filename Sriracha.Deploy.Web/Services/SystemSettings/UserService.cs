@@ -11,15 +11,18 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
     public class UserService : Service
     {
         private readonly IUserManager _userManager;
+        private readonly IPermissionValidator _permissionValidator;
 
-        public UserService(IUserManager userManager)
+        public UserService(IUserManager userManager, IPermissionValidator permissionValidator)
         {
             _userManager = DIHelper.VerifyParameter(userManager);
+            _permissionValidator = DIHelper.VerifyParameter(permissionValidator);
         }
         
         public object Get(UserRequest request)
         {
-            if(request == null)
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditUsers);
+            if (request == null)
             {
                 throw new ArgumentNullException("request is null");
             }
@@ -35,7 +38,8 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
         
         public object Delete(UserRequest request)
         {
-            if(request == null)
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditUsers);
+            if (request == null)
             {
                 throw new ArgumentNullException("request is null");
             }
@@ -58,7 +62,8 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 
         private SrirachaUser Save(UserRequest request)
         {
-            if(string.IsNullOrEmpty(request.Id))
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditUsers);
+            if (string.IsNullOrEmpty(request.Id))
             {
                 return _userManager.CreateUser(request.UserName, request.EmailAddress, request.Password);
             }

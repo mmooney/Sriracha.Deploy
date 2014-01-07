@@ -1,0 +1,17 @@
+﻿<h2>Delete User</h2>
+<div class="alert">Are you SURE you want to delete this user?  This cannot be undone!</div>
+<table class="table">
+	<tr>
+		<th>User Name:</th>
+		<td>{{editForm.userName}}</td>
+	</tr>
+	<tr>
+		<th>Email Address:</th>
+		<td>
+            {{editForm.emailAddress}}
+		</td>
+	</tr>
+</table>
+<button class="btn" ng-click="navigator.systemSettings.users.list.go()">Cancel</button>
+<button class="btn btn-danger" ng-click="deleteUser()">Delete</button>
+
