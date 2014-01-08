@@ -280,28 +280,28 @@
 		            go: function (credentialsId) { root.goTo(this.url, { credentialsId: credentialsId }); }
 		        }
 		    },
-		    users: {
+		    user: {
 		        list: {
-		            url: "/systemSettings/users",
+		            url: "/systemSettings/user",
 		            clientUrl: function (pageNumber, pageSize, sortField, sortAscending) { return root.getUrl(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) },
 		            go: function (pageNumber, pageSize, sortField, sortAscending) { root.goTo(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) }
 		        },
 		        create: {
-		            url: "/systemSettings/users/create",
+		            url: "/systemSettings/user/create",
 		            clientUrl: function () { return root.getUrl(this.url) },
 		            go: function () { root.goTo(this.url); }
 		        },
 		        edit: {
-		            url: "/systemSettings/users/edit/:userId",
+		            url: "/systemSettings/user/edit/:userId",
 		            clientUrl: function (userId) { return root.getUrl(this.url, { userId: userId }) },
 		            go: function (userId) { root.goTo(this.url, { userId: userId }); }
 		        },
 		        remove: {
-		            url: "/systemSettings/users/delete/:userId",
+		            url: "/systemSettings/user/delete/:userId",
 		            clientUrl: function (userId) { return root.getUrl(this.url, { userId: userId }) },
 		            go: function (userId) { root.goTo(this.url, { userId: userId }); }
 		        }
-		    }
+		    },
 		};
 		return root;
 	}

@@ -1,4 +1,4 @@
-﻿ngSriracha.controller("usersController",
+﻿ngSriracha.controller("userController",
 	['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator', 'ErrorReporter', 'PermissionVerifier',
 	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 
@@ -12,7 +12,7 @@
 
 		$scope.editForm = {};
 		if ($routeParams.userId) {
-		    $scope.user = SrirachaResource.users.get(
+		    $scope.user = SrirachaResource.systemSettings.user.get(
 				{ id: $routeParams.userId },
 				function (data) {
 				    $scope.editForm.userName = data.userName;
@@ -24,9 +24,10 @@
 			);
 		}
 		else {
-		    $scope.userList = SrirachaResource.users.get(
+		    $scope.userList = SrirachaResource.systemSettings.user.get(
 				$scope.listOptions,
 				function (data) {
+				    console.log(data)
 				    //console.log(data);
 				},
 				function (err) {
@@ -36,10 +37,10 @@
 		}
 
 		$scope.goToPage = function (pageNumber) {
-		    $scope.navigator.systemSettings.users.list.go(pageNumber, $scope.userList.pageSize, $scope.userList.sortField, $scope.userList.sortAscending);
+		    $scope.navigator.systemSettings.user.list.go(pageNumber, $scope.userList.pageSize, $scope.userList.sortField, $scope.userList.sortAscending);
 		};
 		$scope.applySort = function (sortField, sortAscending) {
-		    $scope.navigator.systemSettings.users.list.go(1, $scope.userList.pageSize, sortField, sortAscending);
+		    $scope.navigator.systemSettings.user.list.go(1, $scope.userList.pageSize, sortField, sortAscending);
 		}
 
 		$scope.deleteUser = function () {
@@ -47,7 +48,7 @@
 		        alert("Error: scope.editForm is null")
 		        return;
 		    }
-		    var item = new SrirachaResource.users();
+		    var item = new SrirachaResource.systemSettings.user();
 		    item.userName = $scope.editForm.userName;
 		    item.emailAddress = $scope.editForm.emailAddress;
 		    item.password = $scope.editForm.password;
@@ -56,7 +57,7 @@
 		    };
 		    var result = item.$delete(deleteParams,
 				function (data) {
-					$scope.navigator.systemSettings.users.list.go();
+					$scope.navigator.systemSettings.user.list.go();
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);
@@ -83,7 +84,7 @@
 		        isValid = false;
 		    }
 		    if (isValid) {
-		        var item = new SrirachaResource.users();
+		        var item = new SrirachaResource.systemSettings.user();
 		        item.userName = $scope.editForm.userName;
 		        item.emailAddress = $scope.editForm.emailAddress;
 		        item.password = $scope.editForm.password;
@@ -94,10 +95,10 @@
 		        var result = item.$save(saveParams,
 					function (data) {
 					    if ($routeParams.userId) {
-					        $scope.navigator.systemSettings.users.list.go();
+					        $scope.navigator.systemSettings.user.list.go();
 					    }
 					    else {
-					        $scope.navigator.systemSettings.users.list.go();
+					        $scope.navigator.systemSettings.user.list.go();
 					        //$scope.navigator.systemSettings.credentials.edit.go(data.id);
 					    }
 					},

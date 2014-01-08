@@ -1,18 +1,15 @@
-﻿<h2>Create User</h2>
+﻿<h2>User Details</h2>
 <table class="table">
-    <tr>
-        <th>User Name:</th>
-        <td>
-            <input type="text" ng-required="true" ng-model="editForm.userName">
-            <span class="alert alert-error" ng-show="editForm.userNameError">{{editForm.userNameError}}</span>
-        </td>
-    </tr>
-    <tr>
-        <th>Email Address:</th>
-        <td>
-            <input type="emailAddress" ng-model="editForm.emailAddress">
-        </td>
-    </tr>
+	<tr>
+		<th>User Name:</th>
+		<td>{{editForm.userName}}</td>
+	</tr>
+	<tr>
+		<th>Email Address:</th>
+		<td>
+            <input type="text" ng-model="editForm.emailAddress"/>
+		</td>
+	</tr>
     <tr>
         <th>Password:</th>
         <td>
@@ -28,6 +25,6 @@
         </td>
     </tr>
 </table>
-<button class="btn" ng-click="navigator.systemSettings.users.list.go()">Cancel</button>
+<button class="btn" ng-click="navigator.systemSettings.user.list.go()">Cancel</button>
 <button class="btn btn-primary" ng-click="saveUser()">Save</button>
 

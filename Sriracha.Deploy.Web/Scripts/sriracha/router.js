@@ -202,21 +202,21 @@
 			templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
 			controller: "credentialsController"
 		})
-        .when(navigator.systemSettings.users.list.url, {
-            templateUrl: "templates/systemSettings/systemSettings-users-list.html",
-            controller: "usersController"
+        .when(navigator.systemSettings.user.list.url, {
+            templateUrl: "templates/systemSettings/systemSettings-user-list.html",
+            controller: "userController"
         })
-        .when(navigator.systemSettings.users.create.url, {
-            templateUrl: "templates/systemSettings/systemSettings-users-create.html",
-            controller: "usersController"
+        .when(navigator.systemSettings.user.create.url, {
+            templateUrl: "templates/systemSettings/systemSettings-user-create.html",
+            controller: "userController"
         })
-        .when(navigator.systemSettings.users.edit.url, {
-            templateUrl: "templates/systemSettings/systemSettings-users-edit.html",
-            controller: "usersController"
+        .when(navigator.systemSettings.user.edit.url, {
+            templateUrl: "templates/systemSettings/systemSettings-user-edit.html",
+            controller: "userController"
         })
-        .when(navigator.systemSettings.users.remove.url, {
-            templateUrl: "templates/systemSettings/systemSettings-users-delete.html",
-            controller: "usersController"
+        .when(navigator.systemSettings.user.remove.url, {
+            templateUrl: "templates/systemSettings/systemSettings-user-delete.html",
+            controller: "userController"
         })
 
 		.otherwise({

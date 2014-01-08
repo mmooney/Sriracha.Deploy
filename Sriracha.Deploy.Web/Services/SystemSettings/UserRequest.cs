@@ -7,8 +7,8 @@ using System.Web;
 
 namespace Sriracha.Deploy.Web.Services.SystemSettings
 {
-    [Route("/systemSettings/users")]
-    [Route("/systemSettings/users/{id}")]
+    [Route("/systemSettings/user")]
+    [Route("/systemSettings/user/{id}")]
     public class UserRequest : RequestBase<SrirachaUser>
     {
         public string UserName { get; set; }

@@ -34,10 +34,12 @@
 			taskMetadata: $resource("/api/taskmetadata"),
 			user: $resource("/api/user"),
 
-			//System settings
-			credentials: $resource("/api/systemSettings/credentials"),
-			credentialsTest: $resource("/api/systemSettings/credentials/test/:id"),
-            users: $resource("/api/systemSettings/users/:id")
+		    //System settings
+			systemSettings: {
+			    credentials: $resource("/api/systemSettings/credentials"),
+			    credentialsTest: $resource("/api/systemSettings/credentials/test/:id"),
+			    user: $resource("/api/systemSettings/user/:id")
+			}
 		}
 	}
 ]);
