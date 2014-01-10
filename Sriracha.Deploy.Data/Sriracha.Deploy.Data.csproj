@@ -183,6 +183,7 @@
     <Compile Include="Build\IBuildPurger.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="Exceptions\SystemPermissionDeniedException.cs" />
+    <Compile Include="Exceptions\UnrecognizedSortFieldException.cs" />
     <Compile Include="ICleanupManager.cs" />
     <Compile Include="IDataGenerator.cs" />
     <Compile Include="Deployment\IDeployQueueManager.cs" />

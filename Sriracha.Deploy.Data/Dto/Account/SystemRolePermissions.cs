@@ -13,5 +13,10 @@ namespace Sriracha.Deploy.Data.Dto.Account
         public EnumPermissionAccess EditSystemPermissionsAccess { get; set; }
         public EnumPermissionAccess EditUsersAccess { get; set; }
         public EnumPermissionAccess ManageDeploymentCredentialsAccess { get; set; }
+
+        public string CreatedByUserName { get; set; }
+        public DateTime CreatedDateTimeUtc { get; set; }
+        public string UpdatedByUserName { get; set; }
+        public DateTime UpdateDateTimeUtc { get; set; }
     }
 }

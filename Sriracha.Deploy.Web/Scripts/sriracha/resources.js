@@ -38,7 +38,8 @@
 			systemSettings: {
 			    credentials: $resource("/api/systemSettings/credentials"),
 			    credentialsTest: $resource("/api/systemSettings/credentials/test/:id"),
-			    user: $resource("/api/systemSettings/user/:id")
+			    user: $resource("/api/systemSettings/user/:id"),
+                systemRole: $resource("/api/systemSettings/systemRole/:id")
 			}
 		}
 	}

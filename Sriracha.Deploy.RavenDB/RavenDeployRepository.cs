@@ -188,8 +188,7 @@ namespace Sriracha.Deploy.RavenDB
 			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
 			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(5);
 			listOptions.PageNumber = listOptions.PageNumber.GetValueOrDefault(1);
-			var pagedList = query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
-			return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
+			return query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
 		}
 
 

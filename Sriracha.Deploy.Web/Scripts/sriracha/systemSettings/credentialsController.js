@@ -6,7 +6,7 @@
 		$scope.permissionVerifier = PermissionVerifier;
 		$scope.editForm = {};
 		if ($routeParams.credentialsId) {
-			$scope.credentialsItem = SrirachaResource.credentials.get(
+			$scope.credentialsItem = SrirachaResource.systemSettings.credentials.get(
 				{id: $routeParams.credentialsId},
 				function (data) {
 					$scope.editForm.userName = data.userName;
@@ -18,7 +18,7 @@
 			);
 		}
 		else  {
-			$scope.credentialsList = SrirachaResource.credentials.get(
+		    $scope.credentialsList = SrirachaResource.systemSettings.credentials.get(
 				{},
 				function (data) {
 					//console.log(data);
@@ -31,7 +31,7 @@
 
 		$scope.testCredentials = function (item) {
 			if (item) {
-				SrirachaResource.credentialsTest.get(
+			    SrirachaResource.systemSettings.credentialsTest.get(
 					{id: item.id},
 					function () {
 						alert("Success");
@@ -65,7 +65,7 @@
 				isValid = false;
 			}
 			if (isValid) {
-				var item = new SrirachaResource.credentials();
+			    var item = new SrirachaResource.systemSettings.credentials();
 				item.userName = $scope.editForm.userName;
 				item.password = $scope.editForm.password;
 				item.domain = $scope.editForm.domain;

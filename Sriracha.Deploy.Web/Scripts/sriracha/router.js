@@ -190,34 +190,45 @@
 			templateUrl: "templates/systemSettings/systemSettings-list.html",
 			controller: "systemSettingsController"
 		})
-		.when(navigator.systemSettings.credentials.list.url, {
-			templateUrl: "templates/systemSettings/systemSettings-credentials-list.html",
-			controller: "credentialsController"
-		})
-		.when(navigator.systemSettings.credentials.create.url, {
-			templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
-			controller: "credentialsController"
-		})
-		.when(navigator.systemSettings.credentials.edit.url, {
-			templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
-			controller: "credentialsController"
-		})
-        .when(navigator.systemSettings.user.list.url, {
-            templateUrl: "templates/systemSettings/systemSettings-user-list.html",
-            controller: "userController"
-        })
-        .when(navigator.systemSettings.user.create.url, {
-            templateUrl: "templates/systemSettings/systemSettings-user-create.html",
-            controller: "userController"
-        })
-        .when(navigator.systemSettings.user.edit.url, {
-            templateUrl: "templates/systemSettings/systemSettings-user-edit.html",
-            controller: "userController"
-        })
-        .when(navigator.systemSettings.user.remove.url, {
-            templateUrl: "templates/systemSettings/systemSettings-user-delete.html",
-            controller: "userController"
-        })
+            //Credentials
+		    .when(navigator.systemSettings.credentials.list.url, {
+			    templateUrl: "templates/systemSettings/systemSettings-credentials-list.html",
+			    controller: "credentialsController"
+		    })
+		    .when(navigator.systemSettings.credentials.create.url, {
+			    templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
+			    controller: "credentialsController"
+		    })
+		    .when(navigator.systemSettings.credentials.edit.url, {
+			    templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
+			    controller: "credentialsController"
+		    })
+            //Users
+            .when(navigator.systemSettings.user.list.url, {
+                templateUrl: "templates/systemSettings/systemSettings-user-list.html",
+                controller: "userController"
+            })
+            .when(navigator.systemSettings.user.create.url, {
+                templateUrl: "templates/systemSettings/systemSettings-user-create.html",
+                controller: "userController"
+            })
+            .when(navigator.systemSettings.user.edit.url, {
+                templateUrl: "templates/systemSettings/systemSettings-user-edit.html",
+                controller: "userController"
+            })
+            .when(navigator.systemSettings.user.remove.url, {
+                templateUrl: "templates/systemSettings/systemSettings-user-delete.html",
+                controller: "userController"
+            })
+            //System Roles
+            .when(navigator.systemSettings.systemRole.list.url, {
+                templateUrl: "templates/systemSettings/systemSettings-systemRole-list.html",
+                controller: "systemRoleController"
+            })
+            .when(navigator.systemSettings.systemRole.create.url, {
+                templateUrl: "templates/systemSettings/systemSettings-systemRole-create.html",
+                controller: "systemRoleController"
+            })
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"

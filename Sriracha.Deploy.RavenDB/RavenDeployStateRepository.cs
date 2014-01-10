@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Repository;
 using System;
 using System.Collections.Generic;
@@ -259,15 +260,12 @@ namespace Sriracha.Deploy.RavenDB
             switch (listOptions.SortField.ToLower())
             {
                 case "deploymentstarteddatetimeutc":
-                    pagedList = query.PageAndSort(listOptions, i => i.DeploymentStartedDateTimeUtc);
-                    break;
+                    return query.PageAndSort(listOptions, i => i.DeploymentStartedDateTimeUtc);
                 case "version":
-                    pagedList = query.PageAndSort(listOptions, i => i.SortableVersion);
-                    break;
+                    return query.PageAndSort(listOptions, i => i.SortableVersion);
                 default:
-                    throw new ArgumentException("Unrecognized sort field: " + listOptions.SortField);
+                    throw new UnrecognizedSortFieldException<ComponentDeployHistory>(listOptions);
             }
-            return new PagedSortedList<ComponentDeployHistory>(pagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
         }
 
         private IRavenQueryable<ComponentDeployHistory> GetComponentDeployHistoryBaseQuery(IRavenQueryable<DeployState> baseQuery)

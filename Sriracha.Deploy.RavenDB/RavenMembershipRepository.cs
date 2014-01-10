@@ -10,6 +10,7 @@ using Raven.Client.Linq;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.Exceptions;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -165,16 +166,12 @@ namespace Sriracha.Deploy.RavenDB
             switch (listOptions.SortField)
             {
                 case "UserName":
-                    var temp = query.OrderBy(i => i.UserName);
-                    pagedList = query.PageAndSort(listOptions, i => i.UserName);
-                    break;
+                    return query.PageAndSort(listOptions, i => i.UserName);
                 case "EmailAddress":
-                    pagedList = query.PageAndSort(listOptions, i => i.EmailAddress);
-                    break;
+                    return query.PageAndSort(listOptions, i => i.EmailAddress);
                 default:
-                    throw new Exception("Unsupported sort field " + listOptions.SortField);
+                    throw new UnrecognizedSortFieldException<SrirachaUser>(listOptions);
             }
-            return new PagedSortedList<SrirachaUser>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
         }
 
         public PagedSortedList<SrirachaUser> GetUserList_old(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter)
@@ -185,16 +182,12 @@ namespace Sriracha.Deploy.RavenDB
 			switch(listOptions.SortField)
 			{
 				case "UserName":
-					var temp = query.OrderBy(i=>i.UserName);
-					pagedList = query.PageAndSort(listOptions, i=>i.UserName);
-					break;
+				    return query.PageAndSort(listOptions, i=>i.UserName);
 				case "EmailAddress":
-					pagedList = query.PageAndSort(listOptions, i=>i.EmailAddress);
-					break;
+					return query.PageAndSort(listOptions, i=>i.EmailAddress);
 				default:
-					throw new Exception("Unsupported sort field " + listOptions.SortField);
+					throw new UnrecognizedSortFieldException<SrirachaUser>(listOptions);
 			}
-			return new PagedSortedList<SrirachaUser>(pagedList, listOptions.SortField, listOptions.SortAscending.Value );
 		}
 
 		public int GetUserCount(Expression<Func<SrirachaUser, bool>> filter=null)

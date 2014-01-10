@@ -1,0 +1,13 @@
+﻿<h2>Create System Role</h2>
+<table class="table">
+    <tr>
+        <th>Role Name:</th>
+        <td>
+            <input type="text" ng-required="true" ng-model="editForm.roleName">
+            <span class="alert alert-error" ng-show="editForm.roleNameError">{{editForm.roleNameError}}</span>
+        </td>
+    </tr>
+</table>
+<button class="btn" ng-click="navigator.systemSettings.systemRole.list.go()">Cancel</button>
+<button class="btn btn-primary" ng-click="saveSystemRole()">Save</button>
+

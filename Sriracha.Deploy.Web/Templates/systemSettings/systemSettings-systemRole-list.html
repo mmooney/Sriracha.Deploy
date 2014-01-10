@@ -1,0 +1,32 @@
+﻿<h2><a ng-href="{{navigator.systemRole.list.clientUrl()}}">System Role List</a></h2>
+
+<div style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()">Create Role</button>
+</div>
+
+<table class="table table-striped" ng-show="systemRoleList.items.length">
+    <thead>
+        <tr>
+            <th sort-header sort-field="RoleName" apply-sort="applySort" paged-list="systemRoleList">RoleName</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="role in systemRoleList.items">
+            <td><a ng-href="{{navigator.systemSettings.systemRole.edit.clientUrl(role.id)}}">{{role.roleName}}</a></td>
+            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.systemRole.remove.clientUrl(role.id)}}">Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+<div ng-hide="systemRoleList.items.length">
+    No system roles
+</div>
+<div ng-show="systemRoleList.items.length">
+    <div>
+        <pager paged-list="systemRoleList" go-to-page="goToPage"></pager>
+    </div>
+
+    <div style="padding-top:10px">
+        <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()">Create Role</button>
+    </div>
+</div>

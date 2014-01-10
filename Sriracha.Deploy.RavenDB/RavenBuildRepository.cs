@@ -59,28 +59,22 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				query = (IRavenQueryable<DeployBuild>)query.Where(i => i.ProjectComponentId == componentId);
 			}
-			IPagedList<DeployBuild> pagedList;
 			listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UpdatedDateTimeUtc", false);
 			switch(listOptions.SortField.ToLower())
 			{
 				case "updateddatetimeutc":
-					pagedList = query.PageAndSort(listOptions, i=>i.UpdatedDateTimeUtc);
+					return query.PageAndSort(listOptions, i=>i.UpdatedDateTimeUtc);
 					break;
 				case "branchname":
 				case "projectbranchname":
-					pagedList = query.PageAndSort(listOptions, i => i.ProjectBranchName);
+					return query.PageAndSort(listOptions, i => i.ProjectBranchName);
 					break;
 				case "projectname":
-					pagedList = query.PageAndSort(listOptions, i=>i.ProjectName);
+					return query.PageAndSort(listOptions, i=>i.ProjectName);
 					break;
 				default:
-					throw new Exception("Unrecognized sort field " + listOptions.SortField);
+                    throw new UnrecognizedSortFieldException<DeployBuild>(listOptions);
 			}
-			foreach(var item in pagedList)
-			{
-				_documentSession.Advanced.Evict(item);
-			}
-			return new PagedSortedList<DeployBuild>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
 
 		public DeployBuild CreateBuild(string projectId, string projectName, string projectComponentId, string projectComponentName, string projectBranchId, string projectBranchName, string fileId, string version)
