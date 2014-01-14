@@ -5,5 +5,5 @@
 ServerIp=fe80::6420:2a7e:38a5:7305%9
 EngineName=QB_MooneyLaptop8_18
 ServerPort=10180
-FilePath=C:\Projects\Sriracha.Deploy\Sriracha.Deploy.Web\Scripts\sriracha\systemSettings\systemRoleController.js
+FilePath=C:\Projects\Sriracha.Deploy\Sriracha.Deploy.Web\Templates\systemSettings\systemSettings-systemRole-edit.html
 ServerMode=1

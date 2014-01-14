@@ -1,0 +1,81 @@
+﻿<h2>System Details</h2>
+<table class="table">
+	<tr>
+		<th>Role Name:</th>
+        <td>
+            <input type="text" ng-required="true" ng-model="editForm.roleName" ng-disabled="!canEditRoleName()"/>
+            <span class="alert alert-error" ng-show="editForm.roleNameError">{{editForm.roleNameError}}</span>
+        </td>
+	</tr>
+    <tr>
+        <td colspan="2">
+            <div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px">
+                <h3>Permissions</h3>
+                <h4>Edit System Permissions</h4>
+                <label class="checkbox">
+                    <select ng-model="editForm.permissions.editSystemPermissionsAccess" ng-disabled="!canEditRole()">
+                        <option>None</option>
+                        <option>Grant</option>
+                        <option>Deny</option>
+                    </select>
+                </label>
+                <h4>Edit Users</h4>
+                <label class="checkbox">
+                    <select ng-model="editForm.permissions.editUsersAccess" ng-disabled="!canEditRole()">
+                        <option>None</option>
+                        <option>Grant</option>
+                        <option>Deny</option>
+                    </select>
+                </label>
+                <h4>Manage Deployment Credentials</h4>
+                <label class="checkbox">
+                    <select ng-model="editForm.permissions.manageDeploymentCredentialsAccess" ng-disabled="!canEditRole()">
+                        <option>None</option>
+                        <option>Grant</option>
+                        <option>Deny</option>
+                    </select>
+                </label>
+            </div>
+            <div class="span4 container" style="border: 1px solid black; border-radius:5px; padding:10px; margin-left:5px">
+                <h3>User Assignment</h3>
+                <h4>Users</h4>
+                <div class="span3" style="width:300px;">
+                    <div ng-show="systemRole.everyoneRoleIndicator">
+                        This is a built in role to represent the everyone in the system.  These default permissions will get assigned to all users,
+                        and those default permissions can be modified by assigning users to additional roles.
+                    </div>
+                    <table class="table table-striped" ng-hide="systemRole.everyoneRoleIndicator">
+                        <tr>
+                            <th>User Name</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="userName in editForm.assignments.userNameList">
+                            <td>{{userName}}</td>
+                            <td ng-show="canEditRole()"><button class="btn btn-danger" ng-click="deleteUserAssignment(userName)"><i class="icon-trash"></i></button></td>
+                        </tr>
+                    </table>
+                    <div ng-hide="editForm.assignments.userNameList.length || systemRole.everyoneRoleIndicator">
+                        No users assigned
+                    </div>
+                    <p><button class="btn" ng-click="editAssignedUsers()" ng-hide="systemRole.everyoneRoleIndicator || !canEditRole()">Edit Users</button></p>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+<button class="btn" ng-click="navigator.systemSettings.systemRole.list.go()" ng-hide="canEditRole()">Back</button>
+<button class="btn" ng-click="navigator.systemSettings.systemRole.list.go()" ng-show="canEditRole()">Cancel</button>
+<button class="btn btn-primary" ng-click="saveSystemRole()" ng-show="canEditRole()">Save</button>
+
+<div class="editAssignedUsers" style="display:none">
+    <div ng-repeat="item in editAssignedUsersData.userAssignList">
+        <label typeof="checkbox">
+            <input type="checkbox" ng-model="item.selected">
+            {{item.userName}}
+        </label>
+    </div>
+    <center>
+        <button class="btn btn-primary" ng-click="completeEditAssignedUsers()">OK</button>
+    </center>
+</div>
+

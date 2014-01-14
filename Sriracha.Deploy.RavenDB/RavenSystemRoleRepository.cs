@@ -100,6 +100,7 @@ namespace Sriracha.Deploy.RavenDB
 
         private SystemRoleAssignments UpdateAssignments(SystemRoleAssignments assignments, string roleId)
         {
+            assignments = assignments ?? new SystemRoleAssignments();
             if (string.IsNullOrEmpty(assignments.Id))
             {
                 assignments.Id = Guid.NewGuid().ToString();
@@ -114,6 +115,7 @@ namespace Sriracha.Deploy.RavenDB
 
         private SystemRolePermissions UpdatePermissions(SystemRolePermissions permissions, string roleId)
         {
+            permissions = permissions ?? new SystemRolePermissions();
             if (string.IsNullOrEmpty(permissions.Id))
             {
                 permissions.Id = Guid.NewGuid().ToString();

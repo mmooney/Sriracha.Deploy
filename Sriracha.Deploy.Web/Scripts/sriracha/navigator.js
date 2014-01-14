@@ -312,6 +312,11 @@
 		            url: "/systemSettings/systemRole/create",
 		            clientUrl: function () { return root.getUrl(this.url) },
 		            go: function () { root.goTo(this.url); }
+		        },
+		        edit: {
+		            url: "/systemSettings/systemRole/edit/:systemRoleId",
+		            clientUrl: function (systemRoleId) { return root.getUrl(this.url, { systemRoleId: systemRoleId }) },
+		            go: function (systemRoleId) { root.goTo(this.url, { systemRoleId: systemRoleId }); }
 		        }
 		    }
 		};

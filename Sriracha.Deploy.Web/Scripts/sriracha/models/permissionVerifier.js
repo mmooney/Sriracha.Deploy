@@ -86,6 +86,13 @@
 				return _.findWhere(accountData.effectivePermissions.projectPermissionList, { projectId: projectId });
 			}
 		}
+
+		this.canEditSystemRole = function () {
+		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
+		        return (accountData.effectivePermissions.systemPermissions.editSystemPermissionsAccess == "Grant");
+		    }
+		}
+
 		this.getUserPermissions = function () {
 			return this.effectivePermissions;
 		}

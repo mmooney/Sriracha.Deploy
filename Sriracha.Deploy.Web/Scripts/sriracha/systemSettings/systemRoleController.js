@@ -11,11 +11,13 @@
 		if ($routeParams.sortAscending) $scope.listOptions.sortAscending = $routeParams.sortAscending;
 
 		$scope.editForm = {};
-		if ($routeParams.userId) {
+		if ($routeParams.systemRoleId) {
 		    $scope.systemRole = SrirachaResource.systemSettings.systemRole.get(
-				{ id: $routeParams.userId },
+				{ id: $routeParams.systemRoleId },
 				function (data) {
 				    $scope.editForm.roleName = data.roleName;
+				    $scope.editForm.permissions = data.permissions;
+				    $scope.editForm.assignments = data.assignments;
 				},
 				function (err) {
 				    ErrorReporter.handleResourceError(err);
@@ -32,6 +34,23 @@
 				    ErrorReporter.handleResourceError(err);
 				}
 			)
+		}
+
+		$scope.canEditRoleName = function () {
+		    if ($scope.systemRole) {
+		        if ($scope.systemRole.everyoneRoleIndicator) {
+		            return false;
+		        }
+		        else {
+		            return $scope.permissionVerifier.canEditSystemRole();
+		        }
+		    }
+		}
+
+		$scope.canEditRole = function () {
+		    if ($scope.systemRole) {
+		        return $scope.permissionVerifier.canEditSystemRole();
+		    }
 		}
 
 		$scope.goToPage = function (pageNumber) {
@@ -76,6 +95,8 @@
 		    if (isValid) {
 		        var item = new SrirachaResource.systemSettings.systemRole();
 		        item.roleName = $scope.editForm.roleName;
+		        item.permissions = $scope.editForm.permissions,
+		        item.assignments = $scope.editForm.assignments
 		        var saveParams = {};
 		        if ($routeParams.systemRoleId) {
 		            saveParams.id = $routeParams.systemRoleId;
@@ -94,6 +115,51 @@
 					    ErrorReporter.handleResourceError(err);
 					}
 				)
+		    }
+		}
+
+		$scope.editAssignedUsers = function () {
+		    $scope.editAssignedUsersData = {
+		        userAssignList: []
+		    };
+		    var response = SrirachaResource.user.get(
+				{},
+				function () {
+				    _.each(response.userNameList, function (userName) {
+				        var item = {
+				            userName: userName,
+				            selected: false
+				        }
+				        if ($scope.editForm && $scope.editForm.assignments && $scope.editForm.assignments.userNameList) {
+				            item.selected = _.contains($scope.editForm.assignments.userNameList, userName);
+				        }
+				        $scope.editAssignedUsersData.userAssignList.push(item);
+				    });
+				    angular.element(".editAssignedUsers").dialog({
+				        width: 'auto',
+				        height: 'auto',
+				        modal: true
+				    });
+				},
+				function (err) {
+				    ErrorReporter.handleResourceError(err);
+				}
+			)
+		}
+
+		$scope.completeEditAssignedUsers = function () {
+		    if ($scope.editForm) {
+		        $scope.editForm.assignments = $scope.editForm.assignments || {};
+		        $scope.editForm.assignments.userNameList = _.pluck(_.filter($scope.editAssignedUsersData.userAssignList, function (x) { return x.selected; }), "userName");
+		    }
+		    angular.element(".editAssignedUsers").dialog("destroy");
+		}
+
+		$scope.deleteUserAssignment = function (userName) {
+		    if ($scope.editForm && editForm.assignments) {
+		        if (_.contains($scope.editForm.assignments.userNameList, userName)) {
+		            $scope.editForm.assignments.userNameList = _.without($scope.editForm.assignments.userNameList, userName);
+		        }
 		    }
 		}
 	}]);

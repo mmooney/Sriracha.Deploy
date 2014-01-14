@@ -229,6 +229,10 @@
                 templateUrl: "templates/systemSettings/systemSettings-systemRole-create.html",
                 controller: "systemRoleController"
             })
+            .when(navigator.systemSettings.systemRole.edit.url, {
+                templateUrl: "templates/systemSettings/systemSettings-systemRole-edit.html",
+                controller: "systemRoleController"
+            })
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"

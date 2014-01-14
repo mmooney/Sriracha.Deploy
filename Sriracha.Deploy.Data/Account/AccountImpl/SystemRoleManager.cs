@@ -57,16 +57,11 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
         public List<SystemRole> GetSystemRoleListForUser(string userName)
         {
             var roleList = _systemRoleRepository.GetSystemRoleListForUser(userName);
-            foreach (var role in roleList)
-            {
-                //this.ValidateRole(role);
-            }
             var everyoneRole = this.EnsureEveryoneRoleExists();
             if (everyoneRole == null)
             {
                 everyoneRole = CreateEveryoneRole();
             }
-            //this.ValidateRole(everyoneRole);
             roleList.Add(everyoneRole);
 
             return roleList;
