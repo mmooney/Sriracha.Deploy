@@ -23,7 +23,7 @@
 			$scope.environment = new SrirachaResource.environment({ projectId: $routeParams.projectId });
 		}
 	});
-	$scope.credentials = SrirachaResource.credentials.get(
+	$scope.credentials = SrirachaResource.systemSettings.credentials.get(
 		{pageSize:1000},
 		function (data) {
 			//console.log(data);

@@ -41,7 +41,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployCredentials GetCredentials(string credentialsId)
 		{
-			var item = _documentSession.Load<DeployCredentials>(credentialsId);
+			var item = _documentSession.LoadEnsureNoCache<DeployCredentials>(credentialsId);
 			if(item == null) 
 			{
 				throw new RecordNotFoundException(typeof(DeployCredentials), "Id", credentialsId);
@@ -53,7 +53,7 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployCredentials CreateCredentials(string domain, string userName, string encrytpedPassword)
 		{
 			string id = FormatId(userName, domain);
-			var existingItem = _documentSession.Load<DeployCredentials>(id);
+			var existingItem = _documentSession.LoadNoCache<DeployCredentials>(id);
 			if(existingItem != null)
 			{
 				throw new ArgumentException("UserName already exists: " + userName);
@@ -76,7 +76,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployCredentials UpdateCredentials(string credentialsId, string domain, string userName, string encrytpedPassword)
 		{
-			var item = GetCredentials(credentialsId);
+			var item = _documentSession.LoadEnsure<DeployCredentials>(credentialsId);
 			item.Domain = domain;
 			item.UserName = userName;
 			item.EncryptedPassword = encrytpedPassword;
@@ -85,5 +85,12 @@ namespace Sriracha.Deploy.RavenDB
 			_documentSession.SaveChanges();
 			return item;
 		}
-	}
+
+
+        public DeployCredentials DeleteCredentials(string credentialsId)
+        {
+            var item = _documentSession.LoadEnsure<DeployCredentials>(credentialsId);
+            return _documentSession.DeleteSaveEvict(item);
+        }
+    }
 }

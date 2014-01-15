@@ -11,15 +11,18 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 	public class CredentialsTestService : Service
 	{
 		private readonly IImpersonator _impersonator;
+        private readonly IPermissionValidator _permissionValidator;
 
-		public CredentialsTestService(IImpersonator impersonator)
+		public CredentialsTestService(IImpersonator impersonator, IPermissionValidator permissionValidator)
 		{
 			_impersonator = DIHelper.VerifyParameter(impersonator);
+            _permissionValidator = DIHelper.VerifyParameter(permissionValidator);
 		}
 
 		public object Get(CredentialsTestRequest request)
 		{
-			if(request == null)
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditDeploymentCredentials);
+            if (request == null)
 			{
 				throw new ArgumentNullException("request is null");
 			}

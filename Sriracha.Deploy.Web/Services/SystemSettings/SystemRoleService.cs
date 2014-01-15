@@ -56,11 +56,11 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
             }
             if(string.IsNullOrEmpty(request.Id))
             {
-                return _systemRoleManager.CreateSystemRole(request.RoleName, request.EveryoneRoleIndicator, request.Permissions, request.Assignments);
+                return _systemRoleManager.CreateSystemRole(request.RoleName, request.Permissions, request.Assignments);
             }
             else 
             {
-                return _systemRoleManager.UpdateSystemRole(request.Id, request.RoleName, request.EveryoneRoleIndicator, request.Permissions, request.Assignments);
+                return _systemRoleManager.UpdateSystemRole(request.Id, request.RoleName, request.Permissions, request.Assignments);
             }
         }
 

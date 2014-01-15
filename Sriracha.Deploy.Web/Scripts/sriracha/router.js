@@ -200,8 +200,12 @@
 			    controller: "credentialsController"
 		    })
 		    .when(navigator.systemSettings.credentials.edit.url, {
-			    templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
-			    controller: "credentialsController"
+		        templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
+		        controller: "credentialsController"
+		    })
+		    .when(navigator.systemSettings.credentials.remove.url, {
+		        templateUrl: "templates/systemSettings/systemSettings-credentials-delete.html",
+		        controller: "credentialsController"
 		    })
             //Users
             .when(navigator.systemSettings.user.list.url, {

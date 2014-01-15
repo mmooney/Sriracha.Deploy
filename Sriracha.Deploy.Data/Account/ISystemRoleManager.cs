@@ -10,9 +10,9 @@ namespace Sriracha.Deploy.Data.Account
     public interface ISystemRoleManager
     {
         PagedSortedList<SystemRole> GetSystemRoleList(ListOptions listOptions);
-        SystemRole CreateSystemRole(string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments);
+        SystemRole CreateSystemRole(string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments);
         SystemRole GetSystemRole(string systemRoleId);
-        SystemRole UpdateSystemRole(string systemRoleId, string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments);
+        SystemRole UpdateSystemRole(string systemRoleId, string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments);
         SystemRole DeleteSystemRole(string systemRoleId);
 
         List<SystemRole> GetSystemRoleListForUser(string userName);

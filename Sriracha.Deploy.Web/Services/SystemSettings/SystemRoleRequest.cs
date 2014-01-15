@@ -12,7 +12,6 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
     public class SystemRoleRequest : RequestBase<SystemRole>
     {
         public string RoleName { get; set; }
-        public bool EveryoneRoleIndicator { get; set; }
         public SystemRoleAssignments Assignments { get; set; }
         public SystemRolePermissions Permissions { get; set; }
     }

@@ -55,6 +55,13 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 			return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
 		}
 
+        public DeployCredentialsMasked DeleteCredentials(string credentialsId)
+        {
+            var item = _credentialsRepository.DeleteCredentials(credentialsId);
+            return AutoMapper.Mapper.Map(item, new DeployCredentialsMasked());
+        }
+
+
 		private string EncryptPassword(string userName, string password)
 		{
 			return _encrypterator.Encrypt(userName, password);
@@ -79,5 +86,7 @@ namespace Sriracha.Deploy.Data.Credentials.CredentialsImpl
 		{
 			return _encrypterator.Decrypt(credentials.UserName, credentials.EncryptedPassword);
 		}
-	}
+
+
+    }
 }

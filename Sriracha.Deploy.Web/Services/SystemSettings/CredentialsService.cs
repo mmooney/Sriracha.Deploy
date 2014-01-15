@@ -21,13 +21,14 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 
 		public object Get(CredentialsRequest request)
 		{
-			if(request == null)
+            //_permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditDeploymentCredentials);
+                //yes, we can read the credentials (we need that to select them on the environment page), we just can't update them without permission
+            if (request == null)
 			{
 				throw new ArgumentNullException("request is null");
 			}
 			else if (!string.IsNullOrEmpty(request.Id))
 			{
-                _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.ManageDeploymentCredentials);
 				return _credentialsManager.GetMaskedCredentials(request.Id);
 			}
 			else 
@@ -38,7 +39,8 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 
 		public object Post(CredentialsRequest request)
 		{
-			if(request == null)
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditDeploymentCredentials);
+            if (request == null)
 			{
 				throw new ArgumentNullException("request is null");
 			}
@@ -59,5 +61,19 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 				return _credentialsManager.UpdateCredentials(request.Id, request.Domain, request.UserName, request.Password);
 			}
 		}
+
+        public object Delete(CredentialsRequest request)
+        {
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditDeploymentCredentials);
+            if(request == null)
+            {
+                throw new ArgumentNullException("request is null");
+            }
+            if(string.IsNullOrEmpty(request.Id))
+            {
+                throw new ArgumentNullException("request.id is null");
+            }
+            return _credentialsManager.DeleteCredentials(request.Id);
+        }
 	}
 }

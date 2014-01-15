@@ -60,28 +60,6 @@
 		    $scope.navigator.systemSettings.systemRole.list.go(1, $scope.systemRoleList.pageSize, sortField, sortAscending);
 		}
 
-		//$scope.deleteUser = function () {
-		//    if (!$scope.editForm) {
-		//        alert("Error: scope.editForm is null")
-		//        return;
-		//    }
-		//    var item = new SrirachaResource.users();
-		//    item.userName = $scope.editForm.userName;
-		//    item.emailAddress = $scope.editForm.emailAddress;
-		//    item.password = $scope.editForm.password;
-		//    var deleteParams = {
-		//        id: $routeParams.userId
-		//    };
-		//    var result = item.$delete(deleteParams,
-		//		function (data) {
-		//			$scope.navigator.systemSettings.users.list.go();
-		//		},
-		//		function (err) {
-		//			ErrorReporter.handleResourceError(err);
-		//		}
-		//	)
-		//}
-
 		$scope.saveSystemRole = function () {
 		    if (!$scope.editForm) {
 		        alert("Error: scope.editForm is null")

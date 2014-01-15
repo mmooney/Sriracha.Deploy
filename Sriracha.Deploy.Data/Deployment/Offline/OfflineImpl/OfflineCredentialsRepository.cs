@@ -27,5 +27,11 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
         {
             throw new NotImplementedException();
         }
+
+
+        public Dto.Credentials.DeployCredentials DeleteCredentials(string credentialsId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

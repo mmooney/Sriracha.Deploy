@@ -89,5 +89,24 @@
 				)
 			}
 		}
+
+		$scope.deleteCredentials = function () {
+	        if (!$scope.editForm) {
+	            alert("Error: scope.editForm is null")
+	            return;
+	        }
+	        var item = new SrirachaResource.systemSettings.credentials();
+	        var deleteParams = {
+	            id: $routeParams.credentialsId
+	        };
+	        var result = item.$delete(deleteParams,
+	    		function (data) {
+	    			$scope.navigator.systemSettings.credentials.list.go();
+	    		},
+	    		function (err) {
+	    			ErrorReporter.handleResourceError(err);
+	    		}
+	    	)
+	    }
 	}]);
 

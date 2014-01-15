@@ -14,5 +14,6 @@ namespace Sriracha.Deploy.Data.Repository
 
 		DeployCredentials CreateCredentials(string domain, string userName, string encrytpedPassword);
 		DeployCredentials UpdateCredentials(string credentialsId, string domain, string userName, string encrytpedPassword);
-	}
+        DeployCredentials DeleteCredentials(string credentialsId);
+    }
 }

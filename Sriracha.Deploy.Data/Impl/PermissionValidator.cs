@@ -73,8 +73,8 @@ namespace Sriracha.Deploy.Data.Impl
                 EditUsersAccess = userSystemRoleList.Any(i => i.Permissions.EditUsersAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
                                                 : userSystemRoleList.Any(i => i.Permissions.EditUsersAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
                                                 : EnumPermissionAccess.None,
-                ManageDeploymentCredentialsAccess = userSystemRoleList.Any(i => i.Permissions.ManageDeploymentCredentialsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
-                                                : userSystemRoleList.Any(i => i.Permissions.ManageDeploymentCredentialsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+                EditDeploymentCredentialsAccess = userSystemRoleList.Any(i => i.Permissions.EditDeploymentCredentialsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+                                                : userSystemRoleList.Any(i => i.Permissions.EditDeploymentCredentialsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
                                                 : EnumPermissionAccess.None,
             };
 
@@ -137,8 +137,8 @@ namespace Sriracha.Deploy.Data.Impl
                 case EnumSystemPermission.EditUsers:
                     access = permissionData.SystemPermissions.EditUsersAccess;
                     break;
-                case EnumSystemPermission.ManageDeploymentCredentials:
-                    access = permissionData.SystemPermissions.ManageDeploymentCredentialsAccess;
+                case EnumSystemPermission.EditDeploymentCredentials:
+                    access = permissionData.SystemPermissions.EditDeploymentCredentialsAccess;
                     break;
                 default:
                     throw new UnknownEnumValueException(permission);

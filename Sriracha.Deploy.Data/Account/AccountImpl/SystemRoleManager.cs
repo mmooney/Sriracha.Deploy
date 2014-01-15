@@ -23,30 +23,15 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             return _systemRoleRepository.GetSystemRoleList(listOptions);
         }
 
-        public SystemRole CreateSystemRole(string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments)
+        public SystemRole CreateSystemRole(string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
-            if(everyoneRoleIndicator)
-            {
-                var existingEveryoneRole = _systemRoleRepository.TryGetSystemEveryoneRole();
-                if (existingEveryoneRole != null)
-                {
-                    throw new ArgumentException("Everyone role already exists");
-                }
-            }
-            return _systemRoleRepository.CreateSystemRole(roleName, everyoneRoleIndicator, permissions, assignments);
+            return _systemRoleRepository.CreateSystemRole(roleName, false, permissions, assignments);
         }
 
-        public SystemRole UpdateSystemRole(string systemRoleId, string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments)
+        public SystemRole UpdateSystemRole(string systemRoleId, string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
-            if(everyoneRoleIndicator)
-            {
-                var existingEveryoneRole = _systemRoleRepository.TryGetSystemEveryoneRole();
-                if(existingEveryoneRole != null && existingEveryoneRole.Id != systemRoleId)
-                {
-                    throw new ArgumentException("Everyone role already exists");
-                }
-            }
-            return _systemRoleRepository.UpdateSystemRole(systemRoleId, roleName, everyoneRoleIndicator, permissions, assignments);
+            var role = _systemRoleRepository.GetSystemRole(systemRoleId);
+            return _systemRoleRepository.UpdateSystemRole(systemRoleId, roleName, role.EveryoneRoleIndicator, permissions, assignments);
         }
 
         public SystemRole GetSystemRole(string systemRoleId)
@@ -91,7 +76,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             };
             role.Permissions.EditSystemPermissionsAccess = EnumPermissionAccess.Grant;
             role.Permissions.EditUsersAccess = EnumPermissionAccess.Grant;
-            role.Permissions.ManageDeploymentCredentialsAccess = EnumPermissionAccess.Grant;
+            role.Permissions.EditDeploymentCredentialsAccess = EnumPermissionAccess.Grant;
             return role;
         }
 
