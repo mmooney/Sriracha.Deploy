@@ -64,5 +64,19 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
             }
         }
 
+        public object Delete(SystemRoleRequest request)
+        {
+            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditSystemPermissions);
+            if(request == null)
+            {
+                throw new ArgumentNullException("request is null");
+            }
+            if(string.IsNullOrEmpty(request.Id))
+            {
+                throw new ArgumentNullException("request.id is null");
+            }
+            return _systemRoleManager.DeleteSystemRole(request.Id);
+        }
+
     }
 }

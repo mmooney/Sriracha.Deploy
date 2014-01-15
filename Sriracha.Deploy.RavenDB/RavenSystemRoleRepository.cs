@@ -128,5 +128,11 @@ namespace Sriracha.Deploy.RavenDB
             return permissions;
         }
 
+
+        public SystemRole DeleteSystemRole(string systemRoleId)
+        {
+            var item = _documentSession.LoadEnsure<SystemRole>(systemRoleId);
+            return _documentSession.DeleteSaveEvict(item);
+        }
     }
 }

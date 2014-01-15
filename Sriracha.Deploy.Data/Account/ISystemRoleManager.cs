@@ -13,7 +13,9 @@ namespace Sriracha.Deploy.Data.Account
         SystemRole CreateSystemRole(string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments);
         SystemRole GetSystemRole(string systemRoleId);
         SystemRole UpdateSystemRole(string systemRoleId, string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments);
+        SystemRole DeleteSystemRole(string systemRoleId);
 
         List<SystemRole> GetSystemRoleListForUser(string userName);
+
     }
 }

@@ -95,5 +95,9 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             return role;
         }
 
+        public SystemRole DeleteSystemRole(string systemRoleId)
+        {
+            return _systemRoleRepository.DeleteSystemRole(systemRoleId);
+        }
     }
 }

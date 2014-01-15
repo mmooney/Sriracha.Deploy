@@ -317,6 +317,11 @@
 		            url: "/systemSettings/systemRole/edit/:systemRoleId",
 		            clientUrl: function (systemRoleId) { return root.getUrl(this.url, { systemRoleId: systemRoleId }) },
 		            go: function (systemRoleId) { root.goTo(this.url, { systemRoleId: systemRoleId }); }
+		        },
+		        remove: {
+		            url: "/systemSettings/systemRole/delete/:systemRoleId",
+		            clientUrl: function (systemRoleId) { return root.getUrl(this.url, { systemRoleId: systemRoleId }) },
+		            go: function (systemRoleId) { root.goTo(this.url, { systemRoleId: systemRoleId }); }
 		        }
 		    }
 		};

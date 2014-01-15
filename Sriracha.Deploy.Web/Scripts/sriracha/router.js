@@ -233,6 +233,10 @@
                 templateUrl: "templates/systemSettings/systemSettings-systemRole-edit.html",
                 controller: "systemRoleController"
             })
+            .when(navigator.systemSettings.systemRole.remove.url, {
+                templateUrl: "templates/systemSettings/systemSettings-systemRole-delete.html",
+                controller: "systemRoleController"
+            })
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"

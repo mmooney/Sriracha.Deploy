@@ -494,6 +494,7 @@
     <Content Include="Templates\project\project-view-template.html" />
     <Content Include="Templates\systemSettings\systemSettings-systemRole-create.html" />
     <Content Include="Templates\systemSettings\systemSettings-user-create.html" />
+    <Content Include="Templates\systemSettings\systemSettings-systemRole-delete.html" />
     <Content Include="Templates\systemSettings\systemSettings-user-delete.html" />
     <Content Include="Templates\systemSettings\systemSettings-systemRole-edit.html" />
     <Content Include="Templates\systemSettings\systemSettings-user-edit.html" />

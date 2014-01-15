@@ -162,5 +162,24 @@
 		        }
 		    }
 		}
+
+		$scope.deleteSystemRole = function () {
+		    if (!$scope.editForm) {
+		        alert("Error: scope.editForm is null")
+		        return;
+		    }
+		    var item = new SrirachaResource.systemSettings.systemRole();
+		    var deleteParams = {
+		        id: $routeParams.systemRoleId
+		    };
+		    var result = item.$delete(deleteParams,
+				function (data) {
+				    $scope.navigator.systemSettings.systemRole.list.go();
+				},
+				function (err) {
+				    ErrorReporter.handleResourceError(err);
+				}
+			)
+		}
 	}]);
 
