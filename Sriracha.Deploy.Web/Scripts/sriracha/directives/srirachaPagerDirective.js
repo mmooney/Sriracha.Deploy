@@ -1,9 +1,9 @@
-﻿angular.module("ngSriracha").directive("pager",
+﻿angular.module("ngSriracha").directive("srirachaPager",
 		[
 		function () {
 			return {
 				restrict: "E",
-				templateUrl: "templates/directives/pager.html",
+				templateUrl: "templates/directives/srirachaPager.html",
 				scope: {
 					pagedList: '=',
 					goToPage: '='

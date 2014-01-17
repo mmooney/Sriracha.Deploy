@@ -2,7 +2,7 @@
 
 <a ng-href="{{navigator.deployment.batchRequest.clientUrl()}}">Submit Batch Deploy Request</a>
 <div>
-	<pager paged-list="deployBatchRequestList" go-to-page="goToPage"></pager>
+    <sriracha-pager paged-list="deployBatchRequestList" go-to-page="goToPage"></sriracha-pager>
 </div>
 <div ng-hide="deployBatchRequestList">
 <i>Loading...</i>
@@ -40,4 +40,4 @@
 	</div>
 	<pre ng-show="false">{{deployment}}</pre>
 </div>
-<pager paged-list="deployBatchRequestList" go-to-page="goToPage"></pager>
+<sriracha-pager paged-list="deployBatchRequestList" go-to-page="goToPage"></sriracha-pager>

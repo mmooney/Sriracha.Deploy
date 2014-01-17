@@ -269,7 +269,7 @@
     <Content Include="Scripts\sriracha\deployment\deployOfflineStatusController.js" />
     <Content Include="Scripts\sriracha\directives\deployActionLinksDirective.js" />
     <Content Include="Scripts\sriracha\directives\deployQueueDirective.js" />
-    <Content Include="Scripts\sriracha\directives\pagerDirective.js" />
+    <Content Include="Scripts\sriracha\directives\srirachaPagerDirective.js" />
     <Content Include="Scripts\sriracha\directives\selectEnvironmentMachinesDirective.js" />
     <Content Include="Scripts\sriracha\directives\sortHeaderDirective.js" />
     <Content Include="Scripts\sriracha\models\permissionVerifier.js" />
@@ -482,7 +482,7 @@
     <Content Include="Templates\directives\breadcrumbs.html" />
     <Content Include="Templates\directives\deployActionLinks.html" />
     <Content Include="Templates\directives\deployQueue.html" />
-    <Content Include="Templates\directives\pager.html" />
+    <Content Include="Templates\directives\srirachaPager.html" />
     <Content Include="Templates\project\branch\branch-edit-template.html" />
     <Content Include="Templates\project\branch\branch-delete-template.html" />
     <Content Include="Templates\builds\build-delete-template.html" />
