@@ -1,4 +1,4 @@
-﻿var ngSriracha = angular.module("ngSriracha", ["ngResource", "SharedServices", "ngUpload"]);
+﻿var ngSriracha = angular.module("ngSriracha", ["ngResource", "SharedServices", "ngUpload", "ngRoute"]);
 
 ngSriracha.filter("displayDate", function () {
 	return function (input) {
