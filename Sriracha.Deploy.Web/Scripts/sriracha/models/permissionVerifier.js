@@ -93,6 +93,12 @@
 		    }
 		}
 
+		this.canEditUsers = function () {
+		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
+		        return (accountData.effectivePermissions.systemPermissions.editUsersAccess == "Grant");
+		    }
+		}
+
 		this.canEditDeploymentCredentials = function () {
 		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
 		        return (accountData.effectivePermissions.systemPermissions.editDeploymentCredentialsAccess == "Grant");

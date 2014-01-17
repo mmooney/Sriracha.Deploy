@@ -1,7 +1,7 @@
 ﻿<h2><a ng-href="{{navigator.user.list.clientUrl()}}">User List</a></h2>
 
 <div style="padding-top:10px">
-    <button class="btn btn-primary" ng-click="navigator.systemSettings.user.create.go()">Create User</button>
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.user.create.go()" ng-show="permissionVerifier.canEditUsers()">Create User</button>
 </div>
 
 <table class="table table-striped" ng-show="userList.items.length">
@@ -14,9 +14,12 @@
     </thead>
     <tbody>
         <tr ng-repeat="user in userList.items">
-            <td><a ng-href="{{navigator.systemSettings.user.edit.clientUrl(user.id)}}">{{user.userName}}</a></td>
+            <td>
+                <a ng-href="{{navigator.systemSettings.user.edit.clientUrl(user.id)}}" ng-show="permissionVerifier.canEditUsers()">{{user.userName}}</a>
+                <div ng-hide="permissionVerifier.canEditUsers()">{{user.userName}}</div>
+            </td>
             <td>{{user.emailAddress}}</td>
-            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.user.remove.clientUrl(user.id)}}">Delete</a></td>
+            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.user.remove.clientUrl(user.id)}}" ng-show="permissionVerifier.canEditUsers()" >Delete</a></td>
         </tr>
     </tbody>
 </table>
@@ -28,5 +31,5 @@
 </div>
 
 <div style="padding-top:10px">
-    <button class="btn btn-primary" ng-click="navigator.systemSettings.user.create.go()">Create User</button>
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.user.create.go()" ng-show="permissionVerifier.canEditUsers()">Create User</button>
 </div>

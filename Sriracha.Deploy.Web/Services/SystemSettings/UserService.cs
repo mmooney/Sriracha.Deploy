@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
         
         public object Get(UserRequest request)
         {
-            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditUsers);
+            //_permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditUsers);
             if (request == null)
             {
                 throw new ArgumentNullException("request is null");
