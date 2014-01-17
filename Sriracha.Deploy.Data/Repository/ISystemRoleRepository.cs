@@ -17,6 +17,5 @@ namespace Sriracha.Deploy.Data.Repository
 
         List<SystemRole> GetSystemRoleListForUser(string userName);
         SystemRole TryGetSystemEveryoneRole();
-
     }
 }

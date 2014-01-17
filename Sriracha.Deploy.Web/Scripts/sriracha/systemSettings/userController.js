@@ -22,6 +22,15 @@
 				    ErrorReporter.handleResourceError(err);
 				}
 			);
+		    $scope.systemRoleList = SrirachaResource.systemSettings.systemRole.query(
+                { userId: $routeParams.userId },
+                function (data) {
+                    console.log($scope.systemRoleList);
+                },
+                function (err) {
+                    ErrorReporter.handleResourceError(err);
+                }
+            )
 		}
 		else {
 		    $scope.userList = SrirachaResource.systemSettings.user.get(
@@ -106,6 +115,12 @@
 					    ErrorReporter.handleResourceError(err);
 					}
 				)
+		    }
+		}
+
+		$scope.canRemoveRole = function(role) {
+		    if (role) {
+		        return (!role.everyoneRoleIndicator && $scope.permissionVerifier.canEditSystemRole());
 		    }
 		}
 	}]);

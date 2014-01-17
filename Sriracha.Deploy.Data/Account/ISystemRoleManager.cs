@@ -16,6 +16,6 @@ namespace Sriracha.Deploy.Data.Account
         SystemRole DeleteSystemRole(string systemRoleId);
 
         List<SystemRole> GetSystemRoleListForUser(string userName);
-
+        List<SystemRole> GetSystemRoleListForUserId(string userId);
     }
 }

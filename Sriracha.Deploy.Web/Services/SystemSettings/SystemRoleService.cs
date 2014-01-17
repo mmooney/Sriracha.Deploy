@@ -31,6 +31,10 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
             {
                 return _systemRoleManager.GetSystemRole(request.Id);
             }
+            else if(!string.IsNullOrEmpty(request.UserId))
+            {
+                return _systemRoleManager.GetSystemRoleListForUserId(request.UserId);
+            }
             else 
             {
                 return _systemRoleManager.GetSystemRoleList(request.BuildListOptions());

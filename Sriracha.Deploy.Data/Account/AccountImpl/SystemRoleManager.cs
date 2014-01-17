@@ -11,10 +11,12 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
     public class SystemRoleManager : ISystemRoleManager
     {
         private readonly ISystemRoleRepository _systemRoleRepository;
+        private readonly IMembershipRepository _membershipRepository;
 
-        public SystemRoleManager(ISystemRoleRepository systemRoleRepository)
+        public SystemRoleManager(ISystemRoleRepository systemRoleRepository, IMembershipRepository membershipRepository)
         {
             _systemRoleRepository = DIHelper.VerifyParameter(systemRoleRepository);
+            _membershipRepository = DIHelper.VerifyParameter(membershipRepository);
         }
 
         public PagedSortedList<SystemRole> GetSystemRoleList(ListOptions listOptions)
@@ -42,6 +44,20 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
         public List<SystemRole> GetSystemRoleListForUser(string userName)
         {
             var roleList = _systemRoleRepository.GetSystemRoleListForUser(userName);
+            var everyoneRole = this.EnsureEveryoneRoleExists();
+            if (everyoneRole == null)
+            {
+                everyoneRole = CreateEveryoneRole();
+            }
+            roleList.Add(everyoneRole);
+
+            return roleList;
+        }
+
+        public List<SystemRole> GetSystemRoleListForUserId(string userId)
+        {
+            var user = _membershipRepository.GetUser(userId);
+            var roleList = _systemRoleRepository.GetSystemRoleListForUser(user.UserName);
             var everyoneRole = this.EnsureEveryoneRoleExists();
             if (everyoneRole == null)
             {

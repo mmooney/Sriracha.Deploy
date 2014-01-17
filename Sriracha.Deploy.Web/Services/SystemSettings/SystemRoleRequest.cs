@@ -14,5 +14,7 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
         public string RoleName { get; set; }
         public SystemRoleAssignments Assignments { get; set; }
         public SystemRolePermissions Permissions { get; set; }
+
+        public string UserId { get; set; }
     }
 }

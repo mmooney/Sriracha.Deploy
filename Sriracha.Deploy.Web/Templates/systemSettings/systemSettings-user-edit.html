@@ -1,34 +1,58 @@
 ﻿<h2>User Details</h2>
 <div class="alert alert-error" ng-hide="permissionVerifier.canEditUsers()">You do not have permission to edit users</div>
 <div ng-show="permissionVerifier.canEditUsers()">
-    <table class="table">
-        <tr>
-            <th>User Name:</th>
-            <td>{{editForm.userName}}</td>
-        </tr>
-        <tr>
-            <th>Email Address:</th>
-            <td>
-                <input type="text" ng-model="editForm.emailAddress" />
-            </td>
-        </tr>
-        <tr>
-            <th>Password:</th>
-            <td>
-                <input type="password" ng-required="true" ng-model="editForm.password">
-                <span class="alert alert-error" ng-show="editForm.passwordError">{{editForm.passwordError}}</span>
-            </td>
-        </tr>
-        <tr>
-            <th>Confirm Password:</th>
-            <td>
-                <input type="password" ng-required="true" ng-model="editForm.confirmPassword">
-                <span class="alert alert-error" ng-show="editForm.confirmPasswordError">{{editForm.confirmPasswordError}}</span>
-            </td>
-        </tr>
-    </table>
+    <tabset>
+        <tab heading="User Details">
+            <table class="table">
+                <tr>
+                    <th>User Name:</th>
+                    <td>{{editForm.userName}}</td>
+                </tr>
+                <tr>
+                    <th>Email Address:</th>
+                    <td>
+                        <input type="text" ng-model="editForm.emailAddress" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Password:</th>
+                    <td>
+                        <input type="password" ng-required="true" ng-model="editForm.password">
+                        <span class="alert alert-error" ng-show="editForm.passwordError">{{editForm.passwordError}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Confirm Password:</th>
+                    <td>
+                        <input type="password" ng-required="true" ng-model="editForm.confirmPassword">
+                        <span class="alert alert-error" ng-show="editForm.confirmPasswordError">{{editForm.confirmPasswordError}}</span>
+                    </td>
+                </tr>
+            </table>
+            <button class="btn" ng-click="navigator.systemSettings.user.list.go()" ng-hide="permissionVerifier.canEditUsers()">Back</button>
+            <button class="btn" ng-click="navigator.systemSettings.user.list.go()" ng-show="permissionVerifier.canEditUsers()">Cancel</button>
+            <button class="btn btn-primary" ng-click="saveUser()" ng-show="permissionVerifier.canEditUsers()">Save</button>
+        </tab>
+        <tab heading="User Roles">
+            <div ng-hide="systemRoleList.length" class="alert">
+                This user does not have any roles assigned
+            </div>
+            <div ng-show="systemRoleList.length">
+                <table class="table table-striped" >
+                    <tr>
+                        <th>Role Name</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="role in systemRoleList">
+                        <td>{{role.roleName}}</td>
+                    </tr>
+                </table>
+                <a ng-href="{{navigator.systemSettings.systemRole.list.clientUrl()}}">Manage System Roles/Assignments</a>
+            </div>
+            <div style="padding-top:20px">
+                <button class="btn" ng-click="navigator.systemSettings.user.list.go()">Back</button>
+            </div>
+        </tab>
+    </tabset>
 </div>
-<button class="btn" ng-click="navigator.systemSettings.user.list.go()" ng-hide="permissionVerifier.canEditUsers()">Back</button>
-<button class="btn" ng-click="navigator.systemSettings.user.list.go()" ng-show="permissionVerifier.canEditUsers()">Cancel</button>
-<button class="btn btn-primary" ng-click="saveUser()" ng-show="permissionVerifier.canEditUsers()">Save</button>
 
