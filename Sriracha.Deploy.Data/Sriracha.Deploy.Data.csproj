@@ -241,7 +241,7 @@
     <Compile Include="Utility\IFileWriter.cs" />
     <Compile Include="IModuleInspector.cs" />
     <Compile Include="Build\BuildImpl\BuildPublisher.cs" />
-    <Compile Include="Impl\DefaultSystemSettings.cs" />
+    <Compile Include="SystemSettings\SystemSettingsImpl\DefaultSystemSettings.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployComponentRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeploymentValidator.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployRequestManager.cs" />
@@ -255,7 +255,7 @@
     <Compile Include="Utility\UtilityImpl\Zipper.cs" />
     <Compile Include="Utility\IParameterParser.cs" />
     <Compile Include="Utility\IProcessRunner.cs" />
-    <Compile Include="ISystemSettings.cs" />
+    <Compile Include="SystemSettings\ISystemSettings.cs" />
     <Compile Include="Utility\IZipper.cs" />
     <Compile Include="JsonExtensions.cs" />
     <Compile Include="Repository\IDeployRepository.cs" />

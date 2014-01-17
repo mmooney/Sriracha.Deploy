@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {

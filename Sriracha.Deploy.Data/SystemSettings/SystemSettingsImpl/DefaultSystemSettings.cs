@@ -8,7 +8,7 @@ using MMDB.Shared;
 using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
 using Sriracha.Deploy.Data.Repository;
 
-namespace Sriracha.Deploy.Data.Impl
+namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 {
 	public class DefaultSystemSettings : ISystemSettings
 	{
@@ -162,5 +162,10 @@ namespace Sriracha.Deploy.Data.Impl
             get { return _repository.GetStringSetting("_offlineExeDirectory", Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "offlineExe")); }
             set { _repository.SetStringSetting("OfflineExeDirectory", value); }
         }
-	}
+
+        public bool IsInitialized()
+        {
+            return true;
+        }
+    }
 }

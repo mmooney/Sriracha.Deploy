@@ -6,6 +6,7 @@ using NLog;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Triggers;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 {

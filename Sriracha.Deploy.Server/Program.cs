@@ -13,6 +13,7 @@ using Sriracha.Deploy.AutofacModules;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.ServiceJobs;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Server
 {

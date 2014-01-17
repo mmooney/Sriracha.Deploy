@@ -7,20 +7,27 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Account;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Web.Controllers
 {
     public class HomeController : Controller
     {
 		private readonly IAccountSettingsManager _accountSettingsManager;
+        private readonly ISystemSettings _systemSettings;
 
-		public HomeController(IAccountSettingsManager accountSettingsManager)
+		public HomeController(IAccountSettingsManager accountSettingsManager, ISystemSettings systemSettings)
 		{
 			_accountSettingsManager = DIHelper.VerifyParameter(accountSettingsManager);
-		}
+            _systemSettings = DIHelper.VerifyParameter(systemSettings);
+        }
 
         public ActionResult Index()
         {
+            if(!_systemSettings.IsInitialized())
+            {
+                return RedirectToAction("Index","Setup");
+            }
 			if (this.User != null && this.User.Identity != null && this.User.Identity.IsAuthenticated)
 			{
 				if(this.User is WindowsPrincipal)

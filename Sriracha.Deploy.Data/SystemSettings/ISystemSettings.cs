@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto.BuildPurgeRules;
 
-namespace Sriracha.Deploy.Data
+namespace Sriracha.Deploy.Data.SystemSettings
 {
 	public interface ISystemSettings
 	{
@@ -37,5 +37,7 @@ namespace Sriracha.Deploy.Data
 		int DeploymentFolderCleanupMinutes { get; set; }
 
         string OfflineExeDirectory { get; set; }
-	}
+
+        bool IsInitialized();
+    }
 }

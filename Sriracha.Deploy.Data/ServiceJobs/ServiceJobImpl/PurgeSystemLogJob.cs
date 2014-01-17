@@ -6,6 +6,7 @@ using NLog;
 using Quartz;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 {

@@ -6,6 +6,7 @@ using MMDB.ConnectionSettings;
 using MMDB.RazorEmail;
 using NLog;
 using Sriracha.Deploy.Data.Notifications;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Data.ServiceJobs.ServiceJobImpl
 {

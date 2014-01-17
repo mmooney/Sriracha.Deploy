@@ -12,6 +12,7 @@ using MMDB.Shared;
 using System.Xml;
 using Ionic.Zip;
 using Newtonsoft.Json;
+using Sriracha.Deploy.Data.SystemSettings;
 
 namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
