@@ -5,11 +5,18 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Dto.Account
 {
+    public enum EnumSystemRoleType
+    {
+        Normal,
+        Everyone,
+        Administrator
+    }
+
     public class SystemRole
     {
         public string Id { get; set; }
         public string RoleName { get; set; }
-        public bool EveryoneRoleIndicator { get; set; }
+        public EnumSystemRoleType RoleType { get; set; }
 
         public SystemRolePermissions Permissions { get; set; }
         public SystemRoleAssignments Assignments { get; set; }

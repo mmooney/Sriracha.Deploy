@@ -36,7 +36,7 @@ namespace Sriracha.Deploy.RavenDB
             }
         }
 
-        public SystemRole CreateSystemRole(string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments)
+        public SystemRole CreateSystemRole(string roleName, EnumSystemRoleType roleType, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
             if(string.IsNullOrEmpty(roleName))
             {
@@ -57,7 +57,7 @@ namespace Sriracha.Deploy.RavenDB
                 RoleName = roleName,
                 Assignments = UpdateAssignments(assignments, systemRoleId),
                 Permissions = UpdatePermissions(permissions, systemRoleId),
-                EveryoneRoleIndicator = everyoneRoleIndicator,
+                RoleType = roleType,
                 CreatedByUserName = _userIdentity.UserName,
                 CreatedDateTimeUtc = DateTime.UtcNow,
                 UpdatedByUserName = _userIdentity.UserName,
@@ -72,7 +72,7 @@ namespace Sriracha.Deploy.RavenDB
             return _documentSession.LoadEnsureNoCache<SystemRole>(systemRoleId);
         }
 
-        public SystemRole UpdateSystemRole(string systemRoleId, string roleName, bool everyoneRoleIndicator, SystemRolePermissions permissions, SystemRoleAssignments assignments)
+        public SystemRole UpdateSystemRole(string systemRoleId, string roleName, EnumSystemRoleType roleType, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
             if(string.IsNullOrEmpty(roleName))
             {
@@ -80,7 +80,7 @@ namespace Sriracha.Deploy.RavenDB
             }
             var role = _documentSession.LoadEnsure<SystemRole>(systemRoleId);
             role.RoleName = roleName;
-            role.EveryoneRoleIndicator = everyoneRoleIndicator;
+            role.RoleType = roleType;
             role.UpdateDateTimeUtc = DateTime.UtcNow;
             role.UpdatedByUserName = _userIdentity.UserName;
             role.Permissions = UpdatePermissions(permissions, systemRoleId);
@@ -88,9 +88,9 @@ namespace Sriracha.Deploy.RavenDB
             return _documentSession.SaveEvict(role);
         }
 
-        public SystemRole TryGetSystemEveryoneRole()
+        public SystemRole TryGetSpecialSystemRole(EnumSystemRoleType roleType)
         {
-            return _documentSession.QueryNoCache<SystemRole>().FirstOrDefault(i=>i.EveryoneRoleIndicator);
+            return _documentSession.QueryNoCache<SystemRole>().FirstOrDefault(i=>i.RoleType == roleType);
         }
 
         public List<SystemRole> GetSystemRoleListForUser(string userName)

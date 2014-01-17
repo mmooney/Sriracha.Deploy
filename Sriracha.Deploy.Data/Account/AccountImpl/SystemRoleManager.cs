@@ -22,18 +22,19 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
         public PagedSortedList<SystemRole> GetSystemRoleList(ListOptions listOptions)
         {
             this.EnsureEveryoneRoleExists();
+            this.EnsureAdministratorRoleExists();
             return _systemRoleRepository.GetSystemRoleList(listOptions);
         }
 
         public SystemRole CreateSystemRole(string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
-            return _systemRoleRepository.CreateSystemRole(roleName, false, permissions, assignments);
+            return _systemRoleRepository.CreateSystemRole(roleName, EnumSystemRoleType.Normal, permissions, assignments);
         }
 
         public SystemRole UpdateSystemRole(string systemRoleId, string roleName, SystemRolePermissions permissions, SystemRoleAssignments assignments)
         {
             var role = _systemRoleRepository.GetSystemRole(systemRoleId);
-            return _systemRoleRepository.UpdateSystemRole(systemRoleId, roleName, role.EveryoneRoleIndicator, permissions, assignments);
+            return _systemRoleRepository.UpdateSystemRole(systemRoleId, roleName, role.RoleType, permissions, assignments);
         }
 
         public SystemRole GetSystemRole(string systemRoleId)
@@ -70,16 +71,44 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
 
         private SystemRole EnsureEveryoneRoleExists()
         {
-            var everyoneRole = _systemRoleRepository.TryGetSystemEveryoneRole();
-            if(everyoneRole == null)
+            var everyoneRole = _systemRoleRepository.TryGetSpecialSystemRole(EnumSystemRoleType.Everyone);
+            if (everyoneRole == null)
             {
                 everyoneRole = CreateEveryoneRole();
-                return _systemRoleRepository.CreateSystemRole(everyoneRole.RoleName, everyoneRole.EveryoneRoleIndicator, everyoneRole.Permissions, everyoneRole.Assignments);
+                return _systemRoleRepository.CreateSystemRole(everyoneRole.RoleName, EnumSystemRoleType.Everyone, everyoneRole.Permissions, everyoneRole.Assignments);
             }
-            else 
+            else
             {
                 return everyoneRole;
             }
+        }
+
+        private SystemRole EnsureAdministratorRoleExists()
+        {
+            var adminRole = _systemRoleRepository.TryGetSpecialSystemRole(EnumSystemRoleType.Administrator);
+            if (adminRole == null)
+            {
+                adminRole = CreateAdministratorRole();
+                return _systemRoleRepository.CreateSystemRole(adminRole.RoleName, EnumSystemRoleType.Administrator, adminRole.Permissions, adminRole.Assignments);
+            }
+            else
+            {
+                return adminRole;
+            }
+        }
+
+        private SystemRole CreateAdministratorRole()
+        {
+            var role = new SystemRole
+            {
+                Id = "AdministratorSystemRole",
+                RoleName = "Administrators",
+                RoleType = EnumSystemRoleType.Administrator
+            };
+            role.Permissions.EditSystemPermissionsAccess = EnumPermissionAccess.Grant;
+            role.Permissions.EditUsersAccess = EnumPermissionAccess.Grant;
+            role.Permissions.EditDeploymentCredentialsAccess = EnumPermissionAccess.Grant;
+            return role;
         }
 
         private SystemRole CreateEveryoneRole()
@@ -88,7 +117,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             {
                 Id = "EveryoneSystemRole",
                 RoleName = "Everyone",
-                EveryoneRoleIndicator = true
+                RoleType = EnumSystemRoleType.Everyone
             };
             role.Permissions.EditSystemPermissionsAccess = EnumPermissionAccess.Grant;
             role.Permissions.EditUsersAccess = EnumPermissionAccess.Grant;

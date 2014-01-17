@@ -37,13 +37,8 @@
 		}
 
 		$scope.canEditRoleName = function () {
-		    if ($scope.systemRole) {
-		        if ($scope.systemRole.everyoneRoleIndicator) {
-		            return false;
-		        }
-		        else {
-		            return $scope.permissionVerifier.canEditSystemRole();
-		        }
+		    if ($scope.systemRole && $scope.systemRole.roleType == "Normal") {
+		        return $scope.permissionVerifier.canEditSystemRole();
 		    }
 		}
 
@@ -56,13 +51,8 @@
 
 		$scope.canDeleteRole = function (role) {
 		    role = role || $scope.systemRole;
-		    if (role) {
-		        if (role.everyoneRoleIndicator) {
-		            return false;
-		        }
-		        else {
-		            return $scope.permissionVerifier.canEditSystemRole();
-		        }
+		    if (role && role.roleType == "Normal") {
+		        return $scope.permissionVerifier.canEditSystemRole();
 		    }
 		}
 

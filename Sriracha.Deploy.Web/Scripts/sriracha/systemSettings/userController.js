@@ -119,8 +119,8 @@
 		}
 
 		$scope.canRemoveRole = function(role) {
-		    if (role) {
-		        return (!role.everyoneRoleIndicator && $scope.permissionVerifier.canEditSystemRole());
+		    if (role && role.roleType == "Normal") {
+                return $scope.permissionVerifier.canEditSystemRole();
 		    }
 		}
 	}]);

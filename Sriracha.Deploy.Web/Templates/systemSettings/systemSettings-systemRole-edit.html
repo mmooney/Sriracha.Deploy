@@ -40,24 +40,26 @@
                 <h3>User Assignment</h3>
                 <h4>Users</h4>
                 <div class="span3" style="width:300px;">
-                    <div ng-show="systemRole.everyoneRoleIndicator">
+                    <div ng-show="systemRole.roleType=='Everyone'">
                         This is a built in role to represent the everyone in the system.  These default permissions will get assigned to all users,
                         and those default permissions can be modified by assigning users to additional roles.
                     </div>
-                    <table class="table table-striped" ng-hide="systemRole.everyoneRoleIndicator">
-                        <tr>
-                            <th>User Name</th>
-                            <th></th>
-                        </tr>
-                        <tr ng-repeat="userName in editForm.assignments.userNameList">
-                            <td>{{userName}}</td>
-                            <td ng-show="canEditRole()"><button class="btn btn-danger" ng-click="deleteUserAssignment(userName)"><i class="icon-trash"></i></button></td>
-                        </tr>
-                    </table>
-                    <div ng-hide="editForm.assignments.userNameList.length || systemRole.everyoneRoleIndicator">
-                        No users assigned
+                    <div ng-show="systemRole.roleType!='Everyone'">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>User Name</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="userName in editForm.assignments.userNameList">
+                                <td>{{userName}}</td>
+                                <td ng-show="canEditRole()"><button class="btn btn-danger" ng-click="deleteUserAssignment(userName)"><i class="icon-trash"></i></button></td>
+                            </tr>
+                        </table>
+                        <div ng-hide="editForm.assignments.userNameList.length">
+                            No users assigned
+                        </div>
+                        <p><button class="btn" ng-click="editAssignedUsers()" ng-hide="!canEditRole()">Edit Users</button></p>
                     </div>
-                    <p><button class="btn" ng-click="editAssignedUsers()" ng-hide="systemRole.everyoneRoleIndicator || !canEditRole()">Edit Users</button></p>
                 </div>
             </div>
         </td>
