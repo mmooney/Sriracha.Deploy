@@ -47,9 +47,22 @@
 		    }
 		}
 
-		$scope.canEditRole = function () {
-		    if ($scope.systemRole) {
+		$scope.canEditRole = function (role) {
+		    role = role || $scope.systemRole;
+		    if (role) {
 		        return $scope.permissionVerifier.canEditSystemRole();
+		    }
+		}
+
+		$scope.canDeleteRole = function (role) {
+		    role = role || $scope.systemRole;
+		    if (role) {
+		        if (role.everyoneRoleIndicator) {
+		            return false;
+		        }
+		        else {
+		            return $scope.permissionVerifier.canEditSystemRole();
+		        }
 		    }
 		}
 

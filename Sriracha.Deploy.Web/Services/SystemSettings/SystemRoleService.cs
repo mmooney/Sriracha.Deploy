@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Web.Services.SystemSettings
 
         public object Get(SystemRoleRequest request)
         {
-            _permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditSystemPermissions);
+            //_permissionValidator.VerifyCurrentUserSystemPermission(EnumSystemPermission.EditSystemPermissions);
             if(request == null)
             {
                 throw new ArgumentNullException("request is null");

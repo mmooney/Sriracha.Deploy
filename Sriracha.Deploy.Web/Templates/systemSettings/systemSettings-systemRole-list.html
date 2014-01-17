@@ -1,7 +1,7 @@
 ﻿<h2><a ng-href="{{navigator.systemRole.list.clientUrl()}}">System Role List</a></h2>
 
 <div style="padding-top:10px">
-    <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()">Create Role</button>
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()" ng-show="permissionVerifier.canEditSystemRole()">Create Role</button>
 </div>
 
 <table class="table table-striped" ng-show="systemRoleList.items.length">
@@ -14,7 +14,7 @@
     <tbody>
         <tr ng-repeat="role in systemRoleList.items">
             <td><a ng-href="{{navigator.systemSettings.systemRole.edit.clientUrl(role.id)}}">{{role.roleName}}</a></td>
-            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.systemRole.remove.clientUrl(role.id)}}">Delete</a></td>
+            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.systemRole.remove.clientUrl(role.id)}}" ng-show="canDeleteRole(role)">Delete</a></td>
         </tr>
     </tbody>
 </table>
@@ -27,6 +27,6 @@
     </div>
 
     <div style="padding-top:10px">
-        <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()">Create Role</button>
+        <button class="btn btn-primary" ng-click="navigator.systemSettings.systemRole.create.go()" ng-show="permissionVerifier.canEditSystemRole()">Create Role</button>
     </div>
 </div>
