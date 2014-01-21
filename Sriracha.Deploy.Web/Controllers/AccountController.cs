@@ -5,18 +5,34 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Sriracha.Deploy.Web.Models.Account;
+using Sriracha.Deploy.Data.SystemSettings;
+using Sriracha.Deploy.Data;
 
 namespace Sriracha.Deploy.Web.Controllers
 {
 	[Authorize]
     public class AccountController : Controller
     {
+        private readonly ISystemSettings _systemSetings;
+
+        public AccountController(ISystemSettings systemSettings)
+        {
+            _systemSetings = DIHelper.VerifyParameter(systemSettings);
+        }
+
 		//
 		// GET: /Account/LogOn
 		[AllowAnonymous]
 		public ActionResult LogOn()
 		{
-			return View();
+            if(!_systemSetings.IsInitialized())
+            {
+                return RedirectToAction("Index", "Setup");
+            }
+            else 
+            {   
+			    return View();
+            }
 		}
 
 		//
@@ -26,6 +42,10 @@ namespace Sriracha.Deploy.Web.Controllers
         [HttpPost]
         public ActionResult LogOnJson(string userName, string password)
         {
+            if (!_systemSetings.IsInitialized())
+            {
+                return RedirectToAction("Index", "Setup");
+            }
             var response = new Sriracha.Deploy.Data.Account.AuthResponse();
             try 
             {
@@ -63,7 +83,11 @@ namespace Sriracha.Deploy.Web.Controllers
 		[HttpPost]
 		public ActionResult LogOn(LogOnModel model, string returnUrl)
 		{
-			if (ModelState.IsValid)
+            if (!_systemSetings.IsInitialized())
+            {
+                return RedirectToAction("Index", "Setup");
+            }
+            if (ModelState.IsValid)
 			{
 				if (Membership.ValidateUser(model.UserName, model.Password))
 				{

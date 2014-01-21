@@ -119,5 +119,12 @@ namespace Sriracha.Deploy.RavenDB
             _documentSession.SaveChanges();
             return value;
         }
+
+
+        public bool AnyActiveSettings()
+        {
+            var x = this.GetActiveSettingsData();
+            return (x != null);
+        }
     }
 }

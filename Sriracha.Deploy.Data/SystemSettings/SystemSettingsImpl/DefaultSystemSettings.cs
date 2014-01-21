@@ -165,7 +165,7 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 
         public bool IsInitialized()
         {
-            return true;
+            return _repository.AnyActiveSettings();
         }
     }
 }

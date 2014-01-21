@@ -16,5 +16,7 @@ namespace Sriracha.Deploy.Data.Repository
 
         List<BaseBuildPurgeRetentionRule> GetBuildPurgeRetentionRuleList(List<BaseBuildPurgeRetentionRule> defaultValue);
         List<BaseBuildPurgeRetentionRule> SetBuildPurgeRetentionRuleList(List<BaseBuildPurgeRetentionRule> value);
+
+        bool AnyActiveSettings();
     }
 }
