@@ -1,4 +1,5 @@
-﻿using Sriracha.Deploy.Data.Dto;
+﻿using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Repository;
 using System;
@@ -128,6 +129,20 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
         public SystemRole DeleteSystemRole(string systemRoleId)
         {
             return _systemRoleRepository.DeleteSystemRole(systemRoleId);
+        }
+
+
+        public SystemRole GetBuiltInRole(EnumSystemRoleType roleType)
+        {
+            switch(roleType)
+            {
+                case EnumSystemRoleType.Administrator:
+                    return this.EnsureAdministratorRoleExists();
+                case EnumSystemRoleType.Everyone:
+                    return this.EnsureEveryoneRoleExists();
+                default:
+                    throw new UnknownEnumValueException(roleType);
+            }
         }
     }
 }

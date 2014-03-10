@@ -27,6 +27,15 @@ namespace Sriracha.Deploy.Data.Impl
             return _membershipRepository.GetUser(userId);
         }
 
+        public SrirachaUser GetUserByUserName(string userName)
+        {
+            return _membershipRepository.GetUserByUserName(userName);
+        }
+
+        public SrirachaUser TryGetUserByUserName(string userName)
+        {
+            return _membershipRepository.TryGetUserByUserName(userName);
+        }
 
         public SrirachaUser CreateUser(string userName, string emailAddress, string password)
         {
