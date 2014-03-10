@@ -471,7 +471,7 @@ namespace Sriracha.Deploy.Web.Tests
 					new SrirachaUser { UserName="test5", EmailAddress = "test5@example.com" },
 				};
 				var pagedList = new PagedSortedList<SrirachaUser>(new PagedList.StaticPagedList<SrirachaUser>(userList,  1, int.MaxValue, userList.Count()), string.Empty, true);
-                testData.Repository.Setup(i => i.GetUserList_old(It.Is<ListOptions>(j => j.PageNumber == 1 && j.PageSize == 10), null)).Returns(pagedList);
+                testData.Repository.Setup(i => i.GetUserList(It.Is<ListOptions>(j => j.PageNumber == 1 && j.PageSize == 10), null)).Returns(pagedList);
 
 				var provider = new SrirachaMembershipProvider(testData.Repository.Object);
 				int totalRecords;

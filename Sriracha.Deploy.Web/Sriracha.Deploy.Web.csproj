@@ -238,6 +238,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AutofacIocAdapter.cs" />
+    <Compile Include="Models\SystemSetupData.cs" />
     <Compile Include="Security\SrirachaMembershipProvider.cs" />
     <Compile Include="Models\Account\ChangePasswordModel.cs" />
     <Compile Include="Models\Account\LogOnModel.cs" />
@@ -264,6 +265,7 @@
     <Content Include="Scripts\angular\angular.js" />
     <Content Include="Scripts\angular\angular.min.js" />
     <Content Include="Scripts\angular\errors.json" />
+    <Content Include="Scripts\bootstrap\aspnetmvc_bootstrap.js" />
     <Content Include="Scripts\sriracha\account\accountController.js" />
     <Content Include="Scripts\sriracha\build\buildListController.js" />
     <Content Include="Scripts\sriracha\dataAccess\deployQueueDataAccess.js" />
@@ -539,6 +541,10 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\PreviewEmail\ViewEmail.cshtml" />
     <Content Include="Views\Setup\Index.cshtml" />
+    <Content Include="Views\Shared\_SetupLayout.cshtml" />
+    <Content Include="Views\Home\Setup.cshtml" />
+    <Content Include="Views\Setup\Details.cshtml" />
+    <Content Include="Views\Setup\Start.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

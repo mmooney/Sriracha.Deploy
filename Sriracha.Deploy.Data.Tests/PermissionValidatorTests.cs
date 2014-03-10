@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Account;
 using Sriracha.Deploy.Data.Dto;
+using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Project.Roles;
 using Sriracha.Deploy.Data.Impl;
@@ -83,7 +84,10 @@ namespace Sriracha.Deploy.Data.Tests
 								RoleName = fixture.Create<string>("RoleName")
 							}
 						).ToList();
-					returnValue.ProjectRoleManager.Setup(i=>i.GetProjectRoleListForUser(returnValue.UserName)).Returns(returnValue.DeployProjectRoleList);
+                    returnValue.ProjectRoleManager.Setup(i => i.GetProjectRoleListForUser(It.IsAny<string>())).Returns(new List<DeployProjectRole>());
+                    returnValue.ProjectRoleManager.Setup(i => i.GetProjectRoleListForUser(returnValue.UserName)).Returns(returnValue.DeployProjectRoleList);
+
+                    returnValue.SystemRoleManager.Setup(i=>i.GetSystemRoleListForUser(It.IsAny<string>())).Returns(new List<SystemRole>());
 
 					returnValue.UserIdentity.Setup(i=>i.UserName).Returns(returnValue.UserName);
 

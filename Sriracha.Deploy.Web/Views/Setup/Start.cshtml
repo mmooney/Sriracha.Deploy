@@ -1,0 +1,52 @@
+﻿@model Sriracha.Deploy.Web.Models.SystemSetupData
+@{
+    ViewBag.Title = "Start";
+    Layout = "~/Views/Shared/_SetupLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    <h2>Setup Sriracha - Step 1 of 1 and then you're done</h2>
+            @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
+	<div>
+		<fieldset>
+			<legend>Administrator Account</legend>
+
+			<div class="editor-label">
+				Administrator User Name:
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.AdministratorUserName)
+				@Html.ValidationMessageFor(m => m.AdministratorUserName)
+			</div>
+
+			<div class="editor-label">
+				Administrator Email:
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.AdministratorEmailAddress)
+				@Html.ValidationMessageFor(m => m.AdministratorEmailAddress)
+			</div>
+
+			<div class="editor-label">
+				Administrator Password:
+			</div>
+			<div class="editor-field">
+				@Html.PasswordFor(m => m.AdministratorPassword)
+				@Html.ValidationMessageFor(m => m.AdministratorPassword)
+			</div>
+
+			<div class="editor-label">
+				Confirm Password:
+			</div>
+			<div class="editor-field">
+				@Html.PasswordFor(m => m.AdministratorConfirmPassword)
+				@Html.ValidationMessageFor(m => m.AdministratorConfirmPassword)
+			</div>
+
+			<p>
+				<input type="submit" value="Complete Setup" />
+			</p>
+		</fieldset>
+    </div>
+}

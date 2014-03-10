@@ -7,10 +7,11 @@ using PagedList;
 using Raven.Client;
 using Raven.Client.Linq;
 using Sriracha.Deploy.Data.Dto;
+using System.ComponentModel;
 
 namespace Sriracha.Deploy.RavenDB
 {
-	public static class RavenQueryExtensions
+    public static class RavenQueryExtensions
 	{
         public static PagedSortedList<T> PageAndSort<T, SortKey>(this IRavenQueryable<T> query, ListOptions listOptions, Expression<Func<T, SortKey>> sortSelector)
         {

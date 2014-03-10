@@ -11,11 +11,13 @@ using Sriracha.Deploy.Data.Exceptions;
 using Sriracha.Deploy.Data.Repository;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace Sriracha.Deploy.RavenDB
 {
+    [Category("Database")]
     public class RavenDeployStateRepository : IDeployStateRepository
     {
         private readonly IDocumentSession _documentSession;

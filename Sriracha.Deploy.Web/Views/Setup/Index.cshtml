@@ -1,5 +1,13 @@
 ﻿@{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_SetupLayout.cshtml";
 }
-
-<h2>Index</h2>
+<div class="">
+    <h1>Welcome to Sriracha <img src="/Content/images/pepper.jpg" style="height:75px" /></h1>
+</div>
+<p>
+    This wizard will take you through the initialization process for Sriracha.
+</p>
+<p>
+    <a class="btn btn-primary" href="@Url.Action("Start")">Start Now</a>
+</p>
