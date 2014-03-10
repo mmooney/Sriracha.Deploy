@@ -68,8 +68,6 @@ namespace Sriracha.Deploy.RavenDB
 
         }
 
-
-
         public int GetIntSetting(string key, int defaultValue)
         {
             var stringValue = this.GetStringSetting(key, defaultValue.ToString());
@@ -86,6 +84,41 @@ namespace Sriracha.Deploy.RavenDB
         }
 
         public void SetIntSetting(string key, int value)
+        {
+            this.SetStringSetting(key, value.ToString());
+        }
+
+        public bool GetBoolSetting(string key, bool defaultValue)
+        {
+            var stringValue = this.GetStringSetting(key, defaultValue.ToString());
+            bool returnValue;
+            if (stringValue == null)
+            {
+                return defaultValue;
+            }
+            if (!bool.TryParse(stringValue, out returnValue))
+            {
+                throw new FormatException(string.Format("Unable to parse {0} value \"{1}\" into an integer", key, stringValue));
+            }
+            return returnValue;
+        }
+
+        public void SetBoolSetting(string key, bool value)
+        {
+            this.SetStringSetting(key, value.ToString());
+        }
+
+        public T GetEnumSetting<T>(string key, T defaultValue) where T : struct, IConvertible
+        {
+            var stringValue = this.GetStringSetting(key, defaultValue.ToString());
+            if (stringValue == null)
+            {
+                return defaultValue;
+            }
+            return EnumHelper.Parse<T>(stringValue);
+        }
+
+        public void SetEnumSetting<T>(string key, T value) where T : struct, IConvertible
         {
             this.SetStringSetting(key, value.ToString());
         }

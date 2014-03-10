@@ -1,0 +1,12 @@
+﻿@model Sriracha.Deploy.Web.Models.SystemConfigureData
+
+@{
+    ViewBag.Title = "Setup Sriracha - Complete";
+    Layout = "~/Views/Shared/_SetupLayout.cshtml";
+}
+
+<h2>Setup Sriracha - Complete</h2>
+<p>Your setup is now complete, click the button below to login and get started</p>
+<div>
+    @Html.ActionLink("Get Started", "Index", "Home", null, new { @class="btn"} )
+</div>

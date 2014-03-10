@@ -38,6 +38,10 @@ namespace Sriracha.Deploy.Data.SystemSettings
 
         string OfflineExeDirectory { get; set; }
 
+        bool AllowSelfRegistration { get; set; }
+        EnumPermissionAccess DefaultAccess { get; set; }
+
         bool IsInitialized();
+
     }
 }

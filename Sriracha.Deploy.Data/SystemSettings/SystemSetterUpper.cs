@@ -1,4 +1,5 @@
 ﻿using Sriracha.Deploy.Data.Account;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,16 @@ namespace Sriracha.Deploy.Data.SystemSettings
     {
         private readonly IUserManager _userManager;
         private readonly ISystemRoleManager _systemRoleManager;
+        private readonly ISystemSettings _systemSettings;
 
-        public SystemSetterUpper(IUserManager userManager, ISystemRoleManager systemRoleManager)
+        public SystemSetterUpper(IUserManager userManager, ISystemRoleManager systemRoleManager, ISystemSettings systemSettings)
         {
             _userManager = DIHelper.VerifyParameter(userManager);
             _systemRoleManager = DIHelper.VerifyParameter(systemRoleManager);
+            _systemSettings = DIHelper.VerifyParameter(systemSettings);
         }
 
-        public void SetupSystem(string adminstratorUserName, string adminstratorPassword, string adminstratorEmailAddress)
+        public void SetupAdministratorUser(string adminstratorUserName, string adminstratorPassword, string adminstratorEmailAddress)
         {
             if(string.IsNullOrEmpty(adminstratorUserName)) 
             {
@@ -52,6 +55,33 @@ namespace Sriracha.Deploy.Data.SystemSettings
                 adminRole.Assignments.UserNameList.Add(adminstratorUserName);
                 _systemRoleManager.UpdateSystemRole(adminRole.Id, adminRole.RoleName, adminRole.Permissions, adminRole.Assignments);
             }
+        }
+
+
+        public void SetupAdministratorUser()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public SrirachaUser GetAdministratorUser()
+        {
+            var role = _systemRoleManager.GetBuiltInRole(EnumSystemRoleType.Administrator);
+            if(role != null && role.Assignments != null && role.Assignments.UserNameList != null && role.Assignments.UserNameList.Count != 0)
+            {
+                return _userManager.GetUserByUserName(role.Assignments.UserNameList.First());
+            }
+            else 
+            {
+                return null;
+            }
+        }
+
+
+        public void SetupAdministratorUser(bool allowSelfRegistation, EnumPermissionAccess defaultAccess)
+        {
+            _systemSettings.AllowSelfRegistration = allowSelfRegistation;
+            _systemSettings.DefaultAccess = defaultAccess;
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿@model Sriracha.Deploy.Web.Models.SystemSetupData
 @{
-    ViewBag.Title = "Start";
+    ViewBag.Title = "Setup Sriracha - Start";
     Layout = "~/Views/Shared/_SetupLayout.cshtml";
 }
 
 @using (Html.BeginForm())
 {
-    <h2>Setup Sriracha - Step 1 of 1 and then you're done</h2>
-            @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
+    <h2>Setup Sriracha - Step 1 of 2 - Create Administrative User</h2>
+    @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
 	<div>
 		<fieldset>
 			<legend>Administrator Account</legend>
@@ -45,7 +45,7 @@
 			</div>
 
 			<p>
-				<input type="submit" value="Complete Setup" />
+				<input type="submit" value="Continue Setup" />
 			</p>
 		</fieldset>
     </div>

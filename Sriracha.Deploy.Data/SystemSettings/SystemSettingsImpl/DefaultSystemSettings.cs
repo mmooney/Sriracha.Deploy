@@ -163,9 +163,23 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
             set { _repository.SetStringSetting("OfflineExeDirectory", value); }
         }
 
+        public bool AllowSelfRegistration
+        {
+            get { return _repository.GetBoolSetting("AllowSelfRegistration", true); }
+            set { _repository.SetBoolSetting("AllowSelfRegistration", value); }
+        }
+
+        public EnumPermissionAccess DefaultAccess
+        {
+            get { return _repository.GetEnumSetting<EnumPermissionAccess>("EnumPermissionAccess", EnumPermissionAccess.Grant); }
+            set { _repository.SetEnumSetting("EnumPermissionAccess", value); }
+        }
+
         public bool IsInitialized()
         {
             return _repository.AnyActiveSettings();
         }
+
+
     }
 }

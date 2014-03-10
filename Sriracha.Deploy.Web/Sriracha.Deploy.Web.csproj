@@ -238,6 +238,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AutofacIocAdapter.cs" />
+    <Compile Include="Models\SystemConfigureData.cs" />
     <Compile Include="Models\SystemSetupData.cs" />
     <Compile Include="Security\SrirachaMembershipProvider.cs" />
     <Compile Include="Models\Account\ChangePasswordModel.cs" />
@@ -545,6 +546,8 @@
     <Content Include="Views\Home\Setup.cshtml" />
     <Content Include="Views\Setup\Details.cshtml" />
     <Content Include="Views\Setup\Start.cshtml" />
+    <Content Include="Views\Setup\Configure.cshtml" />
+    <Content Include="Views\Setup\Complete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

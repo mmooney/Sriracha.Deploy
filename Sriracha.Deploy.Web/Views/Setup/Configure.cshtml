@@ -1,0 +1,38 @@
+﻿@model Sriracha.Deploy.Web.Models.SystemConfigureData
+
+@{
+    ViewBag.Title = "Setup Sriracha - Configure";
+    Layout = "~/Views/Shared/_SetupLayout.cshtml";
+}
+
+@using(Html.BeginForm())
+{ 
+    <h2>Setup Sriracha - Step 2 of 2 - System Configuration</h2>
+    @Html.ValidationSummary(true, "System setup unsuccessful. Please correct the errors and try again.")
+    <div>
+        <legend>Configure System</legend>
+        <div class="editor-field">
+            Allow new users to register themselves: @Html.CheckBoxFor(m => m.AllowSelfRegistration)
+            @Html.ValidationMessageFor(m => m.AllowSelfRegistration)
+            <div><em>Otherwise all users will have to be created by an adminstrator</em></div>
+        </div>
+        <br/>
+        <div class="editor-label">
+            By default, new users will have the following permissions:
+        </div>
+        <div class="editor-field">
+            <label>
+                @Html.RadioButtonFor(i => i.DefaultAccess, Sriracha.Deploy.Data.EnumPermissionAccess.Grant)
+                Grant everyone access to everything default.
+            </label>
+            <label>
+                @Html.RadioButtonFor(i => i.DefaultAccess, Sriracha.Deploy.Data.EnumPermissionAccess.None)
+                Grant everyone access to nothing default.
+            </label>
+            @Html.ValidationMessageFor(m => m.DefaultAccess)
+        </div>
+        <p>
+            <input type="submit" value="Complete Setup" />
+        </p>
+    </div>
+}

@@ -18,5 +18,11 @@ namespace Sriracha.Deploy.Data.Repository
         List<BaseBuildPurgeRetentionRule> SetBuildPurgeRetentionRuleList(List<BaseBuildPurgeRetentionRule> value);
 
         bool AnyActiveSettings();
+
+        bool GetBoolSetting(string key, bool defaultValue);
+        void SetBoolSetting(string key, bool value);
+
+        T GetEnumSetting<T>(string key, T defaultValue) where T:struct, IConvertible;
+        void SetEnumSetting<T>(string key, T value) where T : struct, IConvertible;
     }
 }
