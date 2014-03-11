@@ -334,6 +334,11 @@
 		            url: "/systemSettings/deploymentTool",
 		            clientUrl: function (pageNumber, pageSize, sortField, sortAscending) { return root.getUrl(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) },
 		            go: function (pageNumber, pageSize, sortField, sortAscending) { root.goTo(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) }
+		        },
+		        create: {
+		            url: "/systemSettings/deploymentTool/create",
+		            clientUrl: function () { return root.getUrl(this.url) },
+		            go: function () { root.goTo(this.url); }
 		        }
 		    }
 		};

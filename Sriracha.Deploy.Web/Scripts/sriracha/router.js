@@ -248,6 +248,10 @@ ngSriracha.config(
                 templateUrl: "scripts/sriracha/systemSettings/deploymentTools/list.html",
                 controller: "deploymentToolsController"
             })
+            .when(navigator.systemSettings.deploymentTool.create.url, {
+                templateUrl: "scripts/sriracha/systemSettings/deploymentTools/create.html",
+                controller: "systemRoleController"
+            })
 
 		.otherwise({
 			template: "<h1>Not Found</h1>"

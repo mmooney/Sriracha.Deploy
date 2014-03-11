@@ -24,12 +24,12 @@ Deployment Tools are standalone command line tools that you can call from your d
     </tbody>
 </table>
 <div ng-hide="userList.items.length">
-    No users
+    No deployment tools
 </div>
-<div>
+<div ng-show="userList.items.length">
     <sriracha-pager paged-list="deploymentToolList" go-to-page="goToPage"></sriracha-pager>
+    <div style="padding-top:10px">
+        <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
+    </div>
 </div>
 
-<div style="padding-top:10px">
-    <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
-</div>

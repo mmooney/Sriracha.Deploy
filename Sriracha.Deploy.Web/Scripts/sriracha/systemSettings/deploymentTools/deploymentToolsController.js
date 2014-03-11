@@ -5,6 +5,7 @@
 		$scope.navigator = SrirachaNavigator;
 		$scope.permissionVerifier = PermissionVerifier;
 		$scope.editForm = {};
+
 		//if ($routeParams.credentialsId) {
 		//	$scope.credentialsItem = SrirachaResource.systemSettings.credentials.get(
 		//		{id: $routeParams.credentialsId},
@@ -27,7 +28,11 @@
 		//			ErrorReporter.handleResourceError(err);
 		//		}
 		//	)
-		//}
+	    //}
+
+		$scope.uploadComplete = function (data) {
+            console.log("uploadComplete", data)
+		}
 
 		//$scope.testCredentials = function (item) {
 		//	if (item) {
