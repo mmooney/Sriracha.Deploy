@@ -1,0 +1,33 @@
+﻿<h2><a ng-href="{{navigator.user.list.clientUrl()}}">Deployment Tool List</a></h2>
+
+<div style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
+</div>
+
+<table class="table table-striped" ng-show="deploymentToolList.items.length">
+    <thead>
+        <tr>
+            <th sort-header sort-field="ToolName" apply-sort="applySort" paged-list="deploymentToolList">Tool Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="deploymentTool in deploymentToolList.items">
+            <td>
+                <a ng-href="{{navigator.systemSettings.deploymentTool.edit.clientUrl(deploymentTool.id)}}" ng-show="permissionVerifier.canEditDeploymentTools()">{{deploymentTool.toolName}}</a>
+                <div ng-hide="permissionVerifier.canEditDeploymentTools()">{{deploymentTool.toolName}}</div>
+            </td>
+            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.deploymentTool.remove.clientUrl(deploymentTool.id)}}" ng-show="permissionVerifier.canEditDeploymentTools()">Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+<div ng-hide="userList.items.length">
+    No users
+</div>
+<div>
+    <sriracha-pager paged-list="deploymentToolList" go-to-page="goToPage"></sriracha-pager>
+</div>
+
+<div style="padding-top:10px">
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
+</div>

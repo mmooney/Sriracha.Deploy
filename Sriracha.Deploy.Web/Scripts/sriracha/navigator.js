@@ -328,6 +328,13 @@
 		            clientUrl: function (systemRoleId) { return root.getUrl(this.url, { systemRoleId: systemRoleId }) },
 		            go: function (systemRoleId) { root.goTo(this.url, { systemRoleId: systemRoleId }); }
 		        }
+		    },
+		    deploymentTool: {
+		        list: {
+		            url: "/systemSettings/deploymentTool",
+		            clientUrl: function (pageNumber, pageSize, sortField, sortAscending) { return root.getUrl(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) },
+		            go: function (pageNumber, pageSize, sortField, sortAscending) { root.goTo(this.url, null, { pageNumber: pageNumber, pageSize: pageSize, sortField: sortField, sortAscending: sortAscending }) }
+		        }
 		    }
 		};
 		return root;

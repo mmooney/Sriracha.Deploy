@@ -2,6 +2,7 @@
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;
 using Sriracha.Deploy.Data.Repository;
+using Sriracha.Deploy.Data.SystemSettings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
     {
         private readonly ISystemRoleRepository _systemRoleRepository;
         private readonly IMembershipRepository _membershipRepository;
+        private readonly ISystemSettings _systemSettings;
 
-        public SystemRoleManager(ISystemRoleRepository systemRoleRepository, IMembershipRepository membershipRepository)
+        public SystemRoleManager(ISystemRoleRepository systemRoleRepository, IMembershipRepository membershipRepository, ISystemSettings systemSettings)
         {
             _systemRoleRepository = DIHelper.VerifyParameter(systemRoleRepository);
             _membershipRepository = DIHelper.VerifyParameter(membershipRepository);
+            _systemSettings = DIHelper.VerifyParameter(systemSettings);
         }
 
         public PagedSortedList<SystemRole> GetSystemRoleList(ListOptions listOptions)
@@ -76,10 +79,12 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             if (everyoneRole == null)
             {
                 everyoneRole = CreateEveryoneRole();
+                VerifyAllRolePermissions(everyoneRole, _systemSettings.DefaultAccess);
                 return _systemRoleRepository.CreateSystemRole(everyoneRole.RoleName, EnumSystemRoleType.Everyone, everyoneRole.Permissions, everyoneRole.Assignments);
             }
             else
             {
+                VerifyAndSaveAllRolePermissions(everyoneRole, _systemSettings.DefaultAccess);
                 return everyoneRole;
             }
         }
@@ -90,13 +95,49 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             if (adminRole == null)
             {
                 adminRole = CreateAdministratorRole();
+                VerifyAllRolePermissions(adminRole, EnumPermissionAccess.Grant);
                 return _systemRoleRepository.CreateSystemRole(adminRole.RoleName, EnumSystemRoleType.Administrator, adminRole.Permissions, adminRole.Assignments);
             }
             else
             {
+                VerifyAndSaveAllRolePermissions(adminRole, EnumPermissionAccess.Grant);
                 return adminRole;
             }
         }
+
+        private void VerifyAndSaveAllRolePermissions(SystemRole role, EnumPermissionAccess access)
+        {
+            if (VerifyAllRolePermissions(role, access))
+            {
+                _systemRoleRepository.UpdateSystemRole(role.Id, role.RoleName, role.RoleType, role.Permissions, role.Assignments);
+            }
+        }
+
+        private bool VerifyAllRolePermissions(SystemRole role, EnumPermissionAccess access)
+        {
+            bool anyChange = false;
+            if(role.Permissions.EditSystemPermissionsAccess != access)
+            {
+                role.Permissions.EditSystemPermissionsAccess = access;
+                anyChange = true;
+            }
+            if(role.Permissions.EditUsersAccess != access)
+            {
+                role.Permissions.EditUsersAccess = access;
+                anyChange = true;
+            }
+            if(role.Permissions.EditDeploymentCredentialsAccess != access)
+            {
+                role.Permissions.EditDeploymentCredentialsAccess = access;
+                anyChange = true;
+            }
+            if(role.Permissions.EditDeploymentToolsAccess != access)
+            {
+                role.Permissions.EditDeploymentToolsAccess = access;
+                anyChange = true;
+            }
+            return anyChange;
+       }
 
         private SystemRole CreateAdministratorRole()
         {
@@ -106,9 +147,6 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
                 RoleName = "Administrators",
                 RoleType = EnumSystemRoleType.Administrator
             };
-            role.Permissions.EditSystemPermissionsAccess = EnumPermissionAccess.Grant;
-            role.Permissions.EditUsersAccess = EnumPermissionAccess.Grant;
-            role.Permissions.EditDeploymentCredentialsAccess = EnumPermissionAccess.Grant;
             return role;
         }
 

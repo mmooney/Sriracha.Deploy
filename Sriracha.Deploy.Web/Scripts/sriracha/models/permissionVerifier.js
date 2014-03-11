@@ -99,6 +99,12 @@
 		    }
 		}
 
+		this.canEditDeploymentTools = function () {
+		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
+		        return (accountData.effectivePermissions.systemPermissions.editDeploymentToolsAccess == "Grant")
+		    }
+		}
+
 		this.canEditDeploymentCredentials = function () {
 		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
 		        return (accountData.effectivePermissions.systemPermissions.editDeploymentCredentialsAccess == "Grant");

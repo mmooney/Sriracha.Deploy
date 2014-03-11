@@ -1,4 +1,6 @@
-﻿ngSriracha.config(
+﻿/// <reference path="systemSettings/deploymentTools/deploymentToolsController.js" />
+/// <reference path="systemSettings/deploymentTools/deploymentToolsController.js" />
+ngSriracha.config(
 		['$routeProvider', 'SrirachaNavigatorProvider',
 		function ($routeProvider, SrirachaNavigatorProvider) {
 	var navigator = SrirachaNavigatorProvider.$get();
@@ -240,6 +242,11 @@
             .when(navigator.systemSettings.systemRole.remove.url, {
                 templateUrl: "templates/systemSettings/systemSettings-systemRole-delete.html",
                 controller: "systemRoleController"
+            })
+            // Deployment Tools
+            .when(navigator.systemSettings.deploymentTool.list.url, {
+                templateUrl: "scripts/sriracha/systemSettings/deploymentTools/list.html",
+                controller: "deploymentToolsController"
             })
 
 		.otherwise({
