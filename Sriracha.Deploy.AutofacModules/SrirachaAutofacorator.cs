@@ -210,7 +210,7 @@ namespace Sriracha.Deploy.AutofacModules
 					})
 					.As<NLog.Logger>()
 					.SingleInstance();
-            Common.Logging.LogManager.Adapter = new Common.Logging.NLog.NLogLoggerFactoryAdapter(null);
+            Common.Logging.LogManager.Adapter = new Common.Logging.NLog.NLogLoggerFactoryAdapter((Common.Logging.Configuration.NameValueCollection)null);
             builder.Register(ctx=> 
                     { return Common.Logging.LogManager.GetCurrentClassLogger(); })
                     .As<Common.Logging.ILog>()
