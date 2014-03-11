@@ -30,8 +30,12 @@ namespace Sriracha.Deploy.Web.Controllers
                 return RedirectToAction("Index", "Setup");
             }
             else 
-            {   
-			    return View();
+            {
+                var model = new LogOnModel
+                {
+                    AllowSelfRegistration = _systemSetings.AllowSelfRegistration
+                }; 
+			    return View(model);
             }
 		}
 
@@ -127,6 +131,14 @@ namespace Sriracha.Deploy.Web.Controllers
 		[AllowAnonymous]
 		public ActionResult Register()
 		{
+            if (!_systemSetings.IsInitialized())
+            {
+                return RedirectToAction("Index", "Setup");
+            }
+            if(!_systemSetings.AllowSelfRegistration)
+            {
+                return RedirectToAction("LogOn", "Account");
+            }
 			return View();
 		}
 
@@ -137,7 +149,15 @@ namespace Sriracha.Deploy.Web.Controllers
 		[HttpPost]
 		public ActionResult Register(RegisterModel model)
 		{
-			if (ModelState.IsValid)
+            if (!_systemSetings.IsInitialized())
+            {
+                return RedirectToAction("Index", "Setup");
+            }
+            if (!_systemSetings.AllowSelfRegistration)
+            {
+                return RedirectToAction("LogOn", "Account");
+            }
+            if (ModelState.IsValid)
 			{
 				// Attempt to register the user
 				MembershipCreateStatus createStatus;

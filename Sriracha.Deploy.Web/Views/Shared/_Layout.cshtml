@@ -27,6 +27,10 @@
 						<li><a href="#/deploy/batchList">Deployments</a></li>
 						<li><a href="#/account">My Settings</a></li>
 						<li><a href="#/systemSettings">System Settings</a></li>
+                        @if(this.Request.IsAuthenticated)
+                        { 
+						    <li>@Html.ActionLink("Logout", "LogOff", "Account")</li>
+                        }
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div>

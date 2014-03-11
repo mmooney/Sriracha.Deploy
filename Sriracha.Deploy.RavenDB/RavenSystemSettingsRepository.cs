@@ -43,7 +43,7 @@ namespace Sriracha.Deploy.RavenDB
         {
             var settings = GetActiveSettingsData();
             string returnValue;
-            if(settings == null || settings.SettingsDictionary.TryGetValue(key, out returnValue))
+            if(settings == null || !settings.SettingsDictionary.TryGetValue(key, out returnValue))
             {
                 returnValue = defaultValue;
             }

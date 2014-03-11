@@ -19,5 +19,7 @@ namespace Sriracha.Deploy.Web.Models.Account
 
 		[Display(Name = "Remember me?")]
 		public bool RememberMe { get; set; }
+
+        public bool AllowSelfRegistration { get; set; }
 	}
 }
