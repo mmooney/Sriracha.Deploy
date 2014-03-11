@@ -472,6 +472,7 @@
     <Content Include="Scripts\sriracha\systemLogController.js" />
     <Content Include="Scripts\sriracha\systemSettings\deploymentTools\deploymentToolsController.js" />
     <Content Include="Scripts\sriracha\systemSettings\deploymentTools\list.html" />
+    <Content Include="Scripts\sriracha\systemSettings\deploymentTools\create.html" />
     <Content Include="Scripts\sriracha\systemSettings\systemRoleController.js" />
     <Content Include="Scripts\sriracha\systemSettings\userController.js" />
     <Content Include="Scripts\sriracha\systemSettings\credentialsController.js" />
