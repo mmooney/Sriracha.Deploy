@@ -1,5 +1,7 @@
 ﻿<h2><a ng-href="{{navigator.user.list.clientUrl()}}">Deployment Tool List</a></h2>
 
+Deployment Tools are standalone command line tools that you can call from your deployment steps.
+
 <div style="padding-top:10px">
     <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
 </div>
