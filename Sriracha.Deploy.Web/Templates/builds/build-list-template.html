@@ -21,5 +21,7 @@
 <div ng-hide="buildList.items.length">
 	No builds yet
 </div>
-<sriracha-pager paged-list="buildList" go-to-page="goToPage"></sriracha-pager>
+<div ng-show="buildList.items.length">
+    <sriracha-pager paged-list="buildList" go-to-page="goToPage"></sriracha-pager>
+</div>
 <!--<a ng-href="{{navigator.build.submit.clientUrl()}}">Submit Build</a>-->
