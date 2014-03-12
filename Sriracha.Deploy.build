@@ -49,11 +49,6 @@
 			<property name="OutDir" value="..\PublishTemp\Website\\"/>
 			<property name="BuildingProject" value="true"/>
 		</msbuild>
-    <xmlpoke 
-        file="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\web.config"
-        xpath="/configuration/system.web/compilation/@debug"
-        value="false"
-    />
 
 		<!-- 
 			Why this if/unless(directory:exists) foolishness?  Is msbuild's ongoing attempts to drive me insane, on my local machine it creates 
@@ -73,7 +68,13 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-	</target>
+    <xmlpoke
+        file="${BuildDirectory}\Publish\Website\web.config"
+        xpath="/configuration/system.web/compilation/@debug"
+        value="false"
+    />
+  </target>
+
 	<target name="DeploySolution" description="Deploy Solution">
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
