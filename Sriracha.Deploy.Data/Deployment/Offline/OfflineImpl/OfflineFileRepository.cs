@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             throw new NotSupportedException();
         }
 
-        public DeployFile CreateFile(string fileName, byte[] data)
+        public DeployFile CreateFile(string fileName, byte[] data, FileManifest fileManifest)
         {
             throw new NotSupportedException();
         }
@@ -33,7 +33,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             return _offlineDataProvider.GetFile(fileId);
         }
 
-        public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData)
+        public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData, FileManifest fileManifest)
         {
             throw new NotSupportedException();
         }

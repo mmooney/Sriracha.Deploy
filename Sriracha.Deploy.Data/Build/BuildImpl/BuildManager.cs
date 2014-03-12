@@ -15,8 +15,9 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 		private readonly IBuildRepository _buildRepository;
 		private readonly IProjectRepository _projectRepository;
 		private readonly IProjectNotifier _projectNotifier;
+        private readonly IManifestBuilder _manifestBuilder;
 
-		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository, IProjectNotifier projectNotifier)
+		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository, IProjectNotifier projectNotifier, IManifestBuilder manifestBuilder)
 		{
 			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
 			this._buildRepository = DIHelper.VerifyParameter(buildRepository);
@@ -38,7 +39,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			var branch = _projectRepository.GetBranch(branchId, project.Id);
 			var component = _projectRepository.GetComponent(componentId, project.Id);
-			var file = this._fileRepository.CreateFile(fileName, fileData);
+            var fileManifest = _manifestBuilder.BuildFileManifest(fileData);
+			var file = this._fileRepository.CreateFile(fileName, fileData, fileManifest);
 			var build = this._buildRepository.CreateBuild(projectId, project.ProjectName, componentId, component.ComponentName, branchId, branch.BranchName, file.Id, version);
 			_projectNotifier.SendBuildPublishedNotification(project, build);
 			return build;

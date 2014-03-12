@@ -14,11 +14,13 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 	{
 		private readonly IFileRepository _fileRepository;
 		private readonly IFileWriter _fileWriter;
+        private readonly IManifestBuilder _manifestBuilder;
 
-		public FileManager(IFileRepository fileRepository, IFileWriter fileWriter)
+		public FileManager(IFileRepository fileRepository, IFileWriter fileWriter, IManifestBuilder manifestBuilder)
 		{
-			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
-			this._fileWriter = DIHelper.VerifyParameter(fileWriter);
+			_fileRepository = DIHelper.VerifyParameter(fileRepository);
+			_fileWriter = DIHelper.VerifyParameter(fileWriter);
+            _manifestBuilder = DIHelper.VerifyParameter(manifestBuilder);
 		}
 
 		public IEnumerable<DeployFile> GetFileList()
@@ -40,7 +42,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
             {
                 throw new ArgumentException("fileData is empty");
             }
-			return _fileRepository.CreateFile(fileName, fileData);
+            var fileManifest = _manifestBuilder.BuildFileManifest(fileData);
+			return _fileRepository.CreateFile(fileName, fileData, fileManifest);
 		}
 
 		public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData)
@@ -61,7 +64,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
             {
                 throw new ArgumentException("fileData is empty");
             }
-			return _fileRepository.UpdateFile(fileId, fileName, fileData);
+            var fileManifest = _manifestBuilder.BuildFileManifest(fileData);
+			return _fileRepository.UpdateFile(fileId, fileName, fileData, fileManifest);
 		}
 
 		public DeployFile GetFile(string fileId)

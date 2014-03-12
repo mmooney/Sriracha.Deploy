@@ -21,6 +21,7 @@ namespace Sriracha.Deploy.Data.Tests
             public Fixture Fixture { get; set; }
             public Mock<IFileRepository> FileRepository { get; set; }
             public Mock<IFileWriter> FileWriter { get; set; }
+            public Mock<IManifestBuilder> ManifestBuilder { get; set; }
             public IFileManager Sut { get; set; }
 
             public static TestData Create()
@@ -30,9 +31,10 @@ namespace Sriracha.Deploy.Data.Tests
                 {
                     Fixture = fixture,
                     FileRepository = new Mock<IFileRepository>(),
-                    FileWriter = new Mock<IFileWriter>()
+                    FileWriter = new Mock<IFileWriter>(),
+                    ManifestBuilder = new Mock<IManifestBuilder>()
                 };
-                testData.Sut = new FileManager(testData.FileRepository.Object, testData.FileWriter.Object);
+                testData.Sut = new FileManager(testData.FileRepository.Object, testData.FileWriter.Object, testData.ManifestBuilder.Object);
                 return testData;
             }
 
@@ -62,13 +64,16 @@ namespace Sriracha.Deploy.Data.Tests
                     var fileName = testData.Fixture.Create<string>("fileName");
                     var fileData = testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i=>i.CreateFile(fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.FileRepository.Setup(i => i.CreateFile(fileName, fileData, fileManifest)).Returns(deployFile);
+                    testData.ManifestBuilder.Setup(i=>i.BuildFileManifest(fileData)).Returns(fileManifest);
 
                     var result = testData.Sut.CreateFile(fileName, fileData);
 
                     Assert.IsNotNull(result);
                     Assert.AreEqual(deployFile, result);
-                    testData.FileRepository.Verify(i=>i.CreateFile(fileName, fileData), Times.Once());
+                    testData.ManifestBuilder.Verify(i=>i.BuildFileManifest(fileData), Times.Once());
+                    testData.FileRepository.Verify(i => i.CreateFile(fileName, fileData, fileManifest), Times.Once());
                 }
 
                 [Test]
@@ -79,7 +84,7 @@ namespace Sriracha.Deploy.Data.Tests
 
                     Assert.Throws<ArgumentNullException>(()=>testData.Sut.CreateFile(null, fileData));
 
-                    testData.FileRepository.Verify(i=>i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i=>i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
 
                 [Test]
@@ -90,7 +95,7 @@ namespace Sriracha.Deploy.Data.Tests
 
                     Assert.Throws<ArgumentNullException>(() => testData.Sut.CreateFile(fileName, null));
 
-                    testData.FileRepository.Verify(i => i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
 
                 [Test]
@@ -102,7 +107,7 @@ namespace Sriracha.Deploy.Data.Tests
 
                     Assert.Throws<ArgumentException>(() => testData.Sut.CreateFile(fileName, fileData));
 
-                    testData.FileRepository.Verify(i => i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.CreateFile(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
             }
 
@@ -116,13 +121,16 @@ namespace Sriracha.Deploy.Data.Tests
                     var fileName = testData.Fixture.Create<string>("fileName");
                     var fileData = testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i=>i.UpdateFile(fileId, fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.ManifestBuilder.Setup(i => i.BuildFileManifest(fileData)).Returns(fileManifest);
+                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData, fileManifest)).Returns(deployFile);
 
                     var result = testData.Sut.UpdateFile(fileId, fileName, fileData);
 
                     Assert.IsNotNull(result);
                     Assert.AreEqual(deployFile, result);
-                    testData.FileRepository.Verify(i=>i.UpdateFile(fileId, fileName, fileData), Times.Once());
+                    testData.ManifestBuilder.Verify(i=>i.BuildFileManifest(fileData), Times.Once());
+                    testData.FileRepository.Verify(i => i.UpdateFile(fileId, fileName, fileData, fileManifest), Times.Once());
                 }
 
                 [Test]
@@ -133,11 +141,13 @@ namespace Sriracha.Deploy.Data.Tests
                     var fileName = testData.Fixture.Create<string>("fileName");
                     var fileData = testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.ManifestBuilder.Setup(i => i.BuildFileManifest(fileData)).Returns(fileManifest);
+                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData, fileManifest)).Returns(deployFile);
 
                     Assert.Throws<ArgumentNullException>(()=>testData.Sut.UpdateFile(fileId, fileName, fileData));
 
-                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
 
                 [Test]
@@ -148,11 +158,13 @@ namespace Sriracha.Deploy.Data.Tests
                     string fileName = null;//testData.Fixture.Create<string>("fileName");
                     var fileData = testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.ManifestBuilder.Setup(i => i.BuildFileManifest(fileData)).Returns(fileManifest);
+                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData, fileManifest)).Returns(deployFile);
 
                     Assert.Throws<ArgumentNullException>(() => testData.Sut.UpdateFile(fileId, fileName, fileData));
 
-                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
 
                 [Test]
@@ -163,11 +175,13 @@ namespace Sriracha.Deploy.Data.Tests
                     var fileName = testData.Fixture.Create<string>("fileName");
                     byte[] fileData = null;//testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.ManifestBuilder.Setup(i => i.BuildFileManifest(fileData)).Returns(fileManifest);
+                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData, fileManifest)).Returns(deployFile);
 
                     Assert.Throws<ArgumentNullException>(() => testData.Sut.UpdateFile(fileId, fileName, fileData));
 
-                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
 
                 [Test]
@@ -178,11 +192,13 @@ namespace Sriracha.Deploy.Data.Tests
                     var fileName = testData.Fixture.Create<string>("fileName");
                     byte[] fileData = new byte[0];//testData.Fixture.Create<byte[]>();
                     var deployFile = testData.Fixture.Create<DeployFile>();
-                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData)).Returns(deployFile);
+                    var fileManifest = testData.Fixture.Create<FileManifest>();
+                    testData.ManifestBuilder.Setup(i => i.BuildFileManifest(fileData)).Returns(fileManifest);
+                    testData.FileRepository.Setup(i => i.UpdateFile(fileId, fileName, fileData, fileManifest)).Returns(deployFile);
 
                     Assert.Throws<ArgumentException>(() => testData.Sut.UpdateFile(fileId, fileName, fileData));
 
-                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>()), Times.Never());
+                    testData.FileRepository.Verify(i => i.UpdateFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<FileManifest>()), Times.Never());
                 }
             }
 

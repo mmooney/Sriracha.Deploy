@@ -61,5 +61,5 @@ namespace Sriracha.Deploy.Data
 				}
 			}
 		}
-	}
+    }
 }

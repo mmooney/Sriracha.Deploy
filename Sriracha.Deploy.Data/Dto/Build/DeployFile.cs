@@ -10,9 +10,10 @@ namespace Sriracha.Deploy.Data.Dto.Build
 		public string Id { get; set; }
 		public string FileName { get; set; }
 		public string FileStorageId { get; set; }
+        public FileManifest Manifest { get; set; }
 		public DateTime CreatedDateTimeUtc { get; set; }
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
-	}
+    }
 }

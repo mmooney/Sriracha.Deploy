@@ -34,7 +34,7 @@ namespace Sriracha.Deploy.RavenDB
 			return _documentSession.Query<DeployFile>();
 		}
 
-		public DeployFile CreateFile(string fileName, byte[] fileData)
+		public DeployFile CreateFile(string fileName, byte[] fileData, FileManifest fileManifest)
 		{
 			if(string.IsNullOrEmpty(fileName))
 			{
@@ -50,6 +50,7 @@ namespace Sriracha.Deploy.RavenDB
 				Id = Guid.NewGuid().ToString(),
 				FileName = fileName,
 				FileStorageId = fileId,
+                Manifest = fileManifest,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				CreatedByUserName = _userIdentity.UserName,
 				UpdatedDateTimeUtc = DateTime.UtcNow,
@@ -74,7 +75,7 @@ namespace Sriracha.Deploy.RavenDB
 			return file;
 		}
 
-		public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData)
+		public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData, FileManifest fileManifest)
 		{
 			if (string.IsNullOrEmpty(fileName))
 			{
@@ -88,6 +89,7 @@ namespace Sriracha.Deploy.RavenDB
 			file.FileName = fileName;
 			file.UpdatedDateTimeUtc = DateTime.UtcNow;
 			file.UpdatedByUserName = _userIdentity.UserName;
+            file.Manifest = fileManifest;
 			this._documentSession.SaveChanges();
 
 			_fileStorage.UpdateFile(file.FileStorageId, fileData);

@@ -13,6 +13,7 @@ using System.Xml;
 using Ionic.Zip;
 using Newtonsoft.Json;
 using Sriracha.Deploy.Data.SystemSettings;
+using Sriracha.Deploy.Data.Build;
 
 namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
 {
@@ -25,8 +26,9 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
         private readonly IFileRepository _fileRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IZipper _zipper;
+        private readonly IManifestBuilder _manifestBuilder;
 
-		public OfflineDeploymentManager(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository, IOfflineDeploymentRepository offlineDeploymentRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper)
+		public OfflineDeploymentManager(IDeployRepository deployRepository, IDeployStateRepository deployStateRepository, IOfflineDeploymentRepository offlineDeploymentRepository, IProjectRepository projectRepository, ISystemSettings systemSettings, IFileRepository fileRepository, IZipper zipper, IManifestBuilder manifestBuilder)
 		{
 			_deployRepository = DIHelper.VerifyParameter(deployRepository);
             _deployStateRepository = DIHelper.VerifyParameter(deployStateRepository);
@@ -35,6 +37,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             _systemSettings = DIHelper.VerifyParameter(systemSettings);
             _fileRepository = DIHelper.VerifyParameter(fileRepository);
             _zipper = DIHelper.VerifyParameter(zipper);
+            _manifestBuilder = DIHelper.VerifyParameter(manifestBuilder);
 		}
 
 		public OfflineDeployment BeginCreateOfflineDeployment(string deployBatchRequestId)
@@ -152,7 +155,8 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
                 string targetZipPath = targetDirectory + ".zip";
                 _zipper.ZipDirectory(targetDirectory, targetZipPath);
                 var zippedFileBytes = File.ReadAllBytes(targetZipPath);
-                var fileObject = _fileRepository.CreateFile(deployBatchRequest.Id + ".zip", zippedFileBytes);
+                var fileManifest = _manifestBuilder.BuildFileManifest(zippedFileBytes);
+                var fileObject = _fileRepository.CreateFile(deployBatchRequest.Id + ".zip", zippedFileBytes, fileManifest);
                 _offlineDeploymentRepository.SetReadyForDownload(offlineDeploymentId, fileObject.Id);
 
                 try 

@@ -107,6 +107,8 @@
     <Compile Include="Account\AccountImpl\SystemRoleManager.cs" />
     <Compile Include="Account\AuthResponse.cs" />
     <Compile Include="Account\ISystemRoleManager.cs" />
+    <Compile Include="Build\BuildImpl\ManifestBuilder.cs" />
+    <Compile Include="Build\IManifestBuilder.cs" />
     <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
     <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
     <Compile Include="Credentials\CredentialsImpl\ProcessSample.cs" />
@@ -146,6 +148,8 @@
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
+    <Compile Include="Dto\Build\FileManifest.cs" />
+    <Compile Include="Dto\Build\FileManifestItem.cs" />
     <Compile Include="Dto\CleanupTaskData.cs" />
     <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
     <Compile Include="Dto\Deployment\Offline\OfflineComponentSelection.cs" />
