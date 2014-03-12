@@ -4,9 +4,9 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>@ViewBag.Title</title>
-	@Styles.Render("~/styles/bootstrap")
-    @Styles.Render("~/styles/sriracha")
-    @Styles.Render("~/styles/jquery-ui")
+    @Styles.Render("~/vendor/bootstrap/styles")
+    @Styles.Render("~/app/sriracha/styles")
+    @Styles.Render("~/vendor/jquery/styles")
 	<style>
 	</style>
 </head>
@@ -29,12 +29,12 @@
 		@RenderBody()
 
 		@RenderSection("scripts", required: false)
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/underscore")
-		@Scripts.Render("~/bundles/bootstrap")
-        @Scripts.Render("~/bundles/angular")
-        @Scripts.Render("~/bundles/angular-ui-bootstrap")
-		@Scripts.Render("~/bundles/sriracha")
+        @Scripts.Render("~/vendor/jquery/scripts")
+        @Scripts.Render("~/vendor/underscore/scripts")
+        @Scripts.Render("~/vendor/bootstrap/scripts")
+        @Scripts.Render("~/vendor/angular/scripts")
+        @Scripts.Render("~/vendor/angular-ui-bootstrap/scripts")
+        @Scripts.Render("~/app/sriracha/scripts")
 	</div>
 	<div class="container">
 		<footer>
