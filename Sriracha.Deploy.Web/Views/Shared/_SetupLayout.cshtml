@@ -4,8 +4,9 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>@ViewBag.Title</title>
-	@Styles.Render("~/Content/bootstrap")
-	@Scripts.Render("~/bundles/modernizr")
+	@Styles.Render("~/styles/bootstrap")
+    @Styles.Render("~/styles/sriracha")
+    @Styles.Render("~/styles/jquery-ui")
 	<style>
 	</style>
 </head>
@@ -28,21 +29,12 @@
 		@RenderBody()
 
 		@RenderSection("scripts", required: false)
-		@Scripts.Render("~/bundles/js")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/underscore")
 		@Scripts.Render("~/bundles/bootstrap")
-		@Scripts.Render("~/Scripts/underscore.js")
-		@Scripts.Render("~/Scripts/angular/angular.js")
-        @Scripts.Render("~/Scripts/angular/angular-resource.js")
-        @Scripts.Render("~/Scripts/angular/angular-route.js")
-        @Scripts.Render("~/Scripts/angular-ui-bootstrap/ui-bootstrap-0.9.0.js")
-        @Scripts.Render("~/Scripts/angular-ui-bootstrap/ui-bootstrap-tpls-0.9.0.js")
-		@Scripts.Render("~/Scripts/angular/ng-upload.js")
-		@Scripts.Render("~/Scripts/ace/ace.js")
-		@Scripts.Render("~/Scripts/ace/ui-ace.js")
-
+        @Scripts.Render("~/bundles/angular")
+        @Scripts.Render("~/bundles/angular-ui-bootstrap")
 		@Scripts.Render("~/bundles/sriracha")
-		@Styles.Render("~/Content/sriracha")
-		<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
 	</div>
 	<div class="container">
 		<footer>
