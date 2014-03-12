@@ -498,7 +498,7 @@
     <Content Include="app\project\configuration\configuration-view-template.html" />
     <Content Include="app\project\configuration\configuration-edit-template.html" />
     <Content Include="app\project\role\role-list-template.html" />
-    <Content Include="Templates\systemlog-list-template.html" />
+    <Content Include="app\systemlog-list-template.html" />
     <Content Include="app\deployment\deployment-view-template.html" />
     <Content Include="app\project\environment\environment-delete-template.html" />
     <Content Include="app\project\environment\environment-edit-template.html" />
@@ -513,19 +513,19 @@
     <Content Include="app\project\project-edit-template.html" />
     <Content Include="app\project\project-list-template.html" />
     <Content Include="app\project\project-view-template.html" />
-    <Content Include="Templates\systemSettings\systemSettings-systemRole-create.html" />
-    <Content Include="Templates\systemSettings\systemSettings-credentials-delete.html" />
-    <Content Include="Templates\systemSettings\systemSettings-user-create.html" />
-    <Content Include="Templates\systemSettings\systemSettings-systemRole-delete.html" />
-    <Content Include="Templates\systemSettings\systemSettings-user-delete.html" />
-    <Content Include="Templates\systemSettings\systemSettings-systemRole-edit.html" />
-    <Content Include="Templates\systemSettings\systemSettings-user-edit.html" />
-    <Content Include="Templates\systemSettings\systemSettings-systemRole-list.html" />
-    <Content Include="Templates\systemSettings\systemSettings-user-list.html" />
-    <Content Include="Templates\systemSettings\systemSettings-credentials-edit.html" />
-    <Content Include="Templates\systemSettings\systemSettings-credentials-create.html" />
-    <Content Include="Templates\systemSettings\systemSettings-credentials-list.html" />
-    <Content Include="Templates\systemSettings\systemSettings-list.html" />
+    <Content Include="app\systemSettings\systemSettings-systemRole-create.html" />
+    <Content Include="app\systemSettings\systemSettings-credentials-delete.html" />
+    <Content Include="app\systemSettings\systemSettings-user-create.html" />
+    <Content Include="app\systemSettings\systemSettings-systemRole-delete.html" />
+    <Content Include="app\systemSettings\systemSettings-user-delete.html" />
+    <Content Include="app\systemSettings\systemSettings-systemRole-edit.html" />
+    <Content Include="app\systemSettings\systemSettings-user-edit.html" />
+    <Content Include="app\systemSettings\systemSettings-systemRole-list.html" />
+    <Content Include="app\systemSettings\systemSettings-user-list.html" />
+    <Content Include="app\systemSettings\systemSettings-credentials-edit.html" />
+    <Content Include="app\systemSettings\systemSettings-credentials-create.html" />
+    <Content Include="app\systemSettings\systemSettings-credentials-list.html" />
+    <Content Include="app\systemSettings\systemSettings-list.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -549,7 +549,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\bin\" />
-    <Folder Include="Templates\project\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

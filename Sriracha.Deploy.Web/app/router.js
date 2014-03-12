@@ -183,64 +183,64 @@ ngSriracha.config(
 
 		//System Log
 		.when(navigator.systemLog.list.url, {
-			templateUrl: "templates/systemlog-list-template.html",
+			templateUrl: "app/systemlog-list-template.html",
 			controller: "systemLogController"
 		})
 
 		//System Settings
 		.when(navigator.systemSettings.list.url, {
-			templateUrl: "templates/systemSettings/systemSettings-list.html",
+			templateUrl: "app/systemSettings/systemSettings-list.html",
 			controller: "systemSettingsController"
 		})
             //Credentials
 		    .when(navigator.systemSettings.credentials.list.url, {
-			    templateUrl: "templates/systemSettings/systemSettings-credentials-list.html",
+			    templateUrl: "app/systemSettings/systemSettings-credentials-list.html",
 			    controller: "credentialsController"
 		    })
 		    .when(navigator.systemSettings.credentials.create.url, {
-			    templateUrl: "templates/systemSettings/systemSettings-credentials-create.html",
+			    templateUrl: "app/systemSettings/systemSettings-credentials-create.html",
 			    controller: "credentialsController"
 		    })
 		    .when(navigator.systemSettings.credentials.edit.url, {
-		        templateUrl: "templates/systemSettings/systemSettings-credentials-edit.html",
+		        templateUrl: "app/systemSettings/systemSettings-credentials-edit.html",
 		        controller: "credentialsController"
 		    })
 		    .when(navigator.systemSettings.credentials.remove.url, {
-		        templateUrl: "templates/systemSettings/systemSettings-credentials-delete.html",
+		        templateUrl: "app/systemSettings/systemSettings-credentials-delete.html",
 		        controller: "credentialsController"
 		    })
             //Users
             .when(navigator.systemSettings.user.list.url, {
-                templateUrl: "templates/systemSettings/systemSettings-user-list.html",
+                templateUrl: "app/systemSettings/systemSettings-user-list.html",
                 controller: "userController"
             })
             .when(navigator.systemSettings.user.create.url, {
-                templateUrl: "templates/systemSettings/systemSettings-user-create.html",
+                templateUrl: "app/systemSettings/systemSettings-user-create.html",
                 controller: "userController"
             })
             .when(navigator.systemSettings.user.edit.url, {
-                templateUrl: "templates/systemSettings/systemSettings-user-edit.html",
+                templateUrl: "app/systemSettings/systemSettings-user-edit.html",
                 controller: "userController"
             })
             .when(navigator.systemSettings.user.remove.url, {
-                templateUrl: "templates/systemSettings/systemSettings-user-delete.html",
+                templateUrl: "app/systemSettings/systemSettings-user-delete.html",
                 controller: "userController"
             })
             //System Roles
             .when(navigator.systemSettings.systemRole.list.url, {
-                templateUrl: "templates/systemSettings/systemSettings-systemRole-list.html",
+                templateUrl: "app/systemSettings/systemSettings-systemRole-list.html",
                 controller: "systemRoleController"
             })
             .when(navigator.systemSettings.systemRole.create.url, {
-                templateUrl: "templates/systemSettings/systemSettings-systemRole-create.html",
+                templateUrl: "app/systemSettings/systemSettings-systemRole-create.html",
                 controller: "systemRoleController"
             })
             .when(navigator.systemSettings.systemRole.edit.url, {
-                templateUrl: "templates/systemSettings/systemSettings-systemRole-edit.html",
+                templateUrl: "app/systemSettings/systemSettings-systemRole-edit.html",
                 controller: "systemRoleController"
             })
             .when(navigator.systemSettings.systemRole.remove.url, {
-                templateUrl: "templates/systemSettings/systemSettings-systemRole-delete.html",
+                templateUrl: "app/systemSettings/systemSettings-systemRole-delete.html",
                 controller: "systemRoleController"
             })
             // Deployment Tools
