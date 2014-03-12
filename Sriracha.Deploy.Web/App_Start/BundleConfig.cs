@@ -27,9 +27,13 @@ namespace Sriracha.Deploy.Web
             );
 
             bundles.Add(new ScriptBundle("~/vendor/angular-ui-bootstrap/scripts")
-                        .IncludeDirectory("~/vendor/angular-ui-bootstrap", "*.js"));
+                        .IncludeDirectory("~/vendor/angular-ui-bootstrap", "*.js")
+                        .IncludeDirectory("~/vendor/angular-bootstrap-nav-tree", "*.js"));
 
-			var srirachaBundleJS = new ScriptBundle("~/app/sriracha/scripts")
+            bundles.Add(new StyleBundle("~/vendor/angular-ui-bootstrap/styles")
+                        .IncludeDirectory("~/vendor/angular-bootstrap-nav-tree", "*.css"));
+
+            var srirachaBundleJS = new ScriptBundle("~/app/sriracha/scripts")
 										.Include("~/app/shared.js")
                                         .Include("~/app/ngSriracha.js")
                                         .Include("~/app/resources.js")

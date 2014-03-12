@@ -1,17 +1,16 @@
 var module;
-
 module = angular.module('angularBootstrapNavTree', []);
 
 module.directive('abnTree', function($timeout) {
   return {
     restrict: 'E',
-    templateUrl: '../dist/abn_tree_template.html',
+    templateUrl: 'vendor/angular-bootstrap-nav-tree/abn_tree_template.html',
     scope: {
       treeData: '=',
       onSelect: '&',
       initialSelection: '='
     },
-    link: function(scope, element, attrs) {
+    link: function (scope, element, attrs) {
       var expand_level, for_each_branch, on_treeData_change, select_branch, selected_branch;
       if (attrs.iconExpand == null) {
         attrs.iconExpand = 'icon-plus';

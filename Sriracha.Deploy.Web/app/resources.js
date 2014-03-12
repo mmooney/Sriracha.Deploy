@@ -17,6 +17,7 @@
 
 			//Build
 			build: $resource("/api/build/:buildId"),
+            file: $resource("/api/file/:fileId"),
 
 			//Deploy
 			deployQueue: $resource("/api/deploy/queue"),

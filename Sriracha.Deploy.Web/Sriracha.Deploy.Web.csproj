@@ -435,7 +435,7 @@
     <Content Include="vendor\jquery\jquery.blockUI.js" />
     <Content Include="vendor\jquery\jquery.blockUI.min.js" />
     <Content Include="vendor\ng-upload\ng-upload.js" />
-    <Content Include="app\buildController.js" />
+    <Content Include="app\build\buildController.js" />
     <Content Include="app\deployment\deployController.js" />
     <Content Include="app\deployment\deployBatchListController.js" />
     <Content Include="app\deployment\deployBatchRequestController.js" />
