@@ -3,7 +3,7 @@
 	function (DeployQueueDataAccess, SrirachaNavigator) {
 		return {
 			restrict: "E",
-			templateUrl: "templates/directives/deployQueue.html",
+			templateUrl: "app/directives/deployQueue.html",
 			scope: {
 			},
 			link: function postLink(scope, element, attrs) {

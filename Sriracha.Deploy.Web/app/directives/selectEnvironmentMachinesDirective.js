@@ -3,7 +3,7 @@
 		function (SrirachaResource, ErrorReporter, SrirachaNavigator) {
 			return {
 				restrict: "E",
-				templateUrl: "templates/directives/selectEnvironmentMachines.html",
+				templateUrl: "app/directives/selectEnvironmentMachines.html",
 				scope: {
 					buildid: '@',
 					environmentid: '@',

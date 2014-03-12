@@ -3,7 +3,7 @@
 		function (SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 			return {
 				restrict: "E",
-				templateUrl: "templates/directives/deployActionLinks.html",
+				templateUrl: "app/directives/deployActionLinks.html",
 				scope: {
 					deployBatchRequest: '=',
 					refreshDataCallback: '='

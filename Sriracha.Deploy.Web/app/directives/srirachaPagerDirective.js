@@ -3,7 +3,7 @@
 		function () {
 			return {
 				restrict: "E",
-				templateUrl: "templates/directives/srirachaPager.html",
+				templateUrl: "app/directives/srirachaPager.html",
 				scope: {
 					pagedList: '=',
 					goToPage: '='
