@@ -69,6 +69,7 @@
     <Compile Include="BuildParameterEvaluatorTests.cs" />
     <Compile Include="DeployComponentRunnerTests.cs" />
     <Compile Include="DeploymentPlanBuilderTests.cs" />
+    <Compile Include="FileManagerTests.cs" />
     <Compile Include="ModuleInspectorTests.cs" />
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="PermissionValidatorTests.cs" />
