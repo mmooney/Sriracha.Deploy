@@ -1,6 +1,6 @@
 ﻿ngSriracha.controller("ProjectDeploymentStepController",
-		['$scope', '$routeParams', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
-	function ($scope, $routeParams, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
+		['$scope', '$routeParams', '$modal', 'SrirachaResource', 'SrirachaNavigator','ErrorReporter','PermissionVerifier',
+	function ($scope, $routeParams, $modal, SrirachaResource, SrirachaNavigator, ErrorReporter, PermissionVerifier) {
 	$scope.navigator = SrirachaNavigator;
 	$scope.permissionVerifier = PermissionVerifier;
 	if (!$routeParams.projectId) {
@@ -54,6 +54,59 @@
 		}
 	});
 
+	$scope.browseContents = function () {
+	    var queryParameters = {
+	        projectId: $scope.deploymentStep.projectId,
+	        projectComponentId: $scope.deploymentStep.parentId,
+	        sortField: "UpdatedDateTimeUtc",
+	        sortAscending: false,
+	        pageSize: 10
+	    };
+	    var buildList = SrirachaResource.build.get(
+			queryParameters,
+			function () {
+			    var modalInstance = $modal.open({
+			        templateUrl: 'app/project/deploymentStep/deploymentstep-filebrowser-template.html',
+			        controller: "FileBrowserController",
+			        resolve: {
+			            buildList: function () {
+			                return buildList.items;
+			            }
+			        }
+			    });
+			    modalInstance.result.then(
+                    function (selectedFile) {
+                        if(selectedFile && selectedFile.fileName) {
+                            var exePath = "${deploy:directory}\\";
+                            if(selectedFile.directory) {
+                                var reformattedDirectory = selectedFile.directory;
+                                if (reformattedDirectory[0] == '/' || reformattedDirectory[0] == '\\') {
+                                    reformattedDirectory = reformattedDirectory.substring(1);
+                                }
+                                if(reformattedDirectory && reformattedDirectory.length && 
+                                    (reformattedDirectory[reformattedDirectory.length-1] == '/' || reformattedDirectory[reformattedDirectory.length-1] == '\\')) {
+                                    reformattedDirectory = reformattedDirectory.substring(0, reformattedDirectory.length-1);
+                                }
+                                if(reformattedDirectory && reformattedDirectory.length) {
+                                    var re = /\//g;
+                                    console.log(reformattedDirectory);
+                                    reformattedDirectory = reformattedDirectory.replace(re, '\\');
+                                }
+                                if(reformattedDirectory && reformattedDirectory.length) {
+                                    exePath += reformattedDirectory + "\\";
+                                }
+                            }
+                            exePath += selectedFile.fileName;
+                            $scope.deploymentStep.taskOptions.ExecutablePath = exePath;
+                        }
+                    }
+			    );
+			},
+			function (err) {
+			    ErrorReporter.handleResourceError(err);
+			}
+		);
+	}
 	$scope.goBack = function () {
 		if ($routeParams.componentId) {
 			$scope.navigator.component.view.go($scope.project.id, $routeParams.componentId);

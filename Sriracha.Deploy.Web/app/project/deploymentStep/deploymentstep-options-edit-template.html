@@ -66,11 +66,14 @@
 	<table class="table table-striped">
 		<tr>
 			<th>Executable Path:</th>
-			<td><input type="text" ng-model="deploymentStep.taskOptions.ExecutablePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
+			<td class="form-inline">
+                <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ExecutablePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)"/>
+                <button class="btn" ng-click="browseContents()"><i class="icon-folder-open"></i></button>
+            </td>
 		</tr>
 		<tr>
 			<th>Executable Arguments:</th>
-			<td><input type="text" ng-model="deploymentStep.taskOptions.ExecutableArguments" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
+			<td><textarea class="input-xxlarge" ng-model="deploymentStep.taskOptions.ExecutableArguments" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)"></textarea></td>
 		</tr>
 	</table>
 </div>

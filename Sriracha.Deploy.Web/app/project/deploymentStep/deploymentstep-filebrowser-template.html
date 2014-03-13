@@ -1,0 +1,22 @@
+﻿<div class="modal-header">
+    Browse File
+    <div class="pull-right">
+        <button class="close" ng-click="close()">X</button>
+    </div>
+</div>
+<div class="modal-body">
+    <div>
+        Select a recent build: <select ng-model="selectedBuild" ng-options="item as item.displayValue for item in buildList" style="width:350px" ng-change="selectedBuildChanged()"></select>
+    </div>
+    <div>
+        <table class="table table-hover">
+            <tr ng-repeat="item in fileList" ng-model="selectedFile" style="cursor:pointer" ng-dblclick="selectFile(item)">
+                <td>
+                    {{item.fileName}}
+                    <span ng-show="item.directory"> ({{item.directory}})</span>
+                </td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</div>
