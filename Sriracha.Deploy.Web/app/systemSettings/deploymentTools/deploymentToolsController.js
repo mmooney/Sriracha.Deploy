@@ -31,7 +31,7 @@
 	    //}
 
 		$scope.uploadComplete = function (data) {
-            console.log("uploadComplete", data)
+            //console.log("uploadComplete", data)
 		}
 
 		//$scope.testCredentials = function (item) {

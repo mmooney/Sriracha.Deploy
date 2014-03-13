@@ -6,7 +6,6 @@
 	if ($routeParams.buildId) {
 		$scope.build = SrirachaResource.build.get({ id: $routeParams.buildId }, function () {
 			$scope.project = SrirachaResource.project.get({ id: $scope.build.projectId });
-			console.log($scope.build)
 			if ($scope.build.fileId) {
 			    var fileData = SrirachaResource.file.get({ id: $scope.build.fileId },
                     function () {

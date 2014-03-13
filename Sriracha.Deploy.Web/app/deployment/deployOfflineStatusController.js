@@ -10,14 +10,14 @@
 			    if (!$scope.batchRequest && $scope.offlineDeployment.deployBatchRequestId) {
 			        $scope.batchRequest = SrirachaResource.deployBatchRequest.get({ id: $scope.offlineDeployment.deployBatchRequestId },
                         function () {
-                            console.log($scope.batchRequest);
+                            //console.log($scope.batchRequest);
                         },
                         function (error) {
                             ErrorReporter.handleResourceError(error);
                         }
                     );
 			    }
-			    console.log($scope.offlineDeployment);
+			    //console.log($scope.offlineDeployment);
 				//if ($scope.deployBatchStatus.request.status == "Success" ||
 				//		($scope.deployBatchStatus.request.status == "Error" && !$scope.deployBatchStatus.request.resumeRequested)) {
 				//	if ($scope.refreshInterval) {

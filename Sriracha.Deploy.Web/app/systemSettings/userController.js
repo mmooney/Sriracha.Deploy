@@ -25,7 +25,7 @@
 		    $scope.systemRoleList = SrirachaResource.systemSettings.systemRole.query(
                 { userId: $routeParams.userId },
                 function (data) {
-                    console.log($scope.systemRoleList);
+                    //console.log($scope.systemRoleList);
                 },
                 function (err) {
                     ErrorReporter.handleResourceError(err);
@@ -36,7 +36,7 @@
 		    $scope.userList = SrirachaResource.systemSettings.user.get(
 				$scope.listOptions,
 				function (data) {
-				    console.log(data)
+				    //console.log(data)
 				    //console.log(data);
 				},
 				function (err) {

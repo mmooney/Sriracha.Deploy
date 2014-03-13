@@ -1,7 +1,4 @@
-var module;
-module = angular.module('angularBootstrapNavTree', []);
-
-module.directive('abnTree', function($timeout) {
+angular.module('angularBootstrapNavTree', []).directive('abnTree', ['$timeout', function($timeout) {
   return {
     restrict: 'E',
     templateUrl: 'vendor/angular-bootstrap-nav-tree/abn_tree_template.html',
@@ -172,4 +169,4 @@ module.directive('abnTree', function($timeout) {
       return scope.$watch('treeData', on_treeData_change, true);
     }
   };
-});
+}]);
