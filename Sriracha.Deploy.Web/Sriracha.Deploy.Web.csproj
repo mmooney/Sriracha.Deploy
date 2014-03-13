@@ -221,6 +221,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\project\deploymentStep\fileBrowserController.js" />
     <Compile Include="App_Start\AppHost.cs" />
     <Compile Include="App_Start\AutofacWebCommon.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
