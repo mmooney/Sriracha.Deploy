@@ -305,8 +305,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				var fileToUpload = new FileInfo(zipPath);
 				string fileUrl = url + "file";
 				client.Credentials = System.Net.CredentialCache.DefaultCredentials;
-				client.Timeout = TimeSpan.FromMinutes(2);
-				client.ReadWriteTimeout = TimeSpan.FromMinutes(2);
+				client.Timeout = TimeSpan.FromMinutes(5);
+				client.ReadWriteTimeout = TimeSpan.FromMinutes(5);
                 if(authCookie != null)
                 {  
                     client.CookieContainer.Add(authCookie);
