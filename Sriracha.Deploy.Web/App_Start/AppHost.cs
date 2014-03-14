@@ -96,7 +96,7 @@ namespace Sriracha.Deploy.Web.App_Start
 				//pass the exception over to Elmah
 				var context = HttpContext.Current;
 				Elmah.ErrorLog.GetDefault(context).Log(new Error(exception, context));
-
+                NLog.LogManager.GetCurrentClassLogger().ErrorException(exception.Message, exception);
 				//call default exception handler or prepare your own custom response
 				return DtoUtils.HandleException(this, request, exception);
 			};

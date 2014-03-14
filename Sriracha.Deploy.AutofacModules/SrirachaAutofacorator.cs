@@ -201,7 +201,7 @@ namespace Sriracha.Deploy.AutofacModules
 								loggingConfig = new NLog.Config.LoggingConfiguration();
 							}
 							loggingConfig.AddTarget("dbTarget", dbTarget);
-							var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Trace, dbTarget);
+							var rule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Warn, dbTarget);
 							loggingConfig.LoggingRules.Add(rule);
 							NLog.LogManager.Configuration = loggingConfig;
 						}

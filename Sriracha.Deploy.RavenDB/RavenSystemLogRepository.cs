@@ -46,7 +46,7 @@ namespace Sriracha.Deploy.RavenDB
 				MessageText = message,
 				LoggerName = loggerName
 			};
-			//this._documentSession.StoreSaveEvict(systemLog);
+			this._documentSession.StoreSaveEvict(systemLog);
 			return systemLog;
 		}
 
