@@ -117,7 +117,7 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 
 		public int DefaultBuildRetentionMinutes
 		{
-			get { return _repository.GetIntSetting("DefaultBuildRetentionMinutes", 60*24); }
+			get { return _repository.GetIntSetting("DefaultBuildRetentionMinutes", 60*24*7); }
 			set { _repository.SetIntSetting("DefaultBuildRetentionMinutes", value); }
 		}
 
