@@ -54,7 +54,7 @@
 		}
 	});
 
-	$scope.browseContents = function () {
+	$scope.browseContents = function (targetObject, targetFieldName) {
 	    var queryParameters = {
 	        projectId: $scope.deploymentStep.projectId,
 	        projectComponentId: $scope.deploymentStep.parentId,
@@ -77,7 +77,7 @@
 			    modalInstance.result.then(
                     function (selectedFile) {
                         if(selectedFile && selectedFile.fileName) {
-                            var exePath = "${deploy:directory}\\";
+                            var fullPath = "${deploy:directory}\\";
                             if(selectedFile.directory) {
                                 var reformattedDirectory = selectedFile.directory;
                                 if (reformattedDirectory[0] == '/' || reformattedDirectory[0] == '\\') {
@@ -93,11 +93,11 @@
                                     reformattedDirectory = reformattedDirectory.replace(re, '\\');
                                 }
                                 if(reformattedDirectory && reformattedDirectory.length) {
-                                    exePath += reformattedDirectory + "\\";
+                                    fullPath += reformattedDirectory + "\\";
                                 }
                             }
-                            exePath += selectedFile.fileName;
-                            $scope.deploymentStep.taskOptions.ExecutablePath = exePath;
+                            fullPath += selectedFile.fileName;
+                            targetObject[targetFieldName] = fullPath;
                         }
                     }
 			    );

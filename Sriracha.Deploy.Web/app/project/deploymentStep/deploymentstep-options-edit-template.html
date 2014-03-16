@@ -21,15 +21,35 @@
 <div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.XmlConfigFile.XmlConfigFileTaskDefinition'">
 	<h4>XML Config File </h4>
 	<table class="table table-striped">
-		<tr>
+        <tr>
+            <th>Template Source:</th>
+            <td>
+                <label class="radio">
+                    <input type="radio" ng-model="deploymentStep.taskOptions.TemplateSource" value="XmlTemplate" checked="checked" />
+                    XML Template (below)
+                </label>
+                <label class="radio">
+                    <input type="radio" ng-model="deploymentStep.taskOptions.TemplateSource" value="File"/>
+                    File in the deployment package
+                </label>
+            </td>
+        </tr>
+		<tr ng-show="deploymentStep.taskOptions.TemplateSource == 'XmlTemplate'">
 			<th>XML Template:</th>
 			<td>
 				<textarea ng-model="deploymentStep.taskOptions.XmlTemplate" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
 			</td>
 		</tr>
+        <tr ng-show="deploymentStep.taskOptions.TemplateSource == 'File'">
+            <th>File:</th>
+            <td class="form-inline">
+                <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.SourceFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" />
+                <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'SourceFileName')"><i class="icon-folder-open"></i></button>
+            </td>
+        </tr>
 		<tr>
 			<th>Target File Name:</th>
-			<td><input type="text" ng-model="deploymentStep.taskOptions.TargetFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
+			<td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)" /></td>
 		</tr>
 		<tr>
 			<th>XPath Value List:</th>
@@ -68,7 +88,7 @@
 			<th>Executable Path:</th>
 			<td class="form-inline">
                 <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ExecutablePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(project.id)"/>
-                <button class="btn" ng-click="browseContents()"><i class="icon-folder-open"></i></button>
+                <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ExecutablePath')"><i class="icon-folder-open"></i></button>
             </td>
 		</tr>
 		<tr>

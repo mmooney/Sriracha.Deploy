@@ -18,8 +18,10 @@
             );
 	    }
 
-	    $scope.selectedBuild = _.first(buildList);
-	    $scope.loadFiles($scope.selectedBuild);
+	    if (buildList && buildList.length) {
+	        $scope.selectedBuild = _.first(buildList);
+	        $scope.loadFiles($scope.selectedBuild);
+	    }
 
 	    $scope.selectedBuildChanged = function () {
 	        $scope.loadFiles($scope.selectedBuild);

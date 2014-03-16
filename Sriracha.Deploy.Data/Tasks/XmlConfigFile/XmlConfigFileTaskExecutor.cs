@@ -47,7 +47,27 @@ namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
 			statusManager.Info(deployStateId, string.Format("Configuring {0} for machine {1}", definition.Options.TargetFileName, machine.MachineName));
 			var machineResult = validationResult.MachineResultList[machine.Id];
 			var xmlDoc = new XmlDocument();
-			xmlDoc.LoadXml(definition.Options.XmlTemplate);
+            switch(definition.Options.TemplateSource)
+            {
+                case XmlConfigFileTaskOptions.EnumTemplateSource.XmlTemplate:
+                    if(string.IsNullOrEmpty(definition.Options.XmlTemplate)) 
+                    {
+                        throw new ArgumentNullException("TemplateSource=XmlTemplate but XmlTemplate is null");
+                    }
+                    xmlDoc.LoadXml(definition.Options.XmlTemplate);
+                    break;
+                case XmlConfigFileTaskOptions.EnumTemplateSource.File:
+                    if(string.IsNullOrEmpty(definition.Options.SourceFileName))
+                    {
+                        throw new ArgumentNullException("TemplateSource=File but SourceFileName is null");
+                    }
+                    if(!File.Exists(definition.Options.SourceFileName))
+                    {
+                        throw new FileNotFoundException("SourceFileName does not exist:" + definition.Options.SourceFileName, definition.Options.SourceFileName);
+                    }
+                    xmlDoc.Load(definition.Options.SourceFileName);
+                    break;
+            }
 			foreach (var xpathItem in definition.Options.XPathValueList)
 			{
 				string value;
