@@ -36,8 +36,35 @@
 </table>
 <h3>File Contents</h3>
 <div>
-    <abn-tree tree-data="fileContents"></abn-tree>
+    <div class="span6">
+        <abn-tree tree-data="fileContents" on-select="selectTreeNode(branch)"></abn-tree>
+    </div>
+    <div class="span4 alert alert-info" ng-show="selectedTreeNode">
+        <div ng-show="selectedTreeNode.label">
+            <b>Label:</b> {{selectedTreeNode.label}}
+        </div>
+        <div ng-show="selectedTreeNode.fileName">
+            <b>File Name:</b> {{selectedTreeNode.fileName}}
+        </div>
+        <div ng-show="selectedTreeNode.fileSizeBytes">
+            <b>File Size:</b> {{selectedTreeNode.fileSizeBytes | number}} bytes
+        </div>
+        <div ng-show="selectedTreeNode.createdDateTime">
+            <b>Created Date/Time</b> {{selectedTreeNode.createdDateTime | displayDateTimeShort}}
+        </div>
+        <div ng-show="selectedTreeNode.modifiedDateTime">
+            <b>Modified Date/Time:</b> {{selectedTreeNode.modifiedDateTime | displayDateTimeShort}}
+        </div>
+        <div ng-show="selectedTreeNode.accessedDateTime">
+            <b>Accessed Date/Time</b> {{selectedTreeNode.accessedDateTime | displayDateTimeShort}}
+        </div>
+        <div ng-show="selectedTreeNode.children.length">
+            <b>Children:</b> {{selectedTreeNode.children.length}}
+        </div>
+        <pre>{{selectedTreeNode}}</pre>
+    </div>
  </div>
+ <div class="clearfix"></div>
 <h3>Recent Deploy History</h3>
 <table class="table table-bordered table-striped">
     <thead>

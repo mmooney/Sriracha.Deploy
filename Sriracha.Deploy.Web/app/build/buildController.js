@@ -11,9 +11,11 @@
                     function () {
                         if (fileData.manifest && fileData.manifest.itemList && fileData.manifest.itemList.length) {
                             var itemList = fileData.manifest.itemList;
-                            var directoryNameList = _.sortBy(_.unique(_.pluck(itemList, 'directory')));
+                            var directoryNameList = _.sortBy(_.unique(_.pluck(_.filter(itemList, function (x) { return x.directory }), 'directory')));
+                            console.log(directoryNameList);
                             var directoryDataList = [];
                             var childrenList = _.filter(itemList, function (x) { return !x.directory; });   //Start with root items
+                            _.each(childrenList, function (x) { x.label = x.fileName });
                             _.each(directoryNameList, function (directoryName) {
                                 var parts = directoryName.split('/');
                                 var displayName = _.last(parts);
@@ -30,8 +32,9 @@
                                     if (!directoryNode) {
                                         directoryNode = {
                                             label: directoryLabel,
-                                            children: _.pluck(_.filter(itemList, function (x) { return (x.fileName && x.directory == currentDirectoryName);}), "fileName")
+                                            children: _.filter(itemList, function (x) { return (x.fileName && x.directory == currentDirectoryName);})
                                         };
+                                        _.each(directoryNode.children, function (x) { x.label = x.fileName });
                                         currentNodeList.push(directoryNode);
                                     }
                                     directoryNode.children = directoryNode.children || [];
@@ -47,6 +50,10 @@
                 )
 			}
 		});
+
+		$scope.selectTreeNode = function (branch) {
+		    $scope.selectedTreeNode = branch;
+		}
 		$scope.deployHistory = SrirachaResource.deployHistory.get(
             { buildIdList: [$routeParams.buildId] },
             function () {
