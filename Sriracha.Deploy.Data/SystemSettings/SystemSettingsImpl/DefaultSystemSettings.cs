@@ -121,7 +121,7 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 			set { _repository.SetIntSetting("DefaultBuildRetentionMinutes", value); }
 		}
 
-        private new List<BaseBuildPurgeRetentionRule> _defaultBuildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
+        private List<BaseBuildPurgeRetentionRule> _defaultBuildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
 		{
 			new DeployHistoryBuildRetentionRule 
 			{ 
