@@ -327,6 +327,8 @@
     <Compile Include="Services\SystemSettings\UserRequest.cs" />
     <Compile Include="Services\SystemSettings\UserService.cs" />
     <Compile Include="Services\TaskMetadataService.cs" />
+    <Compile Include="Services\TaskOptionsViewRequest.cs" />
+    <Compile Include="Services\TaskOptionsViewService.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentRequest.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentResponse.cs" />
     <Compile Include="Services\ValidateEnvironment\ValidateEnvironmentService.cs" />

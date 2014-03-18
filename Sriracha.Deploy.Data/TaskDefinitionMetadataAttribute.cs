@@ -9,10 +9,12 @@ namespace Sriracha.Deploy.Data
     public class TaskDefinitionMetadataAttribute : Attribute 
     {
         public string TaskName { get; set; }
+        public string OptionsViewResourceId { get; set; }
 
-        public TaskDefinitionMetadataAttribute(string taskName = null)
+        public TaskDefinitionMetadataAttribute(string taskName = null, string optionsViewResourceId=null)
         {
             this.TaskName = taskName;
+            this.OptionsViewResourceId = optionsViewResourceId;
         }
     }
 }

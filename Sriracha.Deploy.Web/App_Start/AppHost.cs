@@ -77,8 +77,9 @@ namespace Sriracha.Deploy.Web.App_Start
 				.Add<DeployState>("/deploy/state")
 				.Add<DeployState>("/deploy/state/{id}")
 
-				.Add<TaskMetadata>("/taskMetadata")
-				.Add<SystemLogRequest>("/systemlog");
+                .Add<TaskMetadata>("/taskMetadata")
+                
+                .Add<SystemLogRequest>("/systemlog");
 
 			//container.Adapter = NinjectWebCommon.CreateServiceStackAdapter();
 			

@@ -231,4 +231,80 @@ namespace Sriracha.Deploy.Data.Tests
 			}
 		}
 	}
+
+    public class GetTaskOptionsView
+    {
+        [TaskDefinitionMetadata(TaskName = "Test Task With Metadata", OptionsViewResourceId = "TestView")]
+        private class TestTaskWithMetadata : IDeployTaskDefinition
+        {
+            public string TaskDefintionName
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public IList<TaskParameter> GetStaticTaskParameterList()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IList<TaskParameter> GetEnvironmentTaskParameterList()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IList<TaskParameter> GetMachineTaskParameterList()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IList<TaskParameter> GetBuildTaskParameterList()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IList<TaskParameter> GetDeployTaskParameterList()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Type GetTaskExecutorType()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Type GetTaskOptionType()
+            {
+                throw new NotImplementedException();
+            }
+
+            public object DeployTaskOptions
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+        
+        [Test]
+        public void ReturnsOptionsView()
+        {
+            var moduleInspector = new Mock<IModuleInspector>();
+            ITaskManager sut = new TaskManager(moduleInspector.Object);
+            var data = new List<Type>()
+				{
+					typeof(TestTaskWithMetadata)
+				};
+            moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition))).Returns(data);
+
+            var result = sut.GetTaskOptionsView(data[0].FullName);
+
+            Assert.IsNotNullOrEmpty(result);
+            Assert.AreEqual(TestDataResources.TestView, result);
+        }
+    }
 }

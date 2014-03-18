@@ -39,6 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureTaskResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AzureTaskResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="DeployCloudService\DeployCloudServiceTaskDefinition.cs" />
     <Compile Include="DeployCloudService\DeployCloudServiceTaskExecutor.cs" />
     <Compile Include="DeployCloudService\DeployCloudServiceTaskTaskOptions.cs" />
@@ -49,6 +54,15 @@
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AzureTaskResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AzureTaskResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeployCloudServiceTaskOptionsView.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

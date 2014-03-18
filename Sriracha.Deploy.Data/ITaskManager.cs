@@ -9,5 +9,7 @@ namespace Sriracha.Deploy.Data
 	public interface ITaskManager
 	{
 		List<TaskMetadata> GetAvailableTaskList();
-	}
+
+        string GetTaskOptionsView(string taskTypeName);
+    }
 }
