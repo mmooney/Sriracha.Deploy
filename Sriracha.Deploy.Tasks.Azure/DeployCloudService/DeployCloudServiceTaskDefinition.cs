@@ -1,4 +1,5 @@
-﻿using Sriracha.Deploy.Data.Tasks;
+﻿using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
 {
+    [TaskDefinitionMetadata("Azure - Deploy Cloud Service")]
     public class DeployCloudServiceTaskDefinition : BaseDeployTaskDefinition<DeployCloudServiceTaskTaskOptions, DeployCloudServiceTaskExecutor>
     {
         public override IList<TaskParameter> GetStaticTaskParameterList()

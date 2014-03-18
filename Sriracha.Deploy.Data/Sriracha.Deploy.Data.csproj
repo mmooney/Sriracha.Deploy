@@ -235,6 +235,7 @@
     <Compile Include="Deployment\DeploymentImpl\DeployStatusNotifier.cs" />
     <Compile Include="SystemSettings\ISystemSetterUpper.cs" />
     <Compile Include="SystemSettings\SystemSetterUpper.cs" />
+    <Compile Include="TaskDefinitionMetadataAttribute.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="Utility\IRegexResolver.cs" />

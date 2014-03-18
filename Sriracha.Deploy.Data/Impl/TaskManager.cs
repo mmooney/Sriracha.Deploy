@@ -23,10 +23,16 @@ namespace Sriracha.Deploy.Data.Impl
 			{
 				if(type.IsClass && !type.IsAbstract)
 				{
+                    string taskDisplayName = type.Name;
+                    var attribute = type.GetCustomAttributes(typeof(TaskDefinitionMetadataAttribute), true).FirstOrDefault();
+                    if(attribute != null)
+                    {
+                        taskDisplayName = ((TaskDefinitionMetadataAttribute)attribute).TaskName;
+                    }
 					var item = new TaskMetadata
 					{
 						TaskTypeName = type.FullName,
-						TaskDisplayName = type.Name
+						TaskDisplayName = taskDisplayName
 					};
 					returnList.Add(item);
 				}

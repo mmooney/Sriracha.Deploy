@@ -12,7 +12,7 @@ namespace Sriracha.Deploy.Data.Tests
 {
 	public class TaskManagerTests
 	{
-		public abstract class GetAvailableTaskList
+		public class GetAvailableTaskList
 		{
 			private class TestBaseTask : IDeployTaskDefinition
 			{
@@ -87,6 +87,87 @@ namespace Sriracha.Deploy.Data.Tests
 				public abstract Type GetTaskOptionType();
 				public abstract object DeployTaskOptions { get; set; }
 			}
+
+            [TaskDefinitionMetadata(TaskName="Test Task With Metadata")]
+            private class TestTaskWithMetadata : IDeployTaskDefinition
+            {
+                public string TaskDefintionName
+                {
+                    get { throw new NotImplementedException(); }
+                }
+
+                public IList<TaskParameter> GetStaticTaskParameterList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IList<TaskParameter> GetEnvironmentTaskParameterList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IList<TaskParameter> GetMachineTaskParameterList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IList<TaskParameter> GetBuildTaskParameterList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IList<TaskParameter> GetDeployTaskParameterList()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public Type GetTaskExecutorType()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public Type GetTaskOptionType()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public object DeployTaskOptions
+                {
+                    get
+                    {
+                        throw new NotImplementedException();
+                    }
+                    set
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+            }
+
+            [Test]
+            public void UsesMetadataAttributeIfAvaialble()
+            {
+                var moduleInspector = new Mock<IModuleInspector>();
+                ITaskManager sut = new TaskManager(moduleInspector.Object);
+                var data = new List<Type>()
+				{
+					typeof(TestTaskWithMetadata)
+				};
+                moduleInspector.Setup(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition))).Returns(data);
+
+                var result = sut.GetAvailableTaskList();
+
+                moduleInspector.Verify(i => i.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition)), Times.Once());
+                Assert.AreEqual(data.Count, result.Count);
+                foreach (var metadata in result)
+                {
+                    var type = data.FirstOrDefault(i=>i.FullName == metadata.TaskTypeName);
+                    Assert.IsNotNull(type);
+                    string displayName = ((TaskDefinitionMetadataAttribute)type.GetCustomAttributes(typeof(TaskDefinitionMetadataAttribute), true).First()).TaskName;
+                    Assert.AreEqual(displayName, metadata.TaskDisplayName);
+                }
+
+            }
 
 			[Test]
 			public void CallsIModuleInspector()
