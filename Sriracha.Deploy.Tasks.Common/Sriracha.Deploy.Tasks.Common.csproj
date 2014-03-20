@@ -77,7 +77,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\XmlConfigFileTaskOptionsView.html" />
+    <Content Include="LocalCommandLine\LocalCommandLineTaskOptionsView.html" />
+    <Content Include="XmlConfigFile\XmlConfigFileTaskOptionsView.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

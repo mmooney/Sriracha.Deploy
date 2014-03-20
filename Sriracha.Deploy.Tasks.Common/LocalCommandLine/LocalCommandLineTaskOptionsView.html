@@ -1,0 +1,14 @@
+<h4>Local Command Line</h4>
+<table class="table table-striped">
+	<tr>
+		<th>Executable Path:</th>
+		<td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ExecutablePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ExecutablePath')"><i class="icon-folder-open"></i></button>
+        </td>
+	</tr>
+	<tr>
+		<th>Executable Arguments:</th>
+		<td><textarea class="input-xxlarge" ng-model="deploymentStep.taskOptions.ExecutableArguments" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)"></textarea></td>
+	</tr>
+</table>

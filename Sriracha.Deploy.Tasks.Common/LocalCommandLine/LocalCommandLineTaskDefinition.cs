@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 {
+    [TaskDefinitionMetadata("Execute Command Line Locally", "LocalCommandLineTaskOptionsView")]
 	public class LocalCommandLineTaskDefinition : BaseDeployTaskDefinition<LocalCommandLineTaskOptions, LocalCommandLineTaskExecutor>
 	{
 		private readonly IParameterParser _parameterParser;

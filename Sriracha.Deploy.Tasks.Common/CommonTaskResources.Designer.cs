@@ -61,17 +61,37 @@ namespace Sriracha.Deploy.Tasks.Common {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 	&lt;h4&gt;XML Config File &lt;/h4&gt;
-        ///	&lt;table class=&quot;table table-striped&quot;&gt;
-        ///        &lt;tr&gt;
-        ///            &lt;th&gt;Template Source:&lt;/th&gt;
-        ///            &lt;td&gt;
-        ///                &lt;label class=&quot;radio&quot;&gt;
-        ///                    &lt;input type=&quot;radio&quot; ng-model=&quot;deploymentStep.taskOptions.TemplateSource&quot; value=&quot;XmlTemplate&quot; checked=&quot;checked&quot; /&gt;
-        ///                    XML Template (below)
-        ///                &lt;/label&gt;
-        ///                &lt;label class=&quot;radio&quot;&gt;
-        ///                    &lt;input type=&quot;radio&quot; ng-model=&quot;deploymentStep.taskOptions.TemplateSource&quot; v [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;h4&gt;Local Command Line&lt;/h4&gt;
+        ///&lt;table class=&quot;table table-striped&quot;&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Executable Path:&lt;/th&gt;
+        ///		&lt;td class=&quot;form-inline&quot;&gt;
+        ///            &lt;input type=&quot;text&quot; class=&quot;input-xxlarge&quot; ng-model=&quot;deploymentStep.taskOptions.ExecutablePath&quot; ng-disabled=&quot;!permissionVerifier.canEditComponentConfiguration(project.id)&quot;/&gt;
+        ///            &lt;button class=&quot;btn&quot; ng-click=&quot;browseContents(deploymentStep.taskOptions, &apos;ExecutablePath&apos;)&quot;&gt;&lt;i class=&quot;icon-folder-open&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        ///        &lt;/td&gt;
+        ///	&lt;/tr&gt;
+        ///	&lt;tr&gt;
+        ///		&lt;th&gt;Executable Arg [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LocalCommandLineTaskOptionsView {
+            get {
+                return ResourceManager.GetString("LocalCommandLineTaskOptionsView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;h4&gt;XML Config File &lt;/h4&gt;
+        ///&lt;table class=&quot;table table-striped&quot;&gt;
+        ///    &lt;tr&gt;
+        ///        &lt;th&gt;Template Source:&lt;/th&gt;
+        ///        &lt;td&gt;
+        ///            &lt;label class=&quot;radio&quot;&gt;
+        ///                &lt;input type=&quot;radio&quot; ng-model=&quot;deploymentStep.taskOptions.TemplateSource&quot; value=&quot;XmlTemplate&quot; checked=&quot;checked&quot; /&gt;
+        ///                XML Template (below)
+        ///            &lt;/label&gt;
+        ///            &lt;label class=&quot;radio&quot;&gt;
+        ///                &lt;input type=&quot;radio&quot; ng-model=&quot;deploymentStep.taskOptions.TemplateSource&quot; value=&quot;File&quot;/&gt;
+        ///                File in [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string XmlConfigFileTaskOptionsView {
             get {
