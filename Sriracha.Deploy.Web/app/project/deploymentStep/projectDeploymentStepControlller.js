@@ -45,6 +45,7 @@
 					if (deploymentStepItem) {
 						deploymentStepItem.taskOptions = JSON.parse(deploymentStepItem.taskOptionsJson);
 						$scope.deploymentStep = new SrirachaResource.deploymentStep(deploymentStepItem);
+
 					}
 				}
 			}
@@ -107,6 +108,30 @@
 			}
 		);
 	}
+	$scope.validator = {
+	    isValid: function (item) {
+	        if (item) {
+	            if (item.validation && item.validation.length) {
+	                return !_.any(item.validation, function (x) { return x.isError });
+	            }
+	            return true;
+	        }
+	    },
+	    getErrors: function (item) {
+	        if (item && item.validation) {
+	            console.log("test", _.where(item.validation, { isError: true }));
+	            return _.where(item.validation, { isError: true });
+	        }
+	    }
+    }
+	//$scope.isValid = function (item) {
+	//    if (item) {
+	//        if (item.validation && item.validation.length) {
+	//            return !_.any(item.validation, function (x) { return x.isError });
+	//        }
+	//        return true;
+	//    }
+	//}
 	$scope.goBack = function () {
 		if ($routeParams.componentId) {
 			$scope.navigator.component.view.go($scope.project.id, $routeParams.componentId);

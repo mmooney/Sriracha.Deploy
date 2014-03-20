@@ -31,7 +31,10 @@
 		};
 		this.handleResourceError = function (response) {
 			var displayMessage;
-			if (!response.data) {
+			if (response.responseStatus && response.responseStatus.message) {
+			    displayMessage = "<b>Error: " + response.responseStatus.message + "</b><pre>" + JSON.stringify(response.responseStatus, null, 4);
+			}
+			else if (!response.data) {
 				displayMessage = "<b>Unknown Error</b><br/>" + JSON.stringify(response);
 			}
 			else if (response.data.responseStatus && response.data.responseStatus.message) {

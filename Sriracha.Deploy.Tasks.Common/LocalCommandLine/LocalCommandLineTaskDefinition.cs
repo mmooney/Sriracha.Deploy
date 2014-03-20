@@ -1,10 +1,11 @@
-﻿using Sriracha.Deploy.Data.Utility;
+﻿using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
+namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 {
 	public class LocalCommandLineTaskDefinition : BaseDeployTaskDefinition<LocalCommandLineTaskOptions, LocalCommandLineTaskExecutor>
 	{

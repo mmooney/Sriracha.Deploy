@@ -1,4 +1,5 @@
-﻿using ServiceStack.ServiceInterface;
+﻿using MMDB.Shared;
+using ServiceStack.ServiceInterface;
 using Sriracha.Deploy.Data;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Sriracha.Deploy.Web.Services
             {
                 throw new ArgumentNullException("request.taskTypeName is null");
             }
-            return _taskManager.GetTaskOptionsView(request.TaskTypeName);
+            return _taskManager.TryGetTaskOptionsView(request.TaskTypeName);
         }
     }
 }

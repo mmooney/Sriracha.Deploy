@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using XmlUnit;
 
-namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
+namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 {
 	[Ignore]
 	public class XmlConfigFileTaskExecutorTests

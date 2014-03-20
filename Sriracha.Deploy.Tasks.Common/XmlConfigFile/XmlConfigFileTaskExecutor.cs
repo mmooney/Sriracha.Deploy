@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml;
+using System.Linq;
 using MMDB.Shared;
 using Newtonsoft.Json;
-using Sriracha.Deploy.Data.Dto;
-using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Utility;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Validation;
+using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data;
 
-namespace Sriracha.Deploy.Data.Tasks.XmlConfigFile
+namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 {
 	public class XmlConfigFileTaskExecutor : BaseDeployTaskExecutor<XmlConfigFileTaskDefinition>
 	{

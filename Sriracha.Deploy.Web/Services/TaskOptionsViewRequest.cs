@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Sriracha.Deploy.Web.Services
 {
-    [Route("/taskOptions/{taskTypeName*}")]
+    [Route("/taskOptionsView/{taskTypeName*}")]
     public class TaskOptionsViewRequest 
     {
         public string TaskTypeName { get; set; }

@@ -4,9 +4,10 @@ using System.Text;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Tasks;
-using Sriracha.Deploy.Data.Tasks.XmlConfigFile;
+using Sriracha.Deploy.Tasks.Common.XmlConfigFile;
+using Sriracha.Deploy.Data;
 
-namespace Sriracha.Deploy.Data.Tests.Tasks.XmlConfigFile
+namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 {
 	public class XmlConfigFileTaskDefinitionTests
 	{

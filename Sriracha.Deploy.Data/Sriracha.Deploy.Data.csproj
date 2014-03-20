@@ -318,22 +318,12 @@
     <Compile Include="Tasks\IDeployTaskExecutor.cs" />
     <Compile Include="Tasks\IDeployTaskFactory.cs" />
     <Compile Include="Tasks\IDeployTaskStatusManager.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskOptions.cs" />
-    <Compile Include="Tasks\RoundhousE\RoundhousEEnvironmentConfiguration.cs" />
-    <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
-    <Compile Include="Tasks\RoundhousE\RoundhousETaskExecutor.cs" />
-    <Compile Include="Tasks\RoundhousE\RoundhousETaskOptions.cs" />
     <Compile Include="Tasks\RuntimeSystemSettings.cs" />
     <Compile Include="Dto\Validation\TaskDefinitionValidationResult.cs" />
     <Compile Include="Tasks\TaskImpl\DeployTaskFactory.cs" />
     <Compile Include="Tasks\TaskImpl\DeployTaskStatusManager.cs" />
     <Compile Include="Tasks\TaskMetadata.cs" />
     <Compile Include="Tasks\TaskParameter.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskDefinition.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskExecutor.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskOptions.cs" />
     <Compile Include="TempStreamHelper.cs" />
     <Compile Include="TupleList.cs" />
   </ItemGroup>

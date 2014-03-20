@@ -11,5 +11,7 @@ namespace Sriracha.Deploy.Data
 		List<TaskMetadata> GetAvailableTaskList();
 
         string GetTaskOptionsView(string taskTypeName);
+        string TryGetTaskOptionsView(string taskTypeName);
+
     }
 }

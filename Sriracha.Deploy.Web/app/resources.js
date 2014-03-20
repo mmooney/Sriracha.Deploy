@@ -33,6 +33,7 @@
 			//Other
 			systemLog: $resource("/api/systemLog"),
 			taskMetadata: $resource("/api/taskmetadata"),
+			taskOptionsView: $resource("/api/taskOptionsView"),
 			user: $resource("/api/user"),
 
 		    //System settings

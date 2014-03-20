@@ -13,9 +13,15 @@
 	</tr>
 	<tr>
 		<th>Task Configuration:</th>
-		<td><div task-config tasktypename="{{deploymentStep.taskTypeName}}"></div></td>
+		<td><div task-options deployment-step="deploymentStep"></div></td>
 	</tr>
 </table>
+<div ng-show="!validator.isValid(deploymentStep)" class="error">
+    <h3>Errors:</h3>
+    <div ng-repeat="item in validator.getErrors(deploymentStep)" class="alert alert-error">
+        {{item.fieldName}} : {{item.message}}
+    </div>
+</div>
 <button class="btn" ng-click="goBack()" ng-hide="permissionVerifier.canEditComponentConfiguration(project.id)">Back</button>
 <button class="btn" ng-click="navigator.component.view.go(component.projectId, component.id)" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Cancel</button>
 <button class="btn btn-primary" ng-click="saveDeploymentStep()" ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">Save</button>

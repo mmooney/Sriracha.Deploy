@@ -45,32 +45,39 @@ namespace Sriracha.Deploy.Data.Impl
 
         public string GetTaskOptionsView(string taskTypeName)
         {
+            string returnValue = TryGetTaskOptionsView(taskTypeName);
+            if(string.IsNullOrEmpty(returnValue))
+            {
+                throw new Exception("Could not find task option view for type " + taskTypeName);
+            }
+            return returnValue;
+        }
+
+
+        public string TryGetTaskOptionsView(string taskTypeName)
+        {
             var typeList = _moduleInspector.FindTypesImplementingInterfaces(typeof(IDeployTaskDefinition));
-            var type = typeList.FirstOrDefault(i=>i.FullName == taskTypeName);
-            if(type == null)
+            var type = typeList.FirstOrDefault(i => i.FullName == taskTypeName);
+            if (type == null)
             {
                 throw new ArgumentNullException("Failed to find type " + taskTypeName);
             }
             var attribute = (TaskDefinitionMetadataAttribute)type.GetCustomAttributes(typeof(TaskDefinitionMetadataAttribute), true).FirstOrDefault();
-            if (attribute == null)
+            if (attribute == null || string.IsNullOrEmpty(attribute.OptionsViewResourceId))
             {
-                throw new Exception("Unable to find TaskDefinitionMetadataAttribute for type " + taskTypeName);
-            }
-            if(string.IsNullOrEmpty(attribute.OptionsViewResourceId))
-            {
-                throw new Exception("Unable to find OptionsViewResourceId for type " + taskTypeName);
+                return null;
             }
             var resourceNameList = type.Assembly.GetManifestResourceNames();
-            foreach(var resourceName in resourceNameList)
+            foreach (var resourceName in resourceNameList)
             {
                 string newResourceName = resourceName;
-                if(newResourceName.EndsWith(".resources"))
+                if (newResourceName.EndsWith(".resources"))
                 {
-                    newResourceName = newResourceName.Substring(0, resourceName.Length-".resources".Length);
+                    newResourceName = newResourceName.Substring(0, resourceName.Length - ".resources".Length);
                 }
                 var resourceManager = new ResourceManager(newResourceName, type.Assembly);
                 var value = resourceManager.GetString(attribute.OptionsViewResourceId);
-                if(value != null)
+                if (value != null)
                 {
                     return value;
                 }

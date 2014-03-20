@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8784116D-D63F-49B3-A4BB-CC929BB0A080}</ProjectGuid>
+    <ProjectGuid>{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sriracha.Deploy.Tasks.Azure</RootNamespace>
-    <AssemblyName>Sriracha.Deploy.Tasks.Azure</AssemblyName>
+    <RootNamespace>Sriracha.Deploy.Tasks.Common</RootNamespace>
+    <AssemblyName>Sriracha.Deploy.Tasks.Common</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,9 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="MMDB.Shared">
       <HintPath>..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,15 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureTaskResources.Designer.cs">
+    <Compile Include="CommonTaskResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AzureTaskResources.resx</DependentUpon>
+      <DependentUpon>CommonTaskResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="DeployCloudService\DeployCloudServiceTaskDefinition.cs" />
-    <Compile Include="DeployCloudService\DeployCloudServiceTaskExecutor.cs" />
-    <Compile Include="DeployCloudService\DeployCloudServiceTaskTaskOptions.cs" />
+    <Compile Include="LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
+    <Compile Include="LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
+    <Compile Include="LocalCommandLine\LocalCommandLineTaskOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlConfigFile\XmlConfigFileTaskDefinition.cs" />
+    <Compile Include="XmlConfigFile\XmlConfigFileTaskExecutor.cs" />
+    <Compile Include="XmlConfigFile\XmlConfigFileTaskOptions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CommonTaskResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonTaskResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
@@ -62,20 +73,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AzureTaskResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AzureTaskResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\DeployCloudServiceTaskOptionsView.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\XmlConfigFileTaskOptionsView.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)TaskBinaries /s /i /y</PostBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -83,6 +87,9 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)TaskBinaries /s /i /y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

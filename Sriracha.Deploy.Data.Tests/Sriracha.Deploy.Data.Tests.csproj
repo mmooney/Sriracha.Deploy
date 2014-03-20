@@ -65,9 +65,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xmlunit">
-      <HintPath>..\ThirdParty\xmlunit-0.4\bin\xmlunit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuildParameterEvaluatorTests.cs" />
@@ -95,13 +92,6 @@
     <Compile Include="Repository\RepositoryTestBase.cs" />
     <Compile Include="SystemSetterUpperTests.cs" />
     <Compile Include="TaskManagerTests.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskDefinitionTests.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTaskExecutorTests.cs" />
-    <Compile Include="Tasks\LocalCommandLine\LocalCommandLineTestData.cs" />
-    <Compile Include="Tasks\RoundhousE\RoundhousETaskTests.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskExecutorTests.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskTestData.cs" />
-    <Compile Include="Tasks\XmlConfigFile\XmlConfigFileTaskDefinitionTests.cs" />
     <Compile Include="TempTestDataHelper.cs" />
     <Compile Include="TestDataResources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -71,6 +71,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{8E6B61EF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Tasks.Azure", "Sriracha.Deploy.Tasks.Azure\Sriracha.Deploy.Tasks.Azure.csproj", "{8784116D-D63F-49B3-A4BB-CC929BB0A080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Tasks.Common", "Sriracha.Deploy.Tasks.Common\Sriracha.Deploy.Tasks.Common.csproj", "{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Tasks.Common.Tests", "Sriracha.Deploy.Tasks.Common.Tests\Sriracha.Deploy.Tasks.Common.Tests.csproj", "{EB768C84-253A-47B4-BEF6-22956E2882D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +159,14 @@ Global
 		{8784116D-D63F-49B3-A4BB-CC929BB0A080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8784116D-D63F-49B3-A4BB-CC929BB0A080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8784116D-D63F-49B3-A4BB-CC929BB0A080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB768C84-253A-47B4-BEF6-22956E2882D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB768C84-253A-47B4-BEF6-22956E2882D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB768C84-253A-47B4-BEF6-22956E2882D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB768C84-253A-47B4-BEF6-22956E2882D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,5 +184,7 @@ Global
 		{21C46193-7EE6-4A8E-9307-38B1DF745519} = {1F4ABF02-2FCD-4EA7-8F2D-985399F32133}
 		{1AA839C6-9057-40A5-9F35-249B55A4C0D5} = {1F4ABF02-2FCD-4EA7-8F2D-985399F32133}
 		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8E6B61EF-7A1E-4EBC-B729-BD7B75933A2D}
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {8E6B61EF-7A1E-4EBC-B729-BD7B75933A2D}
+		{EB768C84-253A-47B4-BEF6-22956E2882D5} = {8E6B61EF-7A1E-4EBC-B729-BD7B75933A2D}
 	EndGlobalSection
 EndGlobal

@@ -2671,7 +2671,7 @@ forEach({
 
   off: jqLiteOff,
 
-  replaceWith: function(element, replaceNode) {
+  replaceWith: function (element, replaceNode) {
     var index, parent = element.parentNode;
     jqLiteDealoc(element);
     forEach(new JQLite(replaceNode), function(node){
@@ -6470,7 +6470,7 @@ function $CompileProvider($provide) {
      * @param {Node} newNode The new DOM node.
      */
     function replaceWith($rootElement, elementsToRemove, newNode) {
-      var firstElementToRemove = elementsToRemove[0],
+        var firstElementToRemove = elementsToRemove[0],
           removeCount = elementsToRemove.length,
           parent = firstElementToRemove.parentNode,
           i, ii;

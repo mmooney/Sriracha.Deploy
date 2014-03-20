@@ -6,7 +6,7 @@ using System.Text;
 using Moq;
 using NUnit.Framework;
 
-namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
+namespace Sriracha.Deploy.Tasks.Common.Tests.LocalCommandLine
 {
 	[Ignore]
 	public class LocalCommandLineTaskExecutorTests

@@ -1,24 +1,4 @@
-﻿<div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.RoundhousE.RoundhousETask'">
-	<h4>RoundhousE Configuration</h4>
-	<table class="table table-striped">
-		<tr>
-			<th>Database Type</th>
-			<td>
-				<select ng-model="deploymentStep.taskOptions.DBType">
-					<option value="SqlServer">SQL Server</option>
-					<option value="Postgres">Postgres</option>
-					<option value="MySql">MySQL</option>
-					<option value="Oracle">Oracle</option>
-					<option value="Other">Other</option>
-			    </select>
-				<div ng-show="deploymentStep.taskOptions.DBType == 'Other'">
-					<input type="text" ng-model="deploymentStep.taskOptions.DBTypeOtherValue" />
-				</div>
-			</td>
-		</tr>
-	</table>
-</div>
-<div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.XmlConfigFile.XmlConfigFileTaskDefinition'">
+﻿<div ng-show="deploymentStep.taskTypeName == 'Sriracha.Deploy.Data.Tasks.XmlConfigFile.XmlConfigFileTaskDefinition'">
 	<h4>XML Config File </h4>
 	<table class="table table-striped">
         <tr>
@@ -97,3 +77,4 @@
 		</tr>
 	</table>
 </div>
+<div>helloe there </div>

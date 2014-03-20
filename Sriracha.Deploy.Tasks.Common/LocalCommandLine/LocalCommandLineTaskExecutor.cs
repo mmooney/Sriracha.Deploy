@@ -14,8 +14,10 @@ using System.Security.Principal;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Validation;
+using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data;
 
-namespace Sriracha.Deploy.Data.Tasks.LocalCommandLine
+namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 {
 	public class LocalCommandLineTaskExecutor : BaseDeployTaskExecutor<LocalCommandLineTaskDefinition>
 	{

@@ -1,0 +1,17 @@
+﻿<style>
+    .ace_editor {
+        height: 200px;
+    }
+</style>
+<div>this is the defaul template</div>
+<div ng-model="jsonEditorTaskOptions" ui-ace="{
+  useWrapMode : true,
+  showGutter: false,
+  mode: 'json',
+  onChange: aceChanged
+}"></div>
+
+<div>
+test json
+<pre>{{deploymentStep.taskOptions}}</pre>
+</div>

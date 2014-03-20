@@ -11,6 +11,9 @@ namespace Sriracha.Deploy.Web
             bundles.Add(new ScriptBundle("~/vendor/underscore/scripts")
                             .Include("~/vendor/underscore/*.js"));
 
+            bundles.Add(new ScriptBundle("~/vendor/ace/scripts")
+                            .Include("~/vendor/ace/*.js"));
+
             bundles.Add(new ScriptBundle("~/vendor/bootstrap/scripts")
                                 .Include("~/vendor/bootstrap/*.js"));
 

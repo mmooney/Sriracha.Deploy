@@ -1,0 +1,61 @@
+<h4>XML Config File </h4>
+<table class="table table-striped">
+    <tr>
+        <th>Template Source:</th>
+        <td>
+            <label class="radio">
+                <input type="radio" ng-model="deploymentStep.taskOptions.TemplateSource" value="XmlTemplate" checked="checked" />
+                XML Template (below)
+            </label>
+            <label class="radio">
+                <input type="radio" ng-model="deploymentStep.taskOptions.TemplateSource" value="File"/>
+                File in the deployment package
+            </label>
+        </td>
+    </tr>
+	<tr ng-show="deploymentStep.taskOptions.TemplateSource == 'XmlTemplate'">
+		<th>XML Template:</th>
+		<td>
+            <textarea ng-model="deploymentStep.taskOptions.XmlTemplate" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+		</td>
+	</tr>
+    <tr ng-show="deploymentStep.taskOptions.TemplateSource == 'File'">
+        <th>File:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.SourceFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'SourceFileName')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+	<tr>
+		<th>Target File Name:</th>
+		<td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+	</tr>
+	<tr>
+		<th>XPath Value List:</th>
+		<td>
+			<table class="table table-striped">
+				<tr>
+					<th>XPath</th>
+					<th>Config Level</th>
+					<th>Value Name</th>
+				</tr>
+				<tr ng-repeat="item in deploymentStep.taskOptions.XPathValueList">
+					<td><input type="text" ng-model="item.xPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+					<td>
+                        <select ng-model="item.configLevel" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)">
+                            <option value="Static">Static</option>
+                            <option value="Environment">Environment</option>
+                            <option value="Machine">Machine</option>
+                            <option value="Build">Build</option>
+                        </select>
+					</td>
+					<td><input type="text" ng-model="item.valueName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+					<td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteXPathValueListItem(item)"><i class="icon-trash"></i></button></td>
+				</tr>
+				<tr>
+					<td colspan="3" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addXPathValueListItem()">Add</button></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

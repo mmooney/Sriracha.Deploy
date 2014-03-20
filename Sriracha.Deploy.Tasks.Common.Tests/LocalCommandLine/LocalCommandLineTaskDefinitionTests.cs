@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Tasks;
 
-namespace Sriracha.Deploy.Data.Tests.Tasks.LocalCommandLine
+namespace Sriracha.Deploy.Tasks.Common.Tests.LocalCommandLine
 {
 	public class LocalCommandLineTaskDefinitionTests
 	{
