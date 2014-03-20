@@ -12,7 +12,6 @@
                         if (fileData.manifest && fileData.manifest.itemList && fileData.manifest.itemList.length) {
                             var itemList = fileData.manifest.itemList;
                             var directoryNameList = _.sortBy(_.unique(_.pluck(_.filter(itemList, function (x) { return x.directory }), 'directory')));
-                            console.log(directoryNameList);
                             var directoryDataList = [];
                             var childrenList = _.filter(itemList, function (x) { return !x.directory; });   //Start with root items
                             _.each(childrenList, function (x) { x.label = x.fileName });

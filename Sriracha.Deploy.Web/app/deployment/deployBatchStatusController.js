@@ -17,7 +17,6 @@
 			    if ($scope.deployBatchStatus.request.status == "OfflineRequested") {
 			        $scope.offlineDeployment = SrirachaResource.offlineDeployment.get({deployBatchRequestId: $routeParams.deployBatchRequestId}, 
                         function() {
-                            console.log("offlineDeployment", $scope.offlineDeployment);
                         },
                         function(error) {
                             if ($scope.refreshInterval) {

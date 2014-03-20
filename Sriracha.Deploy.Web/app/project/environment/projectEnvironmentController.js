@@ -26,7 +26,6 @@
 	$scope.credentials = SrirachaResource.systemSettings.credentials.get(
 		{pageSize:1000},
 		function (data) {
-			//console.log(data);
 		},
 		function (err) {
 			ErrorReporter.handleResourceError(err);

@@ -90,7 +90,6 @@
                                 }
                                 if(reformattedDirectory && reformattedDirectory.length) {
                                     var re = /\//g;
-                                    console.log(reformattedDirectory);
                                     reformattedDirectory = reformattedDirectory.replace(re, '\\');
                                 }
                                 if(reformattedDirectory && reformattedDirectory.length) {
@@ -119,7 +118,6 @@
 	    },
 	    getErrors: function (item) {
 	        if (item && item.validation) {
-	            console.log("test", _.where(item.validation, { isError: true }));
 	            return _.where(item.validation, { isError: true });
 	        }
 	    }

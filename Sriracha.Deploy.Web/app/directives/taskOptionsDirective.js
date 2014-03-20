@@ -34,7 +34,6 @@
 	                catch (exception) {
 	                    validationItem.message = exception.message;
 	                    validationItem.isError = true;
-	                    console.log(exception);
 	                }
 	            }
 	            scope.$watch("deploymentStep.taskTypeName", function () {

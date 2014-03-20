@@ -21,7 +21,6 @@
 		    $scope.credentialsList = SrirachaResource.systemSettings.credentials.get(
 				{},
 				function (data) {
-					//console.log(data);
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);

@@ -28,7 +28,6 @@
 		    $scope.systemRoleList = SrirachaResource.systemSettings.systemRole.get(
 				$scope.listOptions,
 				function (data) {
-				    //console.log(data);
 				},
 				function (err) {
 				    ErrorReporter.handleResourceError(err);
