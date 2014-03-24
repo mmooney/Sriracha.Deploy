@@ -155,3 +155,4 @@ PublishTemp/**/*
 /packages/dropkick.core.0.4.13.0
 /DeployTest
 /TaskBinaries
+/Sriracha.Deploy.Tasks.Azure.Tests/Azure.publishsettings.private

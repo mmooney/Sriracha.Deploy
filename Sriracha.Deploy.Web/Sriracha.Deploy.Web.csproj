@@ -511,7 +511,6 @@
     <Content Include="app\project\deploymentStep\deploymentstep-delete-template.html" />
     <Content Include="app\project\component\component-delete-template.html" />
     <Content Include="app\project\deploymentStep\deploymentstep-edit-template.html" />
-    <Content Include="app\project\deploymentStep\deploymentstep-options-edit-template.html" />
     <Content Include="app\project\component\component-view-template.html" />
     <Content Include="app\home-template.html" />
     <Content Include="app\project\project-delete-template.html" />
