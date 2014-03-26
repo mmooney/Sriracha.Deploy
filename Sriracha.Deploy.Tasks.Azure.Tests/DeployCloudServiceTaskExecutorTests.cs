@@ -51,7 +51,7 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
                     Logger = new Mock<ILog>(),
                     TaskDefinition = new DeployCloudServiceTaskDefinition
                                         {
-                                            Options = fixture.Create<DeployCloudServiceTaskTaskOptions>()
+                                            Options = fixture.Create<DeployCloudServiceTaskOptions>()
                                         },
                     DeployStateId = fixture.Create<string>("DeployStateId"),
                     DeployComponent = fixture.Create<DeployComponent>(),
@@ -92,6 +92,37 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
                 };
                 testData.DeploymentValidator.Setup(i=>i.ValidateMachineTaskDefinition(testData.TaskDefinition, testData.EnvironmentComponent, testData.DeployMachine))
                                         .Returns(testData.TaskValidationResult);
+
+                //Storage account names must be just numbers and lowercase letters between 3 and 24 characters.  Seriously.
+                testData.TaskDefinition.Options.StorageAccountName = ("StorageAccountName" + Guid.NewGuid().ToString())
+                                                                        .Replace("-", "").Replace("{", "").Replace("}","")
+                                                                        .ToLower().Substring(0, 24);
+
+                string packageName = "MMDB.AzureSample.Web.Azure.cspkg";
+                var packagePath = Path.Combine(Environment.CurrentDirectory, packageName);
+                if(!File.Exists(packagePath))
+                {
+                    packagePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..", packageName));
+                    if(!File.Exists(packagePath))
+                    {
+                        throw new Exception("Unable to find package " + packageName);
+                    }
+                }
+                testData.TaskDefinition.Options.AzurePackagePath = packagePath;
+
+                string configName = "ServiceConfiguration.Cloud.cscfg";
+                var configPath = Path.Combine(Environment.CurrentDirectory, packageName);
+                if (!File.Exists(configPath))
+                {
+                    configPath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..", configName));
+                    if (!File.Exists(configPath))
+                    {
+                        throw new Exception("Unable to find config " + configName);
+                    }
+                }
+                testData.TaskDefinition.Options.AzureConfigPath = configPath;
+
+                testData.TaskDefinition.Options.DeploymentSlot = "production";
                 return testData;
             }
 
@@ -102,9 +133,20 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
         {
             var testData = TestData.Create();
 
-            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition, 
+            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
                                 testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
                                 testData.SystemSettings);
+        }
+        [Test, Explicit]
+        public void NewDeployment_NameNotAvailable_ThorwsErrors()
+        {
+            var testData = TestData.Create();
+            testData.TaskDefinition.Options.ServiceName = "sportscommanderprod";
+
+            Assert.Throws<ArgumentException>(()=>
+                            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
+                                                testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
+                                                testData.SystemSettings));
         }
     }
 }

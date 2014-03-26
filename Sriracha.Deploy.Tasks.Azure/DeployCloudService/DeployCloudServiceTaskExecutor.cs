@@ -6,8 +6,12 @@ using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Validation;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Tasks.Azure.AzureDto;
+using Sriracha.Deploy.Tasks.Azure.AzureDto.AzureCloudService;
+using Sriracha.Deploy.Tasks.Azure.AzureDto.AzureStorage;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -18,6 +22,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
         private const string ValueMask = "*****";
         private readonly ILog _logger;
         private readonly IDeploymentValidator _validator;
+        private readonly IParameterEvaluator _parameterEvaluator;
 
         public DeployCloudServiceTaskExecutor(IParameterEvaluator parameterEvaluator, ILog logger, IDeploymentValidator validator) : base(parameterEvaluator)
         {
@@ -28,40 +33,107 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
         protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, DeployCloudServiceTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
         {
             _logger.Info("Starting DeployCloudService.InternalExecute");
-            var result = new DeployTaskExecutionResult();
-            var validationResult = _validator.ValidateMachineTaskDefinition(definition, environmentComponent, machine);
-            if (validationResult.Status != EnumRuntimeValidationStatus.Success)
-            {
-                throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
-            }
+            var context = GetTaskExecutionContext(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings);
 
-            statusManager.Info(deployStateId, "Configuring Azure Cloud Services Deployment");
-            var machineResult = validationResult.MachineResultList[machine.Id];
+            //string formattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
+            //string maskedFormattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
 
-            string formattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
-            string maskedFormattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
+            //string formattedManagementCertificate = this.ReplaceParameters(definition.Options.AzureManagementCertificate, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
+            //string maskedFormattedManagementCertificate = this.ReplaceParameters(definition.Options.AzureManagementCertificate, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
 
-            string formattedManagementCertificate = this.ReplaceParameters(definition.Options.AzureManagementCertificate, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
-            string maskedFormattedManagementCertificate = this.ReplaceParameters(definition.Options.AzureManagementCertificate, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
-
-            string formattedServiceName = this.ReplaceParameters(definition.Options.ServiceName, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
-            string maskedFormattedServiceName = this.ReplaceParameters(definition.Options.ServiceName, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
+            //string formattedServiceName = this.ReplaceParameters(definition.Options.ServiceName, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
+            //string maskedFormattedServiceName = this.ReplaceParameters(definition.Options.ServiceName, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
 
             //Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 
-            var client = new AzureClient(formattedSubscriptionIdentifier, formattedManagementCertificate);
-            var list = client.GetCloudServiceList();
+            var client = new AzureClient(context.FormattedOptions.AzureSubscriptionIdentifier, context.FormattedOptions.AzureManagementCertificate);
+            var service = client.GetHostedService(context.FormattedOptions.ServiceName);
+            //var list = client.GetCloudServiceList();
 
-            //var existingService = computeManagementClient.HostedServices.Get(formattedServiceName);
-            var existingService = list.FirstOrDefault(i=>i.ServiceName == formattedServiceName);
-            if (existingService == null)
+            ////var existingService = computeManagementClient.HostedServices.Get(formattedServiceName);
+            //var service = list.FirstOrDefault(i=>i.ServiceName == formattedServiceName);
+            if (service == null)
             {
-                statusManager.Info(deployStateId, string.Format("Service {0} does not yet exist", formattedServiceName));
+                context.Info("Service {0} does not yet exist, creating...", context.MaskedFormattedOptions.ServiceName);
+
+                string message;
+                if (!client.CheckCloudServiceNameAvailability(context.FormattedOptions.ServiceName, out message))
+                {
+                    throw new ArgumentException(string.Format("Service name {0} not available: {1}", context.MaskedFormattedOptions.ServiceName, message));
+                }
+                client.CreateCloudService(context.FormattedOptions.ServiceName);
+                service = client.GetHostedService(context.FormattedOptions.ServiceName);
+                context.Info("Service {0} created successfully", context.MaskedFormattedOptions.ServiceName);
             }
             else
             {
-                statusManager.Info(deployStateId, string.Format("Service {0} already exists", formattedServiceName));
+                context.Info("Service {0} already exists", context.MaskedFormattedOptions.ServiceName);
             }
+
+            var storageAccount = client.GetStorageAccount(context.FormattedOptions.StorageAccountName);
+            if(storageAccount == null)
+            {
+                context.Info("Storage Account {0} does not exist, creating...", context.MaskedFormattedOptions.StorageAccountName);
+
+                if (!client.CheckStorageAccountNameAvailability(context.FormattedOptions.StorageAccountName))
+                {
+                    throw new ArgumentException(string.Format("Storage Account name {0} not available", context.MaskedFormattedOptions.StorageAccountName));
+                }
+                client.CreateStorageAccount(context.FormattedOptions.StorageAccountName);
+                storageAccount = client.GetStorageAccount(context.FormattedOptions.StorageAccountName);
+            }
+            else 
+            {
+                context.Info("Storage Account {0} exists", context.MaskedFormattedOptions.StorageAccountName);
+            }
+
+            storageAccount = client.WaitForStorageAccountStatus(context.FormattedOptions.StorageAccountName, StorageServiceProperties.EnumStorageServiceStatus.Created, TimeSpan.FromSeconds(120));
+
+            var keys = client.GetStorageAccountKeys(context.FormattedOptions.StorageAccountName);
+
+            context.Info("Uploading Azure package file to blog storage: {0}", context.MaskedFormattedOptions.AzurePackagePath);
+            var blobUrl = client.UploadBlobFile(context.FormattedOptions.StorageAccountName, keys.Secondary, context.FormattedOptions.AzurePackagePath, "srirachadeploy");
+
+            string configurationData = File.ReadAllText(context.FormattedOptions.AzureConfigPath);
+
+            DeploymentItem deployment = null;
+            if(service.DeploymentList != null)
+            {
+                deployment = service.DeploymentList.FirstOrDefault(i => i.DeploymentSlot == context.FormattedOptions.DeploymentSlot);
+            }
+            if(deployment == null)
+            {
+                context.Info("Deployment does not yet exist, creating...");
+                client.CreateCloudServiceDeployment(context.FormattedOptions.ServiceName, blobUrl, configurationData, context.FormattedOptions.DeploymentSlot);
+            }
+            else 
+            {
+                context.Info("Deployment already exists, upgrading...");
+                throw new NotImplementedException();
+            }
+            deployment = client.WaitForCloudServiceDeploymentStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, DeploymentItem.EnumDeploymentItemStatus.Running, TimeSpan.FromMinutes(10));
+            deployment = client.WaitForAllCloudServiceInstanceStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, RoleInstance.EnumInstanceStatus.ReadyRole, TimeSpan.FromMinutes(10));
+            //DeploymentItem deployment = null;
+            //if(service.DeploymentList != null && service.DeploymentList.Any())
+            //{
+            //    if (deployment == null && !string.IsNullOrEmpty(definition.Options.DeploymentName))
+            //    {
+            //        deployment = service.DeploymentList.FirstOrDefault(i=>i.Name == definition.Options.DeploymentName);
+            //    }
+            //    if(deployment == null && !string.IsNullOrEmpty(definition.Options.DeploymentSlot))
+            //    {
+            //        deployment = service.DeploymentList.FirstOrDefault(i=>i.DeploymntSlot == definition.Options.DeploymentSlot);
+            //    }
+            //}
+            //if(deployment == null)
+            //{
+            //    statusManager.Info(deployStateId, "Azure Deployment not found, creating...");
+            //}
+            //else 
+            //{
+            //    statusManager.Info(deployStateId, "Azure Deployment not found, updating...");
+            //}
+            //var x = client.GetDeploymentList(formattedServiceName);
 
             //statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, formattedExePath, maskedFormattedArgs));
             //using (var standardOutputWriter = new StringWriter())
@@ -122,7 +194,59 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             //}
             //statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, maskedFormattedExePath, maskedFormattedArgs));
             _logger.Info("Done DeployCloudService.InternalExecute");
-            throw new NotImplementedException();
+            return context.BuildResult();
+        }
+
+        private TaskExecutionContext<DeployCloudServiceTaskDefinition, DeployCloudServiceTaskOptions> GetTaskExecutionContext(string deployStateId, IDeployTaskStatusManager statusManager, DeployCloudServiceTaskDefinition taskDefinition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
+        {
+            var validationResult = _validator.ValidateMachineTaskDefinition(taskDefinition, environmentComponent, machine);
+            if (validationResult.Status != EnumRuntimeValidationStatus.Success)
+            {
+                throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
+            }
+            var machineResult = validationResult.MachineResultList[machine.Id];
+
+            var formattedOptions = AutoMapper.Mapper.Map<DeployCloudServiceTaskOptions>(taskDefinition.Options);
+            this.FormatOptions(formattedOptions, validationResult, build, component, machine, runtimeSystemSettings, false);
+
+            var maskedFormattedOptions = AutoMapper.Mapper.Map<DeployCloudServiceTaskOptions>(taskDefinition.Options);
+            this.FormatOptions(maskedFormattedOptions, validationResult, build, component, machine, runtimeSystemSettings, true);
+
+            var returnValue = new TaskExecutionContext<DeployCloudServiceTaskDefinition, DeployCloudServiceTaskOptions>
+            (
+                deployStateId, statusManager, taskDefinition, component, environmentComponent, machine, build,
+                runtimeSystemSettings, validationResult, formattedOptions, maskedFormattedOptions
+            );
+            return returnValue;
+        }
+
+        private void FormatOptions(object formattedOptions, TaskDefinitionValidationResult validationResult, DeployBuild build, DeployComponent component, DeployMachine machine, RuntimeSystemSettings runtimeSystemSettings, bool masked)
+        {
+            var machineResult = validationResult.MachineResultList[machine.Id];
+            foreach (var propInfo in formattedOptions.GetType().GetProperties())
+            {
+                if(propInfo.PropertyType == typeof(string))
+                {
+                    string rawValue = (string)propInfo.GetValue(formattedOptions, null);
+                    if(string.IsNullOrEmpty(rawValue))
+                    {
+                        propInfo.SetValue(formattedOptions, rawValue, null);
+                    }
+                    else 
+                    {
+                        string formattedValue = this.ReplaceParameters(rawValue, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, masked);
+                        propInfo.SetValue(formattedOptions, formattedValue, null);
+                    }
+                }
+                else if (propInfo.PropertyType.IsClass)
+                {
+                    var childObject = propInfo.GetValue(formattedOptions, null);
+                    if(childObject != null)
+                    {
+                        this.FormatOptions(childObject, validationResult, build, component, machine, runtimeSystemSettings, masked);
+                    }
+                }
+            }
         }
 
         private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, List<TaskParameter> buildParameters, List<TaskParameter> deployParameters, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, DeployMachine machine, DeployComponent component, bool masked)

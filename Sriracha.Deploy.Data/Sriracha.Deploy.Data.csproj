@@ -233,9 +233,13 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\OfflineDeploymentPackageJob.cs" />
     <Compile Include="Deployment\IDeployStatusNotifier.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployStatusNotifier.cs" />
+    <Compile Include="StringWriterWithEncoding.cs" />
     <Compile Include="SystemSettings\ISystemSetterUpper.cs" />
     <Compile Include="SystemSettings\SystemSetterUpper.cs" />
     <Compile Include="TaskDefinitionMetadataAttribute.cs" />
+    <Compile Include="Tasks\FormattingStringConverter.cs" />
+    <Compile Include="Tasks\TaskExecutionContext.cs" />
+    <Compile Include="Utf8StringWriter.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />
     <Compile Include="Utility\IRegexResolver.cs" />

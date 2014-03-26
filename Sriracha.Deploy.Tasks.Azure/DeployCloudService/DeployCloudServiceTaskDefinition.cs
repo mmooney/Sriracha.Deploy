@@ -8,7 +8,7 @@ using System.Text;
 namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
 {
     [TaskDefinitionMetadata("Azure - Deploy Cloud Service", "DeployCloudServiceTaskOptionsView")]
-    public class DeployCloudServiceTaskDefinition : BaseDeployTaskDefinition<DeployCloudServiceTaskTaskOptions, DeployCloudServiceTaskExecutor>
+    public class DeployCloudServiceTaskDefinition : BaseDeployTaskDefinition<DeployCloudServiceTaskOptions, DeployCloudServiceTaskExecutor>
     {
         public override IList<TaskParameter> GetStaticTaskParameterList()
         {

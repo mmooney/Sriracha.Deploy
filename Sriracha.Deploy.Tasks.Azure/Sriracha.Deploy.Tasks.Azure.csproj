@@ -32,12 +32,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=2.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.2.0\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WindowsAzure.Storage.3.1.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -48,10 +71,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Net" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,10 +88,39 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureClient.cs" />
+    <Compile Include="AzureDto\AvailabilityResponse.cs" />
+    <Compile Include="AzureDto\AzureCloudService\AllRoles.cs" />
+    <Compile Include="AzureDto\AzureCloudService\ConfigurationSet.cs" />
+    <Compile Include="AzureDto\AzureCloudService\CreateDeploymentRequest.cs" />
+    <Compile Include="AzureDto\AzureCloudService\CreateHostedServiceRequest.cs" />
+    <Compile Include="AzureDto\AzureCloudService\Extension.cs" />
+    <Compile Include="AzureDto\AzureCloudService\ExtensionConfiguration.cs" />
+    <Compile Include="AzureDto\AzureCloudService\NetworkConfigurationSet.cs" />
+    <Compile Include="AzureDto\AzureStorage\CreateStorageServiceRequest.cs" />
+    <Compile Include="AzureDto\AzureStorage\CustomDomain.cs" />
+    <Compile Include="AzureDto\AzureCloudService\DataVirtualHardDisk.cs" />
+    <Compile Include="AzureDto\AzureCloudService\DeploymentItem.cs" />
+    <Compile Include="AzureDto\AzureCloudService\DnsItem.cs" />
+    <Compile Include="AzureDto\AzureCloudService\DnsServer.cs" />
+    <Compile Include="AzureDto\AzureStorage\StorageServiceKeys.cs" />
+    <Compile Include="AzureDto\AzureStorage\StorageServiceListResponse.cs" />
     <Compile Include="AzureDto\ExtendedProperty.cs" />
-    <Compile Include="AzureDto\HostedService.cs" />
-    <Compile Include="AzureDto\HostedServiceProperties.cs" />
-    <Compile Include="AzureDto\HostedServiceListResponse.cs" />
+    <Compile Include="AzureDto\AzureCloudService\HostedService.cs" />
+    <Compile Include="AzureDto\AzureCloudService\HostedServiceProperties.cs" />
+    <Compile Include="AzureDto\AzureCloudService\HostedServiceListResponse.cs" />
+    <Compile Include="AzureDto\AzureCloudService\InputEndpoint.cs" />
+    <Compile Include="AzureDto\AzureCloudService\InstanceEndpoint.cs" />
+    <Compile Include="AzureDto\AzureCloudService\LoadBalancerProbe.cs" />
+    <Compile Include="AzureDto\AzureLocation\Location.cs" />
+    <Compile Include="AzureDto\AzureLocation\LocationsResponse.cs" />
+    <Compile Include="AzureDto\AzureCloudService\OSVirtualHardDisk.cs" />
+    <Compile Include="AzureDto\AzureCloudService\PersistentVMDowntime.cs" />
+    <Compile Include="AzureDto\AzureCloudService\RoleInstance.cs" />
+    <Compile Include="AzureDto\AzureCloudService\RoleItem.cs" />
+    <Compile Include="AzureDto\AzureStorage\StorageService.cs" />
+    <Compile Include="AzureDto\AzureStorage\StorageServiceProperties.cs" />
+    <Compile Include="AzureDto\AzureCloudService\UpgradeStatus.cs" />
+    <Compile Include="AzureDto\AzureCloudService\VirtualIP.cs" />
     <Compile Include="AzureTaskResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -71,7 +128,7 @@
     </Compile>
     <Compile Include="DeployCloudService\DeployCloudServiceTaskDefinition.cs" />
     <Compile Include="DeployCloudService\DeployCloudServiceTaskExecutor.cs" />
-    <Compile Include="DeployCloudService\DeployCloudServiceTaskTaskOptions.cs" />
+    <Compile Include="DeployCloudService\DeployCloudServiceTaskOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
