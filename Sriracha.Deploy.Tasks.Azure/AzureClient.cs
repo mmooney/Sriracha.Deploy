@@ -348,9 +348,20 @@ namespace Sriracha.Deploy.Tasks.Azure
             }
         }
 
-        public bool CheckStorageAccountNameAvailability(string storageAccountName)
+        public bool CheckStorageAccountNameAvailability(string storageAccountName, out string message)
         {
-            return true;
+            string url = string.Format("https://management.core.windows.net/{0}/services/storageservices/operations/isavailable/{1}", _subscriptionIdentifier, Uri.EscapeUriString(storageAccountName));
+            var request = CreateRequest(url, _managementCertificate);
+            using (var response = request.GetResponse())
+            using (var responseStream = response.GetResponseStream())
+            using (var reader = new StreamReader(responseStream))
+            {
+                var xml = reader.ReadToEnd();
+                var serializer = new XmlSerializer(typeof(AvailabilityResponse), "http://schemas.microsoft.com/windowsazure");
+                var returnValue = (AvailabilityResponse)serializer.Deserialize(new StringReader(xml));
+                message = returnValue.Reason;
+                return returnValue.Result;
+            }
         }
 
         public StorageServiceKeys GetStorageAccountKeys(string storageAccountName)

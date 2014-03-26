@@ -75,9 +75,10 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             {
                 context.Info("Storage Account {0} does not exist, creating...", context.MaskedFormattedOptions.StorageAccountName);
 
-                if (!client.CheckStorageAccountNameAvailability(context.FormattedOptions.StorageAccountName))
+                string message;
+                if (!client.CheckStorageAccountNameAvailability(context.FormattedOptions.StorageAccountName, out message))
                 {
-                    throw new ArgumentException(string.Format("Storage Account name {0} not available", context.MaskedFormattedOptions.StorageAccountName));
+                    throw new ArgumentException(string.Format("Storage Account name {0} not available: {1}", context.MaskedFormattedOptions.StorageAccountName, message));
                 }
                 client.CreateStorageAccount(context.FormattedOptions.StorageAccountName);
                 storageAccount = client.GetStorageAccount(context.FormattedOptions.StorageAccountName);
@@ -113,86 +114,6 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             }
             deployment = client.WaitForCloudServiceDeploymentStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, DeploymentItem.EnumDeploymentItemStatus.Running, TimeSpan.FromMinutes(10));
             deployment = client.WaitForAllCloudServiceInstanceStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, RoleInstance.EnumInstanceStatus.ReadyRole, TimeSpan.FromMinutes(10));
-            //DeploymentItem deployment = null;
-            //if(service.DeploymentList != null && service.DeploymentList.Any())
-            //{
-            //    if (deployment == null && !string.IsNullOrEmpty(definition.Options.DeploymentName))
-            //    {
-            //        deployment = service.DeploymentList.FirstOrDefault(i=>i.Name == definition.Options.DeploymentName);
-            //    }
-            //    if(deployment == null && !string.IsNullOrEmpty(definition.Options.DeploymentSlot))
-            //    {
-            //        deployment = service.DeploymentList.FirstOrDefault(i=>i.DeploymntSlot == definition.Options.DeploymentSlot);
-            //    }
-            //}
-            //if(deployment == null)
-            //{
-            //    statusManager.Info(deployStateId, "Azure Deployment not found, creating...");
-            //}
-            //else 
-            //{
-            //    statusManager.Info(deployStateId, "Azure Deployment not found, updating...");
-            //}
-            //var x = client.GetDeploymentList(formattedServiceName);
-
-            //statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, formattedExePath, maskedFormattedArgs));
-            //using (var standardOutputWriter = new StringWriter())
-            //using (var errorOutputWriter = new StringWriter())
-            //{
-            //    int result;
-            //    if (string.IsNullOrEmpty(environmentComponent.DeployCredentialsId) || !AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
-            //    {
-            //        result = _processRunner.Run(formattedExePath, formattedArgs, standardOutputWriter, errorOutputWriter);
-            //    }
-            //    else
-            //    {
-            //        var credentials = _credentialsManager.GetCredentials(environmentComponent.DeployCredentialsId);
-            //        using (var impersonation = _impersonator.BeginImpersonation(credentials.Id))
-            //        {
-            //            statusManager.Info(deployStateId, string.Format("Starting process as {0} impersonating {1}", WindowsIdentity.GetCurrent().Name, credentials.DisplayValue));
-            //            using (var password = _credentialsManager.DecryptPasswordSecure(credentials))
-            //            {
-            //                string exePath = Path.GetFullPath(formattedExePath);
-            //                statusManager.Info(deployStateId, string.Format("For Options.ExecutablePath {0}, using {1}", maskedFormattedExePath, exePath));
-            //                //result = _processRunner.RunAsUser(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, credentials.Domain, credentials.UserName, password);
-            //                result = _processRunner.RunAsToken(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, impersonation.TokenHandle);
-            //            }
-            //        }
-            //    }
-            //    string standardOutput = standardOutputWriter.GetStringBuilder().ToString();
-            //    string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
-            //    if (result == 0)
-            //    {
-            //        if (!string.IsNullOrWhiteSpace(standardOutput))
-            //        {
-            //            statusManager.Info(deployStateId, standardOutput);
-            //        }
-            //        if (!string.IsNullOrWhiteSpace(errorOutput))
-            //        {
-            //            statusManager.Error(deployStateId, errorOutput);
-            //            throw new Exception("LocalCommandLine Task Failed: " + errorOutput);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        string errorText;
-            //        if (!string.IsNullOrWhiteSpace(errorOutput))
-            //        {
-            //            errorText = errorOutput;
-            //        }
-            //        else if (!string.IsNullOrWhiteSpace(standardOutput))
-            //        {
-            //            errorText = standardOutput;
-            //        }
-            //        else
-            //        {
-            //            errorText = "Error Code " + result.ToString();
-            //        }
-            //        statusManager.Error(deployStateId, errorText);
-            //        throw new Exception("LocalCommandLine Task Failed: " + errorText);
-            //    }
-            //}
-            //statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, maskedFormattedExePath, maskedFormattedArgs));
             _logger.Info("Done DeployCloudService.InternalExecute");
             return context.BuildResult();
         }

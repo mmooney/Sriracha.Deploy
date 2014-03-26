@@ -137,13 +137,48 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
                                 testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
                                 testData.SystemSettings);
         }
+
         [Test, Explicit]
-        public void NewDeployment_NameNotAvailable_ThorwsErrors()
+        public void ExistingDeployment_UpdatesCloudService()
+        {
+            var testData = TestData.Create();
+            testData.TaskDefinition.Options.ServiceName = "SrirachaExistingService";
+
+            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
+                                testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
+                                testData.SystemSettings);
+        }
+
+        [Test, Explicit]
+        public void NewDeployment_CloudServiceNameNotAvailable_ThrowsErrors()
         {
             var testData = TestData.Create();
             testData.TaskDefinition.Options.ServiceName = "sportscommanderprod";
 
             Assert.Throws<ArgumentException>(()=>
+                            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
+                                                testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
+                                                testData.SystemSettings));
+        }
+
+        [Test, Explicit]
+        public void ExistingStorageAccount_ReusesStorageAccount()
+        {
+            var testData = TestData.Create();
+            testData.TaskDefinition.Options.StorageAccountName = "srirachastorage";
+
+            testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
+                                testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
+                                testData.SystemSettings);
+        }
+
+        [Test, Explicit]
+        public void NewDeployment_StorageAccountNameNotAvailable_ThrowsErrors()
+        {
+            var testData = TestData.Create();
+            testData.TaskDefinition.Options.StorageAccountName = "sportscommander";
+
+            Assert.Throws<ArgumentException>(() =>
                             testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition,
                                                 testData.DeployComponent, testData.EnvironmentComponent, testData.DeployMachine, testData.DeployBuild,
                                                 testData.SystemSettings));
