@@ -123,6 +123,7 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
                 testData.TaskDefinition.Options.AzureConfigPath = configPath;
 
                 testData.TaskDefinition.Options.DeploymentSlot = "production";
+                testData.TaskDefinition.Options.AzureTimeoutMinutes = 30;
                 return testData;
             }
 

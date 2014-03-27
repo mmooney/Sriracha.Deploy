@@ -1,4 +1,7 @@
 ﻿using Common.Logging;
+using MMDB.Azure.Management;
+using MMDB.Azure.Management.AzureDto.AzureCloudService;
+using MMDB.Azure.Management.AzureDto.AzureStorage;
 using Newtonsoft.Json;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
@@ -6,9 +9,6 @@ using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Validation;
 using Sriracha.Deploy.Data.Tasks;
-using Sriracha.Deploy.Tasks.Azure.AzureDto;
-using Sriracha.Deploy.Tasks.Azure.AzureDto.AzureCloudService;
-using Sriracha.Deploy.Tasks.Azure.AzureDto.AzureStorage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -88,7 +88,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
                 context.Info("Storage Account {0} exists", context.MaskedFormattedOptions.StorageAccountName);
             }
 
-            storageAccount = client.WaitForStorageAccountStatus(context.FormattedOptions.StorageAccountName, StorageServiceProperties.EnumStorageServiceStatus.Created, TimeSpan.FromSeconds(120));
+            storageAccount = client.WaitForStorageAccountStatus(context.FormattedOptions.StorageAccountName, StorageServiceProperties.EnumStorageServiceStatus.Created, TimeSpan.FromMinutes(context.FormattedOptions.AzureTimeoutMinutes.GetValueOrDefault(30)));
 
             var keys = client.GetStorageAccountKeys(context.FormattedOptions.StorageAccountName);
 
@@ -100,7 +100,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             DeploymentItem deployment = null;
             if(service.DeploymentList != null)
             {
-                deployment = service.DeploymentList.FirstOrDefault(i => i.DeploymentSlot == context.FormattedOptions.DeploymentSlot);
+                deployment = service.DeploymentList.FirstOrDefault(i => context.FormattedOptions.DeploymentSlot.Equals(i.DeploymentSlot, StringComparison.CurrentCultureIgnoreCase));
             }
             if(deployment == null)
             {
@@ -110,10 +110,10 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             else 
             {
                 context.Info("Deployment already exists, upgrading...");
-                throw new NotImplementedException();
+                client.UpgradeCloudServiceDeployment(context.FormattedOptions.ServiceName, blobUrl, configurationData, context.FormattedOptions.DeploymentSlot);
             }
-            deployment = client.WaitForCloudServiceDeploymentStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, DeploymentItem.EnumDeploymentItemStatus.Running, TimeSpan.FromMinutes(10));
-            deployment = client.WaitForAllCloudServiceInstanceStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, RoleInstance.EnumInstanceStatus.ReadyRole, TimeSpan.FromMinutes(10));
+            deployment = client.WaitForCloudServiceDeploymentStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, DeploymentItem.EnumDeploymentItemStatus.Running, TimeSpan.FromMinutes(context.FormattedOptions.AzureTimeoutMinutes.GetValueOrDefault(30)));
+            deployment = client.WaitForAllCloudServiceInstanceStatus(context.FormattedOptions.ServiceName, context.FormattedOptions.DeploymentSlot, RoleInstance.EnumInstanceStatus.ReadyRole, TimeSpan.FromMinutes(context.FormattedOptions.AzureTimeoutMinutes.GetValueOrDefault(30)));
             _logger.Info("Done DeployCloudService.InternalExecute");
             return context.BuildResult();
         }

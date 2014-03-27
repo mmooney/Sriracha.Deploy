@@ -17,5 +17,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
 
         public string AzurePackagePath { get; set; }
         public string AzureConfigPath { get; set; }
+
+        public int? AzureTimeoutMinutes { get; set; }
     }
 }
