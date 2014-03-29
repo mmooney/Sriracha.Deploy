@@ -1,10 +1,11 @@
 ﻿angular.module("ngSriracha").directive("taskOptions",
-	['$http', '$templateCache', '$compile', '$parse', 'PermissionVerifier', 'SrirachaResource', 'ErrorReporter',
-	function ($http, $templateCache, $compile, $parse, PermissionVerifier, SrirachaResource, ErrorReporter) {
+	['$http', '$templateCache', '$compile', '$parse', '$modal', 'PermissionVerifier', 'SrirachaResource', 'ErrorReporter',
+	function ($http, $templateCache, $compile, $parse, $modal, PermissionVerifier, SrirachaResource, ErrorReporter) {
 	    return {
 	        replace: true,
 	        scope: {
-	            deploymentStep: '='
+	            deploymentStep: '=',
+                browseContents: '&'
 	        },
 	        template: "<div><div></div></div>",
 	        link: function (scope, element, attrs) {
@@ -36,6 +37,59 @@
 	                    validationItem.isError = true;
 	                }
 	            }
+	            scope.browseContents = function (targetObject, targetFieldName) {
+	                console.log("browseContents")
+	                var queryParameters = {
+	                    projectId: scope.deploymentStep.projectId,
+	                    projectComponentId: scope.deploymentStep.parentId,
+	                    sortField: "UpdatedDateTimeUtc",
+	                    sortAscending: false,
+	                    pageSize: 10
+	                };
+	                var buildList = SrirachaResource.build.get(
+                        queryParameters,
+                        function () {
+                            var modalInstance = $modal.open({
+                                templateUrl: 'app/dialogs/filebrowser-template.html',
+                                controller: "FileBrowserController",
+                                resolve: {
+                                    buildList: function () {
+                                        return buildList.items;
+                                    }
+                                }
+                            });
+                            modalInstance.result.then(
+                                function (selectedFile) {
+                                    if (selectedFile && selectedFile.fileName) {
+                                        var fullPath = "${deploy:directory}\\";
+                                        if (selectedFile.directory) {
+                                            var reformattedDirectory = selectedFile.directory;
+                                            if (reformattedDirectory[0] == '/' || reformattedDirectory[0] == '\\') {
+                                                reformattedDirectory = reformattedDirectory.substring(1);
+                                            }
+                                            if (reformattedDirectory && reformattedDirectory.length &&
+                                                (reformattedDirectory[reformattedDirectory.length - 1] == '/' || reformattedDirectory[reformattedDirectory.length - 1] == '\\')) {
+                                                reformattedDirectory = reformattedDirectory.substring(0, reformattedDirectory.length - 1);
+                                            }
+                                            if (reformattedDirectory && reformattedDirectory.length) {
+                                                var re = /\//g;
+                                                reformattedDirectory = reformattedDirectory.replace(re, '\\');
+                                            }
+                                            if (reformattedDirectory && reformattedDirectory.length) {
+                                                fullPath += reformattedDirectory + "\\";
+                                            }
+                                        }
+                                        fullPath += selectedFile.fileName;
+                                        targetObject[targetFieldName] = fullPath;
+                                    }
+                                }
+                            );
+                        },
+                        function (err) {
+                            ErrorReporter.handleResourceError(err);
+                        }
+                    );
+	            };
 	            scope.$watch("deploymentStep.taskTypeName", function () {
 	                if (scope.deploymentStep && scope.deploymentStep.taskTypeName) {
 	                    var defaultUrl = "app/directives/deploymentstep-options-default-template.html";

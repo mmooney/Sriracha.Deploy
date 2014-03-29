@@ -223,7 +223,7 @@
   <ItemGroup>
     <Content Include="app\directives\taskOptionsDirective.js" />
     <Content Include="app\directives\deploymentstep-options-default-template.html" />
-    <Content Include="app\project\deploymentStep\fileBrowserController.js" />
+    <Content Include="app\dialogs\fileBrowserController.js" />
     <Compile Include="App_Start\AppHost.cs" />
     <Compile Include="App_Start\AutofacWebCommon.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
@@ -250,7 +250,7 @@
     <Compile Include="Models\JSDeploymentStep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="app\directives\breadcrumbsDirective.js" />
-    <Content Include="app\project\deploymentStep\deploymentstep-filebrowser-template.html" />
+    <Content Include="app\dialogs\filebrowser-template.html" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree.css" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree_directive.js" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree_template.html" />

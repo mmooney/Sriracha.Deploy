@@ -15,5 +15,23 @@ namespace Sriracha.Deploy.Data.Impl
 						&& p.IsClass).ToList();
 			return typeList;
 		}
-	}
+
+
+        public Type GetType(string typeName)
+        {
+            var typeList = AppDomain.CurrentDomain.GetAssemblies().ToList()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.FullName == typeName
+                        && p.IsClass).ToList();
+            if(typeList == null || typeList.Count == 0)
+            {
+                throw new ArgumentException("Failed to find any types matching " + typeName);
+            }
+            if(typeList.Count > 1)
+            {
+                throw new ArgumentNullException("Found multiple types matching " + typeName);
+            }
+            return typeList.Single();
+        }
+    }
 }

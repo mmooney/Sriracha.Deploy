@@ -23,7 +23,7 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 
 		public IDeployTaskDefinition CreateTaskDefinition(string taskTypeName, string taskOptionJson)
 		{
-			var t = Type.GetType(taskTypeName);
+			var t = _moduleInspector.GetType(taskTypeName);
 			var returnValue = (IDeployTaskDefinition)_diFactory.CreateInjectedObject(t);
 			returnValue.DeployTaskOptions = JsonConvert.DeserializeObject(taskOptionJson, returnValue.GetTaskOptionType());
 			return returnValue;
