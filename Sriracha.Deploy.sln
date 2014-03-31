@@ -5,6 +5,7 @@ VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Web", "Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj", "{456CE3B0-1CC2-4797-B718-8036C93FE63A}"
 	ProjectSection(ProjectDependencies) = postProject
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {71D75062-B4DE-4ADE-B88A-87B6212D0A1C}
 		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8784116D-D63F-49B3-A4BB-CC929BB0A080}
 	EndProjectSection
 EndProject
@@ -15,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Data.Tests", "Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj", "{4AABD8D9-AB20-4DB6-82CE-8ECB5644255E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Server", "Sriracha.Deploy.Server\Sriracha.Deploy.Server.csproj", "{74178A7E-6F9E-482C-B4DB-C4D24FAAA354}"
+	ProjectSection(ProjectDependencies) = postProject
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {71D75062-B4DE-4ADE-B88A-87B6212D0A1C}
+		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8784116D-D63F-49B3-A4BB-CC929BB0A080}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Client", "Sriracha.Deploy.Client\Sriracha.Deploy.Client.csproj", "{51917ED5-E2CE-43F6-966A-9965B7143588}"
 EndProject
@@ -66,6 +71,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMDB.QuartzJobs", "MMDB.QuartzJobs\MMDB.QuartzJobs.csproj", "{2DF2898D-6F3E-4651-A225-3444C907FAA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Offline", "Sriracha.Deploy.Offline\Sriracha.Deploy.Offline.csproj", "{0829E2A2-16F0-4293-9EE4-F65DDD1FA9F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {71D75062-B4DE-4ADE-B88A-87B6212D0A1C}
+		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8784116D-D63F-49B3-A4BB-CC929BB0A080}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{8E6B61EF-7A1E-4EBC-B729-BD7B75933A2D}"
 EndProject

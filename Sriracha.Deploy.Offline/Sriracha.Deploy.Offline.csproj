@@ -217,6 +217,9 @@ xcopy $(TargetDir)*.exe.config $(SolutionDir)Sriracha.Deploy.Server\bin\$(Config
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy $(SolutionDir)TaskBinaries\*.* $(TargetDir) /s /y /i</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
