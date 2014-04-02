@@ -14,6 +14,8 @@ using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.ServiceJobs;
 using Sriracha.Deploy.Data.SystemSettings;
+using System.IO;
+using System.Reflection;
 
 namespace Sriracha.Deploy.Server
 {

@@ -35,6 +35,8 @@ using Sriracha.Deploy.Data.Deployment.Offline;
 using Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl;
 using Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl;
 using Sriracha.Deploy.Data.SystemSettings;
+using System.IO;
+using System.Reflection;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -167,6 +169,16 @@ namespace Sriracha.Deploy.AutofacModules
                 builder.RegisterType<OfflineDeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
             }
 			this.SetupLogging(builder);
+
+            var existingBinaryList = AppDomain.CurrentDomain.GetAssemblies().Select(i=>Path.GetFileName(i.Location));
+            var taskDirectory = Path.Combine(Path.GetDirectoryName(this.ThisAssembly.Location), "Tasks");
+            if(Directory.Exists(taskDirectory))
+            {
+                var taskAssemblyList = Directory.GetFiles(taskDirectory, "*.dll")
+                                            .Where(i=>!existingBinaryList.Contains(Path.GetFileName(i), StringComparer.CurrentCultureIgnoreCase))
+                                            .Select(i=>Assembly.LoadFrom(i)).ToArray();
+                builder.RegisterAssemblyTypes(taskAssemblyList);
+            }
 
 			builder.RegisterSource(new Autofac.Features.ResolveAnything.AnyConcreteTypeNotAlreadyRegisteredSource());
 

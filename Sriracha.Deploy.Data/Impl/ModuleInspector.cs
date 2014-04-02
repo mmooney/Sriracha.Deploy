@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 
 namespace Sriracha.Deploy.Data.Impl
@@ -17,9 +20,23 @@ namespace Sriracha.Deploy.Data.Impl
 		}
 
 
-        public Type GetType(string typeName)
+        public Type GetType(string typeName, string directory=null)
         {
-            var typeList = AppDomain.CurrentDomain.GetAssemblies().ToList()
+            IEnumerable<Assembly> assemblyList;
+            if(string.IsNullOrEmpty(directory))
+            {
+                assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            }
+            else 
+            {
+                if(!Directory.Exists(directory))
+                {
+                    throw new Exception("Directory does not exist");
+                }
+                assemblyList = Directory.GetFiles(directory, "*.dll")
+                                .Select(i=>Assembly.LoadFrom(i)).ToList();
+            }
+            var typeList = assemblyList
                 .SelectMany(s => s.GetTypes())
                 .Where(p => p.FullName == typeName
                         && p.IsClass).ToList();

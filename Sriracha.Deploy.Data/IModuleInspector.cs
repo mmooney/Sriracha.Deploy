@@ -9,6 +9,6 @@ namespace Sriracha.Deploy.Data
 	{
 		List<Type> FindTypesImplementingInterfaces(Type interfaceType);
 
-        Type GetType(string taskTypeName);
+        Type GetType(string taskTypeName, string directory=null);
     }
 }

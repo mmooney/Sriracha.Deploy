@@ -16,6 +16,7 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 			_diFactory = DIHelper.VerifyParameter(diFactory);
 			_moduleInspector = DIHelper.VerifyParameter(moduleInspector);
 		}
+
 		public IDeployTaskExecutor CreateTaskExecutor(Type t)
 		{
 			return (IDeployTaskExecutor)_diFactory.CreateInjectedObject(t);
