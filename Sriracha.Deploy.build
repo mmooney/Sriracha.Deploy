@@ -13,23 +13,23 @@
 		<delete dir=".\PublishTemp"/>
     <copy todir=".\Publish\WindowsService">
       <fileset basedir=".\Sriracha.Deploy.Server\bin\Release">
-        <include name="*.config"/>
-        <include name="*.dll"/>
-        <include name="*.exe"/>
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
       </fileset>
     </copy>
     <copy todir=".\Publish\OfflineExe">
       <fileset basedir=".\Sriracha.Deploy.Offline\bin\Release">
-        <include name="*.config"/>
-        <include name="*.dll"/>
-        <include name="*.exe"/>
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
       </fileset>
     </copy>
     <copy todir=".\Publish\SelfDeploy">
       <fileset basedir=".\Sriracha.Deploy.SelfDeploy\bin\Release">
-        <include name="*.config"/>
-        <include name="*.dll"/>
-        <include name="*.exe"/>
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
       </fileset>
     </copy>
     <copy todir=".\Publish\CommandLine">
@@ -39,9 +39,9 @@
     </copy>
     <copy todir=".\Publish\CommandLine">
       <fileset basedir=".\Sriracha.Deploy.CommandLine\bin\Release">
-        <include name="*.config"/>
-        <include name="*.dll"/>
-        <include name="*.exe"/>
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
       </fileset>
     </copy>
     <msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
