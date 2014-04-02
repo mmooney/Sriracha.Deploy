@@ -77,13 +77,24 @@ namespace Sriracha.Deploy.Server
 					}
 					//break;
 				case DIContainer.Autofac:
-					{
-						var builder = new ContainerBuilder();
-						builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.Service));
-						builder.RegisterType<WinService>().AsSelf();
-						var container = builder.Build();
-						_logger = container.Resolve<NLog.Logger>();
-						_diFactory = container.Resolve<IDIFactory>();
+					{  
+                        try 
+                        {
+						    var builder = new ContainerBuilder();
+						    builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.Service));
+						    builder.RegisterType<WinService>().AsSelf();
+						    var container = builder.Build();
+						    _logger = container.Resolve<NLog.Logger>();
+						    _diFactory = container.Resolve<IDIFactory>();
+                        }
+                        catch(ReflectionTypeLoadException err)
+                        {
+                            foreach(var loaderError in err.LoaderExceptions)
+                            {
+                                Console.WriteLine("LOADER EXCEPTION: " + loaderError.ToString());
+                            }
+                            throw;
+                        }
 					}
 					break;
 				default:
