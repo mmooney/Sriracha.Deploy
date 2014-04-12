@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Utility;
 
 namespace Sriracha.Deploy.Data.Tasks
 {
@@ -12,11 +13,14 @@ namespace Sriracha.Deploy.Data.Tasks
 		where TaskOptions : new()
 				
 	{
-		public TaskOptions Options { get; set; }
+        private readonly IParameterParser _parameterParser;
+        
+        public TaskOptions Options { get; set; }
 
-		public BaseDeployTaskDefinition()
+		public BaseDeployTaskDefinition(IParameterParser parameterParser)
 		{
 			this.Options = new TaskOptions();
+            _parameterParser = DIHelper.VerifyParameter(parameterParser);
 		}
 
 		public Type GetTaskOptionType()
@@ -47,62 +51,37 @@ namespace Sriracha.Deploy.Data.Tasks
 			}
 		}
 
-		public abstract IList<TaskParameter> GetStaticTaskParameterList();
-		public abstract IList<TaskParameter> GetEnvironmentTaskParameterList();
-		public abstract IList<TaskParameter> GetMachineTaskParameterList();
-		public abstract IList<TaskParameter> GetBuildTaskParameterList();
-		public abstract IList<TaskParameter> GetDeployTaskParameterList();
-		public abstract string TaskDefintionName { get; }
+        public virtual IList<TaskParameter> GetStaticTaskParameterList()
+        {
+            return new List<TaskParameter>();
+        }
+
+        public virtual IList<TaskParameter> GetEnvironmentTaskParameterList()
+        {
+            return _parameterParser.FindNestedEnvironmentParameters(this.Options);
+        }
+
+        public virtual IList<TaskParameter> GetMachineTaskParameterList()
+        {
+            return _parameterParser.FindNestedMachineParameters(this.Options);
+        }
+
+        public virtual IList<TaskParameter> GetBuildTaskParameterList()
+        {
+            return _parameterParser.FindNestedBuildParameters(this.Options);
+        }
+
+        public virtual IList<TaskParameter> GetDeployTaskParameterList()
+        {
+            return _parameterParser.FindNestedDeployParameters(this.Options);
+        }
+        
+        public abstract string TaskDefintionName { get; }
 
 		public Type GetTaskExecutorType()
 		{
 			return typeof(TaskExecutor);
 		}
 
-		//public RuntimeValidationResult ValidateRuntimeValues(DeployEnvironmentComponent environmentComponent)
-		//{
-		//	var result = new RuntimeValidationResult();
-		//	//Verify Static Values
-		//	var environmentParmeters = this.GetEnvironmentTaskParameterList();
-		//	foreach(var p in environmentParmeters)
-		//	{
-		//		var item = this.GetValidationResultItem(p, environmentComponent.ConfigurationValueList);
-		//		result.EnvironmentResultList.Add(item);
-		//	}
-		//	var machineParameters = this.GetMachineTaskParameterList();
-		//	foreach(var machine in environmentComponent.MachineList)
-		//	{
-		//		var machineResultList = new List<RuntimeValidationResult.RuntimeValidationResultItem>();
-		//		foreach(var p in machineParameters)
-		//		{
-		//			var item = this.GetValidationResultItem(p, machine.ConfigurationValueList);
-		//			machineResultList.Add(item);
-		//		}
-		//		result.MachineResultList.Add(machine.MachineName, machineResultList);
-		//	} 
-		//	return result;
-		//}
-
-		//private RuntimeValidationResult.RuntimeValidationResultItem GetValidationResultItem(TaskParameter parameter, Dictionary<string, string> valueDictionary)
-		//{
-		//	var item = new RuntimeValidationResult.RuntimeValidationResultItem
-		//	{
-		//		FieldName = parameter.FieldName,
-		//		Sensitive = parameter.Sensitive
-		//	};
-		//	if (!valueDictionary.ContainsKey(parameter.FieldName))
-		//	{
-		//		item.Present = false;
-		//	}
-		//	else
-		//	{
-		//		item.Present = true;
-		//		//if (!item.Sensitive)
-		//		//{
-		//			item.FieldValue = valueDictionary[parameter.FieldName];
-		//		//}
-		//	}
-		//	return item;
-		//}
 	}
 }

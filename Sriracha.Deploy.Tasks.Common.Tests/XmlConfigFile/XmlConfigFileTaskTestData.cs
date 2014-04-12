@@ -13,6 +13,7 @@ using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Tasks.Common.XmlConfigFile;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 {
@@ -60,7 +61,7 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 				Build = new DeployBuild(),
 				ExpectedResult = new Dictionary<string, string>()
 			};
-			returnValue.TaskDefinition = new XmlConfigFileTaskDefinition()
+			returnValue.TaskDefinition = new XmlConfigFileTaskDefinition(new ParameterParser())
 			{
 				Options = new XmlConfigFileTaskOptions
 				{

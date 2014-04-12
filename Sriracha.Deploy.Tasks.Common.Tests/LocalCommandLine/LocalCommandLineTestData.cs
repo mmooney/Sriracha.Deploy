@@ -86,9 +86,11 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.LocalCommandLine
 					ExecutableArguments = "this is the arguments ${machine:MachineParameter1} ${machine:MachineParameter2} ${env:EnvironmentParameter1} ${env:EnvironmentParameter2}"
 				}
 			};
-			returnValue.ParameterParser.Setup(i=>i.FindEnvironmentParameters(returnValue.TaskDefinition.Options.ExecutableArguments)).Returns(returnValue.EnvironmentParameters);
-			returnValue.ParameterParser.Setup(i => i.FindMachineParameters(returnValue.TaskDefinition.Options.ExecutableArguments)).Returns(returnValue.MachineParameters);
-			return returnValue;
+            returnValue.ParameterParser.Setup(i => i.FindEnvironmentParameters(returnValue.TaskDefinition.Options.ExecutableArguments)).Returns(returnValue.EnvironmentParameters);
+            returnValue.ParameterParser.Setup(i => i.FindNestedEnvironmentParameters(returnValue.TaskDefinition.Options)).Returns(returnValue.EnvironmentParameters.Select(i=>new TaskParameter { FieldName=i, FieldType = EnumTaskParameterType.String}).ToList());
+            returnValue.ParameterParser.Setup(i => i.FindMachineParameters(returnValue.TaskDefinition.Options.ExecutableArguments)).Returns(returnValue.MachineParameters);
+            returnValue.ParameterParser.Setup(i => i.FindNestedMachineParameters(returnValue.TaskDefinition.Options)).Returns(returnValue.MachineParameters.Select(i => new TaskParameter { FieldName = i, FieldType = EnumTaskParameterType.String }).ToList());
+            return returnValue;
 		}
 	}
 }

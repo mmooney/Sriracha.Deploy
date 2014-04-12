@@ -10,14 +10,19 @@
 	        template: "<div><div></div></div>",
 	        link: function (scope, element, attrs) {
 	            scope.permissionVerifier = PermissionVerifier;
-	            scope.addXPathValueListItem = function () {
-	                scope.deploymentStep.taskOptions.XPathValueList = scope.deploymentStep.taskOptions.XPathValueList || [];
-	                scope.deploymentStep.taskOptions.XPathValueList.push({});
+	            scope.addListItem = function (listParent, listName, item) {
+	                listParent = listParent || scope;
+	                listParent[listName] = listParent[listName] || [];
+	                item = item || {};
+	                listParent[listName].push(item);
 	            }
-	            scope.deleteXPathValueListItem = function (item) {
-	                var index = scope.deploymentStep.taskOptions.XPathValueList.indexOf(item);
-	                if (index >= 0) {
-	                    scope.deploymentStep.taskOptions.XPathValueList.splice(index, 1);
+	            scope.deleteListItem = function (listParent, listName, item) {
+	                listParent = listParent || scope;
+	                if (listParent[listName]) {
+	                    var index = listParent[listName].indexOf(item);
+	                    if (index >= 0) {
+	                        listParent[listName].splice(index, 1);
+	                    }
 	                }
 	            }
 	            scope.aceChanged = function (event, editor) {

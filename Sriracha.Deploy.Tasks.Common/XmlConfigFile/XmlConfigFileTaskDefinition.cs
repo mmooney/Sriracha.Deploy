@@ -9,12 +9,17 @@ using Newtonsoft.Json;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Utility;
 
 namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 {
     [TaskDefinitionMetadata("Configure XML File", "XmlConfigFileTaskOptionsView")]
 	public class XmlConfigFileTaskDefinition : BaseDeployTaskDefinition<XmlConfigFileTaskOptions, XmlConfigFileTaskExecutor>
 	{
+        public XmlConfigFileTaskDefinition(IParameterParser parameterParser) : base(parameterParser)
+        {
+        }
+
 		public override IList<TaskParameter> GetStaticTaskParameterList()
 		{
 			return this.GetTaskParameterList(EnumConfigLevel.Static);
@@ -22,37 +27,44 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 
 		public override IList<TaskParameter> GetEnvironmentTaskParameterList()
 		{
-			return this.GetTaskParameterList(EnumConfigLevel.Environment);
+            var parameters = base.GetEnvironmentTaskParameterList();
+            return parameters.Union(this.GetTaskParameterList(EnumConfigLevel.Environment)).ToList();
 		}
 
 		public override IList<TaskParameter> GetMachineTaskParameterList()
 		{
-			return this.GetTaskParameterList(EnumConfigLevel.Machine);
+            var parameters = base.GetMachineTaskParameterList();
+			return parameters.Union(this.GetTaskParameterList(EnumConfigLevel.Machine)).ToList();
 		}
 
 		public override IList<TaskParameter> GetBuildTaskParameterList()
 		{
-			return this.GetTaskParameterList(EnumConfigLevel.Build);
+            var parameters = base.GetBuildTaskParameterList();
+			return parameters.Union(this.GetTaskParameterList(EnumConfigLevel.Build)).ToList();
 		}
 
 		public override IList<TaskParameter> GetDeployTaskParameterList()
 		{
-			return this.GetTaskParameterList(EnumConfigLevel.Deploy);
+            var parameters = base.GetDeployTaskParameterList();
+			return parameters.Union(this.GetTaskParameterList(EnumConfigLevel.Deploy)).ToList();
 		}
 
 
-		private IList<TaskParameter> GetTaskParameterList(EnumConfigLevel enumConfigLevel)
+		private List<TaskParameter> GetTaskParameterList(EnumConfigLevel enumConfigLevel)
 		{
-			return
+            var xpathParameters = 
 			(
 				from i in this.Options.XPathValueList
 				where i.ConfigLevel == enumConfigLevel
 				select new TaskParameter
 				{
 					FieldName = i.ValueName,
-					FieldType = EnumTaskParameterType.String
+					FieldType = EnumTaskParameterType.String,
+                    Sensitive = i.Sensitive
 				}
 			).ToList();
+
+            return xpathParameters;
 		}
 
 		public override string TaskDefintionName

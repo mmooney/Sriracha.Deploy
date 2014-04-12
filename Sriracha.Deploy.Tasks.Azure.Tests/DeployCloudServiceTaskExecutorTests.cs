@@ -7,6 +7,7 @@ using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Validation;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 using Sriracha.Deploy.Tasks.Azure.DeployCloudService;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace Sriracha.Deploy.Tasks.Azure.Tests
                     DeployTaskStatusManager = new Mock<IDeployTaskStatusManager>(),
                     DeploymentValidator = new Mock<IDeploymentValidator>(),
                     Logger = new Mock<ILog>(),
-                    TaskDefinition = new DeployCloudServiceTaskDefinition
+                    TaskDefinition = new DeployCloudServiceTaskDefinition(new ParameterParser())
                                         {
                                             Options = fixture.Create<DeployCloudServiceTaskOptions>()
                                         },

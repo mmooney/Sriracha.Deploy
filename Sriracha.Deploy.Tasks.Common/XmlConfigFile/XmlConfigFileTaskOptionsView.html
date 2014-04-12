@@ -30,6 +30,25 @@
 		<th>Target File Name:</th>
 		<td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetFileName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
 	</tr>
+    <tr>
+        <th>XML Namespaces</th>
+        <td>
+            <table class="table table-striped">
+                <tr>
+                    <th>Prefix</th>
+                    <th>URI</th>
+                </tr>
+                <tr ng-repeat="item in deploymentStep.taskOptions.NamespaceDefinitionList">
+                    <td><input type="text" ng-model="item.prefix" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td><input type="text" ng-model="item.uRI" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)"></td>
+                    <td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'NamespaceDefinitionList', item)"><i class="icon-trash"></i></button></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addListItem(deploymentStep.taskOptions, 'NamespaceDefinitionList')">Add</button></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 	<tr>
 		<th>XPath Value List:</th>
 		<td>
@@ -50,10 +69,10 @@
                         </select>
 					</td>
 					<td><input type="text" ng-model="item.valueName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
-					<td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteXPathValueListItem(item)"><i class="icon-trash"></i></button></td>
+					<td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'XPathValueList', item)"><i class="icon-trash"></i></button></td>
 				</tr>
 				<tr>
-					<td colspan="3" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addXPathValueListItem()">Add</button></td>
+					<td colspan="3" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addListItem(deploymentStep.taskOptions, 'XPathValueList')">Add</button></td>
 				</tr>
 			</table>
 		</td>

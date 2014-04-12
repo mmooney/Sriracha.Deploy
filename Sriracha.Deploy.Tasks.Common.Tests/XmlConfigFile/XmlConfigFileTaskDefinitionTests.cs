@@ -6,6 +6,7 @@ using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Tasks.Common.XmlConfigFile;
 using Sriracha.Deploy.Data;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 {
@@ -16,7 +17,7 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.XmlConfigFile
 		{
 			var fixture = new Fixture();
 			string fieldName = fixture.Create<string>();
-			var task = new XmlConfigFileTaskDefinition()
+			var task = new XmlConfigFileTaskDefinition(new ParameterParser())
 			{
 				Options = new XmlConfigFileTaskOptions
 				{

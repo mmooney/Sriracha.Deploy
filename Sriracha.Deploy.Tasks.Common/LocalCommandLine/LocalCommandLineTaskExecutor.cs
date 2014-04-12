@@ -19,7 +19,7 @@ using Sriracha.Deploy.Data;
 
 namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 {
-	public class LocalCommandLineTaskExecutor : BaseDeployTaskExecutor<LocalCommandLineTaskDefinition>
+	public class LocalCommandLineTaskExecutor : BaseDeployTaskExecutor<LocalCommandLineTaskDefinition, LocalCommandLineTaskOptions>
 	{
 		private const string ValueMask = "*****";
 		private readonly IProcessRunner _processRunner;
@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 		private readonly ICredentialsManager _credentialsManager;
 		private readonly IImpersonator _impersonator;
 
-		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IParameterEvaluator buildParameterEvaluator, ICredentialsManager credentialsManager, IImpersonator impersonator) : base(buildParameterEvaluator)
+		public LocalCommandLineTaskExecutor(IProcessRunner processRunner, IDeploymentValidator validator, IParameterEvaluator buildParameterEvaluator, ICredentialsManager credentialsManager, IImpersonator impersonator) : base(buildParameterEvaluator, validator)
 		{
 			_processRunner = DIHelper.VerifyParameter(processRunner);
 			_validator = DIHelper.VerifyParameter(validator);
