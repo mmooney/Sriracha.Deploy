@@ -1,0 +1,50 @@
+<h4>Deploy Azure Cloud Service</h4>
+<table class="table table-striped">
+    <tr>
+        <th>Azure Subscription Identifier:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.AzureSubscriptionIdentifier" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+    </tr>
+    <tr>
+        <th>Azure Managment Certificate:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.AzureManagementCertificate" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)"/></td>
+    </tr>
+    <tr>
+        <th>Service Name:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+    </tr>
+    <tr>
+        <th>Storage Account Name:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.StorageAccountName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+    </tr>
+    <tr>
+        <th>Deployment Name:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.DeploymentName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+    </tr>
+    <tr>
+        <th>Deployment Slot:</th>
+        <td><input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.DeploymentSlot" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+    </tr>
+    <tr>
+        <th>Azure Package Path:</th>
+        <td>
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.AzurePackagePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'AzurePackagePath')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+    <tr>
+        <th>Azure Configuration Path:</th>
+        <td>
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.AzureConfigPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'AzureConfigPath')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+    <tr>
+        <th>Azure Communication Timeout (Minutes):</th>
+        <td>
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.AzureTimeoutMinutes" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+
+    </tr>
+</table>

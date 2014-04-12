@@ -62,7 +62,7 @@ namespace Sriracha.Deploy.Tasks.Azure {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;div&gt;
-        ///    &lt;h1&gt;hello there&lt;/h1&gt;
+        ///    &lt;h1&gt;hello there2&lt;/h1&gt;
         ///&lt;/div&gt;.
         /// </summary>
         internal static string DeployCloudServiceTaskOptionsView {
