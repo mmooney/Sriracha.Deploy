@@ -49,13 +49,6 @@
 			<property name="OutDir" value="..\PublishTemp\Website\\"/>
 			<property name="BuildingProject" value="true"/>
 		</msbuild>
-    <copy todir=".\PublishTemp\Website\bin\Tasks">
-      <fileset basedir=".\Sriracha.Deploy.Web\bin\Tasks">
-        <include name="**/*.config"/>
-        <include name="**/*.dll"/>
-        <include name="**/*.exe"/>
-      </fileset>
-    </copy>
 
     <!-- 
 			Why this if/unless(directory:exists) foolishness?  Is msbuild's ongoing attempts to drive me insane, on my local machine it creates 
@@ -65,12 +58,26 @@
 		-->
 		<property name="PublishTempWebDirectory" value="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj"/>
 		<echo message="Directory exists '${PublishTempWebDirectory}'?: ${directory::exists(PublishTempWebDirectory)}"/>
-		<copy todir=".\Publish\Website" if="${directory::exists(PublishTempWebDirectory)}">
+    <copy todir="${PublishTempWebDirectory}\bin\Tasks" if="${directory::exists(PublishTempWebDirectory)}">
+      <fileset basedir=".\Sriracha.Deploy.Web\bin\Tasks">
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\Website" if="${directory::exists(PublishTempWebDirectory)}">
 			<fileset basedir="${PublishTempWebDirectory}">
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-		<copy todir=".\Publish\Website" unless="${directory::exists(PublishTempWebDirectory)}">
+    <copy todir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Tasks" unless="${directory::exists(PublishTempWebDirectory)}">
+      <fileset basedir=".\Sriracha.Deploy.Web\bin\Tasks">
+        <include name="**/*.config"/>
+        <include name="**/*.dll"/>
+        <include name="**/*.exe"/>
+      </fileset>
+    </copy>
+    <copy todir=".\Publish\Website" unless="${directory::exists(PublishTempWebDirectory)}">
 			<fileset basedir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web">
 				<include name="**/*"/>
 			</fileset>
