@@ -18,9 +18,6 @@ using System.Xml;
 
 namespace Sriracha.Deploy.Tasks.Azure.Tests
 {
-    /// <summary>
-    /// http://www.bradygaster.com/post/getting-started-with-the-windows-azure-management-libraries
-    /// </summary>
     public class DeployCloudServiceTaskExecutorTests
     {
         private class TestData

@@ -44,7 +44,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             //Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
 
             var client = new AzureClient(context.FormattedOptions.AzureSubscriptionIdentifier, context.FormattedOptions.AzureManagementCertificate);
-            var service = client.GetHostedService(context.FormattedOptions.ServiceName);
+            var service = client.GetCloudService(context.FormattedOptions.ServiceName);
             //var list = client.GetCloudServiceList();
 
             ////var existingService = computeManagementClient.HostedServices.Get(formattedServiceName);
@@ -59,7 +59,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
                     throw new ArgumentException(string.Format("Service name {0} not available: {1}", context.MaskedFormattedOptions.ServiceName, message));
                 }
                 client.CreateCloudService(context.FormattedOptions.ServiceName);
-                service = client.GetHostedService(context.FormattedOptions.ServiceName);
+                service = client.GetCloudService(context.FormattedOptions.ServiceName);
                 context.Info("Service {0} created successfully", context.MaskedFormattedOptions.ServiceName);
             }
             else
