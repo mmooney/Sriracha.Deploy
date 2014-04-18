@@ -37,6 +37,7 @@
                 <tr>
                     <th>Prefix</th>
                     <th>URI</th>
+                    <th></th>
                 </tr>
                 <tr ng-repeat="item in deploymentStep.taskOptions.NamespaceDefinitionList">
                     <td><input type="text" ng-model="item.prefix" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
@@ -57,20 +58,22 @@
 					<th>XPath</th>
 					<th>Config Level</th>
 					<th>Value Name</th>
+                    <th>Sensitive</th>
+                    <th></th>
 				</tr>
-				<tr ng-repeat="item in deploymentStep.taskOptions.XPathValueList">
-					<td><input type="text" ng-model="item.xPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
-					<td>
+                <tr ng-repeat="item in deploymentStep.taskOptions.XPathValueList">
+                    <td><input type="text" ng-model="item.xPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td>
                         <select ng-model="item.configLevel" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)">
-                            <option value="Static">Static</option>
                             <option value="Environment">Environment</option>
                             <option value="Machine">Machine</option>
                             <option value="Build">Build</option>
                         </select>
-					</td>
-					<td><input type="text" ng-model="item.valueName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
-					<td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'XPathValueList', item)"><i class="icon-trash"></i></button></td>
-				</tr>
+                    </td>
+                    <td><input type="text" ng-model="item.valueName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td><input type="checkbox" ng-model="item.sensitive" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'XPathValueList', item)"><i class="icon-trash"></i></button></td>
+                </tr>
 				<tr>
 					<td colspan="3" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addListItem(deploymentStep.taskOptions, 'XPathValueList')">Add</button></td>
 				</tr>

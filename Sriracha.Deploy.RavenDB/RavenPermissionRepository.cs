@@ -104,7 +104,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public List<DeployProjectRole> GetProjectRoleListForUser(string userName)
 		{
-			return _documentSession.Query<DeployProjectRole>().Where(i => i.Assignments.UserNameList.Any(j=>j == userName)).ToList();
+			return _documentSession.Query<DeployProjectRole>().ToList().Where(i => i.Assignments.UserNameList.Any(j=>j == userName)).ToList();
 		}
 
 		public DeployProjectRole CreateProjectRole(string projectId, string projectName, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
