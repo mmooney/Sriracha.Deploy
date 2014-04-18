@@ -202,6 +202,8 @@
     <Compile Include="Impl\PermissionValidator.cs" />
     <Compile Include="Impl\UserManager.cs" />
     <Compile Include="IUserManager.cs" />
+    <Compile Include="Project\IParameterMasker.cs" />
+    <Compile Include="Project\ProjectImpl\ParameterMasker.cs" />
     <Compile Include="Project\ProjectImpl\ProjectRoleManager.cs" />
     <Compile Include="Impl\UrlGenerator.cs" />
     <Compile Include="IPermissionValidator.cs" />

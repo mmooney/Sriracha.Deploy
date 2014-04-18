@@ -13,10 +13,12 @@ namespace Sriracha.Deploy.Web.Services
 	public class EnvironmentService : Service 
 	{
 		private readonly IProjectManager _projectManager;
+        private readonly IParameterMasker _parameterMasker;
 
-		public EnvironmentService(IProjectManager projectManager)
+		public EnvironmentService(IProjectManager projectManager, IParameterMasker parameterMasker)
 		{
 			_projectManager = DIHelper.VerifyParameter(projectManager);
+            _parameterMasker = DIHelper.VerifyParameter(parameterMasker);
 		}
 
 		public object Get(DeployEnvironment request)
@@ -26,13 +28,16 @@ namespace Sriracha.Deploy.Web.Services
 			{
 				throw new ArgumentNullException();
 			}
+            var project = _projectManager.GetProject(request.ProjectId);
 			if (!string.IsNullOrEmpty(request.Id))
 			{
-				return _projectManager.GetEnvironment(request.Id, request.ProjectId);
+				var environment = _projectManager.GetEnvironment(request.Id, request.ProjectId);
+                return _parameterMasker.Mask(project, environment);
 			}
 			else 
 			{
-				return _projectManager.GetEnvironmentList(request.ProjectId);
+				var environmentList = _projectManager.GetEnvironmentList(request.ProjectId);
+                return _parameterMasker.Mask(project, environmentList);
 			}
 		}
 
@@ -44,7 +49,10 @@ namespace Sriracha.Deploy.Web.Services
 			}
 			else
 			{
-				return _projectManager.UpdateEnvironment(environment.Id, environment.ProjectId, environment.EnvironmentName, environment.ComponentList, environment.ConfigurationList);
+                var project = _projectManager.GetProject(environment.ProjectId);
+                var originalEnvironment = _projectManager.GetEnvironment(environment.Id, environment.ProjectId);
+                var unmaskedEnvironment = _parameterMasker.Unmask(project, environment, originalEnvironment);
+                return _projectManager.UpdateEnvironment(unmaskedEnvironment.Id, unmaskedEnvironment.ProjectId, unmaskedEnvironment.EnvironmentName, unmaskedEnvironment.ComponentList, unmaskedEnvironment.ConfigurationList);
 			}
 		}
 

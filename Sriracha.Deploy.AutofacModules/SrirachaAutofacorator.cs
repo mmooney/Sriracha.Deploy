@@ -98,6 +98,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<Impersonator>().As<IImpersonator>();
             builder.RegisterType<SystemSetterUpper>().As<ISystemSetterUpper>();
             builder.RegisterType<ManifestBuilder>().As<IManifestBuilder>();
+            builder.RegisterType<ParameterMasker>().As<IParameterMasker>();
 
 			builder.RegisterType<AppSettingKeyEncrypterator>().As<IEncrypterator>();
 			builder.RegisterType<ProcessRunner>().As<IProcessRunner>().SingleInstance();

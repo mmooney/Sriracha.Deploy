@@ -15,21 +15,25 @@ namespace Sriracha.Deploy.Web.Services
 	public class ProjectService : Service
 	{
 		private readonly IProjectManager _projectManager;
+        private readonly IParameterMasker _parameterMasker;
 
-		public ProjectService(IProjectManager projectRepository)
+		public ProjectService(IProjectManager projectRepository, IParameterMasker parameterMasker)
 		{
 			_projectManager = DIHelper.VerifyParameter(projectRepository);
+            _parameterMasker = DIHelper.VerifyParameter(parameterMasker);
 		}
 
 		public object Get(DeployProject request)
 		{
 			if(request != null && !string.IsNullOrEmpty(request.Id))
 			{
-				return _projectManager.GetProject(request.Id);				
+                var project = _projectManager.GetProject(request.Id);				
+                return _parameterMasker.Mask(project);
 			}
 			else 
 			{
-				return _projectManager.GetProjectList();
+				var projectList = _projectManager.GetProjectList();
+                return _parameterMasker.Mask(projectList);
 			}
 		}
 
