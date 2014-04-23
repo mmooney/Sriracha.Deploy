@@ -48,8 +48,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xmlunit">
-      <HintPath>..\ThirdParty\xmlunit-0.4\bin\xmlunit.dll</HintPath>
+    <Reference Include="xmlunit, Version=0.4.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\xmlunit-0.4\bin\xmlunit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
