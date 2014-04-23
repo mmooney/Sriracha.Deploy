@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Moq;
-using NLog;
 using NUnit.Framework;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Utility.UtilityImpl;
+using Common.Logging;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -26,7 +26,7 @@ namespace Sriracha.Deploy.Data.Tests
 				TestField2 = "TestField2"
 			};
 
-			var sut = new RegexResolver(new Mock<Logger>().Object);
+			var sut = new RegexResolver(new Mock<ILog>().Object);
 			sut.ResolveValues(dataObject);
 
 			Assert.AreEqual("TestField1", dataObject.TestField1);
@@ -42,7 +42,7 @@ namespace Sriracha.Deploy.Data.Tests
 				TestField2 = @"TestField1<</(\d+)/"
 			};
 
-			var sut = new RegexResolver(new Mock<Logger>().Object);
+			var sut = new RegexResolver(new Mock<ILog>().Object);
 			sut.ResolveValues(dataObject);
 
 			Assert.AreEqual("TestField1234", dataObject.TestField1);
@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Tests
 				TestField2 = @"testfield1<</(\d+)/"
 			};
 
-			var sut = new RegexResolver(new Mock<Logger>().Object);
+			var sut = new RegexResolver(new Mock<ILog>().Object);
 			sut.ResolveValues(dataObject);
 
 			Assert.AreEqual("TestField1234", dataObject.TestField1);
@@ -74,7 +74,7 @@ namespace Sriracha.Deploy.Data.Tests
 				TestField2 = @"TestField1<</(?<=\\)([a-zA-Z\.]+)(?=\.\d)/"
 			};
 
-			var sut = new RegexResolver(new Mock<Logger>().Object);
+			var sut = new RegexResolver(new Mock<ILog>().Object);
 			sut.ResolveValues(dataObject);
 
 			Assert.AreEqual(@"C:\Test\My.Object.1.2.3.4.zip", dataObject.TestField1);
@@ -90,7 +90,7 @@ namespace Sriracha.Deploy.Data.Tests
 				TestField2 = @"TestField1<</\d+(\.\d+)+/"
 			};
 
-			var sut = new RegexResolver(new Mock<Logger>().Object);
+			var sut = new RegexResolver(new Mock<ILog>().Object);
 			sut.ResolveValues(dataObject);
 
 			Assert.AreEqual(@"C:\Test\My.Object.1.2.3.4.zip", dataObject.TestField1);

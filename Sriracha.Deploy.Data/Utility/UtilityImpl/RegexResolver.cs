@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using NLog;
+using Common.Logging;
 
 namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 {
 	public class RegexResolver : IRegexResolver
 	{
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 		private readonly Regex _fieldReplacementRegex;
 
-		public RegexResolver(Logger logger)
+		public RegexResolver(ILog logger)
 		{
 			_logger = DIHelper.VerifyParameter(logger);
 			_fieldReplacementRegex = new Regex(@"[a-zA-Z\d]+<</(.+)/", RegexOptions.Compiled);
@@ -24,21 +24,21 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 			{
 				throw new ArgumentNullException();
 			}
-			_logger.Trace("RegexResolver.ResolveValues for {0}: {1}",dataObject.GetType().FullName, dataObject.ToJson());
+			_logger.Trace(string.Format("RegexResolver.ResolveValues for {0}: {1}",dataObject.GetType().FullName, dataObject.ToJson()));
 			var propInfoList = dataObject.GetType().GetProperties();
 			foreach(var propInfo in propInfoList)
 			{
 				var objectValue = propInfo.GetValue(dataObject, null);
 				if (objectValue == null)
 				{
-					_logger.Trace("{0}.{1} is null", dataObject.GetType().FullName, propInfo.Name);
+					_logger.Trace(string.Format("{0}.{1} is null", dataObject.GetType().FullName, propInfo.Name));
 				}
 				else 
 				{
 					string stringValue = objectValue.ToString();
 					if (!_fieldReplacementRegex.IsMatch(stringValue))
 					{
-						_logger.Trace("{0} is not a replacement field", propInfo.Name);
+						_logger.Trace(string.Format("{0} is not a replacement field", propInfo.Name));
 					}
 					else 
 					{
@@ -58,7 +58,7 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 						object sourceValueObject= sourceFieldPropInfo.GetValue(dataObject, null);
 						if(sourceValueObject == null)
 						{
-							_logger.Trace("Source field {0} is null, setting {1} to null", sourceFieldName, propInfo.Name);
+							_logger.Trace(string.Format("Source field {0} is null, setting {1} to null", sourceFieldName, propInfo.Name));
 							propInfo.SetValue(dataObject, null, null);
 						}
 						else 
@@ -68,13 +68,13 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 							var match = regexObject.Match(sourceValue);
 							if(match == null || !match.Success)
 							{
-								_logger.Trace("Regex {0} doesn't match source value {1}, setting {2} to null", regexString, sourceValue, propInfo.Name);
+								_logger.Trace(string.Format("Regex {0} doesn't match source value {1}, setting {2} to null", regexString, sourceValue, propInfo.Name));
 								propInfo.SetValue(dataObject, null, null);
 							}
 							else 
 							{
 								string matchedValue = match.Captures[0].Value;
-								_logger.Trace("Regex {0} matches source value {1}, setting {2} to {3}", regexString, sourceValue, propInfo.Name, matchedValue);
+								_logger.Trace(string.Format("Regex {0} matches source value {1}, setting {2} to {3}", regexString, sourceValue, propInfo.Name, matchedValue));
 								propInfo.SetValue(dataObject, matchedValue, null);
 							}
 						}
