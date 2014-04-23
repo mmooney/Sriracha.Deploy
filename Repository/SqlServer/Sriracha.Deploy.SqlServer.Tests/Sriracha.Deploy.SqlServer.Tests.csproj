@@ -47,13 +47,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
+    <Reference Include="MMDB.Shared">
+      <HintPath>..\..\..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NCrunch.Framework, Version=1.46.0.9, Culture=neutral, PublicKeyToken=01d101bf6f3e0aea, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -63,17 +61,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    <Reference Include="PagedList">
+      <HintPath>..\..\..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.6.6.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\AutoFixture.3.6.6\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture">
+      <HintPath>..\..\..\packages\AutoFixture.3.6.6\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -100,20 +95,6 @@
     <Compile Include="Project\SqlServerProjectRepositoryConfigurationTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj">
-      <Project>{4aabd8d9-ab20-4db6-82ce-8ecb5644255e}</Project>
-      <Name>Sriracha.Deploy.Data.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
-      <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
-      <Name>Sriracha.Deploy.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sriracha.Deploy.SqlServer\Sriracha.Deploy.SqlServer.csproj">
-      <Project>{21c46193-7ee6-4a8e-9307-38b1df745519}</Project>
-      <Name>Sriracha.Deploy.SqlServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
@@ -154,7 +135,20 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj">
+      <Project>{4aabd8d9-ab20-4db6-82ce-8ecb5644255e}</Project>
+      <Name>Sriracha.Deploy.Data.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
+      <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
+      <Name>Sriracha.Deploy.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sriracha.Deploy.SqlServer\Sriracha.Deploy.SqlServer.csproj">
+      <Project>{21c46193-7ee6-4a8e-9307-38b1df745519}</Project>
+      <Name>Sriracha.Deploy.SqlServer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
