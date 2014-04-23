@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NCrunch.Framework</id>
+	<title>NCrunch.Framework</title>
+    <version>#VERSION#</version>
+    <authors>Remco Software Ltd</authors>
+    <owners>Remco Software Ltd</owners>
+    <licenseUrl>http://www.ncrunch.net/legal/eula</licenseUrl>
+    <projectUrl>http://www.ncrunch.net/documentation/reference_runtime-framework_overview</projectUrl>
+    <iconUrl>http://www.ncrunch.net/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NCrunch.Framework is a run-time library for NCrunch users.  This library contains attributes and tools that enable some very powerful features within NCrunch.</description>
+    <copyright>Copyright 2012</copyright>
+    <tags>NCrunch TDD UnitTest NUnit MSpec Xunit MSTest Continuous testing unit</tags>
+  </metadata>
+</package>
