@@ -4,10 +4,13 @@
   <property name="BuildDirectory" value="${directory::get-current-directory()}" />
   <property name="BuildNumber" value="${environment::get-variable('BUILD_NUMBER')}"/>
 	<target name="BuildSolution" description="Build Solution">
-		<msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
-			<property name="Configuration" value="Release"/>
-		</msbuild>
-	</target>
+    <msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
+      <property name="Configuration" value="ReleaseTasks"/>
+    </msbuild>
+    <msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
+      <property name="Configuration" value="Release"/>
+    </msbuild>
+  </target>
 	<target name="PackageSolution" description="Package Solution">
 		<delete dir=".\Publish"/>
 		<delete dir=".\PublishTemp"/>
