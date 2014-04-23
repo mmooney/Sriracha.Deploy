@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Moq;
-using NLog;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Utility.UtilityImpl;
+using Common.Logging;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Data.Tests
 			try 
 			{
 
-				var sut = new Zipper(new Mock<Logger>().Object);
+				var sut = new Zipper(new Mock<ILog>().Object);
 				sut.ZipFile(sourceFilePath, zipFilePath);
 				File.Delete(zipFilePath);
 			}
@@ -59,7 +59,7 @@ namespace Sriracha.Deploy.Data.Tests
 			try
 			{
 
-				var sut = new Zipper(new Mock<Logger>().Object);
+				var sut = new Zipper(new Mock<ILog>().Object);
 				sut.ZipDirectory(sourceDirectory, zipFilePath);
 				File.Delete(zipFilePath);
 			}
