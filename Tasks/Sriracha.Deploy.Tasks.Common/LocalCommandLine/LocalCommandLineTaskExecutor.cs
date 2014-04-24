@@ -35,68 +35,50 @@ namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 			_impersonator = DIHelper.VerifyParameter(impersonator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
-		{
-			statusManager.Info(deployStateId, string.Format("Starting LocalCommndLine for {0} ", definition.Options.ExecutablePath));
+        protected override DeployTaskExecutionResult InternalExecute(TaskExecutionContext<LocalCommandLineTaskDefinition, LocalCommandLineTaskOptions> context)
+        {
+			context.Info("Starting LocalCommndLine for {0} ", context.MaskedFormattedOptions.ExecutablePath);
 			var result = new DeployTaskExecutionResult();
-			var validationResult = _validator.ValidateMachineTaskDefinition(definition, environmentComponent, machine);
-			if (validationResult.Status != EnumRuntimeValidationStatus.Success)
-			{
-				throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(validationResult));
-			}
-			this.ExecuteMachine(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings, validationResult);
-			statusManager.Info(deployStateId, string.Format("Done LocalCommndLine for {0} ", definition.Options.ExecutablePath));
-			return statusManager.BuildResult();
-		}
 
-		private void ExecuteMachine(string deployStateId, IDeployTaskStatusManager statusManager, LocalCommandLineTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, TaskDefinitionValidationResult validationResult)
-		{
-			statusManager.Info(deployStateId, string.Format("Configuring local command line for machine {0}: {1} {2}", machine.MachineName, definition.Options.ExecutablePath, definition.Options.ExecutableArguments));
-			var machineResult = validationResult.MachineResultList[machine.Id];
+			context.Info("Configuring local command line for machine {0}: {1} {2}", context.Machine.MachineName, context.MaskedFormattedOptions.ExecutablePath, context.MaskedFormattedOptions.ExecutableArguments);
+			Environment.CurrentDirectory = context.SystemSettings.GetLocalMachineComponentDirectory(context.Machine.MachineName, context.Component.Id);
 
-            string formattedExePath = this.ReplaceParameters(definition.Options.ExecutablePath, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
-            string maskedFormattedExePath = this.ReplaceParameters(definition.Options.ExecutablePath, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
+            context.Info("Executing local command line for machine {0}: {1} {2}", context.Machine.MachineName, context.MaskedFormattedOptions.ExecutablePath, context.MaskedFormattedOptions.ExecutableArguments);
 
-			string formattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
-			string maskedFormattedArgs = this.ReplaceParameters(definition.Options.ExecutableArguments, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
-
-			Environment.CurrentDirectory = runtimeSystemSettings.GetLocalMachineComponentDirectory(machine.MachineName, component.Id);
-
-            statusManager.Info(deployStateId, string.Format("Executing local command line for machine {0}: {1} {2}", machine.MachineName, formattedExePath, maskedFormattedArgs));
 			using (var standardOutputWriter = new StringWriter())
 			using(var errorOutputWriter = new StringWriter())
 			{
-				int result;
-				if(string.IsNullOrEmpty(environmentComponent.DeployCredentialsId) || !AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
+				int exeResult;
+				if(string.IsNullOrEmpty(context.EnvironmentComponent.DeployCredentialsId) || !AppSettingsHelper.GetBoolSetting("AllowImpersonation", true))
 				{
-                    result = _processRunner.Run(formattedExePath, formattedArgs, standardOutputWriter, errorOutputWriter);
+                    exeResult = _processRunner.Run(context.FormattedOptions.ExecutablePath, context.FormattedOptions.ExecutableArguments, standardOutputWriter, errorOutputWriter);
 				}
 				else 
 				{
-					var credentials = _credentialsManager.GetCredentials(environmentComponent.DeployCredentialsId);
+					var credentials = _credentialsManager.GetCredentials(context.EnvironmentComponent.DeployCredentialsId);
 					using(var impersonation = _impersonator.BeginImpersonation(credentials.Id))
 					{
-						statusManager.Info(deployStateId, string.Format("Starting process as {0} impersonating {1}", WindowsIdentity.GetCurrent().Name, credentials.DisplayValue));
+						context.Info("Starting process as {0} impersonating {1}", WindowsIdentity.GetCurrent().Name, credentials.DisplayValue);
 						using(var password = _credentialsManager.DecryptPasswordSecure(credentials))
 						{
-                            string exePath = Path.GetFullPath(formattedExePath);
-                            statusManager.Info(deployStateId, string.Format("For Options.ExecutablePath {0}, using {1}", maskedFormattedExePath, exePath));
+                            string exePath = Path.GetFullPath(context.FormattedOptions.ExecutablePath);
+                            context.Info("For Options.ExecutablePath {0}, using {1}", context.MaskedFormattedOptions.ExecutablePath, exePath);
 							//result = _processRunner.RunAsUser(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, credentials.Domain, credentials.UserName, password);
-							result = _processRunner.RunAsToken(exePath, formattedArgs, standardOutputWriter, errorOutputWriter, impersonation.TokenHandle);
+							exeResult = _processRunner.RunAsToken(exePath, context.FormattedOptions.ExecutableArguments, standardOutputWriter, errorOutputWriter, impersonation.TokenHandle);
 						}
 					}
 				}
 				string standardOutput = standardOutputWriter.GetStringBuilder().ToString();
 				string errorOutput = errorOutputWriter.GetStringBuilder().ToString();
-				if(result == 0)
+				if(exeResult == 0)
 				{
 					if(!string.IsNullOrWhiteSpace(standardOutput))
 					{
-						statusManager.Info(deployStateId, standardOutput);
+						context.Info(standardOutput);
 					}
 					if(!string.IsNullOrWhiteSpace(errorOutput))
 					{
-						statusManager.Error(deployStateId, errorOutput);
+						context.Error(errorOutput);
 						throw new Exception("LocalCommandLine Task Failed: " + errorOutput); 
 					}
 				}
@@ -115,139 +97,15 @@ namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 					{
 						errorText = "Error Code " + result.ToString();
 					}
-					statusManager.Error(deployStateId, errorText);
+					context.Error(errorText);
 					throw new Exception("LocalCommandLine Task Failed: " + errorText);
 				}
 			}
-            statusManager.Info(deployStateId, string.Format("Done executing local command line for machine {0}: {1} {2}", machine.MachineName, maskedFormattedExePath, maskedFormattedArgs));
+            context.Info("Done executing local command line for machine {0}: {1} {2}", context.Machine.MachineName, context.MaskedFormattedOptions.ExecutablePath, context.MaskedFormattedOptions.ExecutableArguments);
+
+			context.Info(string.Format("Done LocalCommndLine for {0} ",  context.MaskedFormattedOptions.ExecutablePath));
+			return context.BuildResult();
 		}
 
-		private string ReplaceParameters(string format, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> environmentValues, List<TaskDefinitionValidationResult.TaskDefinitionValidationResultItem> machineValues, List<TaskParameter> buildParameters, List<TaskParameter> deployParameters, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings, DeployMachine machine, DeployComponent component, bool masked)
-		{
-			string returnValue = format;
-			foreach(var item in environmentValues)
-			{
-				string value;
-				string fieldName;
-				if(item.Sensitive)
-				{
-					fieldName = string.Format("${{env:sensitive:{0}}}", item.FieldName);
-				}
-				else
-				{
-					fieldName = string.Format("${{env:{0}}}", item.FieldName);
-				}
-				if(masked && item.Sensitive)
-				{
-					value = LocalCommandLineTaskExecutor.ValueMask;
-				}
-				else 
-				{
-					value = item.FieldValue;
-					//if(!string.IsNullOrEmpty(value))
-					//{
-					//	//Because this is going into a DOS command line, need to escape certain characters
-					//	//	http://www.robvanderwoude.com/escapechars.php
-					//	value = value.Replace("%","%%")
-					//				.Replace("^","^^")
-					//				.Replace("&","^&")
-					//				.Replace("<","^<")
-					//				.Replace(">","^>")
-					//				.Replace("|","|^")
-					//				;	
-					//}
-				}
-				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
-			}
-			foreach(var item in machineValues)
-			{
-				string value;
-				string fieldName;
-				if(item.Sensitive)
-				{
-					fieldName = string.Format("${{machine:sensitive:{0}}}", item.FieldName);
-				}
-				else 
-				{
-					fieldName = string.Format("${{machine:{0}}}", item.FieldName);
-				}
-				if (masked && item.Sensitive)
-				{
-					value = LocalCommandLineTaskExecutor.ValueMask;
-				}
-				else
-				{
-					value = item.FieldValue;
-				}
-				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
-			}
-			foreach (var item in buildParameters)
-			{
-				string value;
-				string fieldName;
-				if (item.Sensitive)
-				{
-					fieldName = string.Format("${{build:sensitive:{0}}}", item.FieldName);
-				}
-				else
-				{
-					fieldName = string.Format("${{build:{0}}}", item.FieldName);
-				}
-				if (masked && item.Sensitive)
-				{
-					value = LocalCommandLineTaskExecutor.ValueMask;
-				}
-				else
-				{
-					value = this.GetBuildParameterValue(item.FieldName, build);
-				}
-				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
-			}
-			foreach (var item in deployParameters)
-			{
-				string value;
-				string fieldName;
-				if (item.Sensitive)
-				{
-					fieldName = string.Format("${{deploy:sensitive:{0}}}", item.FieldName);
-				}
-				else
-				{
-					fieldName = string.Format("${{deploy:{0}}}", item.FieldName);
-				}
-				if (masked && item.Sensitive)
-				{
-					value = LocalCommandLineTaskExecutor.ValueMask;
-				}
-				else
-				{
-					value = this.GetDeployParameterValue(item.FieldName, runtimeSystemSettings, machine, component);
-				}
-				returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
-			}
-			return returnValue;
-		}
-
-		//http://stackoverflow.com/questions/244531/is-there-an-alternative-to-string-replace-that-is-case-insensitive
-		//http://stackoverflow.com/a/244933/203479
-		public static string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
-		{
-			StringBuilder sb = new StringBuilder();
-
-			int previousIndex = 0;
-			int index = str.IndexOf(oldValue, comparison);
-			while (index != -1)
-			{
-				sb.Append(str.Substring(previousIndex, index - previousIndex));
-				sb.Append(newValue);
-				index += oldValue.Length;
-
-				previousIndex = index;
-				index = str.IndexOf(oldValue, index, comparison);
-			}
-			sb.Append(str.Substring(previousIndex));
-
-			return sb.ToString();
-		}
-	}
+    }
 }

@@ -37,7 +37,8 @@ namespace Sriracha.Deploy.Data.Tasks
 				throw new ArgumentException(string.Format("Task definition must be {0}, found {1}", typeof(TaskDefinition).FullName, definition.GetType().FullName));
 			}
 			var typedDefinition = (TaskDefinition)definition;
-			return this.InternalExecute(deployStateId, statusManager, typedDefinition, component, environmentComponent, machine, build, runtimeSystemSettings);
+            var context = this.GetTaskExecutionContext(deployStateId, statusManager, (TaskDefinition)definition, component, environmentComponent, machine, build, runtimeSystemSettings);
+			return this.InternalExecute(context);
 		}
 
 		protected string GetBuildParameterValue(string parameterName, DeployBuild build)
@@ -240,6 +241,7 @@ namespace Sriracha.Deploy.Data.Tasks
             return sb.ToString();
         }
         
-        protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings);
-	}
+        //protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings);
+        protected abstract DeployTaskExecutionResult InternalExecute(TaskExecutionContext<TaskDefinition, TaskDefinitionOptions> context);
+    }
 }

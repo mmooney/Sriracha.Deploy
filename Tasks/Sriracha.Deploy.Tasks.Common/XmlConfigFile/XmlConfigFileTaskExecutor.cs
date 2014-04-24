@@ -25,18 +25,28 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 			_validator = DIHelper.VerifyParameter(validator);
 		}
 
-		protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, XmlConfigFileTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
-		{
-			statusManager.Info(deployStateId, string.Format("Starting XmlConfigTask for {0} ", definition.Options.TargetFileName));
-            var context = this.GetTaskExecutionContext(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings);
-			if (context.ValidationResult.Status != EnumRuntimeValidationStatus.Success)
-			{
-                throw new InvalidOperationException("Validation not complete:" + Environment.NewLine + JsonConvert.SerializeObject(context.ValidationResult));
-			}
+        protected override DeployTaskExecutionResult InternalExecute(TaskExecutionContext<XmlConfigFileTaskDefinition, XmlConfigFileTaskOptions> context)
+        {
+            if(!string.IsNullOrEmpty(context.MaskedFormattedOptions.TargetFileName))
+            {
+			    context.Info("Starting XmlConfigTask for {0}",  context.MaskedFormattedOptions.TargetFileName);
+            }
+            else 
+            {
+                context.Info("Starting XmlConfigTask");
+            }
+
 			this.ExecuteMachine(context);
 
-			statusManager.Info(deployStateId, string.Format("Done XmlConfigTask for {0} ", definition.Options.TargetFileName));
-			return statusManager.BuildResult();
+            if (!string.IsNullOrEmpty(context.MaskedFormattedOptions.TargetFileName))
+            {
+                context.Info("Done XmlConfigTask for {0}", context.MaskedFormattedOptions.TargetFileName);
+            }
+            else
+            {
+                context.Info("Done XmlConfigTask");
+            }
+            return context.BuildResult();
 		}
 
         private void ExecuteMachine(TaskExecutionContext<XmlConfigFileTaskDefinition, XmlConfigFileTaskOptions> context)
@@ -119,6 +129,5 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 			}
 			node.InnerText = value;
 		}
-
-	}
+    }
 }

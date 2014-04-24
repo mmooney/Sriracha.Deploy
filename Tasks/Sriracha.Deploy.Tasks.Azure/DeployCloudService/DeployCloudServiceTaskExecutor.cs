@@ -27,10 +27,9 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             _logger = DIHelper.VerifyParameter(logger);
         }
 
-        protected override DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, DeployCloudServiceTaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
+        protected override DeployTaskExecutionResult InternalExecute(TaskExecutionContext<DeployCloudServiceTaskDefinition, DeployCloudServiceTaskOptions> context)
         {
-            _logger.Info("Starting Dep loyCloudService.InternalExecute");
-            var context = this.GetTaskExecutionContext(deployStateId, statusManager, definition, component, environmentComponent, machine, build, runtimeSystemSettings);
+            _logger.Info("Starting DeployCloudService.InternalExecute");
 
             //string formattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, false);
             //string maskedFormattedSubscriptionIdentifier = this.ReplaceParameters(definition.Options.AzureSubscriptionIdentifier, validationResult.EnvironmentResultList, machineResult, validationResult.BuildParameterList, validationResult.DeployParameterList, build, runtimeSystemSettings, machine, component, true);
@@ -114,6 +113,5 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
             _logger.Info("Done DeployCloudService.InternalExecute");
             return context.BuildResult();
         }
-
     }
 }
