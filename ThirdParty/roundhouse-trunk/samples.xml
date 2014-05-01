@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<deploymentTool>
+ <msbuild>
+
+  <!-- Set this next to your proj file for deployments and import this -->
+  <UsingTask AssemblyFile="roundhouse.tasks.dll" TaskName="roundhouse.tasks.Roundhouse" />
+  
+    <!-- basic functionality, these are the required items-->
+    <Roundhouse
+      DatabaseName="YOURDATABASENAME"
+      SqlFilesDirectory="..\..\db"
+      />
+
+    <!-- for restoring a database from a known location before applying changes -->
+    <Roundhouse
+      ServerName="(local)"
+      DatabaseName="YOURDATABASENAME"
+      SqlFilesDirectory="..\..\db"
+      Restore="true"
+      RestoreFromPath="\\tell\me\where\YOURDATABASENAME.bak"
+      RestoreCustomOptions=""
+      />
+
+    <!-- versioning with a dll -->
+    <Roundhouse
+      ServerName="(local)"
+      DatabaseName="YOURDATABASENAME"
+      SqlFilesDirectory="..\..\db"
+      RepositoryPath="http://tellmewherethisis.com/svn/"
+      VersionFile="..\..\app\somefile.dll"
+      />
+
+    <!-- versioning with an xml file -->
+    <Roundhouse
+      ServerName="(local)"
+      DatabaseName="YOURDATABASENAME"
+      SqlFilesDirectory="..\..\db"
+      RepositoryPath="http://tellmewherethisis.com/svn/"
+      VersionFile="..\..\app\versionfile.xml"
+      VersionXPath="//buildInfo/version"
+      />
+
+    <!-- FULL configuration, for changing conventions -->
+    <Roundhouse
+      ServerName="(local)"
+      DatabaseName="YOURDATABASENAME"
+      ConnectionString=""
+      SqlFilesDirectory="..\..\db"
+      CommandTimeout="60"
+      CommandTimeoutAdmin="300"
+      RepositoryPath="http://tellmewherethisis.com/svn/"
+      VersionFile="..\_BuildInfo.xml"
+      VersionXPath="//buildInfo/version"
+      AlterDatabaseFolderName="alterDatabase"
+      UpFolderName="up"
+      DownFolderName="down"
+      RunFirstAfterUpFolderName="runFirstAfterUp"
+      FunctionsFolderName="functions"
+      ViewsFolderName="views"
+      SprocsFolderName="sprocs"
+      IndexesFolderName="indexes"
+      PermissionsFolderName="permissions"
+      SchemaName="RoundhousE"
+      VersionTableName="Version"
+      ScriptsRunTableName="ScriptsRun"
+      ScriptsRunErrorsTableName="ScriptsRunErrors"
+      EnvironmentName="LOCAL"
+      Restore="false"
+      RestoreFromPath="\\tell\me\where\YOURDATABASENAME.bak"
+      RestoreCustomOptions=""
+      RestoreTimeout=""
+      CreateDatabaseCustomScript=""
+      Drop="false"
+      DoNotCreateDatabase="false"
+      OutputPath="C:\RoundhousE_runs"
+      WarnOnOneTimeScriptChanges="false"
+      Silent="false"
+      DatabaseType="roundhouse.databases.sqlserver.SqlServerDatabase, roundhouse"
+      WithTransaction="false"
+      RecoveryMode="Simple"
+      RunAllAnyTimeScripts="false"
+      DisableTokenReplacement="false"
+      />
+
+  </msbuild>
+</deploymentTool>

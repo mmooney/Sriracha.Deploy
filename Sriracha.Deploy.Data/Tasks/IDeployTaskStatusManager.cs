@@ -11,7 +11,8 @@ namespace Sriracha.Deploy.Data.Tasks
 		DeployTaskExecutionResult BuildResult();
 		void Debug(string deployStateId, string message);
 		void Info(string deployStateId, string message);
-		void Error(string deployStateId, string message);
+        void Warn(string deployStateId, string message);
+        void Error(string deployStateId, string message);
 		void Error(string deployStateId, Exception err);
-	}
+    }
 }

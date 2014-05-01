@@ -62,6 +62,13 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 			this.AddMessageToObject(deployStateId, "INFO", message);
 		}
 
+        public void Warn(string deployStateId, string message)
+        {
+            this._logger.Info("Deployment {0}: {1}", deployStateId, message);
+            this.InfoList.Add(message);
+            this.AddMessageToObject(deployStateId, "WARNING", message);
+        }
+
 		public void Error(string deployStateId, string message)
 		{
 			this._logger.Error("Deployment {0}: {1}", deployStateId, message);
@@ -75,5 +82,7 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 			this.ErrorList.Add(err.ToString());
 			this.AddMessageToObject(deployStateId, "ERROR", err.ToString());
 		}
-	}
+
+
+    }
 }

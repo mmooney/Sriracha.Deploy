@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="DBDeploy" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Visit http://roundhouse.googlecode.com/ for details -->
+  
+  <UsingTask AssemblyFile="roundhouse.tasks.dll" TaskName="roundhouse.tasks.Roundhouse" />
+
+  <PropertyGroup>
+    <Environment>LOCAL</Environment>
+    <DBServer>(local)</DBServer>
+    <DBName>YOURDATABASENAME</DBName>
+    <DBConnectionString>INSERTCONNECTIONSTRING</DBConnectionString>
+    <DBSqlFilesPath>..\..\db</DBSqlFilesPath>
+    <RepositoryPath>http://tellmewherethisis.com/svn/</RepositoryPath>
+    <VersionFile>..\_BuildInfo.xml</VersionFile>
+    <VersionFileXPath>//buildInfo/version</VersionFileXPath>
+    <DBRestore>false</DBRestore>
+    <DBRestorePath>\\tell\me\where\YOURDATABASENAME.bak</DBRestorePath>
+    <DBRestoreOptions>INSERTRESTOREOPTIONS</DBRestoreOptions>
+    <DBCreateDatabaseCustomScript></DBCreateDatabaseCustomScript>
+    <DBDrop>false</DBDrop>
+    <Interactive>true</Interactive>
+  </PropertyGroup>
+
+
+  <Target Name="ApplyDatabaseChanges">
+    <!--<Message Text="Running RoundhousE on $(DBServer) ($(DBName)). Looking in $(DBSqlFilesPath) for sql scripts." />-->
+    <Roundhouse
+        ServerName="$(DBServer)"
+        DatabaseName="$(DBName)"
+        ConnectionString="$(DBConnectionString)"
+        SqlFilesDirectory="$(DBSqlFilesPath)"
+        CommandTimeout="60"
+        CommandTimeoutAdmin="300"
+        RepositoryPath="$(RepositoryPath)"
+        VersionFile="$(VersionFile)"
+        VersionXPath="$(VersionFileXPath)"
+        AlterDatabaseFolderName="alterDatabase"
+        UpFolderName="up"
+        DownFolderName="down"
+        RunFirstAfterUpFolderName="runFirstAfterUp"
+        FunctionsFolderName="functions"
+        ViewsFolderName="views"
+        SprocsFolderName="sprocs"
+        IndexesFolderName="indexes"
+        PermissionsFolderName="permissions"
+        SchemaName="RoundhousE"
+        VersionTableName="Version"
+        ScriptsRunTableName="ScriptsRun"
+        ScriptsRunErrorsTableName="ScriptsRunErrors"
+        EnvironmentName="$(Environment)"
+        Restore="$(DBRestore)"
+        RestoreFromPath="$(DBRestorePath)"
+        RestoreCustomOptions="$(DBRestoreOptions)"
+        RestoreTimeout="900"
+        CreateDatabaseCustomScript="$(DBCreateDatabaseCustomScript)"
+        Drop="$(DBDrop)"
+        DoNotCreateDatabase="false"
+        OutputPath="C:\RoundhousE_runs"
+        WarnOnOneTimeScriptChanges="false"
+        Silent="false"
+        DatabaseType="roundhouse.databases.sqlserver.SqlServerDatabase, roundhouse"
+        WithTransaction="false"
+        RecoveryMode="Full"
+        RunAllAnyTimeScripts="false"
+        DisableTokenReplacement="false"
+        />
+  </Target>
+
+  <Target Name = "DBDeploy"
+		  DependsOnTargets="
+        ApplyDatabaseChanges;
+      "
+     >
+  </Target>
+
+</Project>

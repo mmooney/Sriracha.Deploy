@@ -57,6 +57,16 @@ namespace Sriracha.Deploy.Data.Tasks
             }
             this.StatusManager.Info(this.DeployStateId, message);
         }
+
+        public void Warn(string message, params object[] args)
+        {
+            if (args != null && args.Length > 0)
+            {
+                message = string.Format(message, args);
+            }
+            this.StatusManager.Warn(this.DeployStateId, message);
+        }
+
         public void Error(string message, params object[] args)
         {
             if (args != null && args.Length > 0)
@@ -75,5 +85,6 @@ namespace Sriracha.Deploy.Data.Tasks
         {
             return this.StatusManager.BuildResult();
         }
+
     }
 }
