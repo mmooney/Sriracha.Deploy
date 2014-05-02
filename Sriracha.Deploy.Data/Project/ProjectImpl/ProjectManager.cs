@@ -5,16 +5,19 @@ using System.Text;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Dto.Project;
+using Sriracha.Deploy.Data.Tasks;
 
 namespace Sriracha.Deploy.Data.Project.ProjectImpl
 {
 	public class ProjectManager : IProjectManager
 	{
 		private readonly IProjectRepository _projectRepository;
+        private readonly IDeployTaskFactory _deployTaskFactory;
 
-		public ProjectManager(IProjectRepository projectRepository)
+		public ProjectManager(IProjectRepository projectRepository, IDeployTaskFactory deployTaskFactory)
 		{
-			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+            _deployTaskFactory = DIHelper.VerifyParameter(deployTaskFactory);
 		}
 
 		public DeployProject CreateProject(string projectName, bool usesSharedComponentConfiguration)
@@ -138,7 +141,8 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			}
 			if(string.IsNullOrEmpty(taskOptionsJson))
 			{
-				throw new ArgumentNullException("Missing Task Options");
+                var taskDefinition = _deployTaskFactory.CreateTaskDefinition(taskTypeName, "{}");
+                taskOptionsJson = taskDefinition.DeployTaskOptions.ToJson();
 			}
 			var project = this._projectRepository.GetProject(projectId);
 			var returnValue = this._projectRepository.CreateComponentDeploymentStep(project.Id, componentId, stepName, taskTypeName, taskOptionsJson, null);

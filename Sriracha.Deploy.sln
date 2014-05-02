@@ -4,12 +4,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Web", "Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj", "{456CE3B0-1CC2-4797-B718-8036C93FE63A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {71D75062-B4DE-4ADE-B88A-87B6212D0A1C}
+		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8784116D-D63F-49B3-A4BB-CC929BB0A080}
+		{7CD77BEF-2E0C-4983-9E32-1F5607A9998F} = {7CD77BEF-2E0C-4983-9E32-1F5607A9998F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Data", "Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj", "{125A2A7C-56C3-42AE-86DF-FD88A85BE0E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Data.Tests", "Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj", "{4AABD8D9-AB20-4DB6-82CE-8ECB5644255E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Server", "Sriracha.Deploy.Server\Sriracha.Deploy.Server.csproj", "{74178A7E-6F9E-482C-B4DB-C4D24FAAA354}"
+	ProjectSection(ProjectDependencies) = postProject
+		{71D75062-B4DE-4ADE-B88A-87B6212D0A1C} = {71D75062-B4DE-4ADE-B88A-87B6212D0A1C}
+		{8784116D-D63F-49B3-A4BB-CC929BB0A080} = {8784116D-D63F-49B3-A4BB-CC929BB0A080}
+		{7CD77BEF-2E0C-4983-9E32-1F5607A9998F} = {7CD77BEF-2E0C-4983-9E32-1F5607A9998F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sriracha.Deploy.Client", "Sriracha.Deploy.Client\Sriracha.Deploy.Client.csproj", "{51917ED5-E2CE-43F6-966A-9965B7143588}"
 EndProject
