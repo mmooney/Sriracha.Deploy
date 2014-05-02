@@ -125,16 +125,19 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 		{
 			new DeployHistoryBuildRetentionRule 
 			{ 
+                Id = "DeployHistoryBuildRetentionRule_DefaultDEV",
 				BuildRetentionMinutes = 60*24*7,
 				EnvironmentNameList = new List<string> { "DEV" }
 			},
 			new DeployHistoryBuildRetentionRule 
 			{
+                Id = "DeployHistoryBuildRetentionRule_DefaultQAINT",
 				BuildRetentionMinutes = 60*24*30,
 				EnvironmentNameList = new List<string> { "QA", "INT" }
 			},
 			new DeployHistoryBuildRetentionRule 
 			{
+                Id = "DeployHistoryBuildRetentionRule_DefaultPROD",
 				BuildRetentionMinutes = null,
 				EnvironmentNameList = new List<string> { "PROD" }
 			}

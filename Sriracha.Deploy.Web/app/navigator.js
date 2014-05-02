@@ -329,6 +329,13 @@
 		            go: function (systemRoleId) { root.goTo(this.url, { systemRoleId: systemRoleId }); }
 		        }
 		    },
+		    buildPurgeRule: {
+		        list: {
+		            url: "/systemSettings/buildPurgeRule",
+		            clientUrl: function() { return root.getUrl(this.url) },
+		            go: function () { root.goTo(this.url); }
+		        }
+		    },
 		    deploymentTool: {
 		        list: {
 		            url: "/systemSettings/deploymentTool",

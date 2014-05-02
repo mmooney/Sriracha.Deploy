@@ -77,6 +77,7 @@ namespace Sriracha.Deploy.Data
         Unknown = 0,
         EditSystemPermissions,
         EditUsers,
-        EditDeploymentCredentials
+        EditDeploymentCredentials,
+        EditBuildPurgeRules
     }
 }

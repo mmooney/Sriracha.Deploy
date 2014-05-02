@@ -251,6 +251,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="app\directives\breadcrumbsDirective.js" />
     <Content Include="app\dialogs\filebrowser-template.html" />
+    <Content Include="app\systemSettings\buildPurgeRules\buildPurgeRuleController.js" />
+    <Content Include="app\systemSettings\buildPurgeRules\list.html" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree.css" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree_directive.js" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree_template.html" />
@@ -320,6 +322,8 @@
     <Compile Include="Services\Security\User\UserService.cs" />
     <Compile Include="Services\SystemLog\SystemLogRequest.cs" />
     <Compile Include="Services\SystemLog\SystemLogService.cs" />
+    <Compile Include="Services\SystemSettings\BuildPurgeRuleRequest.cs" />
+    <Compile Include="Services\SystemSettings\BuildPurgeRuleService.cs" />
     <Compile Include="Services\SystemSettings\CredentialsRequest.cs" />
     <Compile Include="Services\SystemSettings\CredentialsService.cs" />
     <Compile Include="Services\SystemSettings\CredentialsTestRequest.cs" />
