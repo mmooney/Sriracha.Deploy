@@ -111,6 +111,12 @@
 		    }
 		}
 
+		this.canEditBuildPurgeRules = function () {
+		    if (accountData && accountData.effectivePermissions && accountData.effectivePermissions.systemPermissions) {
+		        return (accountData.effectivePermissions.systemPermissions.editBuildPurgeRulesAccess == "Grant");
+		    }
+		}
+
 		this.getUserPermissions = function () {
 			return this.effectivePermissions;
 		}

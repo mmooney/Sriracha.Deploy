@@ -20,10 +20,10 @@
 			);
 		}
 		else  {
-		    $scope.buildPurgeRuleList = SrirachaResource.systemSettings.buildPurgeRule.get(
+		    $scope.buildPurgeRuleList = SrirachaResource.systemSettings.buildPurgeRule.query(
 				{},
 				function (data) {
-					console.log(data);
+				    console.log($scope.buildPurgeRuleList);
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);

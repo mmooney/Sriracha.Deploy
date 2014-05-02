@@ -76,6 +76,10 @@ namespace Sriracha.Deploy.Data.Impl
                 EditDeploymentCredentialsAccess = userSystemRoleList.Any(i => i.Permissions.EditDeploymentCredentialsAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
                                                 : userSystemRoleList.Any(i => i.Permissions.EditDeploymentCredentialsAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
                                                 : EnumPermissionAccess.None,
+                EditBuildPurgeRulesAccess = userSystemRoleList.Any(i => i.Permissions.EditBuildPurgeRulesAccess == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
+                                                : userSystemRoleList.Any(i => i.Permissions.EditBuildPurgeRulesAccess == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
+                                                : EnumPermissionAccess.None,
+
             };
 
 
@@ -139,6 +143,9 @@ namespace Sriracha.Deploy.Data.Impl
                     break;
                 case EnumSystemPermission.EditDeploymentCredentials:
                     access = permissionData.SystemPermissions.EditDeploymentCredentialsAccess;
+                    break;
+                case EnumSystemPermission.EditBuildPurgeRules:
+                    access = permissionData.SystemPermissions.EditBuildPurgeRulesAccess;
                     break;
                 default:
                     throw new UnknownEnumValueException(permission);

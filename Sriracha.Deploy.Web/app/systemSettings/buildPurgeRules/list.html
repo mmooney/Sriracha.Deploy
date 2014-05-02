@@ -1,35 +1,65 @@
-﻿<h2><a ng-href="{{navigator.user.list.clientUrl()}}">Deployment Tool List</a></h2>
+﻿<h2><a ng-href="{{navigator.systemSettings.buildPurgeRule.list.clientUrl()}}">Build Purge Rules</a></h2>
 
-Deployment Tools are standalone command line tools that you can call from your deployment steps.
+Controls how long builds are retained before their are purged from the system.
 
 <div style="padding-top:10px">
-    <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
+    <button class="btn btn-primary" ng-click="navigator.systemSettings.buildPurgeRule.create.go()" ng-show="permissionVerifier.canEditBuildPurgeRules()">Create Rule</button>
 </div>
 
-<table class="table table-striped" ng-show="deploymentToolList.items.length">
+<table class="table table-striped" ng-show="buildPurgeRuleList.length">
     <thead>
         <tr>
-            <th sort-header sort-field="ToolName" apply-sort="applySort" paged-list="deploymentToolList">Tool Name</th>
+            <th sort-header sort-field="displayValue" apply-sort="applySort" paged-list="buildPurgeRuleList">Description</th>
+            <th>Environment(s)</th>
+            <th>Machine(s)</th>
+            <th>Retention Minutes</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="deploymentTool in deploymentToolList.items">
+        <tr ng-repeat="buildPurgeRule in buildPurgeRuleList">
             <td>
-                <a ng-href="{{navigator.systemSettings.deploymentTool.edit.clientUrl(deploymentTool.id)}}" ng-show="permissionVerifier.canEditDeploymentTools()">{{deploymentTool.toolName}}</a>
-                <div ng-hide="permissionVerifier.canEditDeploymentTools()">{{deploymentTool.toolName}}</div>
+                <a ng-href="{{navigator.systemSettings.buildPurgeRule.edit.clientUrl(buildPurgeRule.id)}}" ng-show="permissionVerifier.canEditBuildPurgeRules()">{{buildPurgeRule.displayValue}}</a>
+                <div ng-hide="permissionVerifier.canEditBuildPurgeRules()">{{buildPurgeRuleList.displayValue}}</div>
             </td>
-            <td><a class="btn btn-danger" ng-href="{{navigator.systemSettings.deploymentTool.remove.clientUrl(deploymentTool.id)}}" ng-show="permissionVerifier.canEditDeploymentTools()">Delete</a></td>
+            <td>
+                <div ng-show="buildPurgeRule.environmentNameList.length || buildPurgeRule.environmentIdList.length">
+                    <ul>
+                        <li ng-repeat="item in buildPurgeRule.environmentNameList">{{item}}</li>
+                        <li ng-repeat="item in buildPurgeRule.environmentIdList">{{item}}</li>
+                    </ul>
+                </div>
+                <div ng-hide="buildPurgeRule.environmentNameList.length || buildPurgeRule.environmentIdList.length">
+                    <em>None</em>
+                </div>
+            </td>
+            <td>
+                <div ng-show="buildPurgeRule.machineNameList.length || buildPurgeRule.machineIdList.length">
+                    <ul>
+                        <li ng-repeat="item in buildPurgeRule.machineNameList">{{item}}</li>
+                        <li ng-repeat="item in buildPurgeRule.machineIdList">{{item}}</li>
+                    </ul>
+                </div>
+                <div ng-hide="buildPurgeRule.machineNameList.length || buildPurgeRule.machineIdList.length">
+                    <em>None</em>
+                </div>
+            </td>
+            <td>
+                {{buildPurgeRule.buildRetentionMinutes}}
+            </td>
+            <td>
+                <a class="btn btn-primary" ng-href="{{navigator.systemSettings.buildPurgeRule.edit.clientUrl(buildPurgeRule.id)}}" ng-show="permissionVerifier.canEditBuildPurgeRules()">Edit</a>
+                <a class="btn btn-danger" ng-href="{{navigator.systemSettings.buildPurgeRule.remove.clientUrl(buildPurgeRule.id)}}" ng-show="permissionVerifier.canEditBuildPurgeRules()">Delete</a>
+            </td>
         </tr>
     </tbody>
 </table>
-<div ng-hide="userList.items.length">
-    No deployment tools
+<div ng-hide="buildPurgeRuleList.length">
+    No purge rules
 </div>
-<div ng-show="userList.items.length">
-    <sriracha-pager paged-list="deploymentToolList" go-to-page="goToPage"></sriracha-pager>
+<div ng-show="buildPurgeRuleList.length">
     <div style="padding-top:10px">
-        <button class="btn btn-primary" ng-click="navigator.systemSettings.deploymentTool.create.go()" ng-show="permissionVerifier.canEditDeploymentTools()">Create Deployment Tool</button>
+        <button class="btn btn-primary" ng-click="navigator.systemSettings.buildPurgeRule.create.go()" ng-show="permissionVerifier.canEditBuildPurgeRules()">Create Rule</button>
     </div>
 </div>
 

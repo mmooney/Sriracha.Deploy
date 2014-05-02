@@ -136,6 +136,11 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
                 role.Permissions.EditDeploymentToolsAccess = access;
                 anyChange = true;
             }
+            if(role.Permissions.EditBuildPurgeRulesAccess != access)
+            {
+                role.Permissions .EditBuildPurgeRulesAccess = access;
+                anyChange = true;
+            }
             return anyChange;
        }
 
@@ -161,6 +166,7 @@ namespace Sriracha.Deploy.Data.Account.AccountImpl
             role.Permissions.EditSystemPermissionsAccess = EnumPermissionAccess.Grant;
             role.Permissions.EditUsersAccess = EnumPermissionAccess.Grant;
             role.Permissions.EditDeploymentCredentialsAccess = EnumPermissionAccess.Grant;
+            role.Permissions.EditBuildPurgeRulesAccess = EnumPermissionAccess.Grant;
             return role;
         }
 
