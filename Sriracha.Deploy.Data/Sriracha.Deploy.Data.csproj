@@ -108,6 +108,8 @@
     <Compile Include="Account\AuthResponse.cs" />
     <Compile Include="Account\ISystemRoleManager.cs" />
     <Compile Include="Build\BuildImpl\ManifestBuilder.cs" />
+    <Compile Include="Build\BuildPurgeRuleManager.cs" />
+    <Compile Include="Build\IBuildPurgeRuleManager.cs" />
     <Compile Include="Build\IManifestBuilder.cs" />
     <Compile Include="Credentials\CredentialsImpl\AESGCM.cs" />
     <Compile Include="Credentials\CredentialsImpl\CredentialsManager.cs" />
@@ -147,7 +149,7 @@
     <Compile Include="Dto\Account\SystemRolePermissions.cs" />
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
-    <Compile Include="Dto\BuildPurgeRules\DeployHistoryBuildRetentionRule.cs" />
+    <Compile Include="Dto\BuildPurgeRules\BuildPurgeRule.cs" />
     <Compile Include="Dto\Build\FileManifest.cs" />
     <Compile Include="Dto\Build\FileManifestItem.cs" />
     <Compile Include="Dto\CleanupTaskData.cs" />
@@ -213,6 +215,7 @@
     <Compile Include="Notifications\FakeProjectNofifier.cs" />
     <Compile Include="Notifications\INotificationResourceViews.cs" />
     <Compile Include="Notifications\NotificationImpl\NotificationResourceViews.cs" />
+    <Compile Include="Repository\IBuildPurgeRuleRepository.cs" />
     <Compile Include="Repository\ICleanupRepository.cs" />
     <Compile Include="Repository\ICredentialsRepository.cs" />
     <Compile Include="Repository\IDeployStateRepository.cs" />

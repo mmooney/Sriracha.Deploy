@@ -14,8 +14,8 @@ namespace Sriracha.Deploy.Data.Repository
         int GetIntSetting(string key, int defaultValue);
         void SetIntSetting(string key, int value);
 
-        List<BaseBuildPurgeRetentionRule> GetBuildPurgeRetentionRuleList(List<BaseBuildPurgeRetentionRule> defaultValue);
-        List<BaseBuildPurgeRetentionRule> SetBuildPurgeRetentionRuleList(List<BaseBuildPurgeRetentionRule> value);
+        //List<BuildPurgeRule> GetBuildPurgeRetentionRuleList(List<BuildPurgeRule> defaultValue);
+        //List<BuildPurgeRule> SetBuildPurgeRetentionRuleList(List<BuildPurgeRule> value);
 
         bool AnyActiveSettings();
 

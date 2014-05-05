@@ -252,6 +252,8 @@
     <Content Include="app\directives\breadcrumbsDirective.js" />
     <Content Include="app\dialogs\filebrowser-template.html" />
     <Content Include="app\systemSettings\buildPurgeRules\buildPurgeRuleController.js" />
+    <Content Include="app\systemSettings\buildPurgeRules\delete.html" />
+    <Content Include="app\systemSettings\buildPurgeRules\edit.html" />
     <Content Include="app\systemSettings\buildPurgeRules\list.html" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree.css" />
     <Content Include="vendor\angular-bootstrap-nav-tree\abn_tree_directive.js" />

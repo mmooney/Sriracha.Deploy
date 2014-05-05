@@ -1,0 +1,98 @@
+﻿<h2 ng-show="buildPurgeRule.id">Edit Build Purge Rules</h2>
+<h2 ng-hide="buildPurgeRule.id">Create Build Purge Rules</h2>
+<div ng-show="!permissionVerifier.canEditBuildPurgeRules()" class="alert alert-error">
+    You do not have access to edit build purge rules
+</div>
+<div ng-show="permissionVerifier.canEditBuildPurgeRules()">
+    <b>Retention Minutes (blank indicates forever):</b> <input type="text" ng-model="buildPurgeRule.buildRetentionMinutes" />
+    <span class="alert alert-error" ng-show="buildRetentionMinutesError">{{buildRetentionMinutesError}}</span>
+    <h3>Environments</h3>
+    <table class="table table-striped">
+        <tr>
+            <th>Environment Names</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="name in buildPurgeRule.environmentNameList">
+            <td>{{name}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="editItem(buildPurgeRule.environmentNameList, name)">Edit</button>
+                <button class="btn btn-danger" ng-click="deleteItem(buildPurgeRule.environmentNameList, name)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div ng-hide="buildPurgeRule.environmentNameList.length">
+        <em>None</em>
+    </div>
+    <div>
+        <button class="btn btn-primary" ng-click="addItem(buildPurgeRule.environmentNameList)">Add Environment Name</button>
+    </div>
+    <br />
+    <br />
+    <table class="table table-striped">
+        <tr>
+            <th>Environment IDs</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="name in buildPurgeRule.environmentIdList">
+            <td>{{name}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="editItem(buildPurgeRule.environmentIdList, name)">Edit</button>
+                <button class="btn btn-danger" ng-click="deleteItem(buildPurgeRule.environmentIdList, name)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div ng-hide="buildPurgeRule.environmentIdList.length">
+        <em>None</em>
+    </div>
+    <div>
+        <button class="btn btn-primary" ng-click="addItem(buildPurgeRule.environmentIdList)">Add Environment ID</button>
+    </div>
+
+    <h3>Machines</h3>
+    <table class="table table-striped">
+        <tr>
+            <th>Machine Names</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="name in buildPurgeRule.machineNameList">
+            <td>{{name}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="editItem(buildPurgeRule.machineNameList, name)">Edit</button>
+                <button class="btn btn-danger" ng-click="deleteItem(buildPurgeRule.machineNameList, name)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div ng-hide="buildPurgeRule.machineNameList.length">
+        <em>None</em>
+    </div>
+    <div>
+        <button class="btn btn-primary" ng-click="addItem(buildPurgeRule.machineNameList)">Add Machine Name</button>
+    </div>
+    <br/>
+    <br/>
+    <table class="table table-striped">
+        <tr>
+            <th>Machine IDs</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="name in buildPurgeRule.machineIdList">
+            <td>{{name}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="editItem(buildPurgeRule.machineIdList, name)">Edit</button>
+                <button class="btn btn-danger" ng-click="deleteItem(buildPurgeRule.machineIdList, name)">Delete</button>
+            </td>
+        </tr>
+    </table>
+    <div ng-hide="buildPurgeRule.machineIdList.length">
+        <em>None</em>
+    </div>
+    <div>
+        <button class="btn btn-primary" ng-click="addItem(buildPurgeRule.machineIdList)">Add Machine ID</button>
+    </div>
+    <br/>
+    <br/>
+    <button class="btn" ng-click="navigator.systemSettings.buildPurgeRule.list.go()" ng-hide="permissionVerifier.canEditBuildPurgeRules()">Back</button>
+    <button class="btn" ng-click="navigator.systemSettings.buildPurgeRule.list.go()" ng-hide="!permissionVerifier.canEditBuildPurgeRules()">Cancel</button>
+    <button class="btn btn-primary" ng-click="saveBuildPurgeRule()" ng-hide="!permissionVerifier.canEditBuildPurgeRules()">Save</button>
+
+</div>

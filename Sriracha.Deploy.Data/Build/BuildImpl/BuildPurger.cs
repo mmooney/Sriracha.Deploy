@@ -15,13 +15,15 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 		private readonly IBuildManager _buildManager;
 		private readonly Logger _logger;
 		private readonly IDIFactory _diFactory;
+        private readonly IBuildPurgeRuleManager _buildPurgeRuleManager;
 
-		public BuildPurger(ISystemSettings systemSettings, IBuildManager buildManager, Logger logger, IDIFactory diFactory)
+        public BuildPurger(ISystemSettings systemSettings, IBuildManager buildManager, Logger logger, IDIFactory diFactory, IBuildPurgeRuleManager buildPurgeRuleManager)
 		{
 			_systemSettings = DIHelper.VerifyParameter(systemSettings);
 			_buildManager = DIHelper.VerifyParameter(buildManager);
 			_logger = DIHelper.VerifyParameter(logger);
 			_diFactory = DIHelper.VerifyParameter(diFactory);
+            _buildPurgeRuleManager = DIHelper.VerifyParameter(buildPurgeRuleManager);
 		}
 
 		public void PurgeBuild(DeployBuild build)
@@ -33,39 +35,10 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 
 		public void PurgeBuildIfNecessary(DeployBuild build)
 		{
-			var ruleList = _systemSettings.BuildPurgeRetentionRuleList;
-			int maxRetentionMinutes = _systemSettings.DefaultBuildRetentionMinutes;
-			bool keepForever = false;
-			if(ruleList != null)
+            int? rentionMinutes = _buildPurgeRuleManager.CalculateRentionMinutes(build);
+			if(rentionMinutes.HasValue)
 			{
-				foreach(var rule in ruleList)
-				{
-					if (rule.MatchesRule(build, _diFactory))
-					{
-						if(!rule.BuildRetentionMinutes.HasValue)
-						{
-							_logger.Trace("Build \"{0}\" matched rule \"{1}\", keep forever", build.DisplayValue, rule.DisplayValue);
-							keepForever = true;
-						}
-						else 
-						{
-							_logger.Trace("Build \"{0}\" matched rule \"{1}\", build retention minutes: \"{2}\"", build.DisplayValue, rule.DisplayValue, rule.BuildRetentionMinutes.Value);
-							maxRetentionMinutes = Math.Max(maxRetentionMinutes, rule.BuildRetentionMinutes.Value);
-						}
-					}
-				}
-			}
-			if (keepForever)
-			{
-				_logger.Trace("Per rules, keeping build {0} forever", build.DisplayValue);
-			}
-			else if(maxRetentionMinutes <= 0)
-			{
-				_logger.Trace("In absence of any rules or defaults, keeping build {0} forever", build.DisplayValue);
-			}
-			else 
-			{
-				DateTime cutoffDate = DateTime.UtcNow.AddMinutes(0 - maxRetentionMinutes);
+				DateTime cutoffDate = DateTime.UtcNow.AddMinutes(0 - rentionMinutes.Value);
 				if(build.UpdatedDateTimeUtc < cutoffDate)
 				{
 					_logger.Info("Build \"{0}\" updated date {1} is less than cutoff date {2}, purging build", build.DisplayValue, build.UpdatedDateTimeUtc, cutoffDate);

@@ -243,8 +243,21 @@ ngSriracha.config(
                 templateUrl: "app/systemSettings/systemSettings-systemRole-delete.html",
                 controller: "systemRoleController"
             })
+            //Build Purge Rules
             .when(navigator.systemSettings.buildPurgeRule.list.url, {
                 templateUrl: "app/systemSettings/buildPurgeRules/list.html",
+                controller: "buildPurgeRuleController"
+            })
+            .when(navigator.systemSettings.buildPurgeRule.create.url, {
+                templateUrl: "app/systemSettings/buildPurgeRules/edit.html",
+                controller: "buildPurgeRuleController"
+            })
+            .when(navigator.systemSettings.buildPurgeRule.edit.url, {
+                templateUrl: "app/systemSettings/buildPurgeRules/edit.html",
+                controller: "buildPurgeRuleController"
+            })
+            .when(navigator.systemSettings.buildPurgeRule.remove.url, {
+                templateUrl: "app/systemSettings/buildPurgeRules/delete.html",
                 controller: "buildPurgeRuleController"
             })
             // Deployment Tools

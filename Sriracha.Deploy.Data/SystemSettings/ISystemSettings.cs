@@ -30,8 +30,8 @@ namespace Sriracha.Deploy.Data.SystemSettings
 
 		int BuildPurgeJobIntervalSeconds { get; set; }
 		int DefaultBuildRetentionMinutes { get; set; }
-		List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList { get; set; }
-        List<BaseBuildPurgeRetentionRule> SaveBuildPurgeRetentionRuleList();
+        //List<BuildPurgeRule> BuildPurgeRuleList { get; set; }
+        //List<BuildPurgeRule> SaveBuildPurgeRetentionRuleList();
 
 
 		int DeploymentFolderCleanupMinutes { get; set; }

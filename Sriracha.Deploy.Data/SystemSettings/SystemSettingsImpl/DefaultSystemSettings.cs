@@ -121,38 +121,16 @@ namespace Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl
 			set { _repository.SetIntSetting("DefaultBuildRetentionMinutes", value); }
 		}
 
-        private List<BaseBuildPurgeRetentionRule> _defaultBuildPurgeRetentionRuleList = new List<BaseBuildPurgeRetentionRule>()
-		{
-			new DeployHistoryBuildRetentionRule 
-			{ 
-                Id = "DeployHistoryBuildRetentionRule_DefaultDEV",
-				BuildRetentionMinutes = 60*24*7,
-				EnvironmentNameList = new List<string> { "DEV" }
-			},
-			new DeployHistoryBuildRetentionRule 
-			{
-                Id = "DeployHistoryBuildRetentionRule_DefaultQAINT",
-				BuildRetentionMinutes = 60*24*30,
-				EnvironmentNameList = new List<string> { "QA", "INT" }
-			},
-			new DeployHistoryBuildRetentionRule 
-			{
-                Id = "DeployHistoryBuildRetentionRule_DefaultPROD",
-				BuildRetentionMinutes = null,
-				EnvironmentNameList = new List<string> { "PROD" }
-			}
-		};
+        //public List<BuildPurgeRule> BuildPurgeRuleList
+        //{
+        //    get { return _repository.GetBuildPurgeRetentionRuleList(_defaultBuildPurgeRuleList); }
+        //    set { _repository.SetBuildPurgeRetentionRuleList(value); }
+        //}
 
-		public List<BaseBuildPurgeRetentionRule> BuildPurgeRetentionRuleList
-		{
-			get { return _repository.GetBuildPurgeRetentionRuleList(_defaultBuildPurgeRetentionRuleList); }
-			set { _repository.SetBuildPurgeRetentionRuleList(value); }
-		}
-
-        public List<BaseBuildPurgeRetentionRule> SaveBuildPurgeRetentionRuleList()
-        {
-            return _repository.SetBuildPurgeRetentionRuleList(this.BuildPurgeRetentionRuleList);
-        }
+        //public List<BuildPurgeRule> SaveBuildPurgeRetentionRuleList()
+        //{
+        //    return _repository.SetBuildPurgeRetentionRuleList(this.BuildPurgeRuleList);
+        //}
 
 		public int DeploymentFolderCleanupMinutes 
 		{ 

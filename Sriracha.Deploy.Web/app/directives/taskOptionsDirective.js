@@ -43,7 +43,7 @@
 	                }
 	            }
 	            scope.browseContents = function (targetObject, targetFieldName) {
-	                console.log("browseContents")
+	                //console.log("browseContents")
 	                var queryParameters = {
 	                    projectId: scope.deploymentStep.projectId,
 	                    projectComponentId: scope.deploymentStep.parentId,

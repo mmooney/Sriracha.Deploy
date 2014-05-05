@@ -334,6 +334,21 @@
 		            url: "/systemSettings/buildPurgeRule",
 		            clientUrl: function() { return root.getUrl(this.url) },
 		            go: function () { root.goTo(this.url); }
+		        },
+		        create: {
+		            url: "/systemSettings/buildPurgeRule/create",
+		            clientUrl: function () { return root.getUrl(this.url) },
+		            go: function () { root.goTo(this.url) }
+		        },
+		        edit: {
+		            url: "/systemSettings/buildPurgeRule/edit/:buildPurgeRuleId",
+		            clientUrl: function (buildPurgeRuleId) { return root.getUrl(this.url, { buildPurgeRuleId: buildPurgeRuleId }) },
+		            go: function (buildPurgeRuleId) { root.goTo(this.url, { buildPurgeRuleId: buildPurgeRuleId }) }
+		        },
+		        remove: {
+		            url: "/systemSettings/buildPurgeRule/delete/:buildPurgeRuleId",
+		            clientUrl: function (buildPurgeRuleId) { return root.getUrl(this.url, { buildPurgeRuleId: buildPurgeRuleId }) },
+		            go: function (buildPurgeRuleId) { root.goTo(this.url, { buildPurgeRuleId: buildPurgeRuleId }) }
 		        }
 		    },
 		    deploymentTool: {

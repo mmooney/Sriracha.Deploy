@@ -7,10 +7,10 @@
 		$scope.editForm = {};
 
 		if ($routeParams.buildPurgeRuleId) {
-			$scope.buildPurgeRuleItem = SrirachaResource.systemSettings.buildPurgeRule.get(
+			$scope.buildPurgeRule = SrirachaResource.systemSettings.buildPurgeRule.get(
 				{id: $routeParams.buildPurgeRuleId},
 				function (data) {
-				    console.log(data);
+				    //console.log(data);
 					//$scope.editForm.userName = data.userName;
 					//$scope.editForm.domain = data.domain;
 				},
@@ -23,92 +23,104 @@
 		    $scope.buildPurgeRuleList = SrirachaResource.systemSettings.buildPurgeRule.query(
 				{},
 				function (data) {
-				    console.log($scope.buildPurgeRuleList);
+				    //console.log($scope.buildPurgeRuleList);
 				},
 				function (err) {
 					ErrorReporter.handleResourceError(err);
 				}
 			)
-	    }
+		    $scope.buildPurgeRule = new SrirachaResource.systemSettings.buildPurgeRule({
+		        environmentIdList: [],
+		        environmentNameList: [],
+		        machineIdList: [],
+		        machineNameList: []
+		    });
+        }
 
-		//$scope.testCredentials = function (item) {
-		//	if (item) {
-		//	    SrirachaResource.systemSettings.credentialsTest.get(
-		//			{id: item.id},
-		//			function () {
-		//				alert("Success");
-		//			},
-		//			function (err) {
-		//				ErrorReporter.handleResourceError(err);
-		//			}
-		//		)
-		//	}
-		//}
+		$scope.editItem = function (list, item) {
+		    var newValue = prompt("Enter new value:", item);
+		    if (newValue && newValue != item) {
+		        var existingIndex = _.indexOf(list, newValue)
+		        if (existingIndex >= 0) {
+		            alert("Value " + newValue + " already exists");
+		            return;
+		        }
+		        var index = _.indexOf(list, item);
+		        if (index >= 0) {
+		            list[index] = newValue;
+		        }
+		    }
+		}
 
-		//$scope.saveCredentials = function () {
-		//	if (!$scope.editForm) {
-		//		alert("Error: scope.editForm is null")
-		//		return;
-		//	}
-		//	var isValid = true;
-		//	$scope.editForm.userNameError = null;
-		//	$scope.editForm.passwordError = null;
-		//	$scope.editForm.confirmPasswordError = null;
-		//	if (!$scope.editForm.userName) {
-		//		$scope.editForm.userNameError = "User Name Required";
-		//		isValid = false;
-		//	} 
-		//	if (!$scope.editForm.password) {
-		//		$scope.editForm.passwordError = "Password Required";
-		//		isValid = false;
-		//	}
-		//	else if ($scope.editForm.password != $scope.editForm.confirmPassword) {
-		//		$scope.editForm.confirmPasswordError = "Passwords do not match";
-		//		isValid = false;
-		//	}
-		//	if (isValid) {
-		//	    var item = new SrirachaResource.systemSettings.credentials();
-		//		item.userName = $scope.editForm.userName;
-		//		item.password = $scope.editForm.password;
-		//		item.domain = $scope.editForm.domain;
-		//		var saveParams = {};
-		//		if ($routeParams.credentialsId) {
-		//			saveParams.id = $routeParams.credentialsId;
-		//		}
-		//		var result = item.$save(saveParams,
-		//			function (data) {
-		//				if ($routeParams.credentialsId) {
-		//					$scope.navigator.systemSettings.credentials.list.go();
-		//				}
-		//				else {
-		//					$scope.navigator.systemSettings.credentials.list.go();
-		//					//$scope.navigator.systemSettings.credentials.edit.go(data.id);
-		//				}
-		//			},
-		//			function (err) {
-		//				ErrorReporter.handleResourceError(err);
-		//			}
-		//		)
-		//	}
-		//}
+		$scope.deleteItem = function (list, item) {
+		    if(item) {
+		        if (confirm("Are you sure you want to delete " + item + "?")) {
+		            var index = _.indexOf(list, item)
+		            if (index >= 0) {
+                        list.splice(index, 1)
+                    }
+		        }
+		    }
+		}
 
-		//$scope.deleteCredentials = function () {
-	    //    if (!$scope.editForm) {
-	    //        alert("Error: scope.editForm is null")
-	    //        return;
-	    //    }
-	    //    var item = new SrirachaResource.systemSettings.credentials();
-	    //    var deleteParams = {
-	    //        id: $routeParams.credentialsId
-	    //    };
-	    //    var result = item.$delete(deleteParams,
-	    //		function (data) {
-	    //			$scope.navigator.systemSettings.credentials.list.go();
-	    //		},
-	    //		function (err) {
-	    //			ErrorReporter.handleResourceError(err);
-	    //		}
-	    //	)
-	    //}
+		$scope.addItem = function (list) {
+		    var item = prompt("Please enter the new item:")
+		    if (item) {
+		        var index = _.indexOf(list, item);
+		        if (index >= 0) {
+		            alert(item + " is already in the list")
+		            return;
+		        }
+		        list.push(item);
+		    }
+		}
+
+		$scope.saveBuildPurgeRule = function () {
+		    var isValid = true;
+		    $scope.buildRetentionMinutesError = null;
+		    //if (!$scope.buildPurgeRule.buildRetentionMinutes) {
+		    //    $scope.buildRetentionMinutesError = "Build Retention Minutes required";
+		    //	isValid = false;
+		    //} 
+		    if ($scope.buildPurgeRule.buildRetentionMinutes && isNaN(parseInt($scope.buildPurgeRule.buildRetentionMinutes))) {
+		        $scope.buildRetentionMinutesError = "Build Retention Minutes must be a number";
+		    	isValid = false;
+		    }
+		    //console.log($scope.buildPurgeRule.buildRetentionMinutes, parseInt($scope.buildPurgeRule.buildRetentionMinutes))
+		    if (isValid) {
+		    	var saveParams = {};
+		    	if ($routeParams.buildPurgeRuleId) {
+		    	    saveParams.id = $routeParams.buildPurgeRuleId;
+		    	}
+		    	var result = $scope.buildPurgeRule.$save(saveParams,
+		    		function (data) {
+		    			if ($routeParams.credentialsId) {
+		    				$scope.navigator.systemSettings.buildPurgeRule.list.go();
+		    			}
+		    			else {
+		    			    $scope.navigator.systemSettings.buildPurgeRule.list.go();
+		    			}
+		    		},
+		    		function (err) {
+		    			ErrorReporter.handleResourceError(err);
+		    		}
+		    	)
+		    }
+		}
+
+		$scope.deleteBuildPurgeRule = function () {
+		    var item = new SrirachaResource.systemSettings.buildPurgeRule();
+		    var deleteParams = {
+		        id: $routeParams.buildPurgeRuleId
+		    };
+		    var result = item.$delete(deleteParams,
+		    	function (data) {
+		    		$scope.navigator.systemSettings.buildPurgeRule.list.go();
+		    	},
+		    	function (err) {
+		    		ErrorReporter.handleResourceError(err);
+		    	}
+		    )
+		}
 	}]);
 

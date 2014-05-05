@@ -7,14 +7,21 @@ using Sriracha.Deploy.Data.Dto.Build;
 
 namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 {
-	public class DeployHistoryBuildRetentionRule : BaseBuildPurgeRetentionRule
+	public class BuildPurgeRule 
 	{
-		public List<string> EnvironmentIdList { get; set; }
+        public string Id { get; set; }
+        public string ProjectId { get; set; }
+        public int? BuildRetentionMinutes { get; set; }
+        public List<string> EnvironmentIdList { get; set; }
 		public List<string> EnvironmentNameList { get; set; }
 		public List<string> MachineIdList { get; set; }
 		public List<string> MachineNameList { get; set; }
+        public DateTime CreatedDateTimeUtc { get; set; }
+        public string CreatedByUserName { get; set; }
+        public DateTime UpdatedDateTimeUtc { get; set; }
+        public string UpdatedByUserName { get; set; }
 		
-		public DeployHistoryBuildRetentionRule()
+		public BuildPurgeRule()
 		{
 			this.EnvironmentIdList = new List<string>();
 			this.EnvironmentNameList = new List<string>();
@@ -22,7 +29,7 @@ namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 			this.MachineNameList = new List<string>();
 		}
 
-		public override bool MatchesRule(DeployBuild build, IDIFactory diFactory)
+		public bool MatchesRule(DeployBuild build, IDIFactory diFactory)
 		{
 			var deployStateRepository = diFactory.CreateInjectedObject<IDeployStateRepository>();
 			var projectRepository = diFactory.CreateInjectedObject<IProjectRepository>();
@@ -101,7 +108,7 @@ namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 			return false;
 		}
 
-		public override string DisplayValue
+		public string DisplayValue
 		{
 			get 
 			{ 
@@ -146,5 +153,6 @@ namespace Sriracha.Deploy.Data.Dto.BuildPurgeRules
 		{
 			return description + ":[" + string.Join(",",valueList) + "]";
 		}
-	}
+
+    }
 }
