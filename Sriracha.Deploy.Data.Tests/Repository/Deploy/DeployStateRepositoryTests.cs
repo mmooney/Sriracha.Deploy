@@ -42,7 +42,8 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         private void SimulateRun(IDeployStateRepository sut, DeployState deployState)
         {
             sut.UpdateDeploymentStatus(deployState.Id, EnumDeployStatus.InProcess);
-            sut.UpdateDeploymentStatus(deployState.Id, EnumDeployStatus.Success);
+            var newItem = sut.UpdateDeploymentStatus(deployState.Id, EnumDeployStatus.Success);
+            deployState.DeploymentCompleteDateTimeUtc = newItem.DeploymentCompleteDateTimeUtc;
         }
 
         private void AssertCreatedDeployState(IDeployStateRepository sut, DeployState result, CreateTestData testData)
@@ -760,6 +761,24 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         }
 
         [Test]
+        public void UpdateDeploymentStatus_Success_NullCompleteDate_UpdatesDeployCompleteDate()
+        {
+            var sut = this.GetRepository();
+
+            var deployState = this.CreateTestDeployState(sut);
+            var newStatus = EnumDeployStatus.Success;
+            //string newUserName = this.Fixture.Create<string>("UserName");
+            //this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+
+            var result = sut.UpdateDeploymentStatus(deployState.Id, newStatus);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Status, newStatus);
+            Assert.IsNotNull(result.DeploymentCompleteDateTimeUtc);
+            AssertIsRecent(result.DeploymentCompleteDateTimeUtc.Value);
+        }
+
+        [Test]
         public void UpdateDeploymentStatus_MissingDeployStateId_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
@@ -1040,10 +1059,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                 this.CreateTestDeployState(sut, similateRun: true);
             }
 
-            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = true });
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = true, PageSize=20 });
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Items);
+            Assert.AreEqual(20, result.Items.Count);
             Assert.IsTrue(result.SortAscending);
             ComponentDeployHistory lastItem = null;
             foreach (var item in result.Items)

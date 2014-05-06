@@ -17,7 +17,6 @@ using System.Text;
 
 namespace Sriracha.Deploy.RavenDB
 {
-    [Category("Database")]
     public class RavenDeployStateRepository : IDeployStateRepository
     {
         private readonly IDocumentSession _documentSession;
@@ -167,7 +166,10 @@ namespace Sriracha.Deploy.RavenDB
             {
                 case EnumDeployStatus.Success:
                 case EnumDeployStatus.Error:
-                    state.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
+                    if(!state.DeploymentCompleteDateTimeUtc.HasValue)
+                    {
+                        state.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
+                    }
                     break;
             }
             if (err != null)

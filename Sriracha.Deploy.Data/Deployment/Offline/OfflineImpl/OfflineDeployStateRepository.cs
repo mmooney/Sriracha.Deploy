@@ -91,13 +91,6 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
         {
             var state = _offlineDataProvider.GetDeployState(deployStateId);
             state.Status = status;
-            switch (status)
-            {
-                case EnumDeployStatus.Success:
-                case EnumDeployStatus.Error:
-                    state.DeploymentCompleteDateTimeUtc = DateTime.UtcNow;
-                    break;
-            }
             if (err != null)
             {
                 var message = new DeployStateMessage

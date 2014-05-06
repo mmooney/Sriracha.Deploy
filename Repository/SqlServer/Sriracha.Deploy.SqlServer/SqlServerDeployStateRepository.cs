@@ -375,6 +375,13 @@ namespace Sriracha.Deploy.SqlServer
                 {
                     sql = sql.Append(", ErrorDetails=@0", err.ToString());
                 }
+                switch (status)
+                {
+                    case EnumDeployStatus.Success:
+                    case EnumDeployStatus.Error:
+                        sql = sql.Append(", DeploymentCompleteDateTimeUtc=ISNULL(DeploymentCompleteDateTimeUtc, @0)", DateTime.UtcNow);
+                        break;
+                }
                 sql = sql.Append("WHERE ID=@0", deployStateId);
                 db.Execute(sql);
             }
