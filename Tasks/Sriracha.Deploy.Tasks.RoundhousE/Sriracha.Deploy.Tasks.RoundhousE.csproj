@@ -52,9 +52,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.dll</HintPath>
     </Reference>
-    <Reference Include="roundhouse.databases.mysql">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.mysql.dll</HintPath>
-    </Reference>
     <Reference Include="roundhouse.databases.oracle">
       <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.oracle.dll</HintPath>
     </Reference>

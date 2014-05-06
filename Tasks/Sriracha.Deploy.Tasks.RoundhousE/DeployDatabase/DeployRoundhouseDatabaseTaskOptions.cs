@@ -12,7 +12,7 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.DeployDatabase
         Oracle,
         Postgres,
         //Access,
-        MySql,
+        //MySql,
         SqlLite
     }
 

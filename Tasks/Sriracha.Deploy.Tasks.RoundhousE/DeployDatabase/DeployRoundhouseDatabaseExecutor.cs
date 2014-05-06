@@ -29,9 +29,9 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.DeployDatabase
                 //case EnumRoundhouseDatabaseType.Access:
                 //    database = new roundhouse.databases.access.AccessDatabase();
                 //    break;
-                case EnumRoundhouseDatabaseType.MySql:
-                    database = new roundhouse.databases.mysql.MySqlDatabase();
-                    break;
+                //case EnumRoundhouseDatabaseType.MySql:
+                //    database = new roundhouse.databases.mysql.MySqlDatabase();
+                //    break;
                 case EnumRoundhouseDatabaseType.Oracle:
                     database = new roundhouse.databases.oracle.OracleDatabase();
                     break;
