@@ -64,6 +64,7 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.DeployDatabase
             {
                 EnvironmentName = context.FormattedOptions.EnvironmentName,
                 SqlFilesDirectory = context.FormattedOptions.SqlFilesDirectory,
+                ConnectionString = context.FormattedOptions.ConnectionString,
                 Silent = true
             };
 

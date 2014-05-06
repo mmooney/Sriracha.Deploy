@@ -24,5 +24,7 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.DeployDatabase
         public string EnvironmentName { get; set; }
 
         public string SqlFilesDirectory { get; set; }
+
+        public string ConnectionString { get; set; }
     }
 }
