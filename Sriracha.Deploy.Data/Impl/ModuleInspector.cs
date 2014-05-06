@@ -22,33 +22,44 @@ namespace Sriracha.Deploy.Data.Impl
 
         public Type GetType(string typeName, string directory=null)
         {
-            IEnumerable<Assembly> assemblyList;
-            if(string.IsNullOrEmpty(directory))
+            try 
             {
-                assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
-            }
-            else 
-            {
-                if(!Directory.Exists(directory))
+                IEnumerable<Assembly> assemblyList;
+                if(string.IsNullOrEmpty(directory))
                 {
-                    throw new Exception("Directory does not exist");
+                    assemblyList = AppDomain.CurrentDomain.GetAssemblies().ToList();
                 }
-                assemblyList = Directory.GetFiles(directory, "*.dll")
-                                .Select(i=>Assembly.LoadFrom(i)).ToList();
+                else 
+                {
+                    if(!Directory.Exists(directory))
+                    {
+                        throw new Exception("Directory does not exist");
+                    }
+                    assemblyList = Directory.GetFiles(directory, "*.dll")
+                                    .Select(i=>Assembly.LoadFrom(i)).ToList();
+                }
+                var typeList = assemblyList
+                    .SelectMany(s => s.GetTypes())
+                    .Where(p => p.FullName == typeName
+                            && p.IsClass).ToList();
+                if(typeList == null || typeList.Count == 0)
+                {
+                    throw new ArgumentException("Failed to find any types matching " + typeName);
+                }
+                if(typeList.Count > 1)
+                {
+                    throw new ArgumentNullException("Found multiple types matching " + typeName);
+                }
+                return typeList.Single();
             }
-            var typeList = assemblyList
-                .SelectMany(s => s.GetTypes())
-                .Where(p => p.FullName == typeName
-                        && p.IsClass).ToList();
-            if(typeList == null || typeList.Count == 0)
+            catch (ReflectionTypeLoadException err)
             {
-                throw new ArgumentException("Failed to find any types matching " + typeName);
+                foreach (var loaderError in err.LoaderExceptions)
+                {
+                    Console.WriteLine("LOADER EXCEPTION: " + loaderError.ToString());
+                }
+                throw;
             }
-            if(typeList.Count > 1)
-            {
-                throw new ArgumentNullException("Found multiple types matching " + typeName);
-            }
-            return typeList.Single();
         }
     }
 }
