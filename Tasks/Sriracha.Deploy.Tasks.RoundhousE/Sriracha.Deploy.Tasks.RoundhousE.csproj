@@ -40,9 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Common.Logging.Core.2.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\log4net.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -50,25 +50,28 @@
     </Reference>
     <Reference Include="roundhouse, Version=0.8.6.0, Culture=neutral, PublicKeyToken=91b86fd44f1f23bc, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.dll</HintPath>
+    </Reference>
+    <Reference Include="roundhouse.databases.mysql">
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.mysql.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.databases.oracle">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.oracle.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.oracle.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.databases.postgresql">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.postgresql.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.postgresql.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.databases.sqlite">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.sqlite.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.sqlite.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.databases.sqlserver">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.sqlserver.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.sqlserver.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.databases.sqlserver2000">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.databases.sqlserver2000.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.databases.sqlserver2000.dll</HintPath>
     </Reference>
     <Reference Include="roundhouse.tasks">
-      <HintPath>..\..\ThirdParty\roundhouse-trunk\roundhouse.tasks.dll</HintPath>
+      <HintPath>..\..\ThirdParty\roundhouse-0.8.6-AnyCPU\roundhouse.tasks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

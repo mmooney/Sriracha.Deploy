@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NLog;
 using Sriracha.Deploy.Data.Deployment;
+using Common.Logging;
 
 namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 {
 	public class DeployTaskStatusManager : IDeployTaskStatusManager
 	{
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 		private readonly IDeployStateManager _deployStateManager;
         private readonly IDeployStatusNotifier _deployTaskStatusNotifier;
 
@@ -17,7 +17,7 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 		private List<string> InfoList { get; set; }
 		private List<string> ErrorList { get; set; }
 
-		public DeployTaskStatusManager(Logger logger, IDeployStateManager deployStateManager, IDeployStatusNotifier deployTaskStatusNotififer)
+		public DeployTaskStatusManager(ILog logger, IDeployStateManager deployStateManager, IDeployStatusNotifier deployTaskStatusNotififer)
 		{
 			this.InfoList = new List<string>();
 			this.DebugList = new List<string>();
@@ -50,35 +50,35 @@ namespace Sriracha.Deploy.Data.Tasks.TaskImpl
 
 		public void Debug(string deployStateId, string message)
 		{
-			this._logger.Debug("Deployment {0}: {1}", deployStateId, message);
+			this._logger.Debug(string.Format("Deployment {0}: {1}", deployStateId, message));
 			this.DebugList.Add(message);
 			this.AddMessageToObject(deployStateId, "DEBUG", message);
 		}
 
 		public void Info(string deployStateId, string message)
 		{
-			this._logger.Info("Deployment {0}: {1}", deployStateId, message);
+			this._logger.Info(string.Format("Deployment {0}: {1}", deployStateId, message));
 			this.InfoList.Add(message);
 			this.AddMessageToObject(deployStateId, "INFO", message);
 		}
 
         public void Warn(string deployStateId, string message)
         {
-            this._logger.Info("Deployment {0}: {1}", deployStateId, message);
+            this._logger.Info(string.Format("Deployment {0}: {1}", deployStateId, message));
             this.InfoList.Add(message);
             this.AddMessageToObject(deployStateId, "WARNING", message);
         }
 
 		public void Error(string deployStateId, string message)
 		{
-			this._logger.Error("Deployment {0}: {1}", deployStateId, message);
+			this._logger.Error(string.Format("Deployment {0}: {1}", deployStateId, message));
 			this.ErrorList.Add(message);
 			this.AddMessageToObject(deployStateId, "ERROR", message);
 		}
 
 		public void Error(string deployStateId, Exception err)
 		{
-			this._logger.ErrorException(string.Format("Deployment {0}: {1}", deployStateId, err.ToString()), err);
+			this._logger.Error(string.Format("Deployment {0}: {1}", deployStateId, err.ToString()), err);
 			this.ErrorList.Add(err.ToString());
 			this.AddMessageToObject(deployStateId, "ERROR", err.ToString());
 		}

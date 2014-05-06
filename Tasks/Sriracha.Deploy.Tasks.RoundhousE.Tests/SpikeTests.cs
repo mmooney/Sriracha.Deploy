@@ -36,13 +36,16 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.Tests
             var fixture = new Fixture();
 
             string deployStateId = fixture.Create<string>("DeployStateId");
-            var deployTaskStatusManager = new Mock<IDeployTaskStatusManager>();
+            var deployTaskStatusManager = new DeployTaskStatusManager(new Mock<ILog>().Object, new Mock<IDeployStateManager>().Object, new Mock<IDeployStatusNotifier>().Object);
             var component = fixture.Create<DeployComponent>();
             var environmentComponent = fixture.Create<DeployEnvironmentConfiguration>();
             var machine = fixture.Create<DeployMachine>();
             var build = fixture.Create<DeployBuild>();
             var systemSettings = new RuntimeSystemSettings();
-            executor.Execute(deployStateId, deployTaskStatusManager.Object, definition, component, environmentComponent, machine, build, systemSettings);
+            var result = executor.Execute(deployStateId, deployTaskStatusManager, definition, component, environmentComponent, machine, build, systemSettings);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(EnumDeployTaskExecutionResultStatus.Success, result.Status);
         }
     }
 }
