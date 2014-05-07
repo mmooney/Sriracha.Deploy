@@ -218,6 +218,11 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
                 throw new ArgumentNullException("Missing project");
             }
             var newEnvironmentConfiguration = AutoMapper.Mapper.Map(environmentConfiguration, new DeployEnvironmentConfiguration());
+            if (string.IsNullOrEmpty(environmentConfiguration.Id))
+            {
+                //New item being created, don't need to unmask
+                return newEnvironmentConfiguration;
+            }
             DeployEnvironmentConfiguration originalEnviromentConfiguration;
             switch(environmentConfiguration.ParentType)
             {
