@@ -7,7 +7,7 @@
 <div class="modal-body">
     <div ng-show="buildList.length">
         <div>
-            Select a recent build: <select ng-model="selectedBuild" ng-options="item as item.displayValue for item in buildList" style="width:350px" ng-change="selectedBuildChanged()"></select>
+            Select a recent build: <select ng-model="$parent.selectedBuild" ng-options="item as item.displayValue for item in buildList" style="width:350px" ng-change="selectedBuildChanged(x)"></select>
         </div>
         <div>
             <table class="table table-hover">

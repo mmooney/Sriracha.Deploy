@@ -278,7 +278,6 @@
     <Content Include="vendor\angular\angular.js" />
     <Content Include="vendor\angular\angular.min.js" />
     <Content Include="vendor\angular\errors.json" />
-    <Content Include="Scripts\aspnetmvc_bootstrap.js" />
     <Content Include="app\account\accountController.js" />
     <Content Include="app\build\buildListController.js" />
     <Content Include="app\dataAccess\deployQueueDataAccess.js" />
@@ -468,7 +467,6 @@
     <Content Include="vendor\jquery\jquery.validate.min.js" />
     <Content Include="vendor\jquery\jquery.validate.unobtrusive.js" />
     <Content Include="vendor\jquery\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="app\navigator.js" />
     <Content Include="app\ngSriracha.js" />
     <Content Include="app\project\projectController.js" />
