@@ -65,6 +65,7 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			{
 				deploymentStepList = component.DeploymentStepList;
 			}
+            deploymentStepList = deploymentStepList.OrderBy(i=>i.OrderNumber).ToList();
 			foreach(var step in deploymentStepList)
 			{
 				var taskDefinition = _taskFactory.CreateTaskDefinition(step.TaskTypeName, step.TaskOptionsJson);
