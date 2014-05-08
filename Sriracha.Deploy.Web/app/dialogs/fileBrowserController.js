@@ -1,6 +1,6 @@
 ﻿ngSriracha.controller("FileBrowserController",
-    ['$scope', '$modalInstance', 'SrirachaResource', 'ErrorReporter','buildList','$rootScope', 
-	function ($scope, $modalInstance, SrirachaResource, ErrorReporter, buildList, $rootScope) {
+    ['$scope', '$modalInstance', 'SrirachaResource', 'ErrorReporter','buildList',
+	function ($scope, $modalInstance, SrirachaResource, ErrorReporter, buildList) {
 	    $scope.buildList = buildList;
 
 	    $scope.loadFiles = function (build) {
@@ -24,7 +24,6 @@
 	    }
 
 	    $scope.selectedBuildChanged = function (x) {
-            console.log($scope, $rootScope)
 	        $scope.loadFiles($scope.selectedBuild);
 	    }
 

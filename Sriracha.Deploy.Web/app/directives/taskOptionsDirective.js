@@ -43,7 +43,6 @@
 	                }
 	            }
 	            scope.browseContents = function (targetObject, targetFieldName) {
-	                //console.log("browseContents")
 	                var queryParameters = {
 	                    projectId: scope.deploymentStep.projectId,
 	                    projectComponentId: scope.deploymentStep.parentId,
@@ -51,6 +50,7 @@
 	                    sortAscending: false,
 	                    pageSize: 10
 	                };
+	                console.log("browseContents", scope)
 	                var buildList = SrirachaResource.build.get(
                         queryParameters,
                         function () {

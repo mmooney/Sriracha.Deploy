@@ -45,13 +45,27 @@
 					if (deploymentStepItem) {
 						deploymentStepItem.taskOptions = JSON.parse(deploymentStepItem.taskOptionsJson);
 						$scope.deploymentStep = new SrirachaResource.deploymentStep(deploymentStepItem);
-
 					}
 				}
 			}
 		}
 		if (!$scope.deploymentStep) {
-			$scope.deploymentStep = new SrirachaResource.deploymentStep({ projectId: $routeParams.projectId, componentId: $routeParams.componentId });
+		    var parentId;
+		    var parentType;
+		    if ($routeParams.componentId) {
+		        parentId = $routeParams.componentId;
+		        parentType = "Component";
+		    }
+		    if ($routeParams.configurationId) {
+		        parentId = $routeParams.configurationId;
+		        parentType = "Configuration";
+		    }
+
+		    $scope.deploymentStep = new SrirachaResource.deploymentStep({
+		        projectId: $routeParams.projectId,
+		        parentId: parentId,
+                parentType: parentType
+		    });
 		}
 	});
 	$scope.validator = {
