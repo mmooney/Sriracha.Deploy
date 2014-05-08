@@ -221,6 +221,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\dashboard\dashboardController.js" />
+    <Content Include="app\dashboard\index.html" />
     <Content Include="app\directives\taskOptionsDirective.js" />
     <Content Include="app\directives\deploymentstep-options-default-template.html" />
     <Content Include="app\dialogs\fileBrowserController.js" />
