@@ -33,10 +33,13 @@ namespace Sriracha.Deploy.Data.Project
 		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJSON);
         DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId);
         DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId);
-		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON);
-		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configuration, string stepName, string taskTypeName, string taskOptionsJSON);
+		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJSON, int? orderNumber=null);
+		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configuration, string stepName, string taskTypeName, string taskOptionsJSON, int? orderNumber=null);
         void DeleteComponentDeploymentStep(string deploymentStepId, string projectId);
         void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId);
+
+        DeployStep MoveDeploymentStepUp(string projectId, EnumDeployStepParentType parentType, string parentId, string deployStepId);
+        DeployStep MoveDeploymentStepDown(string projectId, EnumDeployStepParentType parentType, string parentId, string deployStepId);
 
 
 		IEnumerable<DeployProjectBranch> GetBranchList(string projectId);
@@ -55,5 +58,6 @@ namespace Sriracha.Deploy.Data.Project
         //void UpdateEnvironmentComponentConfig(string environmentId, string componentId, string configName, string configValue);
 
         EnumDeploymentIsolationType GetComponentIsolationType(string projectId, string componentId);
+
     }
 }

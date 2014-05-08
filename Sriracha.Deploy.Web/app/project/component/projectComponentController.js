@@ -7,6 +7,8 @@
 		console.error("Missing $routeParams.projectId");
 		return;
 	}
+
+
 	$scope.project = SrirachaResource.project.get({ id: $routeParams.projectId }, function () {
 		if (!$routeParams.componentId) {
 			$scope.component = new SrirachaResource.component({ projectId: $routeParams.projectId });
@@ -32,6 +34,56 @@
 		}
 	});
 
+	$scope.moveStepUp= function (item) {
+	    var saveParams = {
+	        projectId: $routeParams.projectId,
+	        parentId: $routeParams.componentId,
+	        parentType: "Component",
+	        id: item.id,
+	        direction: "Up"
+	    };
+	    var item = new SrirachaResource.deploymentStepMove({
+	        projectId: $routeParams.projectId,
+	        parentId: $routeParams.componentId,
+	        parentType: "Component",
+	        id: item.id,
+	        direction: "Up"
+	    });
+	    item.$save(
+			saveParams,
+			function () {
+			    window.location.reload();
+			},
+			function (error) {
+			    ErrorReporter.handleResourceError(error);
+			}
+		);
+	}
+	$scope.moveStepDown = function (item) {
+	    var saveParams = {
+	        projectId: $routeParams.projectId,
+	        parentId: $routeParams.componentId,
+	        parentType: "Component",
+	        id: item.id,
+	        direction: "Down"
+	    };
+	    var item = new SrirachaResource.deploymentStepMove({
+	        projectId: $routeParams.projectId,
+	        parentId: $routeParams.componentId,
+	        parentType: "Component",
+	        id: item.id,
+	        direction: "Down"
+	    });
+	    item.$save(
+			saveParams,
+			function () {
+			    window.location.reload();
+			},
+			function (error) {
+			    ErrorReporter.handleResourceError(error);
+			}
+		);
+	}
 	//Components
 	$scope.saveComponent = function () {
 		var saveParams = {

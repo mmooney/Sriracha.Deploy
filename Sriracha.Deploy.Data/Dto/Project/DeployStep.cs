@@ -27,5 +27,6 @@ namespace Sriracha.Deploy.Data.Dto.Project
 		public string CreatedByUserName { get; set; }
 		public DateTime UpdatedDateTimeUtc { get; set; }
 		public string UpdatedByUserName { get; set; }
+        public int OrderNumber { get; set; }
 	}
 }

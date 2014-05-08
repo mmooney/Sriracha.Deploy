@@ -6,6 +6,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Tasks;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.Data.Project.ProjectImpl
 {
@@ -193,7 +194,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			return this._projectRepository.GetConfigurationDeploymentStep(deploymentStepId, projectId);
 		}
 
-		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson)
+		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber=null)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -220,7 +221,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 				throw new ArgumentNullException("Missing Task Options");
 			}
 			var project = this._projectRepository.GetProject(projectId);
-			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson, null);
+			var returnValue = this._projectRepository.UpdateComponentDeploymentStep(deploymentStepId, projectId, componentId, stepName, taskTypeName, taskOptionsJson, null, orderNumber);
 			if(project.UsesSharedComponentConfiguration)
 			{ 
 				foreach(var component in project.ComponentList)
@@ -230,7 +231,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			}
 			return returnValue;
 		}
-		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber=null)
 		{
 			if (string.IsNullOrEmpty(projectId))
 			{
@@ -256,7 +257,7 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 			{
 				throw new ArgumentNullException("Missing Task Options");
 			}
-			var returnValue = this._projectRepository.UpdateConfigurationDeploymentStep(deploymentStepId, projectId, configurationId, stepName, taskTypeName, taskOptionsJson);
+			var returnValue = this._projectRepository.UpdateConfigurationDeploymentStep(deploymentStepId, projectId, configurationId, stepName, taskTypeName, taskOptionsJson, orderNumber);
 			return returnValue;
 		}
 
@@ -268,6 +269,100 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 		{
 			this._projectRepository.DeleteConfigurationDeploymentStep(deploymentStepId, projectId);
 		}
+
+        public DeployStep MoveDeploymentStepUp(string projectId, EnumDeployStepParentType parentType, string parentId, string deployStepId)
+        {
+            List<DeployStep> stepList;
+            switch(parentType)
+            {
+                case EnumDeployStepParentType.Component:
+                    stepList = _projectRepository.GetComponentDeploymentStepList(parentId, projectId);
+                    break;
+                case EnumDeployStepParentType.Configuration:
+                    stepList = _projectRepository.GetConfigurationDeploymentStepList(parentId, projectId);
+                    break;
+                default:
+                    throw new UnknownEnumValueException(parentType);
+            }
+            var itemToMove = stepList.FirstOrDefault(i=>i.Id == deployStepId);
+            if(itemToMove == null)
+            {
+                throw new ArgumentException("Step not found: " + deployStepId);
+            }
+            stepList = stepList.OrderBy(i=>i.OrderNumber).ToList();
+            if(itemToMove == stepList.First())
+            {
+                return itemToMove;
+            }
+            for(int i = 0; i < stepList.Count; i++)
+            {
+                stepList[i].OrderNumber = i;
+            }
+            itemToMove.OrderNumber--;
+            stepList[itemToMove.OrderNumber].OrderNumber++;
+            foreach(var step in stepList)
+            {
+                switch(parentType)
+                {
+                    case EnumDeployStepParentType.Component:
+                        _projectRepository.UpdateComponentDeploymentStep(step.Id, step.ProjectId, step.ParentId, step.StepName, step.TaskTypeName, step.TaskOptionsJson, step.SharedDeploymentStepId, step.OrderNumber);
+                        break;
+                    case EnumDeployStepParentType.Configuration:
+                        _projectRepository.UpdateConfigurationDeploymentStep(step.Id, step.ProjectId, step.ParentId, step.StepName, step.TaskTypeName, step.TaskOptionsJson, step.OrderNumber);
+                        break;
+                    default:
+                        throw new UnknownEnumValueException(parentType);
+                }
+            }
+            return itemToMove;
+        }
+
+        public DeployStep MoveDeploymentStepDown(string projectId, EnumDeployStepParentType parentType, string parentId, string deployStepId)
+        {
+            List<DeployStep> stepList;
+            switch (parentType)
+            {
+                case EnumDeployStepParentType.Component:
+                    stepList = _projectRepository.GetComponentDeploymentStepList(parentId, projectId);
+                    break;
+                case EnumDeployStepParentType.Configuration:
+                    stepList = _projectRepository.GetConfigurationDeploymentStepList(parentId, projectId);
+                    break;
+                default:
+                    throw new UnknownEnumValueException(parentType);
+            }
+            var itemToMove = stepList.FirstOrDefault(i => i.Id == deployStepId);
+            if (itemToMove == null)
+            {
+                throw new ArgumentException("Step not found: " + deployStepId);
+            }
+            stepList = stepList.OrderBy(i => i.OrderNumber).ToList();
+            if (itemToMove == stepList.Last())
+            {
+                return itemToMove;
+            }
+            for (int i = 0; i < stepList.Count; i++)
+            {
+                stepList[i].OrderNumber = i;
+            }
+            itemToMove.OrderNumber++;
+            stepList[itemToMove.OrderNumber].OrderNumber--;
+            foreach (var step in stepList)
+            {
+                switch (parentType)
+                {
+                    case EnumDeployStepParentType.Component:
+                        _projectRepository.UpdateComponentDeploymentStep(step.Id, step.ProjectId, step.ParentId, step.StepName, step.TaskTypeName, step.TaskOptionsJson, step.SharedDeploymentStepId, step.OrderNumber);
+                        break;
+                    case EnumDeployStepParentType.Configuration:
+                        _projectRepository.UpdateConfigurationDeploymentStep(step.Id, step.ProjectId, step.ParentId, step.StepName, step.TaskTypeName, step.TaskOptionsJson, step.OrderNumber);
+                        break;
+                    default:
+                        throw new UnknownEnumValueException(parentType);
+                }
+            }
+            return itemToMove;
+        }
 
 		public IEnumerable<DeployProjectBranch> GetBranchList(string projectId)
 		{

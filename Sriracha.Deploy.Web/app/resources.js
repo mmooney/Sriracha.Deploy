@@ -12,6 +12,7 @@
 			componentConfiguration: $resource("api/project/:projectId/:parentType/:parentId/configuration"),
 			branch: $resource("/api/project/:projectId/branch"),
 			deploymentStep: $resource("/api/project/:projectId/:parentType/:parentId/step", { projectId: "@projectId", parentType: "@parentType", parentId: "@parentId" }),
+			deploymentStepMove: $resource("/api/project/:projectId/:parentType/:parentId/step/:id/move/:direction", { projectId: "@projectId", parentType: "@parentType", parentId: "@parentId" }),
 			environment: $resource("/api/project/:projectId/environment"),
 			projectRole: $resource("/api/project/:projectId/role"),
 

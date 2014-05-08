@@ -784,9 +784,10 @@ namespace Sriracha.Deploy.SqlServer
             };
             using(var db = _sqlConnectionInfo.GetDB())
             {
+                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployComponentStep WHERE ProjectID=@ProjectID AND DeployComponentID=@ParentID", step); 
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO DeployComponentStep (ID, DeployProjectID, DeployComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
-                            .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @SharedDeploymentStepId, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
+                            .Append("INSERT INTO DeployComponentStep (ID, DeployProjectID, DeployComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, OrderNumber, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @SharedDeploymentStepId, @OrderNumber, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
                 db.Execute(sql);
             }
             return step;
@@ -829,9 +830,10 @@ namespace Sriracha.Deploy.SqlServer
             };
             using (var db = _sqlConnectionInfo.GetDB())
             {
+                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployConfigurationStep WHERE ProjectID=@ProjectID AND DeployConfigurationID=@ParentID", step);
                 var sql = PetaPoco.Sql.Builder
-                            .Append("INSERT INTO DeployConfigurationStep (ID, DeployProjectID, DeployConfigurationID, StepName, TaskTypeName, TaskOptionsJson, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
-                            .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
+                            .Append("INSERT INTO DeployConfigurationStep (ID, DeployProjectID, DeployConfigurationID, StepName, TaskTypeName, TaskOptionsJson, OrderNumber, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
+                            .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @OrderNumber, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
                 db.Execute(sql);
             }
             return step;
@@ -882,7 +884,7 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+        public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId, int? orderNumber=null)
         {
             if(string.IsNullOrEmpty(projectId))
             {
@@ -919,8 +921,12 @@ namespace Sriracha.Deploy.SqlServer
                 var sql = PetaPoco.Sql.Builder
                             .Append("UPDATE DeployComponentStep")
                             .Append("SET StepName=@0, TaskTypeName=@1, TaskOptionsJson=@2, SharedDeploymentStepID=@3, UpdatedByUserName=@4, UpdatedDateTimeUtc=@5", 
-                                        stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId, _userIdentity.UserName, DateTime.UtcNow)
-                            .Append("WHERE ID=@0", deploymentStepId);
+                                        stepName, taskTypeName, taskOptionsJson, sharedDeploymentStepId, _userIdentity.UserName, DateTime.UtcNow);
+                if(orderNumber.HasValue)
+                {
+                    sql = sql.Append(", OrderNumber=@0", orderNumber.Value);
+                }
+                sql = sql.Append("WHERE ID=@0", deploymentStepId);
                 if(!string.IsNullOrEmpty(projectId))
                 {
                     sql = sql.Append("AND DeployProjectID=@0", projectId);
@@ -934,7 +940,7 @@ namespace Sriracha.Deploy.SqlServer
             return this.GetComponentDeploymentStep(deploymentStepId, projectId);
         }
 
-        public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+        public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber=null)
         {
             if (string.IsNullOrEmpty(deploymentStepId))
             {
@@ -964,8 +970,12 @@ namespace Sriracha.Deploy.SqlServer
                 var sql = PetaPoco.Sql.Builder
                             .Append("UPDATE DeployConfigurationStep")
                             .Append("SET StepName=@0, TaskTypeName=@1, TaskOptionsJson=@2, UpdatedByUserName=@3, UpdatedDateTimeUtc=@4",
-                                        stepName, taskTypeName, taskOptionsJson, _userIdentity.UserName, DateTime.UtcNow)
-                            .Append("WHERE ID=@0", deploymentStepId);
+                                        stepName, taskTypeName, taskOptionsJson, _userIdentity.UserName, DateTime.UtcNow);
+                if(orderNumber.HasValue)
+                {
+                    sql = sql.Append(", OrderNumber=@0", orderNumber.Value);
+                }
+                sql = sql.Append("WHERE ID=@0", deploymentStepId);
                 if (!string.IsNullOrEmpty(projectId))
                 {
                     sql = sql.Append("AND DeployProjectID=@0", projectId);

@@ -40,8 +40,8 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployStep CreateConfigurationDeploymentStep(string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
         DeployStep GetComponentDeploymentStep(string deploymentStepId, string projectId);
         DeployStep GetConfigurationDeploymentStep(string deploymentStepId, string projectId);
-		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId);
-		DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson);
+		DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId, int? orderNumber=null);
+        DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber=null);
         void DeleteComponentDeploymentStep(string deploymentStepId, string projectId);
         void DeleteConfigurationDeploymentStep(string deploymentStepId, string projectId);
 

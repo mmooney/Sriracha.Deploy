@@ -33,13 +33,18 @@
 	<table class="table table-border table-striped" ng-show="component.deploymentStepList.length">
 		<thead>
 			<tr>
+                <th></th>
 				<th>Name</th>
 				<th>Task Type</th>
 				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="deploymentStep in component.deploymentStepList">
+			<tr ng-repeat="deploymentStep in component.deploymentStepList | orderBy:'orderNumber'">
+                <td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)">
+                    <button class="btn" ng-disabled="$index==0" ng-click="moveStepUp(deploymentStep)"><i class="icon icon-arrow-up"/></button>
+                    <button class="btn" ng-disabled="$index==(component.deploymentStepList.length-1)" ng-click="moveStepDown(deploymentStep)"><i class="icon icon-arrow-down" /></button>
+                </td>
 				<td><a ng-href="{{navigator.deploymentStep.componentEdit.clientUrl(component.projectId, component.id, deploymentStep.id)}}">{{deploymentStep.stepName}}</a></td>
 				<td>{{deploymentStep.taskTypeName}}</td>
 				<td ng-show="permissionVerifier.canEditComponentConfiguration(project.id)"><a class="btn btn-danger" ng-href="{{navigator.deploymentStep.componentRemove.clientUrl(component.projectId, component.id, deploymentStep.id)}}">Delete</a></td>

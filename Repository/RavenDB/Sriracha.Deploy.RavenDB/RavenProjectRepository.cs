@@ -500,6 +500,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				component.DeploymentStepList = new List<DeployStep>();
 			}
+            item.OrderNumber = component.DeploymentStepList.Count();
 			component.DeploymentStepList.Add(item);
 			this._documentSession.SaveEvict(project);
 			return item;
@@ -544,6 +545,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				configuration.DeploymentStepList = new List<DeployStep>();
 			}
+            item.OrderNumber = configuration.DeploymentStepList.Count();
 			configuration.DeploymentStepList.Add(item);
 			this._documentSession.SaveEvict(project);
 			return item;
@@ -569,7 +571,7 @@ namespace Sriracha.Deploy.RavenDB
             return project.GetConfigurationDeploymentStep(deploymentStepId);
 		}
 
-		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId) 
+		public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId, int? orderNumber=null) 
 		{
             if(string.IsNullOrEmpty(componentId))
             {
@@ -616,11 +618,15 @@ namespace Sriracha.Deploy.RavenDB
 			item.SharedDeploymentStepId = StringHelper.IsNullOrEmpty(sharedDeploymentStepId, item.SharedDeploymentStepId);
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdatedDateTimeUtc = DateTime.UtcNow;
-			this._documentSession.SaveEvict(project);
+            if (orderNumber.HasValue)
+            {
+                item.OrderNumber = orderNumber.Value;
+            }
+            this._documentSession.SaveEvict(project);
 			return item;
 		}
 
-		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson) 
+		public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber) 
 		{
             if(string.IsNullOrEmpty(configurationId))
             {
@@ -654,6 +660,10 @@ namespace Sriracha.Deploy.RavenDB
 			item.TaskOptionsJson = taskOptionsJson;
 			item.UpdatedByUserName = _userIdentity.UserName;
 			item.UpdatedDateTimeUtc = DateTime.UtcNow;
+            if(orderNumber.HasValue)
+            {
+                item.OrderNumber = orderNumber.Value;
+            }
 			this._documentSession.SaveEvict(project);
 			return item;
 			

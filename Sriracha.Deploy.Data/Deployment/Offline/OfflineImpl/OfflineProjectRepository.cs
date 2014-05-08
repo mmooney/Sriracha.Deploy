@@ -190,12 +190,12 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             return configuration.DeploymentStepList.FirstOrDefault(i=>i.Id == deploymentStepId);
         }
 
-        public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId)
+        public DeployStep UpdateComponentDeploymentStep(string deploymentStepId, string projectId, string componentId, string stepName, string taskTypeName, string taskOptionsJson, string sharedDeploymentStepId, int? orderNumber=null)
         {
             throw new NotSupportedException();
         }
 
-        public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson)
+        public DeployStep UpdateConfigurationDeploymentStep(string deploymentStepId, string projectId, string configurationId, string stepName, string taskTypeName, string taskOptionsJson, int? orderNumber=null)
         {
             throw new NotSupportedException();
         }

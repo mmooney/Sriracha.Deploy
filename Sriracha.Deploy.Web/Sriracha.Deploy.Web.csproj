@@ -298,6 +298,7 @@
     <Compile Include="Services\Build\BuildService.cs" />
     <Compile Include="Services\ComponentService.cs" />
     <Compile Include="Services\ComponentConfigurationService.cs" />
+    <Compile Include="Services\DeployStepMoveRequest.cs" />
     <Compile Include="Services\DeployConfigurationService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
     <Compile Include="Services\Deployment\BatchRequestRequest.cs" />
@@ -313,6 +314,7 @@
     <Compile Include="Services\Deployment\OfflineDeploymentRequest.cs" />
     <Compile Include="Services\Deployment\OfflineDeploymentService.cs" />
     <Compile Include="Services\DeployStateService.cs" />
+    <Compile Include="Services\DeployStepMoveService.cs" />
     <Compile Include="Services\EnvironmentService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\ProjectRoleService.cs" />
@@ -558,6 +560,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\bin\" />
+    <Folder Include="Services\Project\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
