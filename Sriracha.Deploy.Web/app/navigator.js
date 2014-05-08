@@ -43,6 +43,13 @@
 				go: function () { return root.goTo(this.url) }
 			},
 		};
+	    root.dashboard = {
+	        index: {
+	            url: "/dashboard",
+	            clientUrl: function() { return root.getUrl(this.url)},
+	            go: function () { return root.goTo(this.url); }
+	        }
+	    },
 		root.project = {
 			list: {
 				url: "/project",

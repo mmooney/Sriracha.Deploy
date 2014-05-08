@@ -6,14 +6,20 @@ ngSriracha.config(
 	var navigator = SrirachaNavigatorProvider.$get();
 	$routeProvider
 		.when("/", {
-			templateUrl: "app/home-template.html",
-			controller: "HomeController"
+		    templateUrl: "app/home-template.html",
+		    controller: "HomeController"
 		})
 
 		.when(navigator.account.edit.url, {
 		    templateUrl: "app/account/account-edit-template.html",
-			controller: "AccountController"
+		    controller: "AccountController"
 		})
+
+        //Dashboard
+        .when(navigator.dashboard.index.url, {
+            templateUrl: "app/dashboard/index.html",
+            controller: "dashboardController"
+        })
 
 		//Projects
 		.when(navigator.project.list.url, {
