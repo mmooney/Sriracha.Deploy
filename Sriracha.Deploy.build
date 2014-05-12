@@ -8,6 +8,9 @@
       <property name="Configuration" value="ReleaseTasks"/>
     </msbuild>
     <msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
+      <property name="Configuration" value="ReleaseRepositories"/>
+    </msbuild>
+    <msbuild project=".\Sriracha.Deploy.sln" target="Rebuild">
       <property name="Configuration" value="Release"/>
     </msbuild>
   </target>

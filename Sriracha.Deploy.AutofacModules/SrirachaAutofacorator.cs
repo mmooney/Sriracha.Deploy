@@ -158,7 +158,7 @@ namespace Sriracha.Deploy.AutofacModules
 
 			if(_diMode != EnumDIMode.CommandLine && _diMode != EnumDIMode.Offline)
 			{
-				builder.RegisterModule(new RavenDBAutofacModule());
+                this.RegisterRepositories(builder, "Sriracha.Deploy.RavenDB");
 			}
             if(_diMode == EnumDIMode.Offline)
             {
@@ -190,6 +190,24 @@ namespace Sriracha.Deploy.AutofacModules
 			//http://stackoverflow.com/questions/2385370/cant-resolve-namevaluecollection-with-autofac
 			builder.RegisterType<NameValueCollection>().UsingConstructor();
 		}
+
+        private void RegisterRepositories(ContainerBuilder builder, string assemblyName)
+        {
+            var assembly = Assembly.Load(assemblyName);
+            var typeList = assembly.GetTypes()
+                            .Where(p => typeof(ISrirachaRepositoryRegistar).IsAssignableFrom(p)
+                                    && p.IsClass).ToList();
+            if(typeList == null || typeList.Count == 0)
+            {
+                throw new Exception("Failed to find class implementing ISrirachaRepositoryRegistar in " + assemblyName);
+            }
+            if(typeList.Count > 1)
+            {
+                throw new Exception(string.Format("Found multiple classes implementing ISrirachaRepositoryRegistar in {0}: {1}",assemblyName, string.Join(",",typeList.Select(i=>i.FullName))));
+            }
+            var registrar = (ISrirachaRepositoryRegistar)Activator.CreateInstance(typeList[0]);
+            registrar.RegisterRepositories(builder);
+        }
 
 		public static IScheduler CreateScheduler(IComponentContext context)
 		{
