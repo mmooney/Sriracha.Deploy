@@ -5,6 +5,9 @@
 			//Account
 			account: $resource("/api/account"),
 
+		    //Dashboard 
+			dashboard: $resource("/api/dashboard"),
+
 			//Project
 			project: $resource("/api/project"),
 			configuration: $resource("/api/project/:projectId/configuration"),

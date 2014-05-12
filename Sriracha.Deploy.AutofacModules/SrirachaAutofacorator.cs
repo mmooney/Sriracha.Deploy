@@ -37,6 +37,8 @@ using Sriracha.Deploy.Data.SystemSettings.SystemSettingsImpl;
 using Sriracha.Deploy.Data.SystemSettings;
 using System.IO;
 using System.Reflection;
+using Sriracha.Deploy.Data.Dashboard.DashboardImpl;
+using Sriracha.Deploy.Data.Dashboard;
 
 namespace Sriracha.Deploy.AutofacModules
 {
@@ -92,6 +94,7 @@ namespace Sriracha.Deploy.AutofacModules
 			builder.RegisterType<DeployStateManager>().As<IDeployStateManager>();
             builder.RegisterType<SystemRoleManager>().As<ISystemRoleManager>();
 			builder.RegisterType<BuildPurger>().As<IBuildPurger>();
+            builder.RegisterType<DashboardReporter>().As<IDashboardReporter>();
 			//builder.RegisterType<ProjectNotifier>().As<IProjectNotifier>();
 			builder.RegisterType<FakeProjectNofifier>().As<IProjectNotifier>();
 			builder.RegisterType<EmailQueue>().As<IEmailQueue>();

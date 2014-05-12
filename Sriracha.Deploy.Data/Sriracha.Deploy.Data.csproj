@@ -125,6 +125,8 @@
     <Compile Include="Credentials\ICredentialsManager.cs" />
     <Compile Include="Credentials\IEncrypterator.cs" />
     <Compile Include="Credentials\ImpersonationContext.cs" />
+    <Compile Include="Dashboard\DashboardImpl\DashboardReporter.cs" />
+    <Compile Include="Dashboard\IDashboardReporter.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchParallelRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployBatchRunner.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployHistoryReporter.cs" />
@@ -158,6 +160,12 @@
     <Compile Include="Dto\Build\FileManifest.cs" />
     <Compile Include="Dto\Build\FileManifestItem.cs" />
     <Compile Include="Dto\CleanupTaskData.cs" />
+    <Compile Include="Dto\Dashboard\DashboardReport.cs" />
+    <Compile Include="Dto\Dashboard\DashboardReportBuild.cs" />
+    <Compile Include="Dto\Dashboard\DashboardReportComponent.cs" />
+    <Compile Include="Dto\Dashboard\DashboardReportEnvironment.cs" />
+    <Compile Include="Dto\Dashboard\DashboardReportProject.cs" />
+    <Compile Include="Dto\Dashboard\DashboardRequest.cs" />
     <Compile Include="Dto\Deployment\ComponentDeployHistory.cs" />
     <Compile Include="Dto\Deployment\Offline\OfflineComponentSelection.cs" />
     <Compile Include="Dto\Deployment\Offline\OfflineDeployment.cs" />

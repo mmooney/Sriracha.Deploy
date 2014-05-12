@@ -1,9 +1,42 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+﻿<h2>Deployment Dashboard</h2>
+<div class="row">
+    <div class="span3">
+        <h3>Projects:</h3>
+        <div ng-repeat="project in projectList">
+            <label class="checkbox">
+                <input type="checkbox" ng-model="selectedProjects[project.id]" ng-change="updateReport()"/>
+                <strong><u>{{project.projectName}}</u></strong>
+            </label>
+            <div ng-show="selectedProjects[project.id]">
+                <b>Components</b>
+                <div ng-repeat="component in project.componentList">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="selectedComponents[project.id][component.id]" ng-change="updateReport()" />
+                        {{component.componentName}}
+                    </label>
+                </div>
+                <b>Environments</b>
+                <div ng-repeat="environment in project.environmentList">
+                    <label class="checkbox">
+                        <input type="checkbox" ng-model="selectedEnvironments[project.id][environment.id]" ng-change="updateReport()" />
+                        {{environment.environmentName}}
+                    </label>
+                </div>
+            </div>
+            <br /><br />
+        </div>
+    </div >
+    <div class="span9 container">
+        <div ng-repeat="environment in displayEnvironmentList" class="span2">
+            <h4>{{environment.environmentName}}</h4>
+            <div ng-repeat="component in environment.componentList">
+                <h5>{{component.componentName}}</h5>
+                <div ng-repeat="build in component.buildList | orderBy:'deploymentStartedDateTimeUtc':false">
+                    <div ng-class="getBuildDisplayClass(build)">
+                        {{build.buildDisplayValue}} - {{deploymentStartedDateTimeUtc}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

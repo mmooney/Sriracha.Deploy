@@ -53,5 +53,7 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
         public string StatusDisplayValue { get; set; }
 
         public List<Sriracha.Deploy.Data.Dto.Project.DeployMachine> MachineList { get; set; }
+
+        public string BuildDisplayValue { get; set; }
     }
 }

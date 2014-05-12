@@ -164,6 +164,13 @@ namespace Sriracha.Deploy.RavenDB
             state.Status = status;
             switch (status)
             {
+                case EnumDeployStatus.InProcess:
+                    if(state.Status == EnumDeployStatus.NotStarted || state.Status == EnumDeployStatus.Cancelled 
+                            || state.DeploymentStartedDateTimeUtc.HasValue)
+                    {
+                        state.DeploymentStartedDateTimeUtc = DateTime.UtcNow;
+                    }
+                    break;
                 case EnumDeployStatus.Success:
                 case EnumDeployStatus.Error:
                     if(!state.DeploymentCompleteDateTimeUtc.HasValue)
@@ -228,7 +235,7 @@ namespace Sriracha.Deploy.RavenDB
             }
             if (componentIdList != null)
             {
-                baseQuery = baseQuery.Where(i => i.Build.ProjectComponentId.In(componentIdList));
+                baseQuery = baseQuery.Where(i => i.Component.Id.In(componentIdList));
             }
             if (buildIdList != null)
             {
@@ -284,6 +291,7 @@ namespace Sriracha.Deploy.RavenDB
                              ErrorDetails = i.ErrorDetails,
                              DeploymentStartedDateTimeUtc = i.DeploymentStartedDateTimeUtc,
                              DeploymentCompleteDateTimeUtc = i.DeploymentCompleteDateTimeUtc,
+                             BuildDisplayValue = i.Build.DisplayValue,
 
                              ProjectId = i.Build.ProjectId,
                              ProjectName = i.Build.ProjectName,

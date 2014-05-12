@@ -303,6 +303,8 @@
     <Compile Include="Services\Build\BuildService.cs" />
     <Compile Include="Services\ComponentService.cs" />
     <Compile Include="Services\ComponentConfigurationService.cs" />
+    <Compile Include="Services\Dashboard\DashboardServiceRequest.cs" />
+    <Compile Include="Services\Dashboard\DashboardService.cs" />
     <Compile Include="Services\DeployStepMoveRequest.cs" />
     <Compile Include="Services\DeployConfigurationService.cs" />
     <Compile Include="Services\DeploymentStepService.cs" />
