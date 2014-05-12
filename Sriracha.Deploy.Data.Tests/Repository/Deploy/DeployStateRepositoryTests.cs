@@ -1059,11 +1059,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                 this.CreateTestDeployState(sut, similateRun: true);
             }
 
-            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = true, PageSize=20 });
+            //var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = false });
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version" });
+            //var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "DeploymentStartedDateTimeUtc", SortAscending = false });
+
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.Items);
-            Assert.AreEqual(20, result.Items.Count);
+            Assert.GreaterOrEqual(result.Items.Count, 20);
             Assert.IsTrue(result.SortAscending);
             ComponentDeployHistory lastItem = null;
             foreach (var item in result.Items)

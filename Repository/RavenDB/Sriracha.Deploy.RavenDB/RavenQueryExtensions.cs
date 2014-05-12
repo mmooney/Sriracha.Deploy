@@ -21,6 +21,8 @@ namespace Sriracha.Deploy.RavenDB
             var startingQuery = query
                         .Statistics(out stats);
             IRavenQueryable<T> sortedQuery;
+            int count1 = query.Count();
+            var list1 = query.ToList();
             if (listOptions.SortAscending.GetValueOrDefault())
             {
                 sortedQuery = startingQuery.OrderBy(sortSelector);
@@ -29,8 +31,12 @@ namespace Sriracha.Deploy.RavenDB
             {
                 sortedQuery = startingQuery.OrderByDescending(sortSelector);
             }
+            int count2 = sortedQuery.Count();
+            var list2 = sortedQuery.ToList();
             var resultQuery = sortedQuery.Skip((pageNumber - 1) * pageSize)
                                             .Take(pageSize);
+            int count3 = resultQuery.Count();
+            var list3 = resultQuery.ToList();
             var pagedList = new StaticPagedList<T>(resultQuery.ToList(), pageNumber, pageSize, stats.TotalResults);
             return new PagedSortedList<T>(pagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
         }
