@@ -1059,8 +1059,8 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
                 this.CreateTestDeployState(sut, similateRun: true);
             }
 
-            //var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = false });
-            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version" });
+            var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version", SortAscending = true });
+            //var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "Version" });
             //var result = sut.GetComponentDeployHistory(new ListOptions { SortField = "DeploymentStartedDateTimeUtc", SortAscending = false });
 
 

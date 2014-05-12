@@ -784,7 +784,7 @@ namespace Sriracha.Deploy.SqlServer
             };
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployComponentStep WHERE ProjectID=@ProjectID AND DeployComponentID=@ParentID", step); 
+                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployComponentStep WHERE DeployProjectID=@ProjectId AND DeployComponentID=@ParentId", step); 
                 var sql = PetaPoco.Sql.Builder
                             .Append("INSERT INTO DeployComponentStep (ID, DeployProjectID, DeployComponentID, StepName, TaskTypeName, TaskOptionsJson, SharedDeploymentStepID, OrderNumber, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
                             .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @SharedDeploymentStepId, @OrderNumber, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
@@ -830,7 +830,7 @@ namespace Sriracha.Deploy.SqlServer
             };
             using (var db = _sqlConnectionInfo.GetDB())
             {
-                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployConfigurationStep WHERE ProjectID=@ProjectID AND DeployConfigurationID=@ParentID", step);
+                step.OrderNumber = db.ExecuteScalar<int>("SELECT COUNT(*) FROM DeployConfigurationStep WHERE DeployProjectID=@ProjectId AND DeployConfigurationID=@ParentId", step);
                 var sql = PetaPoco.Sql.Builder
                             .Append("INSERT INTO DeployConfigurationStep (ID, DeployProjectID, DeployConfigurationID, StepName, TaskTypeName, TaskOptionsJson, OrderNumber, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)")
                             .Append("VALUES (@Id, @ProjectId, @ParentId, @StepName, @TaskTypeName, @TaskOptionsJson, @OrderNumber, @CreatedDateTimeUtc, @CreatedByUserName, @UpdatedDateTimeUtc, @UpdatedByUserName)", step);
