@@ -11,26 +11,26 @@ using System.Text;
 
 namespace Sriracha.Deploy.RavenDB
 {
-	public class RavenCredentialRepository : ICredentialsRepository
+	public class RavenCredentialsRepository : ICredentialsRepository
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
 
-		public RavenCredentialRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
+		public RavenCredentialsRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		private string FormatId(string domain, string userName)
-		{
-			string returnValue = "DeployCredentials_" + userName.Replace("\\", "_");
-			if(!string.IsNullOrEmpty(domain))
-			{
-				returnValue += "_" + domain.Replace("\\","_");
-			}
-			return returnValue;
-		}
+        //private string FormatId(string domain, string userName)
+        //{
+        //    string returnValue = "DeployCredentials_" + userName.Replace("\\", "_");
+        //    if(!string.IsNullOrEmpty(domain))
+        //    {
+        //        returnValue += "_" + domain.Replace("\\","_");
+        //    }
+        //    return returnValue;
+        //}
 
 		public PagedSortedList<DeployCredentials> GetCredentialsList(ListOptions listOptions)
 		{
@@ -41,26 +41,32 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployCredentials GetCredentials(string credentialsId)
 		{
-			var item = _documentSession.LoadEnsureNoCache<DeployCredentials>(credentialsId);
-			if(item == null) 
-			{
-				throw new RecordNotFoundException(typeof(DeployCredentials), "Id", credentialsId);
-			}
-			return item;
+			return _documentSession.LoadEnsureNoCache<DeployCredentials>(credentialsId);
 		}
-
 
 		public DeployCredentials CreateCredentials(string domain, string userName, string encrytpedPassword)
 		{
-			string id = FormatId(userName, domain);
-			var existingItem = _documentSession.LoadNoCache<DeployCredentials>(id);
+            if(string.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentNullException("domain");
+            }
+            if(string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException("userName");
+            }
+            if(string.IsNullOrEmpty(encrytpedPassword))
+            {
+                throw new ArgumentNullException("encrytpedPassword");
+            }
+			//string id = FormatId(userName, domain);
+			var existingItem = _documentSession.QueryNoCacheNotStale<DeployCredentials>().FirstOrDefault(i=>i.UserName == userName && i.Domain == domain);//.Where(i=>i.Domain == domain).Where(i=>i.UserName == i.UserName).FirstOrDefault();
 			if(existingItem != null)
 			{
-				throw new ArgumentException("UserName already exists: " + userName);
+				throw new ArgumentException(string.Format("UserName already exists: {0}\\{1}", domain, userName));
 			}
 			var item = new DeployCredentials
 			{
-				Id = id,
+				Id = Guid.NewGuid().ToString(),
 				Domain = domain,
 				UserName = userName,
 				EncryptedPassword = encrytpedPassword,
@@ -76,6 +82,24 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployCredentials UpdateCredentials(string credentialsId, string domain, string userName, string encrytpedPassword)
 		{
+            if(string.IsNullOrEmpty(domain))
+            {
+                throw new ArgumentNullException("domain");
+            }
+            if(string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException("userName");
+            }
+            if(string.IsNullOrEmpty(encrytpedPassword))
+            {
+                throw new ArgumentNullException("encrytpedPassword");
+            }
+            var existingItem = _documentSession.QueryNoCacheNotStale<DeployCredentials>()
+                        .Any(i=>i.Id != credentialsId && i.Domain == domain && i.UserName == userName);
+            if(existingItem)
+            {
+                throw new ArgumentException(string.Format("UserName already exists: {0}\\{1}", domain, userName));
+            }
 			var item = _documentSession.LoadEnsure<DeployCredentials>(credentialsId);
 			item.Domain = domain;
 			item.UserName = userName;

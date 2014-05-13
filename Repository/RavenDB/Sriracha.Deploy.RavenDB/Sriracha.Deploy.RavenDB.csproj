@@ -85,7 +85,7 @@
     <Compile Include="DocumentSessionExtensions.cs" />
     <Compile Include="Indexes\ComponentDeployHistoryIndex.cs" />
     <Compile Include="RavenConnectionSettingRepository.cs" />
-    <Compile Include="RavenCredentialRepository.cs" />
+    <Compile Include="RavenCredentialsRepository.cs" />
     <Compile Include="RavenPermissionRepository.cs" />
     <Compile Include="RavenRepositoryRegistrar.cs" />
     <Compile Include="RavenSystemRoleRepository.cs" />

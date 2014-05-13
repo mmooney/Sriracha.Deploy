@@ -35,7 +35,7 @@ namespace Sriracha.Deploy.RavenDB
             builder.RegisterType<RavenSystemLogRepository>().As<ISystemLogRepository>();
             builder.RegisterType<RavenMembershipRepository>().As<IMembershipRepository>();
             builder.RegisterType<RavenEmailQueueRepository>().As<IEmailQueueRepository>();
-            builder.RegisterType<RavenCredentialRepository>().As<ICredentialsRepository>();
+            builder.RegisterType<RavenCredentialsRepository>().As<ICredentialsRepository>();
             builder.RegisterType<RavenSystemSettingsRepository>().As<ISystemSettingsRepository>();
             builder.RegisterType<RavenRazorTemplateRepository>().As<IRazorTemplateRepository>();
             builder.RegisterType<RavenCleanupRepository>().As<ICleanupRepository>();
