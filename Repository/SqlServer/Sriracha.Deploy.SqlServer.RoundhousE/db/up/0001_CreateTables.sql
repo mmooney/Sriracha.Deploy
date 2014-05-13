@@ -718,3 +718,33 @@ CREATE NONCLUSTERED INDEX IX_DeployStateMachine_DeployStateID ON dbo.DeployState
 	DeployStateID
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+CREATE TABLE [dbo].[DeployBuildPurgeRule](
+	[ID] [nvarchar](50) NOT NULL,
+	[ProjectID] [nvarchar](50) NULL,
+	[BuildRetentionMinutes] [int] NULL,
+	[EnvironmentIdListJson] [ntext] NULL,
+	[EnvironmentNameListJson] [ntext] NULL,
+	[MachineIdListJson] [ntext] NULL,
+	[MachineNameListJson] [ntext] NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_DeployBuildPurgeRule] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
+ALTER TABLE [dbo].[DeployBuildPurgeRule] ADD  CONSTRAINT [DF_DeployBuildPurgeRule_ID]  DEFAULT (newid()) FOR [ID]
+GO
+
+ALTER TABLE [dbo].[DeployBuildPurgeRule] ADD  CONSTRAINT [DF_DeployBuildPurgeRule_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployBuildPurgeRule] ADD  CONSTRAINT [DF_DeployBuildPurgeRule_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+

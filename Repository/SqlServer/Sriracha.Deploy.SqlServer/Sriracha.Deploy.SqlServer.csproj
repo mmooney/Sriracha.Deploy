@@ -57,6 +57,7 @@
     <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlConnectionInfo.cs" />
+    <Compile Include="SqlServerBuildPurgeRuleRepository.cs" />
     <Compile Include="SqlServerBuildRepository.cs" />
     <Compile Include="SqlServerDeployStateRepository.cs" />
     <Compile Include="SqlServerProjectRepository.cs" />
