@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Dto
 		public string FolderPath { get; set; }
 
 		public int AgeMinutes { get; set; }
-		public DateTime TargetCleanUpDateTimeUtc { get; set; }
+		public DateTime TargetCleanupDateTimeUtc { get; set; }
 
 		public DateTime CreatedDateTimeUtc { get; set; }
 		public string CreatedByUserName { get; set; }

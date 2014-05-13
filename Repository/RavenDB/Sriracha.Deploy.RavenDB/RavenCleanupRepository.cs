@@ -46,7 +46,7 @@ namespace Sriracha.Deploy.RavenDB
 				FolderPath = folderPath,
 				AgeMinutes = ageMinutes,
 				Status = EnumQueueStatus.New,
-				TargetCleanUpDateTimeUtc = DateTime.UtcNow.AddMinutes(ageMinutes),
+				TargetCleanupDateTimeUtc = DateTime.UtcNow.AddMinutes(ageMinutes),
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
@@ -68,11 +68,11 @@ namespace Sriracha.Deploy.RavenDB
 				this._logger.Trace("Checking for next cleanup task");
 				var tempItem = this._documentSession.QueryNoCache<CleanupTaskData>()
 										.Customize(i => i.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(30)))
-										.OrderBy(i => i.TargetCleanUpDateTimeUtc)
+										.OrderBy(i => i.TargetCleanupDateTimeUtc)
 										.Where(i => i.Status == EnumQueueStatus.New 
 												&& i.MachineName == machineName 
 												&& i.TaskType == EnumCleanupTaskType.Folder
-												&& i.TargetCleanUpDateTimeUtc < DateTime.UtcNow)
+												&& i.TargetCleanupDateTimeUtc < DateTime.UtcNow)
 										.FirstOrDefault();
 				if (tempItem == null)
 				{

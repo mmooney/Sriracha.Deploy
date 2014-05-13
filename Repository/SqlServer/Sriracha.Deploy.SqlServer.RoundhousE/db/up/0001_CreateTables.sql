@@ -748,3 +748,105 @@ ALTER TABLE [dbo].[DeployBuildPurgeRule] ADD  CONSTRAINT [DF_DeployBuildPurgeRul
 GO
 
 
+CREATE TABLE [dbo].[EnumCleanupTaskType](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumCleanupTaskType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumCleanupTaskType] ADD  CONSTRAINT [DF_EnumCleanupTaskType_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumCleanupTaskType] ADD  CONSTRAINT [DF_EnumCleanupTaskType_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+INSERT INTO EnumCleanupTaskType (ID, TypeName, DisplayValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)
+    VALUES (0, 'Folder', 'Folder', 'RoundhousE', GETUTCDATE(), 'RoundhousE', GETUTCDATE())
+GO
+
+CREATE TABLE [dbo].[EnumQueueStatus](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumQueueStatus] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumQueueStatus] ADD  CONSTRAINT [DF_EnumQueueStatus_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumQueueStatus] ADD  CONSTRAINT [DF_EnumQueueStatus_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+INSERT INTO EnumQueueStatus (ID, TypeName, DisplayValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)
+    VALUES (0, 'New ', 'New', 'RoundhousE', GETUTCDATE(), 'RoundhousE', GETUTCDATE())
+INSERT INTO EnumQueueStatus (ID, TypeName, DisplayValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)
+    VALUES (1, 'InProcess', 'InProcess', 'RoundhousE', GETUTCDATE(), 'RoundhousE', GETUTCDATE())
+INSERT INTO EnumQueueStatus (ID, TypeName, DisplayValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)
+    VALUES (2, 'Completed', 'Completed', 'RoundhousE', GETUTCDATE(), 'RoundhousE', GETUTCDATE())
+INSERT INTO EnumQueueStatus (ID, TypeName, DisplayValue, CreatedByUserName, CreatedDateTimeUtc, UpdatedByUserName, UpdatedDateTimeUtc)
+    VALUES (3, 'Error', 'Error', 'RoundhousE', GETUTCDATE(), 'RoundhousE', GETUTCDATE())
+GO
+
+CREATE TABLE [dbo].[DeployCleanupTaskData](
+	[ID] [nvarchar](50) NOT NULL,
+	[EnumCleanupTaskTypeID] [int] NOT NULL,
+	[MachineName] [nvarchar](50) NOT NULL,
+	[FolderPath] [nvarchar](500) NOT NULL,
+	[AgeMinutes] [int] NOT NULL,
+	[TargetCleanupDateTimeUtc] [datetime2](7) NOT NULL,
+	[EnumQueueStatusID] [int] NOT NULL,
+	[StartedDateTimeUtc] [datetime2](7) NULL,
+	[CompletedDateTimeUtc] [datetime2](7) NULL,
+	[ErrorDetails] [ntext] NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_DeployCleanupTaskData] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployCleanupTaskData] ADD  CONSTRAINT [DF_DeployCleanupTaskData_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployCleanupTaskData] ADD  CONSTRAINT [DF_DeployCleanupTaskData_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE dbo.DeployCleanupTaskData ADD CONSTRAINT
+	FK_DeployCleanupTaskData_EnumCleanupTaskType FOREIGN KEY
+	(EnumCleanupTaskTypeID) REFERENCES dbo.EnumCleanupTaskType
+	(ID) ON UPDATE  NO ACTION 
+    ON DELETE  NO ACTION 
+GO
+
+ALTER TABLE dbo.DeployCleanupTaskData ADD CONSTRAINT
+	FK_DeployCleanupTaskData_EnumDeployStatus FOREIGN KEY
+	(EnumQueueStatusID) REFERENCES dbo.EnumDeployStatus
+	(ID) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+GO
+
+

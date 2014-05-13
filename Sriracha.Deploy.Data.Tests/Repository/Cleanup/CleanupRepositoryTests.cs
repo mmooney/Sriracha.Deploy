@@ -51,7 +51,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Cleanup
                 Assert.AreEqual(expected.MachineName, actual.MachineName);
                 Assert.AreEqual(expected.FolderPath, actual.FolderPath);
                 Assert.AreEqual(expected.AgeMinutes, actual.AgeMinutes);
-                AssertDateEqual(DateTime.UtcNow.AddMinutes(expected.AgeMinutes), actual.TargetCleanUpDateTimeUtc);
+                AssertDateEqual(DateTime.UtcNow.AddMinutes(expected.AgeMinutes), actual.TargetCleanupDateTimeUtc);
                 Assert.AreEqual(expected.Status, actual.Status);
                 AssertDateEqual(expected.StartedDateTimeUtc, actual.StartedDateTimeUtc);
                 AssertDateEqual(expected.CompletedDateTimeUtc, actual.CompletedDateTimeUtc);
@@ -77,7 +77,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Cleanup
                 Assert.AreEqual(expected.MachineName, actual.MachineName);
                 Assert.AreEqual(expected.FolderPath, actual.FolderPath);
                 Assert.AreEqual(expected.AgeMinutes, actual.AgeMinutes);
-                AssertDateEqual(expected.TargetCleanUpDateTimeUtc, actual.TargetCleanUpDateTimeUtc);
+                AssertDateEqual(expected.TargetCleanupDateTimeUtc, actual.TargetCleanupDateTimeUtc);
                 AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
                 Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
                 AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
@@ -140,7 +140,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Cleanup
             Assert.AreEqual(newTaskData.TaskType, result.TaskType);
             Assert.AreEqual(newTaskData.FolderPath, result.FolderPath);
             Assert.AreEqual(newTaskData.AgeMinutes, result.AgeMinutes);
-            AssertDateEqual(newTaskData.TargetCleanUpDateTimeUtc, result.TargetCleanUpDateTimeUtc);
+            AssertDateEqual(newTaskData.TargetCleanupDateTimeUtc, result.TargetCleanupDateTimeUtc);
             AssertDateEqual(newTaskData.CreatedDateTimeUtc, result.CreatedDateTimeUtc);
             Assert.AreEqual(newTaskData.CreatedByUserName, result.CreatedByUserName);
             AssertIsRecent(result.UpdatedDateTimeUtc);
@@ -194,7 +194,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Cleanup
             var testData = TestData.Create(this, false);
             var newTaskData = testData.Sut.CreateCleanupTask(testData.CleanupTaskData.MachineName, EnumCleanupTaskType.Folder, testData.CleanupTaskData.FolderPath, -1);
 
-            var result = testData.Sut.PopNextFolderCleanupTask(null);
+            var result = testData.Sut.PopNextFolderCleanupTask(Guid.NewGuid().ToString());
 
             Assert.IsNull(result);
         }

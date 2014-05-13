@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Build\SqlServerBuildPurgeRuleRepositoryTests.cs" />
     <Compile Include="Build\SqlServerBuildRepositoryTests.cs" />
+    <Compile Include="Cleanup\SqlServerCleanupRepositoryTests.cs" />
     <Compile Include="Deploy\SqlServerDeployStateRepositoryTests.cs" />
     <Compile Include="EmbeddedSqlServerProvider.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryBranchTests.cs" />
