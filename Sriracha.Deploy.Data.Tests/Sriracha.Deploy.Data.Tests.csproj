@@ -86,6 +86,7 @@
     <Compile Include="ProcessRunnerTests.cs" />
     <Compile Include="Repository\AssertHelpers.cs" />
     <Compile Include="Repository\Build\BuildRepositoryTests.cs" />
+    <Compile Include="Repository\Build\BuildPurgeRuleRepositoryTests.cs" />
     <Compile Include="Repository\Deploy\DeployStateRepositoryTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryEnvironmentTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryConfigurationStepTests.cs" />

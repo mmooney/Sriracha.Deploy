@@ -23,6 +23,32 @@
   <MSTestThreadApartmentState>STA</MSTestThreadApartmentState>
   <BuildProcessArchitecture>x86</BuildProcessArchitecture>
   <IgnoredTests>
-    <AllTestsSelector />
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Build.RavenBuildRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Deploy.RavenDeployStateRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryBranchTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryComponentStepTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryComponentTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryConfigurationStepTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryConfigurationTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryEnvironmentTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Project.RavenProjectRepositoryProjectTests</FixtureName>
+    </FixtureTestSelector>
   </IgnoredTests>
 </ProjectConfiguration>

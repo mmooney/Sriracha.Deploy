@@ -11,7 +11,6 @@ namespace Sriracha.Deploy.Data.Repository
         List<BuildPurgeRule> GetSystemBuildPurgeRuleList();
         BuildPurgeRule CreateSystemBuildPurgeRule(int? buildRetentionMinutes, List<string> environmentNameList, List<string> environmentIdList, List<string> machineNameList, List<string> machineIdList);
         BuildPurgeRule GetSystemBuildPurgeRule(string id);
-        BuildPurgeRule TryGetSystemBuildPurgeRule(string id);
         BuildPurgeRule UpdateSystemBuildPurgeRule(string id, int? buildRetentionMinutes, List<string> environmentNameList, List<string> environmentIdList, List<string> machineNameList, List<string> machineIdList);
         BuildPurgeRule DeleteSystemBuildPurgeRule(string id);
 
