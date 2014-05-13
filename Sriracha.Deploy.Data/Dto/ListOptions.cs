@@ -22,7 +22,7 @@ namespace Sriracha.Deploy.Data.Dto
             listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(pageSize);
             listOptions.PageNumber = listOptions.PageNumber.GetValueOrDefault(pageNumber);
             listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField, sortField);
-            listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault();
+            listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(sortAscending);
             return listOptions;
         }
     }

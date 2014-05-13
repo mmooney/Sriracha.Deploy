@@ -849,4 +849,28 @@ ALTER TABLE dbo.DeployCleanupTaskData ADD CONSTRAINT
 	 ON DELETE  NO ACTION 
 GO
 
+CREATE TABLE [dbo].[DeployCredential](
+	[ID] [nvarchar](50) NOT NULL,
+	[Domain] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](50) NOT NULL,
+	[EncryptedPassword] [nvarchar](500) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_DeployCredential] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployCredential] ADD  CONSTRAINT [DF_DeployCredential_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployCredential] ADD  CONSTRAINT [DF_DeployCredential_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+
 
