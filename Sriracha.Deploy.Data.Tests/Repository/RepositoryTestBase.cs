@@ -29,12 +29,12 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         protected abstract T GetRepository();
 
-        protected void AssertIsRecent(DateTime dateTime)
+        protected void AssertIsRecent(DateTime? dateTime)
         {
             AssertHelpers.AssertIsRecent(dateTime);
         }
 
-        protected void AssertDateEqual(DateTime expected, DateTime actual)
+        protected void AssertDateEqual(DateTime? expected, DateTime? actual)
         {
             AssertHelpers.AssertDateEqual(expected, actual);
         }

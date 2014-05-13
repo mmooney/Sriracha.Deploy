@@ -22,14 +22,23 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
         }
 
-        public static void AssertIsRecent(DateTime dateTime)
+        public static void AssertIsRecent(DateTime? dateTime)
         {
+            Assert.IsNotNull(dateTime);
             Assert.That(dateTime, Is.EqualTo(DateTime.UtcNow).Within(TimeSpan.FromSeconds(2)));
         }
 
-        public static void AssertDateEqual(DateTime expected, DateTime actual)
+        public static void AssertDateEqual(DateTime? expected, DateTime? actual)
         {
-            Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromSeconds(2)));
+            if(!expected.HasValue)
+            {
+                Assert.IsNull(actual);
+            }
+            else 
+            {
+                Assert.IsNotNull(actual);
+                Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromSeconds(2)));
+            }
         }
 
         public static void AssertBuild(DeployBuild expected, DeployBuild actual)

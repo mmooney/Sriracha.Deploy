@@ -24,9 +24,6 @@
   <BuildProcessArchitecture>x86</BuildProcessArchitecture>
   <IgnoredTests>
     <FixtureTestSelector>
-      <FixtureName>Sriracha.Deploy.RavenDB.Tests.Build.RavenBuildRepositoryTests</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Sriracha.Deploy.RavenDB.Tests.Deploy.RavenDeployStateRepositoryTests</FixtureName>
     </FixtureTestSelector>
     <FixtureTestSelector>

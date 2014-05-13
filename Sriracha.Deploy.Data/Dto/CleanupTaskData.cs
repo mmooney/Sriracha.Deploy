@@ -28,8 +28,8 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public EnumQueueStatus Status { get; set; }
 
-		public DateTime StartedDateTimeUtc { get; set; }
-		public DateTime CompletedDateTimeUtc { get; set; }
+		public DateTime? StartedDateTimeUtc { get; set; }
+		public DateTime? CompletedDateTimeUtc { get; set; }
 
 		public string ErrorDetails { get; set; }
 	}

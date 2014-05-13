@@ -20,12 +20,18 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             throw new NotImplementedException();
         }
 
-        public void MarkItemSuccessful(string taskId)
+        public CleanupTaskData MarkItemSuccessful(string taskId)
         {
             throw new NotImplementedException();
         }
 
-        public void MarkItemFailed(string taskId, Exception err)
+        public CleanupTaskData MarkItemFailed(string taskId, Exception err)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public CleanupTaskData GetCleanupTask(string p)
         {
             throw new NotImplementedException();
         }

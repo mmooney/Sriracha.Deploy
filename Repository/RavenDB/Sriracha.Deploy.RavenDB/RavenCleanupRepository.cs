@@ -26,6 +26,18 @@ namespace Sriracha.Deploy.RavenDB
 
 		public CleanupTaskData CreateCleanupTask(string machineName, EnumCleanupTaskType taskType, string folderPath, int ageMinutes)
 		{
+            if(string.IsNullOrEmpty(machineName))
+            {
+                throw new ArgumentNullException("Missing Machine Name");
+            }
+            if(string.IsNullOrEmpty(folderPath))
+            {
+                throw new ArgumentNullException("Missing Folder Path");
+            }
+            //if(ageMinutes <= 0)
+            //{
+            //    throw new ArgumentNullException("Missing Age Minutes");
+            //}
 			var task = new CleanupTaskData
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -46,6 +58,10 @@ namespace Sriracha.Deploy.RavenDB
 
 		public CleanupTaskData PopNextFolderCleanupTask(string machineName)
 		{
+            if(string.IsNullOrEmpty(machineName))
+            {
+                throw new ArgumentNullException("Missing Machine Name");
+            }
 			string itemId = null;
 			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
 			{
@@ -71,8 +87,10 @@ namespace Sriracha.Deploy.RavenDB
 					return null;
 				}
 
-				reloadedItem.Status = EnumQueueStatus.New;
+				reloadedItem.Status = EnumQueueStatus.InProcess;
 				reloadedItem.StartedDateTimeUtc = DateTime.UtcNow;
+                reloadedItem.UpdatedByUserName = _userIdentity.UserName;
+                reloadedItem.UpdatedDateTimeUtc = DateTime.UtcNow;
 				itemId = reloadedItem.Id;
 				this._documentSession.SaveEvict(reloadedItem);
 
@@ -88,21 +106,34 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public void MarkItemSuccessful(string taskId)
+        public CleanupTaskData MarkItemSuccessful(string taskId)
 		{
 			var item = _documentSession.LoadEnsure<CleanupTaskData>(taskId);
 			item.Status = EnumQueueStatus.Completed;
 			item.CompletedDateTimeUtc = DateTime.UtcNow;
-			_documentSession.SaveChanges();
+            item.UpdatedByUserName = _userIdentity.UserName;
+            item.UpdatedDateTimeUtc = DateTime.UtcNow;
+            return _documentSession.SaveEvict(item);
 		}
 
-		public void MarkItemFailed(string taskId, Exception err)
+        public CleanupTaskData MarkItemFailed(string taskId, Exception err)
 		{
 			var item = _documentSession.LoadEnsure<CleanupTaskData>(taskId);
 			item.Status = EnumQueueStatus.Error;
-			item.ErrorDetails = err.ToString();
+            if(err != null)
+            {
+    			item.ErrorDetails = err.ToString();
+            }
 			item.CompletedDateTimeUtc = DateTime.UtcNow;
-			_documentSession.SaveChanges();
-		}
-	}
+            item.UpdatedByUserName = _userIdentity.UserName;
+            item.UpdatedDateTimeUtc = DateTime.UtcNow;
+            return _documentSession.SaveEvict(item);
+        }
+
+
+        public CleanupTaskData GetCleanupTask(string id)
+        {
+            return _documentSession.LoadEnsureNoCache<CleanupTaskData>(id);
+        }
+    }
 }
