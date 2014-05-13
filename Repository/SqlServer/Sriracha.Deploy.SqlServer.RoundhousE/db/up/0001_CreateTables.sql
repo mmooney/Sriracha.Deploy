@@ -633,6 +633,10 @@ INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, Cr
     VALUES (8, 'Error', 'Error', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
 INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
     VALUES (9, 'Cancelled', 'Cancelled', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (10, 'OfflineRequested', 'Offline Requested', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumDeployStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName)
+    VALUES (11, 'OfflineComplete', 'Offline Deployment Complete', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
 GO
 
 CREATE TABLE [dbo].[DeployState](
@@ -871,6 +875,56 @@ GO
 
 ALTER TABLE [dbo].[DeployCredential] ADD  CONSTRAINT [DF_DeployCredential_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
 GO
+
+CREATE TABLE [dbo].[DeployBatchRequest](
+	[ID] [nvarchar](50) NOT NULL,
+	[SubmittedDateTimeUtc] [datetime2](7) NOT NULL,
+	[SubmittedByUserName] [nvarchar](50) NOT NULL,
+	[ItemListJson] [ntext] NOT NULL,
+	[EnumDeployStatusID] [int] NOT NULL,
+	[StartedDateTimeUtc] [datetime2](7) NULL,
+	[CompleteDateTimeUtc] [datetime2](7) NULL,
+	[ErrorDetails] [ntext] NULL,
+	[LastStatusMessage] [nvarchar](500) NULL,
+	[DeploymentLabel] [nvarchar](200) NULL,
+	[CancelRequested] [bit] NOT NULL,
+	[CancelMessage] [nvarchar](500) NULL,
+	[ResumeRequested] [bit] NOT NULL,
+	[ResumeMessage] [nvarchar](200) NULL,
+	[MessageListJson] [ntext] NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_DeployBatchRequest] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployBatchRequest] ADD  CONSTRAINT [DF_DeployBatchRequest_CancelRequested]  DEFAULT ((0)) FOR [CancelRequested]
+GO
+
+ALTER TABLE [dbo].[DeployBatchRequest] ADD  CONSTRAINT [DF_DeployBatchRequest_ResumeRequested]  DEFAULT ((0)) FOR [ResumeRequested]
+GO
+
+ALTER TABLE [dbo].[DeployBatchRequest] ADD  CONSTRAINT [DF_DeployBatchRequest_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployBatchRequest] ADD  CONSTRAINT [DF_DeployBatchRequest_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE dbo.DeployBatchRequest ADD CONSTRAINT
+	FK_DeployBatchRequest_EnumDeployStatus FOREIGN KEY
+	(EnumDeployStatusID) REFERENCES dbo.EnumDeployStatus
+	(ID) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
+
+
 
 
 

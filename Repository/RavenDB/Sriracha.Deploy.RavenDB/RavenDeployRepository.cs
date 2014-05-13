@@ -52,6 +52,10 @@ namespace Sriracha.Deploy.RavenDB
                     item.Id = Guid.NewGuid().ToString();
                 }
             }
+            if(status == EnumDeployStatus.Unknown)
+            {
+                status = EnumDeployStatus.NotStarted;
+            }
             string message = string.Format("{0} created deployment request with status of {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
             var request = new DeployBatchRequest
             {
@@ -200,7 +204,7 @@ namespace Sriracha.Deploy.RavenDB
 		public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus newStatus, string userMessage)
 		{
 			var batchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
-            string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
+            string statusMessage = string.Format("{0} requested deployment to be requeued at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
             if (!string.IsNullOrEmpty(userMessage))
             {
                 statusMessage += ". Notes: " + userMessage;

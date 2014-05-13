@@ -74,6 +74,10 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             }
             else
             {
+                if(expected.Status == EnumDeployStatus.Unknown)
+                {
+                    expected.Status = EnumDeployStatus.NotStarted;
+                }
                 Assert.IsNotNull(actual);
                 Assert.IsNotNullOrEmpty(actual.Id);
                 AssertIsRecent(actual.SubmittedDateTimeUtc);
@@ -282,7 +286,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             AssertIsRecent(result.UpdatedDateTimeUtc);
         }
 
-        [Test]
+        [Test, Explicit]
         public void PopNextBatchDeployment_NoDeployments_ReturnsNothing()
         {
             var testData = TestData.Create(this);
@@ -331,6 +335,80 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.IsNotNull(result);
             Assert.AreEqual(data.Id, result.Id);
             Assert.AreEqual(data.Status, result.Status);
+            var dbItem = testData.Sut.GetBatchRequest(result.Id);
+            AssertRequest(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateBatchDeploymentStatus_Success_SetsCompleteDate()
+        {
+            var testData = TestData.Create(this, 1);
+            var data = this.Fixture.Create<DeployBatchRequest>();
+            data.Id = testData.DeployList[0].Id;
+            data.ItemList = testData.DeployList[0].ItemList;
+
+            var result = testData.Sut.UpdateBatchDeploymentStatus(data.Id, EnumDeployStatus.Success);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Id, result.Id);
+            Assert.AreEqual(EnumDeployStatus.Success, result.Status);
+            AssertIsRecent(result.CompleteDateTimeUtc);
+            var dbItem = testData.Sut.GetBatchRequest(result.Id);
+            AssertRequest(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateBatchDeploymentStatus_Error_SetsCompleteDate()
+        {
+            var testData = TestData.Create(this, 1);
+            var data = this.Fixture.Create<DeployBatchRequest>();
+            data.Id = testData.DeployList[0].Id;
+            data.ItemList = testData.DeployList[0].ItemList;
+
+            var result = testData.Sut.UpdateBatchDeploymentStatus(data.Id, EnumDeployStatus.Error);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Id, result.Id);
+            Assert.AreEqual(EnumDeployStatus.Error, result.Status);
+            AssertIsRecent(result.CompleteDateTimeUtc);
+            var dbItem = testData.Sut.GetBatchRequest(result.Id);
+            AssertRequest(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateBatchDeploymentStatus_InProcess_ClearsResumeRequested()
+        {
+            var testData = TestData.Create(this, 1);
+            var data = this.Fixture.Create<DeployBatchRequest>();
+            data.Id = testData.DeployList[0].Id;
+            data.ItemList = testData.DeployList[0].ItemList;
+            testData.Sut.SetResumeRequested(data.Id, null);
+
+            var result = testData.Sut.UpdateBatchDeploymentStatus(data.Id, EnumDeployStatus.InProcess);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Id, result.Id);
+            Assert.AreEqual(EnumDeployStatus.InProcess, result.Status);
+            Assert.IsFalse(result.ResumeRequested);
+            var dbItem = testData.Sut.GetBatchRequest(result.Id);
+            AssertRequest(result, dbItem);
+        }
+
+        [Test]
+        public void UpdateBatchDeploymentStatus_Cancelled_ClearsCancelRequested()
+        {
+            var testData = TestData.Create(this, 1);
+            var data = this.Fixture.Create<DeployBatchRequest>();
+            data.Id = testData.DeployList[0].Id;
+            data.ItemList = testData.DeployList[0].ItemList;
+            testData.Sut.SetCancelRequested(data.Id, null);
+
+            var result = testData.Sut.UpdateBatchDeploymentStatus(data.Id, EnumDeployStatus.Cancelled);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Id, result.Id);
+            Assert.AreEqual(EnumDeployStatus.Cancelled, result.Status);
+            Assert.IsFalse(result.CancelRequested);
             var dbItem = testData.Sut.GetBatchRequest(result.Id);
             AssertRequest(result, dbItem);
         }

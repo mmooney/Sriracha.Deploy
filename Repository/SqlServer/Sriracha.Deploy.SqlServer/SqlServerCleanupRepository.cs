@@ -101,7 +101,7 @@ namespace Sriracha.Deploy.SqlServer
             }
             var sql = PetaPoco.Sql.Builder 
                         .Append("DECLARE @@id AS NVARCHAR(50);")
-                        .Append("SET @@id = (SELECT TOP 1 ID FROM DeployCleanupTaskData WHERE EnumQueueStatusID=0 AND MachineName=@0 AND TargetCleanupDateTimeUtc < GETUTCDATE());", machineName)
+                        .Append("SET @@id = (SELECT TOP 1 ID FROM DeployCleanupTaskData WHERE EnumQueueStatusID=0 AND MachineName=@0 AND TargetCleanupDateTimeUtc < GETUTCDATE() ORDER BY TargetCleanupDateTimeUtc ASC);", machineName)
                         .Append("IF(@@id IS NOT NULL) UPDATE DeployCleanupTaskData SET EnumQueueStatusID=1, StartedDateTimeUtc=GETUTCDATE(), UpdatedDateTimeUtc=GETUTCDATE(), UpdatedByUserName=@0 WHERE ID=@@id;", _userIdentity.UserName)
                         .Append("SELECT @@id");
             using(var db = _sqlConnectionInfo.GetDB())

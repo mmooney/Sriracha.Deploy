@@ -61,6 +61,7 @@
     <Compile Include="SqlServerBuildPurgeRuleRepository.cs" />
     <Compile Include="SqlServerBuildRepository.cs" />
     <Compile Include="SqlServerCredentialsRepository.cs" />
+    <Compile Include="SqlServerDeployRepository.cs" />
     <Compile Include="SqlServerDeployStateRepository.cs" />
     <Compile Include="SqlServerProjectRepository.cs" />
   </ItemGroup>

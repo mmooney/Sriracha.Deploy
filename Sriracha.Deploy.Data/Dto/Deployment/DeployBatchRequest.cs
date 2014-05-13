@@ -16,19 +16,20 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 		public DateTime? StartedDateTimeUtc { get; set; }
 		public DateTime? CompleteDateTimeUtc { get; set; }
 		public string ErrorDetails { get; set; }
-		public DateTime CreatedDateTimeUtc { get; set; }
-		public string CreatedByUserName { get; set; }
-		public DateTime UpdatedDateTimeUtc { get; set; }
-		public string UpdatedByUserName { get; set; }
 		public string LastStatusMessage { get; set; }
 		public string DeploymentLabel { get; set; }
 		public bool CancelRequested { get; set; }
 		public string CancelMessage { get; set; }
 
-		public List<string> MessageList { get; set; }
-
         public bool ResumeRequested { get; set; }
         public string ResumeMessage { get; set; }
+        
+        public List<string> MessageList { get; set; }
+
+        public DateTime CreatedDateTimeUtc { get; set; }
+        public string CreatedByUserName { get; set; }
+        public DateTime UpdatedDateTimeUtc { get; set; }
+        public string UpdatedByUserName { get; set; }
 
         //public Plan.DeploymentPlan Plan { get; set; }
         
