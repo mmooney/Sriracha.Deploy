@@ -32,35 +32,31 @@ namespace Sriracha.Deploy.RavenDB
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-        public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
+        public PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions)
         {
-            switch (status)
+            listOptions = ListOptions.SetDefaults(listOptions, 10, 1, "SubmittedDateTimeUtc", false);
+            var pagedList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
+            return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
+        }
+
+        public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus status, string deploymentLabel)
+        {
+            if(itemList == null || itemList.Count == 0)
             {
-                case EnumDeployStatus.Unknown:
-                    status = EnumDeployStatus.NotStarted;
-                    break;
-                case EnumDeployStatus.NotStarted:
-                case EnumDeployStatus.Requested:
-                case EnumDeployStatus.OfflineRequested:
-                    //OK
-                    break;
-                case EnumDeployStatus.Error:
-                case EnumDeployStatus.InProcess:
-                case EnumDeployStatus.Success:
-                case EnumDeployStatus.Warning:
-                    throw new ArgumentException(EnumHelper.GetDisplayValue(status) + " is not a valid initial status for a batch deployment request");
-                default:
-                    throw new UnknownEnumValueException(status);
+                throw new ArgumentNullException("itemList");
             }
             foreach (var item in itemList)
             {
-                item.Id = Guid.NewGuid().ToString();
+                if(string.IsNullOrEmpty(item.Id))
+                {
+                    item.Id = Guid.NewGuid().ToString();
+                }
             }
             string message = string.Format("{0} created deployment request with status of {1} at {2} UTC.", _userIdentity.UserName, EnumHelper.GetDisplayValue(status), DateTime.UtcNow);
             var request = new DeployBatchRequest
             {
                 Id = Guid.NewGuid().ToString(),
-                SubmittedDateTimeUtc = submittedDateTimeUtc,
+                SubmittedDateTimeUtc = DateTime.UtcNow,
                 SubmittedByUserName = _userIdentity.UserName,
                 DeploymentLabel = deploymentLabel,
                 ItemList = itemList,
@@ -105,6 +101,8 @@ namespace Sriracha.Deploy.RavenDB
 
 				reloadedItem.Status = EnumDeployStatus.InProcess;
 				reloadedItem.StartedDateTimeUtc = DateTime.UtcNow;
+                reloadedItem.UpdatedByUserName = _userIdentity.UserName;
+                reloadedItem.UpdatedDateTimeUtc = DateTime.UtcNow;
 				itemId = reloadedItem.Id;
 				this._documentSession.SaveEvict(reloadedItem);
 
@@ -118,13 +116,6 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				return _documentSession.LoadNoCache<DeployBatchRequest>(itemId);
 			}
-		}
-
-		public PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions)
-		{
-			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(10);
-			var pagedList = _documentSession.QueryPageAndSort<DeployBatchRequest>(listOptions, "SubmittedDateTimeUtc", false);
-			return new PagedSortedList<DeployBatchRequest>(pagedList, listOptions.SortField, listOptions.SortAscending.Value);
 		}
 
 		public DeployBatchRequest GetBatchRequest(string id)
@@ -173,7 +164,7 @@ namespace Sriracha.Deploy.RavenDB
 				statusList = new List<EnumDeployStatus> { EnumDeployStatus.NotStarted, EnumDeployStatus.InProcess };
 			}
 			var query = (IRavenQueryable<DeployBatchRequest>)_documentSession.QueryNoCache<DeployBatchRequest>()
-										.OrderBy(i => i.SubmittedDateTimeUtc)
+										//.OrderBy(i => i.SubmittedDateTimeUtc)
 										.Where(i => i.Status.In(statusList) 
 												|| (i.ResumeRequested && (i.Status == EnumDeployStatus.Error || i.Status == EnumDeployStatus.Cancelled)));
 			if(environmentIds != null && environmentIds.Count != 0)
@@ -183,80 +174,86 @@ namespace Sriracha.Deploy.RavenDB
 											.Any(j=>j.MachineList
 												.Any(k=>k.EnvironmentId.In(environmentIds))));
 			}
-			listOptions = listOptions ?? new ListOptions();
-			listOptions.SortField = StringHelper.IsNullOrEmpty(listOptions.SortField,"SubmittedDateTimeUtc");
-			listOptions.SortAscending = listOptions.SortAscending.GetValueOrDefault(false);
-			listOptions.PageSize = listOptions.PageSize.GetValueOrDefault(5);
-			listOptions.PageNumber = listOptions.PageNumber.GetValueOrDefault(1);
+            listOptions = ListOptions.SetDefaults(listOptions, 5, 1,  "SubmittedDateTimeUtc", false);
 			return query.PageAndSort(listOptions, i=>i.SubmittedDateTimeUtc);
 		}
-
 
 		public DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage)
 		{
 			var request = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			request.CancelRequested = true;
+            request.CancelMessage = userMessage;
 			string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
 			if(!string.IsNullOrEmpty(userMessage))
 			{
 				statusMessage += ". Notes: " + userMessage;
 			}
 			request.LastStatusMessage = statusMessage;
-			request.MessageList.Add(statusMessage);
+            request.UpdatedByUserName = _userIdentity.UserName;
+            request.UpdatedDateTimeUtc = DateTime.UtcNow;
+			request.MessageList.Add(request.LastStatusMessage);
 			_documentSession.SaveEvict(request);
 			return request;
 		}
 
 
-		public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus newStatus, string statusMessage)
+		public DeployBatchRequest RequeueDeployment(string deployBatchRequestId, EnumDeployStatus newStatus, string userMessage)
 		{
 			var batchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
-			batchRequest.Status = newStatus;
+            string statusMessage = string.Format("{0} requested deployment to be cancelled at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
+            if (!string.IsNullOrEmpty(userMessage))
+            {
+                statusMessage += ". Notes: " + userMessage;
+            }
+            batchRequest.Status = newStatus;
 			batchRequest.StartedDateTimeUtc = null;
 			batchRequest.LastStatusMessage = statusMessage;
 			batchRequest.UpdatedDateTimeUtc = DateTime.UtcNow;
 			batchRequest.UpdatedByUserName = _userIdentity.UserName;
+            batchRequest.MessageList.Add(batchRequest.LastStatusMessage);
 			this._documentSession.SaveEvict(batchRequest);
 			return batchRequest;
 		}
 
 
-		public bool HasCancelRequested(string deployBatchRequestId)
-		{
-			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
-			bool returnValue = item.CancelRequested;
-			return returnValue;
-		}
+        //public bool HasCancelRequested(string deployBatchRequestId)
+        //{
+        //    var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+        //    bool returnValue = item.CancelRequested;
+        //    return returnValue;
+        //}
 
 
 		public DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage)
 		{
 			var request = _documentSession.LoadEnsure<DeployBatchRequest>(deployBatchRequestId);
 			request.ResumeRequested = true;
+            request.ResumeMessage = userMessage;
 			string statusMessage = string.Format("{0} requested deployment to be resumed at {1} UTC", _userIdentity.UserName, DateTime.UtcNow);
 			if (!string.IsNullOrEmpty(userMessage))
 			{
 				statusMessage += ". Notes: " + userMessage;
 			}
 			request.LastStatusMessage = statusMessage;
+            request.UpdatedByUserName = _userIdentity.UserName;
+            request.UpdatedDateTimeUtc = DateTime.UtcNow;
 			request.MessageList.Add(statusMessage);
 			_documentSession.SaveEvict(request);
 			return request;
 		}
 
+        //public bool IsCancelled(string deployBatchRequestId)
+        //{
+        //    var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
+        //    return (item.Status == EnumDeployStatus.Cancelled);
+        //}
 
-		public bool IsCancelled(string deployBatchRequestId)
-		{
-			var item = _documentSession.LoadEnsureNoCache<DeployBatchRequest>(deployBatchRequestId);
-			return (item.Status == EnumDeployStatus.Cancelled);
-		}
-
-		public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
-		{
-			var deployBatchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(plan.DeployBatchRequestId);
-			deployBatchRequest.Plan = plan;
-			_documentSession.SaveEvict(deployBatchRequest);
-			return plan;
-		}
+        //public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
+        //{
+        //    var deployBatchRequest = _documentSession.LoadEnsure<DeployBatchRequest>(plan.DeployBatchRequestId);
+        //    deployBatchRequest.Plan = plan;
+        //    _documentSession.SaveEvict(deployBatchRequest);
+        //    return plan;
+        //}
 	}
 }

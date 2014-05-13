@@ -46,7 +46,25 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 
 		public DeployBatchRequest CreateDeployBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus initialStatus, string deploymentLabel)
 		{
-			var request = _deployRepository.CreateBatchRequest(itemList, DateTime.UtcNow, initialStatus, deploymentLabel);
+            switch (initialStatus)
+            {
+                case EnumDeployStatus.Unknown:
+                    initialStatus = EnumDeployStatus.NotStarted;
+                    break;
+                case EnumDeployStatus.NotStarted:
+                case EnumDeployStatus.Requested:
+                case EnumDeployStatus.OfflineRequested:
+                    //OK
+                    break;
+                case EnumDeployStatus.Error:
+                case EnumDeployStatus.InProcess:
+                case EnumDeployStatus.Success:
+                case EnumDeployStatus.Warning:
+                    throw new ArgumentException(EnumHelper.GetDisplayValue(initialStatus) + " is not a valid initial status for a batch deployment request");
+                default:
+                    throw new UnknownEnumValueException(initialStatus);
+            }
+            var request = _deployRepository.CreateBatchRequest(itemList, initialStatus, deploymentLabel);
 			_projectNotifier.SendDeployRequestedNotification(request);
 			return request;
 		}

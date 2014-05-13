@@ -14,7 +14,7 @@ namespace Sriracha.Deploy.Data.Repository
 	public interface IDeployRepository
 	{
     	PagedSortedList<DeployBatchRequest> GetBatchRequestList(ListOptions listOptions);
-		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel);
+		DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus status, string deploymentLabel);
         DeployBatchRequest PopNextBatchDeployment();
         DeployBatchRequest GetBatchRequest(string id);
 		DeployBatchRequest UpdateBatchDeploymentStatus(string deployBatchRequestId, EnumDeployStatus status, Exception err = null, string statusMessage = null, bool addToMessageHistory=true);
@@ -26,6 +26,6 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest SetCancelRequested(string deployBatchRequestId, string userMessage);
 		DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage);
 
-		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
+        //DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 	}
 }

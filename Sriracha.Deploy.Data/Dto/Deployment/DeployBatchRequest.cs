@@ -27,7 +27,12 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 
 		public List<string> MessageList { get; set; }
 
-		public string StatusDisplayValue 
+        public bool ResumeRequested { get; set; }
+        public string ResumeMessage { get; set; }
+
+        //public Plan.DeploymentPlan Plan { get; set; }
+        
+        public string StatusDisplayValue 
 		{ 
 			get 
 			{ 
@@ -50,9 +55,5 @@ namespace Sriracha.Deploy.Data.Dto.Deployment
 		}
 
 
-		public bool ResumeRequested { get; set; }
-		public string ResumeMessage { get; set; }
-
-		public Plan.DeploymentPlan Plan { get; set; }
 	}
 }

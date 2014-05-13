@@ -29,7 +29,7 @@ namespace Sriracha.Deploy.Data.Deployment
 
 		//Impersonatator BeginImpersonation(string deployStateId, string projectId, string environmentId);
 
-		DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
+        //DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
 
     }
 }

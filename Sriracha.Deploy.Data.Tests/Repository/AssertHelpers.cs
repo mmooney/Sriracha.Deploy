@@ -112,5 +112,22 @@ namespace Sriracha.Deploy.Data.Tests.Repository
                 }
             }
         }
+
+        public static void AssertStringList(List<string> expectedList, List<string> actualList)
+        {
+            if(expectedList == null)
+            {
+                Assert.IsNull(actualList);
+            }
+            else 
+            {
+                Assert.IsNotNull(actualList);
+                Assert.AreEqual(expectedList.Count, actualList.Count);
+                foreach(var expectedItem in expectedList)
+                {
+                    Assert.Contains(expectedItem, actualList);
+                }
+            }
+        }
     }
 }

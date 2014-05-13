@@ -25,7 +25,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             throw new NotSupportedException();
         }
 
-        public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, DateTime submittedDateTimeUtc, EnumDeployStatus status, string deploymentLabel)
+        public DeployBatchRequest CreateBatchRequest(List<DeployBatchRequestItem> itemList, EnumDeployStatus status, string deploymentLabel)
         {
             throw new NotSupportedException();
         }
@@ -74,9 +74,9 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             return request;
         }
 
-        public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
-        {
-            throw new NotSupportedException();
-        }
+        //public DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan)
+        //{
+        //    throw new NotSupportedException();
+        //}
     }
 }
