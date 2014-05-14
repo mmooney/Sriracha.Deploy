@@ -43,7 +43,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.Throws<ArgumentNullException>(() => sut.CreateProject(projectName, false));
         }
 
-        [Test]
+        [Test, Explicit]
         public void GetProjectList_CanRetrieveProjectList()
         {
             var sut = this.GetRepository();

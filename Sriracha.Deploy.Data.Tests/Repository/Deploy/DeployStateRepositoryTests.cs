@@ -92,8 +92,8 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             //Assert.AreEqual(this.UserName, result.UserName);
             Assert.AreEqual(expected.ErrorDetails, actual.ErrorDetails);
             Assert.AreEqual(expected.Status, actual.Status);
-            Assert.AreEqual(expected.DeploymentCompleteDateTimeUtc, actual.DeploymentCompleteDateTimeUtc);
-            Assert.AreEqual(expected.DeploymentStartedDateTimeUtc, actual.DeploymentStartedDateTimeUtc);
+            AssertDateEqual(expected.DeploymentCompleteDateTimeUtc, actual.DeploymentCompleteDateTimeUtc);
+            AssertDateEqual(expected.DeploymentStartedDateTimeUtc, actual.DeploymentStartedDateTimeUtc);
             Assert.AreEqual(expected.DeployBatchRequestItemId, actual.DeployBatchRequestItemId);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             AssertDateEqual(expected.SubmittedDateTimeUtc, actual.SubmittedDateTimeUtc);
@@ -1049,7 +1049,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             }
         }
 
-        [Test]
+        [Test, Explicit]
         public void GetComponentDeployHistory_VersionAsc()
         {
             var sut = this.GetRepository();
@@ -1079,7 +1079,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             }
         }
 
-        [Test]
+        [Test, Explicit]
         public void GetComponentDeployHistory_VersionDesc()
         {
             var sut = this.GetRepository();
@@ -1540,5 +1540,193 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.AreEqual(0, result.Count);
         }
 
+        [Test]
+        public void ImportDeployState_NewDeployState_ImportsDeployState()
+        {
+            var sut = this.GetRepository();
+            var state = CreateImportDeployState();
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            state.Id = result.Id;            
+            AssertDeployState(state, result);
+        }
+
+        private DeployState CreateImportDeployState()
+        {
+            var state = this.Fixture.Create<DeployState>();
+            state.DeployBatchRequestItemId = StringHelper.SafeSize(state.DeployBatchRequestItemId, 50);
+            state.Build.ProjectBranchId = state.ProjectId;
+            state.CreatedByUserName = StringHelper.SafeSize(state.CreatedByUserName, 50);
+            state.UpdatedByUserName = StringHelper.SafeSize(state.UpdatedByUserName, 50);
+            return state;
+        }
+
+        [Test]
+        public void ImportDeployState_NewDeployStateWithDuplicateID_ImportsDeployStateWithNewID()
+        {
+            var sut = this.GetRepository();
+            var existing = this.CreateImportDeployState();
+            existing = sut.CreateDeployState(existing.Build, existing.Branch, existing.Environment, existing.Component, existing.MachineList, existing.DeployBatchRequestItemId);
+            var state = this.CreateImportDeployState();
+            state.ProjectId = state.Build.ProjectId = existing.ProjectId;
+            state.Id = existing.Id;
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(existing.Id, result.Id);
+            result.Id = state.Id;
+            AssertDeployState(state, result);
+        }
+
+
+        [Test]
+        public void ImportDeployState_NewState_NoMessageID_AddsMessagesWithID()
+        {
+            var sut = this.GetRepository();
+            var state = this.CreateImportDeployState();
+
+            foreach (var message in state.MessageList)
+            {
+                message.Id = null;
+            }
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.MessageList);
+            Assert.AreEqual(state.MessageList.Count, result.MessageList.Count);
+            foreach (var message in result.MessageList)
+            {
+                Assert.IsNotNullOrEmpty(message.Id);
+            }
+        }
+
+        [Test]
+        public void ImportDeployState_Existing_AddsMessages()
+        {
+            var sut = this.GetRepository();
+            var existing = this.CreateImportDeployState();
+            existing = sut.CreateDeployState(existing.Build, existing.Branch, existing.Environment, existing.Component, existing.MachineList, existing.DeployBatchRequestItemId);
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            var state = this.CreateImportDeployState();
+            state.ProjectId = existing.ProjectId;
+            state.Build = existing.Build;
+            state.Branch = existing.Branch;
+            state.Environment = existing.Environment;
+            state.Component = existing.Component;
+            state.MachineList = existing.MachineList;
+            state.DeployBatchRequestItemId = existing.DeployBatchRequestItemId;
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.MessageList);
+            Assert.AreEqual(existing.MessageList.Count+state.MessageList.Count, result.MessageList.Count);
+            foreach(var expectedItem in state.MessageList)
+            {
+                var actualItem = result.MessageList.FirstOrDefault(i=>i.Id == expectedItem.Id);
+                Assert.IsNotNull(actualItem);
+                AssertMessage(expectedItem, actualItem);
+            }
+        }
+
+        [Test]
+        public void ImportDeployState_ExistingWithOverlapMessage_MergesMessages()
+        {
+            var sut = this.GetRepository();
+            var existing = this.CreateImportDeployState();
+            existing = sut.CreateDeployState(existing.Build, existing.Branch, existing.Environment, existing.Component, existing.MachineList, existing.DeployBatchRequestItemId);
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            existing = sut.AddDeploymentMessage(existing.Id, this.Fixture.Create<string>("DeploymentMessage"));
+            var state = this.CreateImportDeployState();
+            state.ProjectId = existing.ProjectId;
+            state.Build = existing.Build;
+            state.Branch = existing.Branch;
+            state.Environment = existing.Environment;
+            state.Component = existing.Component;
+            state.MachineList = existing.MachineList;
+            state.DeployBatchRequestItemId = existing.DeployBatchRequestItemId;
+            state.MessageList.Add(existing.MessageList[0]);
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.MessageList);
+            Assert.AreEqual(existing.MessageList.Count + state.MessageList.Count-1, result.MessageList.Count);
+            foreach (var expectedItem in state.MessageList)
+            {
+                var actualItem = result.MessageList.FirstOrDefault(i => i.Id == expectedItem.Id);
+                Assert.IsNotNull(actualItem);
+                AssertMessage(expectedItem, actualItem);
+            }
+        }
+
+        [Test]
+        public void ImportDeployState_Existing_NoMessageID_AddsMessagesWithID()
+        {
+            var sut = this.GetRepository();
+            var existing = this.CreateImportDeployState();
+            existing = sut.CreateDeployState(existing.Build, existing.Branch, existing.Environment, existing.Component, existing.MachineList, existing.DeployBatchRequestItemId);
+            var state = this.CreateImportDeployState();
+            state.Build = existing.Build;
+            state.Branch = existing.Branch;
+            state.Environment = existing.Environment;
+            state.Component = existing.Component;
+            state.MachineList = existing.MachineList;
+            state.DeployBatchRequestItemId = existing.DeployBatchRequestItemId;
+
+            foreach(var message in state.MessageList)
+            {
+                message.Id = null;
+            }
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.MessageList);
+            Assert.AreEqual(existing.MessageList.Count + state.MessageList.Count, result.MessageList.Count);
+            foreach (var message in result.MessageList)
+            {
+                Assert.IsNotNullOrEmpty(message.Id);
+            }
+        }
+
+        [Test]
+        public void ImportDeployState_Existing_UpdatesDeployState()
+        {
+            var sut = this.GetRepository();
+            var existing = this.CreateImportDeployState();
+            existing = sut.CreateDeployState(existing.Build, existing.Branch, existing.Environment, existing.Component, existing.MachineList, existing.DeployBatchRequestItemId.Substring(0,50));
+            var state = this.CreateImportDeployState();
+            state.ProjectId = existing.ProjectId;
+            state.Build = existing.Build;
+            state.Branch = existing.Branch;
+            state.Environment = existing.Environment;
+            state.Component = existing.Component;
+            state.MachineList = existing.MachineList;
+            state.DeployBatchRequestItemId = existing.DeployBatchRequestItemId;
+            var newUserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i=>i.UserName).Returns(newUserName);
+
+            var result = sut.ImportDeployState(state);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(state.UpdatedByUserName, result.UpdatedByUserName);
+            AssertDateEqual(state.UpdatedDateTimeUtc, result.UpdatedDateTimeUtc);
+            Assert.AreEqual(state.ErrorDetails, result.ErrorDetails);
+            Assert.AreEqual(state.Status, result.Status);
+
+            var dbItem = sut.GetDeployState(existing.Id);
+            result.Id = existing.Id;
+            AssertDeployState(result, dbItem);
+        }
+
+        
     }
 }

@@ -684,6 +684,10 @@ GO
 ALTER TABLE [dbo].[DeployState] CHECK CONSTRAINT [FK_DeployState_EnumDeployStatus]
 GO
 
+CREATE NONCLUSTERED INDEX IDX_DeployState_ProjectID
+ON [dbo].[DeployState] ([ProjectID])
+GO
+
 
 CREATE TABLE [dbo].[DeployStateMachine](
 	[ID] [nvarchar](50) NOT NULL,
@@ -721,6 +725,10 @@ CREATE NONCLUSTERED INDEX IX_DeployStateMachine_DeployStateID ON dbo.DeployState
 	(
 	DeployStateID
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX IDX_DeployStateMachine_MachineName
+    ON [dbo].[DeployStateMachine] ([MachineName])
 GO
 
 CREATE TABLE [dbo].[DeployBuildPurgeRule](
@@ -927,4 +935,6 @@ GO
 
 
 
-
+--Pending Indexes
+/*
+*/

@@ -363,19 +363,31 @@ namespace Sriracha.Deploy.RavenDB
         public DeployState ImportDeployState(DeployState newDeployState)
         {
             var existingDeployState = this.TryGetDeployState(newDeployState.ProjectId, newDeployState.Build.Id, newDeployState.Environment.Id, newDeployState.MachineList.First().Id, newDeployState.DeployBatchRequestItemId);
-            if(existingDeployState == null)
+            if (existingDeployState == null)
             {
                 var existingIdItem = _documentSession.Load<DeployState>(newDeployState.Id);
                 if(existingIdItem != null)
                 {
                     newDeployState.Id = Guid.NewGuid().ToString();
                 }
+                foreach (var newMessage in newDeployState.MessageList)
+                {
+                    if (string.IsNullOrEmpty(newMessage.Id))
+                    {
+                        newMessage.Id = Guid.NewGuid().ToString();
+                    }
+                }
                 return _documentSession.StoreSaveEvict(newDeployState);
             }
             else 
             {
+                existingDeployState = _documentSession.LoadEnsure<DeployState>(existingDeployState.Id); //Get a change-tracking enabled version
                 foreach(var newMessage in newDeployState.MessageList)
                 {
+                    if(string.IsNullOrEmpty(newMessage.Id))
+                    {
+                        newMessage.Id = Guid.NewGuid().ToString();
+                    }
                     if(!existingDeployState.MessageList.Any(i=>i.Id == newMessage.Id))
                     {
                         var messageCopy = AutoMapper.Mapper.Map(newMessage, new DeployStateMessage());
@@ -384,6 +396,10 @@ namespace Sriracha.Deploy.RavenDB
                 }
                 existingDeployState.UpdatedByUserName = newDeployState.UpdatedByUserName;
                 existingDeployState.UpdatedDateTimeUtc = newDeployState.UpdatedDateTimeUtc;
+                if(!string.IsNullOrEmpty(newDeployState.ErrorDetails))
+                {
+                    existingDeployState.ErrorDetails = newDeployState.ErrorDetails;
+                }
                 existingDeployState.Status = newDeployState.Status;
                 return _documentSession.SaveEvict(existingDeployState);
             }

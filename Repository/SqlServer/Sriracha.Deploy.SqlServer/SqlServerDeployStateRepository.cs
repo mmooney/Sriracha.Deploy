@@ -65,20 +65,128 @@ namespace Sriracha.Deploy.SqlServer
             _userIdentity = DIHelper.VerifyParameter(userIdentity);
         }
 
+        private string SaveDeployState(DeployState state)
+        {
+            if (state.Build == null)
+            {
+                throw new ArgumentNullException("Missing build");
+            }
+            if (state.Branch == null)
+            {
+                throw new ArgumentNullException("Missing branch");
+            }
+            if (state.Component == null)
+            {
+                throw new ArgumentNullException("Missing component");
+            }
+            if (state.Environment == null)
+            {
+                throw new ArgumentNullException("Missing environment");
+            }
+            if (state.MachineList == null)
+            {
+                throw new ArgumentNullException("Missing machineList");
+            }
+            if (state.DeployBatchRequestItemId == null)
+            {
+                throw new ArgumentNullException("Missing deployBatchRequestItemId");
+            }
+            var sqlDeployState = new SqlDeployState
+            {
+                ID = state.Id,
+                ProjectID = state.ProjectId,
+                BranchID = state.Branch.Id,
+                BranchJson = state.Branch.ToJson(),
+                BuildID = state.Build.Id,
+                BuildJson = state.Build.ToJson(),
+                ComponentID = state.Component.Id,
+                ComponentJson = state.Component.ToJson(),
+                EnvironmentID = state.Environment.Id,
+                EnvironmentName = state.Environment.EnvironmentName,
+                EnvironmentJson = state.Environment.ToJson(),
+                DeployBatchRequestItemID = state.DeployBatchRequestItemId,
+                DeploymentCompleteDateTimeUtc = state.DeploymentCompleteDateTimeUtc,
+                DeploymentStartedDateTimeUtc = state.DeploymentStartedDateTimeUtc,
+                ErrorDetails = state.ErrorDetails,
+                SortableVersion = state.Build.SortableVersion,
+                EnumDeployStatusID = (int)state.Status,
+                CreatedByUserName = state.CreatedByUserName,
+                CreatedDateTimeUtc = state.CreatedDateTimeUtc,
+                UpdatedByUserName = state.UpdatedByUserName,
+                UpdatedDateTimeUtc = state.UpdatedDateTimeUtc,
+                SubmittedDateTimeUtc = state.SubmittedDateTimeUtc
+            };
+            if(state.MessageList != null)
+            {
+                foreach(var message in state.MessageList)
+                {
+                    if(string.IsNullOrEmpty(message.Id))
+                    {
+                        message.Id = Guid.NewGuid().ToString();
+                    }
+                }
+                sqlDeployState.MessageListJson = state.MessageList.ToJson();
+            }
+            var sqlMachineList = new List<SqlDeployStateMachine>();
+            foreach (var machine in state.MachineList)
+            {
+                var sqlMachine = new SqlDeployStateMachine
+                {
+                    ID = machine.Id,
+                    DeployStateID = sqlDeployState.ID,
+                    MachineID = machine.Id,
+                    MachineName = machine.MachineName,
+                    MachineJson = machine.ToJson(),
+                    CreatedByUserName = _userIdentity.UserName,
+                    CreatedDateTimeUtc = DateTime.UtcNow,
+                    UpdatedByUserName = _userIdentity.UserName,
+                    UpdatedDateTimeUtc = DateTime.UtcNow
+                };
+                sqlMachineList.Add(sqlMachine);
+            }
+            using (var db = _sqlConnectionInfo.GetDB())
+            {
+                if (string.IsNullOrEmpty(sqlDeployState.ID) || !DeployStateExists(sqlDeployState.ID))
+                {
+                    if (string.IsNullOrEmpty(sqlDeployState.ID))
+                    {
+                        sqlDeployState.ID = Guid.NewGuid().ToString();
+                    }
+                    db.Insert("DeployState", "ID", false, sqlDeployState);
+                    foreach (var machine in sqlMachineList)
+                    {
+                        machine.ID = Guid.NewGuid().ToString();
+                        machine.DeployStateID = sqlDeployState.ID;
+                        db.Insert("DeployStateMachine", "ID", false, machine);
+                    }
+                }
+                else 
+                {
+                    db.Update("DeployState", "ID", sqlDeployState);
+                }
+            }
+            return sqlDeployState.ID;
+        }
+
         private void VerifyDeployStateExists(string deployStateId)
         {
             if(string.IsNullOrEmpty(deployStateId))
             {
                 throw new ArgumentNullException("Missing deploy state ID");
             }
-            using(var db = _sqlConnectionInfo.GetDB())
+            if(!DeployStateExists(deployStateId))
+            {
+                throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
+            }
+        }
+
+        private bool DeployStateExists(string deployStateId)
+        {
+            using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder.Append("SELECT COUNT(*) FROM DeployState WHERE ID=@0", deployStateId);
                 int count = db.ExecuteScalar<int>(sql);
-                if(count == 0)
-                {
-                    throw new RecordNotFoundException(typeof(DeployState), "Id", deployStateId);
-                }
+                return (count != 0);
             }
         }
 
@@ -403,10 +511,15 @@ namespace Sriracha.Deploy.SqlServer
                 DateTimeUtc = DateTime.UtcNow,
                 MessageUserName = _userIdentity.UserName
             };
+            return AddDeploymentMessage(deployStateId, deployStateMessage);
+        }
+
+        private DeployState AddDeploymentMessage(string deployStateId, DeployStateMessage deployStateMessage)
+        {
             var deployState = GetDeployState(deployStateId);
             deployState.MessageList.Add(deployStateMessage);
             var messageListJson = deployState.MessageList.ToJson();
-            using(var db = _sqlConnectionInfo.GetDB())
+            using (var db = _sqlConnectionInfo.GetDB())
             {
                 var sql = PetaPoco.Sql.Builder
                             .Append("UPDATE DeployState")
@@ -575,11 +688,42 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-
-
         public DeployState ImportDeployState(DeployState newDeployState)
         {
-            throw new NotImplementedException();
+            var existingItem = this.TryGetDeployState(newDeployState.ProjectId, newDeployState.Build.Id, newDeployState.Environment.Id, newDeployState.MachineList.First().Id, newDeployState.DeployBatchRequestItemId);
+            if(existingItem == null)
+            {
+                if(!string.IsNullOrEmpty(newDeployState.Id) && DeployStateExists(newDeployState.Id))
+                {
+                    newDeployState.Id = Guid.NewGuid().ToString();
+                }
+                var id = SaveDeployState(newDeployState);
+                return GetDeployState(id);
+            }
+            else 
+            {
+                existingItem.ErrorDetails = newDeployState.ErrorDetails;
+                existingItem.UpdatedByUserName = newDeployState.UpdatedByUserName;
+                existingItem.UpdatedDateTimeUtc = newDeployState.UpdatedDateTimeUtc;
+                existingItem.Status = newDeployState.Status;
+                if(newDeployState.MessageList != null)
+                {
+                    if(existingItem.MessageList == null)
+                    {
+                        existingItem.MessageList = new List<DeployStateMessage>();
+                    }
+                    foreach(var message in newDeployState.MessageList)
+                    {
+                        if(string.IsNullOrEmpty(message.Id) || !existingItem.MessageList.Any(i=>i.Id == message.Id))
+                        {
+                            existingItem.MessageList.Add(message);
+                        }
+                    }
+                }
+                var id = SaveDeployState(existingItem);
+                return GetDeployState(id);
+            }
         }
+
     }
 }
