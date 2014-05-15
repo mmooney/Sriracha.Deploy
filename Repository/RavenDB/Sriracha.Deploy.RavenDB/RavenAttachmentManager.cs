@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Raven.Client;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -62,7 +63,7 @@ namespace Sriracha.Deploy.RavenDB
             var attachment = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachment(attachmentId);
             if (attachment == null)
             {
-                throw new Exception("Attachment Not Found: " + attachmentId);
+                throw new RecordNotFoundException(typeof(byte[]), "attachmentId", attachmentId);
             }
             using (var memoryStream = new MemoryStream())
             {
@@ -76,7 +77,7 @@ namespace Sriracha.Deploy.RavenDB
             var attachment = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.GetAttachment(attachmentId);
             if (attachment == null)
             {
-                throw new Exception("Attachment Not Found: " + attachmentId);
+                throw new RecordNotFoundException(typeof(byte[]), "attachmentId", attachmentId);
             }
             return attachment.Data();
         }
@@ -89,7 +90,18 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void RemoveAttachment(string attachmentId)
 		{
+            if(!this.AttachmentExists(attachmentId))
+            {
+                throw new RecordNotFoundException(typeof(byte[]), "attachmentId", attachmentId);
+            }
 			this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.DeleteAttachment(attachmentId, null);
 		}
-	}
+
+
+        public bool AttachmentExists(string fileStorageId)
+        {
+            var data = this.DocumentSession.Advanced.DocumentStore.DatabaseCommands.HeadAttachment(fileStorageId);
+            return (data != null);
+        }
+    }
 }

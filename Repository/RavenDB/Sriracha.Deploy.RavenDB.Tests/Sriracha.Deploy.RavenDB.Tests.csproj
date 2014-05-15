@@ -103,6 +103,7 @@
     <Compile Include="Build\RavenBuildPurgeRuleRepositoryTests.cs" />
     <Compile Include="Build\RavenBuildRepositoryTests.cs" />
     <Compile Include="Build\RavenFileRepositoryTests.cs" />
+    <Compile Include="Build\RavenFileStorage_AttachmentTests.cs" />
     <Compile Include="Credentials\RavenCredentialsRepositoryTests.cs" />
     <Compile Include="Deploy\RavenDeployRepositoryTests.cs" />
     <Compile Include="Deploy\RavenDeployStateRepositoryTests.cs" />

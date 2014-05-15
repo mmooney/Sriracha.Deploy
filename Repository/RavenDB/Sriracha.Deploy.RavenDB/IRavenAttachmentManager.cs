@@ -15,5 +15,7 @@ namespace Sriracha.Deploy.RavenDB
 		void SetAttachment(string attachmentId, string attachmentData);
 		void SetAttachment(string attachmentId, Stream stream);
 		void RemoveAttachment(string attachmentId);
-	}
+
+        bool AttachmentExists(string fileStorageId);
+    }
 }

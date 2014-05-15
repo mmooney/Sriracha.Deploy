@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Build;
+using MMDB.Shared;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -19,22 +20,27 @@ namespace Sriracha.Deploy.RavenDB
 
 		public string StoreFile(byte[] fileData)
 		{
+            if(fileData == null || fileData.Length == 0)
+            {
+                throw new ArgumentNullException("fileData");
+            }
 			string attachmentId = Guid.NewGuid().ToString();
 			_ravenAttachmentManager.SetAttachment(attachmentId, fileData);
 			return attachmentId;
 		}
 
-        public string ReplaceFile(string fileStorageId, byte[] fileData)
-        {
-            string attachmentId = Guid.NewGuid().ToString();
-            _ravenAttachmentManager.SetAttachment(attachmentId, fileData);
-            _ravenAttachmentManager.RemoveAttachment(fileStorageId);
-            return attachmentId;
-        }
 
 		public void UpdateFile(string fileStorageId, byte[] fileData)
 		{
-			throw new NotImplementedException();
+            if(string.IsNullOrEmpty(fileStorageId))
+            {
+                throw new ArgumentNullException("fileStorageId");
+            }
+			if(!_ravenAttachmentManager.AttachmentExists(fileStorageId))
+            {
+                throw new RecordNotFoundException(typeof(byte[]), "fileStorageId", fileStorageId);
+            }
+            _ravenAttachmentManager.SetAttachment(fileStorageId, fileData);
 		}
 
 
