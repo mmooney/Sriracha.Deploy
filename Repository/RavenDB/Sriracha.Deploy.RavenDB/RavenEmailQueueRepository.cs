@@ -14,29 +14,55 @@ namespace Sriracha.Deploy.RavenDB
 	public class RavenEmailQueueRepository : IEmailQueueRepository
 	{
 		private readonly IDocumentSession _documentSession;
+        private readonly IUserIdentity _userIdentity;
 
-		public RavenEmailQueueRepository(IDocumentSession documentSession)
+		public RavenEmailQueueRepository(IDocumentSession documentSession, IUserIdentity userIdentity)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
+            _userIdentity = DIHelper.VerifyParameter(userIdentity);
 		}
 
-		public SrirachaEmailMessage CreateMessage(string subject, List<string> emailAddresseList, object dataObject, string razorView)
+		public SrirachaEmailMessage CreateMessage(string subject, List<string> emailAddressList, object dataObject, string razorView)
 		{
+            if(string.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentNullException("subject");
+            }
+            if(emailAddressList == null || emailAddressList.Count == 0)
+            {
+                throw new ArgumentNullException("emailAddressList");
+            }
+            if(dataObject == null)
+            {
+                throw new ArgumentNullException("dataObject");
+            }
+            if(string.IsNullOrEmpty(razorView))
+            {
+                throw new ArgumentNullException("razorView");
+            }
 			var email = new SrirachaEmailMessage
 			{
 				Id = Guid.NewGuid().ToString(),
-				EmailAddressList = emailAddresseList, 
+				EmailAddressList = emailAddressList, 
 				Subject = subject,
 				DataObject = dataObject,
 				RazorView = razorView,
 				QueueDateTimeUtc = DateTime.UtcNow,
-				Status = EnumEmailMessageStatus.New
+                Status = EnumQueueStatus.New,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow
 			};
 			_documentSession.Store(email);
 			_documentSession.SaveChanges();
 			return email;
 		}
 
+        public SrirachaEmailMessage GetMessage(string id)
+        {
+            return _documentSession.LoadEnsureNoCache<SrirachaEmailMessage>(id);
+        }
 
 		public SrirachaEmailMessage PopNextMessage()
 		{
@@ -44,16 +70,19 @@ namespace Sriracha.Deploy.RavenDB
 			using(var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel= IsolationLevel.Serializable}))
 			{
 				var nextSet = _documentSession.Query<SrirachaEmailMessage>()
-												.Where(i=>i.Status == EnumEmailMessageStatus.New)
+                                                .Where(i => i.Status == EnumQueueStatus.New)
 												.OrderBy(i=>i.QueueDateTimeUtc)
 												.Take(5);
 				foreach(var nextItem in nextSet)
 				{
 					//The index may be stale, try loading it directly to ensure that the status is accurate
 					var item = _documentSession.Load<SrirachaEmailMessage>(nextItem.Id);
-					if(item.Status == EnumEmailMessageStatus.New)
+                    if (item.Status == EnumQueueStatus.New)
 					{
-						item.Status = EnumEmailMessageStatus.InProcess;
+                        item.Status = EnumQueueStatus.InProcess;
+                        item.StartedDateTimeUtc = DateTime.UtcNow;
+                        item.UpdatedByUserName = _userIdentity.UserName;
+                        item.UpdatedDateTimeUtc = DateTime.UtcNow;
 						_documentSession.SaveChanges();
 						idToReturn = item.Id;
 						transaction.Complete();
@@ -71,7 +100,7 @@ namespace Sriracha.Deploy.RavenDB
 			}
 		}
 
-		public void UpdateMessageStatus(string emailMessageId, EnumEmailMessageStatus status)
+		public SrirachaEmailMessage UpdateMessageStatus(string emailMessageId, EnumQueueStatus status)
 		{
 			var item = _documentSession.Load<SrirachaEmailMessage>(emailMessageId);
 			if(item == null)
@@ -79,30 +108,43 @@ namespace Sriracha.Deploy.RavenDB
 				throw new RecordNotFoundException(typeof(SrirachaEmailMessage), "Id", emailMessageId);
 			}
 			item.Status = status;
-			_documentSession.SaveChanges();
+            item.UpdatedByUserName = _userIdentity.UserName;
+            item.UpdatedDateTimeUtc = DateTime.UtcNow;
+			return _documentSession.SaveEvict(item);
 		}
 
-		public void AddReceipientResult(string emailMessageId, EnumEmailMessageStatus status, string emailAddress, Exception err = null)
+        public SrirachaEmailMessage AddReceipientResult(string emailMessageId, EnumQueueStatus status, string emailAddress, Exception err = null)
 		{
-			var item = _documentSession.Load<SrirachaEmailMessage>(emailMessageId);
-			if (item == null)
-			{
-				throw new RecordNotFoundException(typeof(SrirachaEmailMessage), "Id", emailMessageId);
-			}
+            if (string.IsNullOrEmpty(emailAddress))
+            {
+                throw new ArgumentNullException("emailAddress");
+            }
+            var message = _documentSession.LoadEnsure<SrirachaEmailMessage>(emailMessageId);
+            if(message.EmailAddressList == null || !message.EmailAddressList.Contains(emailAddress))
+            {
+                throw new RecordNotFoundException(typeof(SrirachaEmailMessage), "EmailAddress", emailAddress);
+            }
 			var data = new SrirachaEmailMessage.SrirachaEmailMessageRecipientResult
 			{
 				Id = Guid.NewGuid().ToString(),
 				SrirachaEmailMessageId = emailMessageId,
-				EmailAddress = emailMessageId,
+				EmailAddress = emailAddress,
 				Status = status,
-				StatusDateTimeUtc = DateTime.UtcNow
+				StatusDateTimeUtc = DateTime.UtcNow,
+                CreatedByUserName = _userIdentity.UserName,
+                CreatedDateTimeUtc = DateTime.UtcNow,
+                UpdatedByUserName = _userIdentity.UserName,
+                UpdatedDateTimeUtc = DateTime.UtcNow
 			};
 			if(err != null)
 			{
 				data.Details = err.ToString();
 			}
-			item.RecipientResultList.Add(data);
-			_documentSession.SaveChanges();
+			message.RecipientResultList.Add(data);
+            message.UpdatedByUserName = _userIdentity.UserName;
+            message.UpdatedDateTimeUtc = DateTime.UtcNow;
+			return _documentSession.SaveEvict(message);
 		}
-	}
+
+    }
 }

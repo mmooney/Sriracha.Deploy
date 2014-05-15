@@ -28,22 +28,22 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 
 		public void MarkSucceeded(SrirachaEmailMessage emailMessage)
 		{
-			_emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumEmailMessageStatus.Success);
+            _emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumQueueStatus.Completed);
 		}
 
 		public void MarkFailed(SrirachaEmailMessage emailMessage)
 		{
-			_emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumEmailMessageStatus.Failed);
+            _emailQueueRepository.UpdateMessageStatus(emailMessage.Id, EnumQueueStatus.Error);
 		}
 
 		public void MarkReceipientSucceeded(SrirachaEmailMessage emailMessage, string emailAddress)
 		{
-			_emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumEmailMessageStatus.Failed, emailAddress);
+            _emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumQueueStatus.Error, emailAddress);
 		}
 
 		public void MarkReceipientFailed(SrirachaEmailMessage emailMessage, string emailAddress, Exception err)
 		{
-			_emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumEmailMessageStatus.Failed, emailAddress, err);
+            _emailQueueRepository.AddReceipientResult(emailMessage.Id, EnumQueueStatus.Error, emailAddress, err);
 		}
 	}
 }

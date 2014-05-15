@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using System;
@@ -128,6 +129,33 @@ namespace Sriracha.Deploy.Data.Tests.Repository
                     Assert.Contains(expectedItem, actualList);
                 }
             }
+        }
+
+        public static void AssertBaseDto(BaseDto expected, BaseDto actual)
+        {
+            Assert.AreEqual(expected.Id, actual.Id);
+            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
+            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
+            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
+            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
+        }
+
+        public static void AssertCreatedBaseDto(BaseDto actual, string userName)
+        {
+            Assert.IsNotNullOrEmpty(actual.Id);
+            AssertIsRecent(actual.CreatedDateTimeUtc);
+            Assert.AreEqual(userName, actual.CreatedByUserName);
+            AssertIsRecent(actual.UpdatedDateTimeUtc);
+            Assert.AreEqual(userName, actual.UpdatedByUserName);
+        }
+
+        public static void AssertUpdatedBaseDto(BaseDto original, BaseDto actual, string newUserName)
+        {
+            Assert.AreEqual(original.Id, actual.Id);
+            AssertDateEqual(original.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
+            Assert.AreEqual(original.CreatedByUserName, actual.CreatedByUserName);
+            AssertIsRecent(actual.UpdatedDateTimeUtc);
+            Assert.AreEqual(newUserName, actual.UpdatedByUserName);
         }
     }
 }

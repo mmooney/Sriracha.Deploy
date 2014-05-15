@@ -154,6 +154,7 @@
     <Compile Include="Dto\Account\SystemRole.cs" />
     <Compile Include="Dto\Account\SystemRoleAssignments.cs" />
     <Compile Include="Dto\Account\SystemRolePermissions.cs" />
+    <Compile Include="Dto\BaseDto.cs" />
     <Compile Include="Dto\Build\BuildPublishOptions.cs" />
     <Compile Include="Dto\BuildPurgeRules\BaseBuildPurgeRetentionRule.cs" />
     <Compile Include="Dto\BuildPurgeRules\BuildPurgeRule.cs" />
