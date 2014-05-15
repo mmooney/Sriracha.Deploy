@@ -54,9 +54,7 @@ namespace Sriracha.Deploy.RavenDB
                 UpdatedByUserName = _userIdentity.UserName,
                 UpdatedDateTimeUtc = DateTime.UtcNow
 			};
-			_documentSession.Store(email);
-			_documentSession.SaveChanges();
-			return email;
+            return _documentSession.StoreSaveEvict(email);
 		}
 
         public SrirachaEmailMessage GetMessage(string id)

@@ -24,7 +24,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
                 Assert.AreEqual(expected.Subject, actual.Subject);
                 AssertHelpers.AssertStringList(expected.EmailAddressList, actual.EmailAddressList);
                 Assert.AreEqual(expected.RazorView, actual.RazorView);
-                Assert.AreEqual(expected.DataObject, actual.DataObject);
+                Assert.AreEqual(expected.DataObject.ToJson(), actual.DataObject.ToJson());
                 Assert.AreEqual(EnumQueueStatus.New, actual.Status);
                 AssertIsRecent(actual.QueueDateTimeUtc);
                 Assert.IsNull(actual.StartedDateTimeUtc);
@@ -46,7 +46,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
                 Assert.AreEqual(expected.Subject, actual.Subject);
                 AssertHelpers.AssertStringList(expected.EmailAddressList, actual.EmailAddressList);
                 Assert.AreEqual(expected.RazorView, actual.RazorView);
-                //Assert.AreEqual(expected.DataObject, actual.DataObject);
+                Assert.AreEqual(expected.DataObject.ToJson(), actual.DataObject.ToJson());
                 Assert.AreEqual(EnumQueueStatus.New, actual.Status);
                 AssertDateEqual(expected.QueueDateTimeUtc, actual.QueueDateTimeUtc);
                 AssertDateEqual(expected.StartedDateTimeUtc, actual.StartedDateTimeUtc);
@@ -84,11 +84,25 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
             AssertHelpers.AssertBaseDto(expected, actual);
         }
 
+        private class TestObject
+        {
+            public int Propert1 { get; set; }
+            public string Property2 { get; set; }
+            public DateTime Property3 { get; set; }
+        }
+
+        private SrirachaEmailMessage CreateTestData()
+        {
+            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            data.DataObject = this.Fixture.Create<TestObject>();
+            return data;
+        }
+
         [Test]
         public void CreateMessage_CreatesMessage()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             var result = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
 
@@ -101,7 +115,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void CreateMessage_MissingSubject_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             Assert.Throws<ArgumentNullException>(()=>sut.CreateMessage(null, data.EmailAddressList, data.DataObject, data.RazorView));
         }
@@ -110,7 +124,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void CreateMessage_MissingEmailAddressList_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             Assert.Throws<ArgumentNullException>(() => sut.CreateMessage(data.Subject, null, data.DataObject, data.RazorView));
         }
@@ -119,7 +133,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void CreateMessage_EmptyEmailAddressList_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             Assert.Throws<ArgumentNullException>(() => sut.CreateMessage(data.Subject, new List<string>(), data.DataObject, data.RazorView));
         }
@@ -128,7 +142,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void CreateMessage_MissingDataObject_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             Assert.Throws<ArgumentNullException>(() => sut.CreateMessage(data.Subject, data.EmailAddressList, null, data.RazorView));
         }
@@ -138,7 +152,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void CreateMessage_MissingRazorView_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
 
             Assert.Throws<ArgumentNullException>(() => sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, null));
         }
@@ -147,7 +161,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void GetMessage_GetsMessage()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
 
             var result = sut.GetMessage(message.Id);
@@ -175,7 +189,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void PopNextMessage_PopsMessage()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var existingItem = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var newUserName = this.Fixture.Create<string>("UserName");
             this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
@@ -189,7 +203,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
             AssertIsRecent(result.UpdatedDateTimeUtc);
         }
 
-        [Test]
+        [Test, Explicit]
         public void PopNextBatchDeployment_NoDeployments_ReturnsNothing()
         {
             var sut = this.GetRepository();
@@ -203,7 +217,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void UpdateMessageStatus_UpdatesStatus()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var newStatus = this.Fixture.Create<EnumQueueStatus>();
             var newUserName = this.Fixture.Create<string>("UserName");
@@ -243,7 +257,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void AddReceipientResult_AddsReceipientResult()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var status = this.Fixture.Create<EnumQueueStatus>();
             var emailAddress = data.EmailAddressList.First();
@@ -255,7 +269,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Id, message.Id);
             AssertHelpers.AssertUpdatedBaseDto(message, result, newUserName);
-            Assert.AreEqual(message.RecipientResultList.Count, result.RecipientResultList.Count);
+            Assert.AreEqual(message.RecipientResultList.Count+1, result.RecipientResultList.Count);
             var item = result.RecipientResultList.FirstOrDefault(i=>i.EmailAddress == emailAddress);
             Assert.IsNotNull(item);
             Assert.IsNotNullOrEmpty(item.Id);
@@ -270,7 +284,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void AddReceipientResult_WithException_AddsReceipientResult_WithDetails()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var status = this.Fixture.Create<EnumQueueStatus>();
             var emailAddress = data.EmailAddressList.First();
@@ -283,7 +297,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Id, message.Id);
             AssertHelpers.AssertUpdatedBaseDto(message, result, newUserName);
-            Assert.AreEqual(message.RecipientResultList.Count, result.RecipientResultList.Count);
+            Assert.AreEqual(message.RecipientResultList.Count+1, result.RecipientResultList.Count);
             var item = result.RecipientResultList.FirstOrDefault(i => i.EmailAddress == emailAddress);
             Assert.IsNotNull(item);
             Assert.IsNotNullOrEmpty(item.Id);
@@ -318,7 +332,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void AddReceipientResult_MissingEmailAddress_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var status = this.Fixture.Create<EnumQueueStatus>();
             var emailAddress = this.Fixture.Create<string>("EmailAddress");
@@ -330,7 +344,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Email
         public void AddReceipientResult_BadEmailAddress_ThrowsRecordNotFoundException()
         {
             var sut = this.GetRepository();
-            var data = this.Fixture.Create<SrirachaEmailMessage>();
+            var data = CreateTestData();
             var message = sut.CreateMessage(data.Subject, data.EmailAddressList, data.DataObject, data.RazorView);
             var status = this.Fixture.Create<EnumQueueStatus>();
             var emailAddress = this.Fixture.Create<string>("EmailAddress");

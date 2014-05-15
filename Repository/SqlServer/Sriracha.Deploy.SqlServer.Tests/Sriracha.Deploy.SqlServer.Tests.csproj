@@ -91,6 +91,7 @@
     <Compile Include="Credentials\SqlServerCredentialsRepositoryTests.cs" />
     <Compile Include="Deploy\SqlServerDeployRepositoryTests.cs" />
     <Compile Include="Deploy\SqlServerDeployStateRepositoryTests.cs" />
+    <Compile Include="Email\SqlServerEmailQueueRepositoryTests.cs" />
     <Compile Include="EmbeddedSqlServerProvider.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryBranchTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryEnvironmentTests.cs" />

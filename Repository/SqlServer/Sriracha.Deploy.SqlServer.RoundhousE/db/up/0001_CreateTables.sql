@@ -933,8 +933,39 @@ ALTER TABLE dbo.DeployBatchRequest ADD CONSTRAINT
 GO
 
 
+CREATE TABLE [dbo].[SrirachaEmailMessage](
+	[ID] [nvarchar](50) NOT NULL,
+	[Subject] [nvarchar](200) NOT NULL,
+	[DataObjectJson] [ntext] NULL,
+	[RazorView] [ntext] NULL,
+	[EnumQueueStatusID] [int] NOT NULL,
+	[StartedDateTimeUtc] [datetime2](7) NULL,
+	[QueueDateTimeUtc] [datetime2](7) NULL,
+	[EmailAddressListJson] [ntext] NULL,
+	[RecipientResultListJson] [ntext] NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_SrirachaEmailMessage] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[SrirachaEmailMessage] ADD  CONSTRAINT [DF_SrirachaEmailMessage_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[SrirachaEmailMessage] ADD  CONSTRAINT [DF_SrirachaEmailMessage_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
 
 
---Pending Indexes
-/*
-*/
+ALTER TABLE dbo.SrirachaEmailMessage ADD CONSTRAINT
+	FK_SrirachaEmailMessage_EnumQueueStatus FOREIGN KEY
+	(EnumQueueStatusID	) REFERENCES dbo.EnumQueueStatus
+	(ID) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
