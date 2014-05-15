@@ -969,3 +969,28 @@ ALTER TABLE dbo.SrirachaEmailMessage ADD CONSTRAINT
 	 ON DELETE  NO ACTION 
 	
 GO
+
+CREATE TABLE [dbo].[DeployFile](
+	[ID] [nvarchar](50) NOT NULL,
+	[FileName] [nvarchar](200) NOT NULL,
+	[FileStorageID] [nvarchar](50) NOT NULL,
+	[FileManifestJson] [ntext] NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_DeployFile] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[DeployFile] ADD  CONSTRAINT [DF_DeployFile_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployFile] ADD  CONSTRAINT [DF_DeployFile_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+

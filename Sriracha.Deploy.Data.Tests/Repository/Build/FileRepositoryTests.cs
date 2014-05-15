@@ -161,7 +161,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
             var data = CreateTestData();
 
             var result = testData.Sut.CreateFile(data.FileName, data.FileData, data.Manifest);
-
+            
             Assert.IsNotNull(result);
             this.FileStorage.Verify(i=>i.StoreFile(data.FileData), Times.Once());
             AssertCreatedFile(data, result);
@@ -401,7 +401,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Build
         {
             var testData = TestData.Create(this);
 
-            Assert.Throws<ArgumentException>(()=>testData.Sut.GetFileDataStream(null));
+            Assert.Throws<ArgumentNullException>(()=>testData.Sut.GetFileDataStream(null));
         }
 
         [Test]
