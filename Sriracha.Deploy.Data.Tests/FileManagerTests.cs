@@ -44,7 +44,7 @@ namespace Sriracha.Deploy.Data.Tests
                 public void ReturnsFileList()
                 {
                     var testData = TestData.Create();
-                    var fileList = testData.Fixture.CreateMany<DeployFile>();
+                    var fileList = testData.Fixture.CreateMany<DeployFile>().ToList();
                     testData.FileRepository.Setup(i=>i.GetFileList()).Returns(fileList);
 
                     var result = testData.Sut.GetFileList();

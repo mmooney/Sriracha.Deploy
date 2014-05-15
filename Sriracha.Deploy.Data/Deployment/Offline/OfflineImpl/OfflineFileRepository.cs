@@ -18,7 +18,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             _offlineDataProvider = offlineDataProvider;
         }
 
-        public IEnumerable<DeployFile> GetFileList()
+        public List<DeployFile> GetFileList()
         {
             throw new NotSupportedException();
         }
@@ -38,7 +38,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             throw new NotSupportedException();
         }
 
-        public void DeleteFile(string fileId)
+        public DeployFile DeleteFile(string fileId)
         {
             throw new NotSupportedException();
         }

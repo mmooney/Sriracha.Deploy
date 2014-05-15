@@ -29,9 +29,9 @@ namespace Sriracha.Deploy.RavenDB
 			_logger = DIHelper.VerifyParameter(logger);
 		}
 
-		public IEnumerable<DeployFile> GetFileList()
+		public List<DeployFile> GetFileList()
 		{
-			return _documentSession.Query<DeployFile>();
+			return _documentSession.QueryNoCache<DeployFile>().ToList();
 		}
 
 		public DeployFile CreateFile(string fileName, byte[] fileData, FileManifest fileManifest)
@@ -56,65 +56,51 @@ namespace Sriracha.Deploy.RavenDB
 				UpdatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName
 			};
-			this._documentSession.Store(file);
-			this._documentSession.SaveChanges();
-			return file;
+            return _documentSession.StoreSaveEvict(file);
 		}
 
 		public DeployFile GetFile(string fileId)
 		{
-			if(string.IsNullOrEmpty(fileId))
-			{
-				throw new ArgumentNullException("Missing file ID");
-			}
-			var file = this._documentSession.Load<DeployFile>(fileId);
-			if(file == null)
-			{
-				throw new RecordNotFoundException(typeof(DeployFile), "Id", fileId);
-			}
-			return file;
+            return _documentSession.LoadEnsureNoCache<DeployFile>(fileId);
 		}
 
 		public DeployFile UpdateFile(string fileId, string fileName, byte[] fileData, FileManifest fileManifest)
 		{
-			if (string.IsNullOrEmpty(fileName))
-			{
-				throw new ArgumentNullException("Missing file name");
-			}
-			if (fileData == null || fileData.Length == 0)
-			{
-				throw new ArgumentNullException("Missing file data");
-			}
-			var file = this.GetFile(fileId);
+            if(string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentNullException("fileName");
+            }
+            if(fileData == null || fileData.Length == 0)
+            {
+                throw new ArgumentNullException("fileData");
+            }
+            var file = _documentSession.LoadEnsure<DeployFile>(fileId);
 			file.FileName = fileName;
 			file.UpdatedDateTimeUtc = DateTime.UtcNow;
 			file.UpdatedByUserName = _userIdentity.UserName;
             file.Manifest = fileManifest;
-			this._documentSession.SaveChanges();
-
-			_fileStorage.UpdateFile(file.FileStorageId, fileData);
-			return file;
+            _fileStorage.UpdateFile(file.FileStorageId, fileData);
+            return this._documentSession.SaveEvict(file);
 		}
 
-		public void DeleteFile(string fileId)
+		public DeployFile DeleteFile(string fileId)
 		{
 			_logger.Info("User {0} deleting file {1}", _userIdentity.UserName, fileId);
-			var file = this.GetFile(fileId);
-			this._documentSession.Delete(file);
-			this._fileStorage.DeleteFile(file.FileStorageId);
-			this._documentSession.SaveChanges();
+			var file = _documentSession.LoadEnsure<DeployFile>(fileId);
+            this._fileStorage.DeleteFile(file.FileStorageId);
+            return _documentSession.DeleteSaveEvict(file);
 		}
 
 
         public byte[] GetFileData(string fileId)
         {
-            var file = this.GetFile(fileId);
+            var file = _documentSession.LoadEnsureNoCache<DeployFile>(fileId);
             return _fileStorage.GetFile(file.FileStorageId);
         }
 
         public Stream GetFileDataStream(string fileId)
         {
-            var file = this.GetFile(fileId);
+            var file = _documentSession.LoadEnsureNoCache<DeployFile>(fileId);
             return _fileStorage.GetFileStream(file.FileStorageId);
         }
     }

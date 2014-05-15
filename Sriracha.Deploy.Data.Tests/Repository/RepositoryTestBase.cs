@@ -29,6 +29,13 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         protected abstract T GetRepository();
 
+        protected string CreateNewUserName()
+        {
+            this.UserName = this.Fixture.Create<string>("UserName");
+            this.UserIdentity.Setup(i => i.UserName).Returns(this.UserName);
+            return this.UserName;
+        }
+
         protected void AssertIsRecent(DateTime? dateTime)
         {
             AssertHelpers.AssertIsRecent(dateTime);

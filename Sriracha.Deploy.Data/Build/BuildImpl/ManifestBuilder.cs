@@ -41,9 +41,9 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
                                 Directory = directory,
                                 FileSizeBytes = entry.UncompressedSize,
                                 Attributes = entry.Attributes,
-                                AccessedDateTime = entry.AccessedTime,
-                                CreatedDateTime = entry.CreationTime,
-                                ModifiedDateTime = entry.ModifiedTime
+                                FileAccessedDateTime = entry.AccessedTime,
+                                FileCreatedDateTime = entry.CreationTime,
+                                FileModifiedDateTime = entry.ModifiedTime
                             };
                             returnValue.ItemList.Add(item);
                         }

@@ -62,5 +62,11 @@ namespace Sriracha.Deploy.RavenDB
         {
             throw new NotImplementedException();
         }
+
+
+        public string ReplaceFile(string fileStorageId, byte[] fileData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

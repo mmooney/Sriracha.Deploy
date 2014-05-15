@@ -24,6 +24,14 @@ namespace Sriracha.Deploy.RavenDB
 			return attachmentId;
 		}
 
+        public string ReplaceFile(string fileStorageId, byte[] fileData)
+        {
+            string attachmentId = Guid.NewGuid().ToString();
+            _ravenAttachmentManager.SetAttachment(attachmentId, fileData);
+            _ravenAttachmentManager.RemoveAttachment(fileStorageId);
+            return attachmentId;
+        }
+
 		public void UpdateFile(string fileStorageId, byte[] fileData)
 		{
 			throw new NotImplementedException();

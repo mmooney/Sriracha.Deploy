@@ -69,9 +69,9 @@ namespace Sriracha.Deploy.Data.Tests
             {
                 var entry = result.ItemList.SingleOrDefault(i=>i.FileName == data.FileName && i.Directory == data.Directory);
                 Assert.IsNotNull(entry);
-                Assert.AreEqual(data.AccessDateTime.ToUniversalTime(), entry.AccessedDateTime.ToUniversalTime());
-                Assert.AreEqual(data.ModifiedDateTime.ToUniversalTime(), entry.ModifiedDateTime.ToUniversalTime());
-                Assert.AreEqual(data.CreatedDateTime.ToUniversalTime(), entry.CreatedDateTime.ToUniversalTime());
+                Assert.AreEqual(data.AccessDateTime.ToUniversalTime(), entry.FileAccessedDateTime.ToUniversalTime());
+                Assert.AreEqual(data.ModifiedDateTime.ToUniversalTime(), entry.FileModifiedDateTime.ToUniversalTime());
+                Assert.AreEqual(data.CreatedDateTime.ToUniversalTime(), entry.FileCreatedDateTime.ToUniversalTime());
                 Assert.AreEqual(data.FileAttributes, entry.Attributes);
             }
         }
