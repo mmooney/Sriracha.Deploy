@@ -904,7 +904,7 @@ CREATE TABLE [dbo].[DeployBatchRequest](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_DeployBatchRequest] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_DeployBatchRequest] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -947,7 +947,7 @@ CREATE TABLE [dbo].[SrirachaEmailMessage](
 	[CreatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK_SrirachaEmailMessage] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_SrirachaEmailMessage] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -979,7 +979,7 @@ CREATE TABLE [dbo].[DeployFile](
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[UpdatedByUserName] [nvarchar](50) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployFile] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_DeployFile] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
@@ -994,3 +994,11 @@ ALTER TABLE [dbo].[DeployFile] ADD  CONSTRAINT [DF_DeployFile_UpdatedDateTimeUtc
 GO
 
 
+CREATE TABLE [dbo].[DeployFileStorage](
+	[ID] [nvarchar](50) NOT NULL,
+	[FileData] [varbinary](max) NOT NULL,
+ CONSTRAINT [PK_DeployFileStorage] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)

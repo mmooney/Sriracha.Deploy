@@ -73,6 +73,7 @@
     <Compile Include="SqlServerDeployStateRepository.cs" />
     <Compile Include="SqlServerEmailQueueRepository.cs" />
     <Compile Include="SqlServerFileRepository.cs" />
+    <Compile Include="SqlServerFileStorage.cs" />
     <Compile Include="SqlServerProjectRepository.cs" />
   </ItemGroup>
   <ItemGroup>

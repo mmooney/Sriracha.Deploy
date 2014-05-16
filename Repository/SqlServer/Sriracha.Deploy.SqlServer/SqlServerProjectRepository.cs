@@ -1697,14 +1697,14 @@ namespace Sriracha.Deploy.SqlServer
             }
         }
 
-        public DeployMachine GetMachine(string machineId)
-        {
-            throw new NotImplementedException();
-        }
+        //public DeployMachine GetMachine(string machineId)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configurationList)
-        {
-            throw new NotImplementedException();
-        }
+        //public DeployMachine UpdateMachine(string machineId, string projectId, string environmentId, string enviromentComponentId, string machineName, Dictionary<string, string> configurationList)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
