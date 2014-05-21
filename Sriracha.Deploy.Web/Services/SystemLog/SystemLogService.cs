@@ -20,27 +20,7 @@ namespace Sriracha.Deploy.Web.Services.SystemLog
 
 		public object Get(SystemLogRequest request)
 		{
-			int pageSize = request.PageSize.GetValueOrDefault(50);
-			int pageNumber = request.PageNumber.GetValueOrDefault(1);
-			var sortField = request.SortField.GetValueOrDefault(EnumSystemLogSortField.MessageDate);
-			bool sortAscending;
-			if(!request.SortAscending.HasValue)
-			{
-				if(sortField == EnumSystemLogSortField.MessageDate)
-				{
-					sortAscending = false;
-				}
-				else 
-				{
-					sortAscending = true;
-				}
-			}
-			else 
-			{
-				sortAscending = request.SortAscending.Value;
-			}
-			var pagedList = _systemLogRepository.GetList(pageSize, pageNumber, sortField, sortAscending);
-			return new PagedSortedList<Sriracha.Deploy.Data.Dto.SystemLog>(pagedList, sortField.ToString(), sortAscending);
+			return _systemLogRepository.GetList(request.BuildListOptions());
 		}
 
 	}

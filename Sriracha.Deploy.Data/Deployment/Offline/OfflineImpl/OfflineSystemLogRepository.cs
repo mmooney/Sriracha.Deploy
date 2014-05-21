@@ -17,6 +17,11 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             _offlineDataProvider = DIHelper.VerifyParameter(offlineDataProvider);
         }
 
+        public SystemLog GetMessage(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         public SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message, string loggerName)
         {
             string formattedMessage = String.Format("{0} {1} {2}: {3}", logType, messageDateTime, userName, message);
@@ -24,14 +29,16 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             return null;
         }
 
-        public void PurgeLogMessages(DateTime utcNow, Dto.EnumSystemLogType systemLogType, int? ageMinutes)
+        public void PurgeLogMessages(DateTime utcNow, EnumSystemLogType systemLogType, int? ageMinutes)
         {
             throw new NotSupportedException();
         }
 
-        public IPagedList<Dto.SystemLog> GetList(int pageSize, int pageNumber, EnumSystemLogSortField sortField, bool sortAscending)
+        public PagedSortedList<SystemLog> GetList(ListOptions listOptions, List<EnumSystemLogType> systemLogTypeList = null)
         {
             throw new NotSupportedException();
         }
+
+
     }
 }

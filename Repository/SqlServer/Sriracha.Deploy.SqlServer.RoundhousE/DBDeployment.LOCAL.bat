@@ -11,6 +11,6 @@ REM SET version.xpath="//buildInfo/version"
 REM SET environment="${environment}"
 
 REM "%DIR%Console\rh.exe" /d=%database.name% /f=%sql.files.directory% /s=%server.database% /vf=%version.file% /vx=%version.xpath% /r=%repository.path% /env=%environment% /simple
-"..\packages\roundhouse.0.8.6\bin\rh.exe" /d=%database.name% /f=%sql.files.directory% /s=%server.database% /simple
+"..\..\..\packages\roundhouse.0.8.6\bin\rh.exe" /d=%database.name% /f=%sql.files.directory% /s=%server.database% /simple
 
 pause

@@ -20,7 +20,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				var documentStore = new DocumentStore()
 				{
-					ConnectionStringName = "RavenDB",
+                    ConnectionStringName = "SrirachaRavenDB",
 					Conventions = new DocumentConvention
 					{
 						DefaultQueryingConsistency = ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite,
@@ -37,10 +37,10 @@ namespace Sriracha.Deploy.RavenDB
 			}
 			catch(Exception err)
 			{
-				var connStrObject = ConfigurationManager.ConnectionStrings["RavenDB"];
+                var connStrObject = ConfigurationManager.ConnectionStrings["SrirachaRavenDB"];
 				if(connStrObject == null || string.IsNullOrWhiteSpace(connStrObject.ConnectionString))
 				{
-					throw new Exception("Error initializing RavenDB DocumentStore, ConnectionString RavenDB is missing", err);
+                    throw new Exception("Error initializing RavenDB DocumentStore, ConnectionString SrirachaRavenDB is missing", err);
 				}
 				else 
 				{

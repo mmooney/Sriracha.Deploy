@@ -6,11 +6,7 @@ using Sriracha.Deploy.Data.Dto;
 
 namespace Sriracha.Deploy.Web.Services.SystemLog
 {
-	public class SystemLogRequest
+	public class SystemLogRequest : RequestBase<Data.Dto.SystemLog>
 	{
-		public int? PageSize { get; set; }
-		public int? PageNumber { get; set; }
-		public EnumSystemLogSortField? SortField { get; set; }
-		public bool? SortAscending { get; set; }
 	}
 }

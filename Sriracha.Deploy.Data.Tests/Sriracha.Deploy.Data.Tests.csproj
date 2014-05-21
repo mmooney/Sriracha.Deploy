@@ -113,6 +113,7 @@
     <Compile Include="Repository\Project\ProjectRepositoryBranchTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryProjectTests.cs" />
     <Compile Include="Repository\RepositoryTestBase.cs" />
+    <Compile Include="Repository\SystemLogRepositoryTests.cs" />
     <Compile Include="SystemSetterUpperTests.cs" />
     <Compile Include="TaskManagerTests.cs" />
     <Compile Include="TempTestDataHelper.cs" />

@@ -11,8 +11,12 @@ namespace Sriracha.Deploy.Data.Repository
 	{
 		SystemLog LogMessage(EnumSystemLogType logType, string userName, DateTime messageDateTime, string message, string loggerName);
 
-		void PurgeLogMessages(DateTime utcNow, EnumSystemLogType systemLogType, int? ageMinutes);
+        SystemLog GetMessage(string id);
 
-		IPagedList<SystemLog> GetList(int pageSize, int pageNumber, EnumSystemLogSortField sortField, bool sortAscending);
-	}
+        PagedSortedList<SystemLog> GetList(ListOptions listOptions = null, List<EnumSystemLogType> systemLogTypeList=null);
+
+        void PurgeLogMessages(DateTime utcNow, EnumSystemLogType systemLogType, int? ageMinutes);
+
+
+    }
 }

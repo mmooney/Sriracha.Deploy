@@ -158,7 +158,8 @@ namespace Sriracha.Deploy.AutofacModules
 
 			if(_diMode != EnumDIMode.CommandLine && _diMode != EnumDIMode.Offline)
 			{
-                this.RegisterRepositories(builder, "Sriracha.Deploy.RavenDB");
+                string repositoryAssemblyName = AppSettingsHelper.GetRequiredSetting("RepositoryAssemblyName");
+                this.RegisterRepositories(builder, repositoryAssemblyName);
 			}
             if(_diMode == EnumDIMode.Offline)
             {
@@ -193,7 +194,7 @@ namespace Sriracha.Deploy.AutofacModules
 
         private void RegisterRepositories(ContainerBuilder builder, string assemblyName)
         {
-            var assembly = Assembly.Load(assemblyName);
+            var assembly = Assembly.Load(assemblyName.Replace(".dll", ""));
             var typeList = assembly.GetTypes()
                             .Where(p => typeof(ISrirachaRepositoryRegistar).IsAssignableFrom(p)
                                     && p.IsClass).ToList();

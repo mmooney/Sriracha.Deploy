@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
@@ -75,12 +81,22 @@
     <Compile Include="SqlServerFileRepository.cs" />
     <Compile Include="SqlServerFileStorage.cs" />
     <Compile Include="SqlServerProjectRepository.cs" />
+    <Compile Include="SqlServerRepositoryRegistar.cs" />
+    <Compile Include="SqlServerSystemLogRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
+      <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
+      <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Sriracha.Deploy.AutofacModules\Sriracha.Deploy.AutofacModules.csproj">
+      <Project>{e525bf79-5e09-484c-9bcb-0c32e83b0f11}</Project>
+      <Name>Sriracha.Deploy.AutofacModules</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Sriracha.Deploy.Data\Sriracha.Deploy.Data.csproj">
       <Project>{125a2a7c-56c3-42ae-86df-fd88a85be0e1}</Project>
       <Name>Sriracha.Deploy.Data</Name>
