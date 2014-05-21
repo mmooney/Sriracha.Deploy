@@ -121,7 +121,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
                 messageList.Add(message);
             }
 
-            sut.PurgeLogMessages(DateTime.UtcNow, EnumSystemLogType.Debug, 0);
+            sut.PurgeLogMessages(DateTime.UtcNow, EnumSystemLogType.Debug, -10);
             var result = sut.GetList(null, new List<EnumSystemLogType> { EnumSystemLogType.Debug });
 
             Assert.IsNotNull(result);

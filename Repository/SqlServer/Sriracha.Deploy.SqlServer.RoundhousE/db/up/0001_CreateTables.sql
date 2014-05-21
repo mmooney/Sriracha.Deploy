@@ -1002,3 +1002,84 @@ CREATE TABLE [dbo].[DeployFileStorage](
 	[ID] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
+GO
+CREATE TABLE [dbo].[EnumSystemLogType](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumSystemLogType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumSystemLogType] ADD  CONSTRAINT [DF_EnumSystemLogType_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumSystemLogType] ADD  CONSTRAINT [DF_EnumSystemLogType_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE dbo.EnumSystemLogType ADD CONSTRAINT IX_EnumSystemLogType UNIQUE NONCLUSTERED (TypeName) 
+    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (0, 'Trace', 'Trace', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (1, 'Debug', 'Debug', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (2, 'Info', 'Info', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (3, 'Warn', 'Warn', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (4, 'Error', 'Error', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (5, 'Fatal', 'Fatal', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemLogType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (6, 'Off', 'Off', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+
+GO
+
+CREATE TABLE [dbo].[SystemLog](
+	[ID] [nvarchar](50) NOT NULL,
+	[MessageText] [nvarchar](max) NOT NULL,
+	[EnumSystemLogTypeID] [int] NOT NULL,
+	[UserName] [nvarchar](50) NOT NULL,
+	[MessageDateTimeUtc] [datetime2](7) NOT NULL,
+	[LoggerName] [nvarchar](50) NULL,
+ CONSTRAINT [PK_SystemLog] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_SystemLog_EnumSystemLogTypeID] ON [dbo].[SystemLog]
+(
+	[EnumSystemLogTypeID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_SystemLog_MessageDateTimeUtc] ON [dbo].[SystemLog]
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+ALTER TABLE [dbo].[SystemLog] ADD  CONSTRAINT [DF_SystemLog_ID]  DEFAULT (newid()) FOR [ID]
+GO
+
+ALTER TABLE [dbo].[SystemLog]  WITH CHECK ADD  CONSTRAINT [FK_SystemLog_EnumSystemLogType] FOREIGN KEY([EnumSystemLogTypeID])
+REFERENCES [dbo].[EnumSystemLogType] ([ID])
+GO
+
+ALTER TABLE [dbo].[SystemLog] CHECK CONSTRAINT [FK_SystemLog_EnumSystemLogType]
+GO
+
+
