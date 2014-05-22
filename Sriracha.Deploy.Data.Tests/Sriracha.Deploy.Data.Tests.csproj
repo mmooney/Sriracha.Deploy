@@ -113,6 +113,7 @@
     <Compile Include="RegexResolverTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryBranchTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryProjectTests.cs" />
+    <Compile Include="Repository\RazorTemplateRepositoryTests.cs" />
     <Compile Include="Repository\RepositoryTestBase.cs" />
     <Compile Include="Repository\SystemLogRepositoryTests.cs" />
     <Compile Include="Repository\SystemSettingsRepositoryTests.cs" />

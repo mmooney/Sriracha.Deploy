@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Dto
 {
-	public class RazorTemplate
+	public class RazorTemplate : BaseDto
 	{
-		public string Id { get; set; }
 		public string ViewName { get; set; }
 		public string ViewData { get; set; }
 	}

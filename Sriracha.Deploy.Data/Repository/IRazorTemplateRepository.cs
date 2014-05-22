@@ -8,6 +8,8 @@ namespace Sriracha.Deploy.Data.Repository
 {
 	public interface IRazorTemplateRepository
 	{
-		RazorTemplate GetTemplate(string viewName, string defaultViewData);
-	}
+        RazorTemplate GetTemplate(string viewName, string defaultViewData);
+        RazorTemplate SaveTemplate(string viewName, string viewData);
+        RazorTemplate DeleteTemplate(string viewName);
+    }
 }
