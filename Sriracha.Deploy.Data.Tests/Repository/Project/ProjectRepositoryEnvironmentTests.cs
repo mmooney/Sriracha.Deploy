@@ -20,10 +20,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             Assert.IsNotNullOrEmpty(result.Id);
             Assert.AreEqual(project.Id, result.ProjectId);
             Assert.AreEqual(environmentName, result.EnvironmentName);
-            AssertIsRecent(result.CreatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.CreatedByUserName);
-            AssertIsRecent(result.UpdatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.UpdatedByUserName);
+            AssertHelpers.AssertCreatedBaseDto(result, this.UserName);
             
             environmentComponentList = environmentComponentList ?? new List<DeployEnvironmentConfiguration>();
             Assert.AreEqual(environmentComponentList.Count(), result.ComponentList.Count);
@@ -52,13 +49,9 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         private void AssertEnvironment(DeployEnvironment expected, DeployEnvironment actual)
         {
             Assert.IsNotNull(actual);
-            Assert.IsNotNullOrEmpty(actual.Id);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             Assert.AreEqual(expected.EnvironmentName, actual.EnvironmentName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
+            AssertHelpers.AssertBaseDto(expected, actual);
             
             AssertEnvironmentConfigurationList(expected.ComponentList, actual.ComponentList);
             AssertEnvironmentConfigurationList(expected.ConfigurationList, actual.ConfigurationList);
@@ -79,15 +72,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         private void AssertEnvironmentConfiguration(DeployEnvironmentConfiguration expected, DeployEnvironmentConfiguration actual)
         {
             Assert.IsNotNull(actual);
-            Assert.AreEqual(expected.Id, actual.Id);
+            AssertHelpers.AssertBaseDto(expected, actual);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             Assert.AreEqual(expected.ParentId, actual.ParentId);
             Assert.AreEqual(expected.ParentType, actual.ParentType);
             Assert.AreEqual(expected.DeployCredentialsId, actual.DeployCredentialsId);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
             AssertHelpers.AssertDictionary(expected.ConfigurationValueList, actual.ConfigurationValueList);
             Assert.AreEqual(expected.MachineList.Count, actual.MachineList.Count);
             AssertHelpers.AssertMachineList(expected.MachineList, actual.MachineList);
@@ -96,15 +85,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         private void AssertCreatedEnvironmentConfiguration(DeployEnvironmentConfiguration sourceItem, DeployEnvironmentConfiguration createdItem, DeployProject project, DeployEnvironment environment, EnumDeployStepParentType parentType)
         {
             Assert.IsNotNull(createdItem);
-            Assert.IsNotNullOrEmpty(createdItem.Id);
+            AssertHelpers.AssertCreatedBaseDto(createdItem, this.UserName);
             Assert.AreEqual(project.Id, createdItem.ProjectId);
             Assert.AreEqual(sourceItem.ParentId, createdItem.ParentId);
             Assert.AreEqual(parentType, createdItem.ParentType);
             Assert.AreEqual(sourceItem.DeployCredentialsId, createdItem.DeployCredentialsId);
-            Assert.AreEqual(this.UserName, createdItem.CreatedByUserName);
-            AssertIsRecent(createdItem.CreatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, createdItem.UpdatedByUserName);
-            AssertIsRecent(createdItem.UpdatedDateTimeUtc);
 
             AssertHelpers.AssertDictionary(sourceItem.ConfigurationValueList, createdItem.ConfigurationValueList);
             Assert.AreEqual(sourceItem.MachineList.Count, createdItem.MachineList.Count);
@@ -112,15 +97,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             {
                 var createdMachine = createdItem.MachineList.SingleOrDefault(i=>i.MachineName == sourceMachine.MachineName);
                 Assert.IsNotNull(createdMachine);
-                Assert.IsNotNullOrEmpty(createdMachine.Id);
+                AssertHelpers.AssertCreatedBaseDto(createdMachine, this.UserName);
                 Assert.AreEqual(project.Id, createdMachine.ProjectId);
                 Assert.AreEqual(environment.Id, createdMachine.EnvironmentId);
                 Assert.AreEqual(environment.EnvironmentName, createdMachine.EnvironmentName);
                 Assert.AreEqual(sourceItem.Id, createdMachine.ParentId);
-                Assert.AreEqual(this.UserName, createdMachine.CreatedByUserName);
-                AssertIsRecent(createdMachine.CreatedDateTimeUtc);
-                Assert.AreEqual(this.UserName, createdMachine.UpdatedByUserName);
-                AssertIsRecent(createdMachine.UpdatedDateTimeUtc);
                 AssertHelpers.AssertDictionary(sourceMachine.ConfigurationValueList, createdMachine.ConfigurationValueList);
             }
         }

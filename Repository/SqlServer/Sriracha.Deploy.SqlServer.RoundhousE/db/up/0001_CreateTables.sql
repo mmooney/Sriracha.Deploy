@@ -35,9 +35,9 @@ CREATE TABLE [dbo].[DeployBranch](
 	[ID] [nvarchar](50) NOT NULL,
 	[DeployProjectID] [nvarchar](50) NOT NULL,
 	[BranchName] [nvarchar](200) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployBranch] PRIMARY KEY NONCLUSTERED
 (
@@ -76,9 +76,9 @@ CREATE TABLE [dbo].[EnumDeploymentIsolationType](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_EnumDeploymentIsolationType] PRIMARY KEY CLUSTERED 
 (
@@ -113,9 +113,9 @@ CREATE TABLE [dbo].[DeployConfiguration](
 	[ConfigurationName] [nvarchar](200) NOT NULL,
 	[EnumDeploymentIsolationTypeID] [int] NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployConfiguration] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -164,9 +164,9 @@ CREATE TABLE [dbo].[DeployComponent](
 	[DeployConfigurationID] [nvarchar](50) NULL,
 	[EnumDeploymentIsolationTypeID] [int] NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployComponent] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -223,9 +223,9 @@ CREATE TABLE [dbo].[DeployComponentStep](
     [OrderNumber] [int] NOT NULL,
 	[SharedDeploymentStepID] [nvarchar](50) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployComponentStep] PRIMARY KEY NONCLUSTERED  
 (
 	[ID] ASC
@@ -273,9 +273,9 @@ CREATE TABLE [dbo].[DeployConfigurationStep](
 	[TaskOptionsJson] [nvarchar](max) NULL,
     [OrderNumber] [int] NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployConfigurationStep] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -314,9 +314,9 @@ CREATE TABLE [dbo].[DeployEnvironment](
 	[DeployProjectID] [nvarchar](50) NOT NULL,
 	[EnvironmentName] [nvarchar](200) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_Environment] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -356,9 +356,9 @@ CREATE TABLE [dbo].[EnumDeployStepParentType](
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_EnumDeployStepParentType] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -388,9 +388,9 @@ CREATE TABLE [dbo].[DeployEnvironmentConfiguration](
 	[EnumDeployStepParentTypeID] [int] NOT NULL,
 	[DeployCredentialsId] [nvarchar](50) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployEnvironmentConfiguration] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -441,9 +441,9 @@ CREATE TABLE [dbo].[DeployMachine](
 	[DeployEnvironmentConfigurationID] [nvarchar](50) NOT NULL,
 	[MachineName] [nvarchar](200) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployMachine] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -480,9 +480,9 @@ CREATE TABLE [dbo].[DeployMachineConfigurationValue](
 	[DeployMachineID] [nvarchar](50) NOT NULL,
 	[ConfigurationName] [nvarchar](200) NOT NULL,
 	[ConfigurationValue] [nvarchar](500) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployMachineConfigurationValue] PRIMARY KEY NONCLUSTERED
 (
@@ -520,9 +520,9 @@ CREATE TABLE [dbo].[DeployEnvironmentConfigurationValue](
 	[DeployEnvironmentConfigurationID] [nvarchar](50) NOT NULL,
 	[ConfigurationName] [nvarchar](200) NOT NULL,
 	[ConfigurationValue] [nvarchar](500) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployEnvironmentConfigurationValue] PRIMARY KEY NONCLUSTERED 
 (
@@ -569,9 +569,9 @@ CREATE TABLE [dbo].[DeployBuild](
 	[FileID] [nvarchar](50) NOT NULL,
 	[Version] [nvarchar](50) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployBuild] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -595,9 +595,9 @@ CREATE TABLE [dbo].[EnumDeployStatus](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_EnumDeployStatus] PRIMARY KEY CLUSTERED 
 (
@@ -659,9 +659,9 @@ CREATE TABLE [dbo].[DeployState](
 	[DeploymentCompleteDateTimeUtc] [datetime2](7) NULL,
 	[ErrorDetails] [nvarchar](max) NULL,
 	[SortableVersion] [nvarchar](200) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployState] PRIMARY KEY NONCLUSTERED 
 (
@@ -695,9 +695,9 @@ CREATE TABLE [dbo].[DeployStateMachine](
 	[MachineID] [nvarchar](50) NOT NULL,
 	[MachineName] [nvarchar](200) NOT NULL,
 	[MachineJson] [nvarchar](max) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployStateMachine] PRIMARY KEY NONCLUSTERED 
 (
@@ -735,14 +735,14 @@ CREATE TABLE [dbo].[DeployBuildPurgeRule](
 	[ID] [nvarchar](50) NOT NULL,
 	[ProjectID] [nvarchar](50) NULL,
 	[BuildRetentionMinutes] [int] NULL,
-	[EnvironmentIdListJson] [ntext] NULL,
-	[EnvironmentNameListJson] [ntext] NULL,
-	[MachineIdListJson] [ntext] NULL,
-	[MachineNameListJson] [ntext] NULL,
+	[EnvironmentIdListJson] [nvarchar](max) NULL,
+	[EnvironmentNameListJson] [nvarchar](max) NULL,
+	[MachineIdListJson] [nvarchar](max) NULL,
+	[MachineNameListJson] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployBuildPurgeRule] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -764,9 +764,9 @@ CREATE TABLE [dbo].[EnumCleanupTaskType](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_EnumCleanupTaskType] PRIMARY KEY CLUSTERED 
 (
@@ -790,9 +790,9 @@ CREATE TABLE [dbo].[EnumQueueStatus](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_EnumQueueStatus] PRIMARY KEY CLUSTERED 
 (
@@ -821,18 +821,18 @@ GO
 CREATE TABLE [dbo].[DeployCleanupTaskData](
 	[ID] [nvarchar](50) NOT NULL,
 	[EnumCleanupTaskTypeID] [int] NOT NULL,
-	[MachineName] [nvarchar](50) NOT NULL,
+	[MachineName] [nvarchar](100) NOT NULL,
 	[FolderPath] [nvarchar](500) NOT NULL,
 	[AgeMinutes] [int] NOT NULL,
 	[TargetCleanupDateTimeUtc] [datetime2](7) NOT NULL,
 	[EnumQueueStatusID] [int] NOT NULL,
 	[StartedDateTimeUtc] [datetime2](7) NULL,
 	[CompletedDateTimeUtc] [datetime2](7) NULL,
-	[ErrorDetails] [ntext] NULL,
+	[ErrorDetails] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployCleanupTaskData] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -863,13 +863,13 @@ GO
 
 CREATE TABLE [dbo].[DeployCredential](
 	[ID] [nvarchar](50) NOT NULL,
-	[Domain] [nvarchar](50) NOT NULL,
-	[UserName] [nvarchar](50) NOT NULL,
+	[Domain] [nvarchar](100) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
 	[EncryptedPassword] [nvarchar](500) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployCredential] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -887,23 +887,23 @@ GO
 CREATE TABLE [dbo].[DeployBatchRequest](
 	[ID] [nvarchar](50) NOT NULL,
 	[SubmittedDateTimeUtc] [datetime2](7) NOT NULL,
-	[SubmittedByUserName] [nvarchar](50) NOT NULL,
-	[ItemListJson] [ntext] NOT NULL,
+	[SubmittedByUserName] [nvarchar](100) NOT NULL,
+	[ItemListJson] [nvarchar](max) NOT NULL,
 	[EnumDeployStatusID] [int] NOT NULL,
 	[StartedDateTimeUtc] [datetime2](7) NULL,
 	[CompleteDateTimeUtc] [datetime2](7) NULL,
-	[ErrorDetails] [ntext] NULL,
+	[ErrorDetails] [nvarchar](max) NULL,
 	[LastStatusMessage] [nvarchar](500) NULL,
 	[DeploymentLabel] [nvarchar](200) NULL,
 	[CancelRequested] [bit] NOT NULL,
 	[CancelMessage] [nvarchar](500) NULL,
 	[ResumeRequested] [bit] NOT NULL,
 	[ResumeMessage] [nvarchar](200) NULL,
-	[MessageListJson] [ntext] NULL,
+	[MessageListJson] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_DeployBatchRequest] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -936,17 +936,17 @@ GO
 CREATE TABLE [dbo].[SrirachaEmailMessage](
 	[ID] [nvarchar](50) NOT NULL,
 	[Subject] [nvarchar](200) NOT NULL,
-	[DataObjectJson] [ntext] NULL,
-	[RazorView] [ntext] NULL,
+	[DataObjectJson] [nvarchar](max) NULL,
+	[RazorView] [nvarchar](max) NULL,
 	[EnumQueueStatusID] [int] NOT NULL,
 	[StartedDateTimeUtc] [datetime2](7) NULL,
 	[QueueDateTimeUtc] [datetime2](7) NULL,
-	[EmailAddressListJson] [ntext] NULL,
-	[RecipientResultListJson] [ntext] NULL,
+	[EmailAddressListJson] [nvarchar](max) NULL,
+	[RecipientResultListJson] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
  CONSTRAINT [PK_SrirachaEmailMessage] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -974,10 +974,10 @@ CREATE TABLE [dbo].[DeployFile](
 	[ID] [nvarchar](50) NOT NULL,
 	[FileName] [nvarchar](200) NOT NULL,
 	[FileStorageID] [nvarchar](50) NOT NULL,
-	[FileManifestJson] [ntext] NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[FileManifestJson] [nvarchar](max) NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_DeployFile] PRIMARY KEY NONCLUSTERED 
 (
@@ -1007,9 +1007,9 @@ CREATE TABLE [dbo].[EnumSystemLogType](
 	[ID] [int] NOT NULL,
 	[TypeName] [nvarchar](50) NOT NULL,
 	[DisplayValue] [nvarchar](50) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_EnumSystemLogType] PRIMARY KEY CLUSTERED 
 (
@@ -1050,9 +1050,9 @@ CREATE TABLE [dbo].[SystemLog](
 	[ID] [nvarchar](50) NOT NULL,
 	[MessageText] [nvarchar](max) NOT NULL,
 	[EnumSystemLogTypeID] [int] NOT NULL,
-	[UserName] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
 	[MessageDateTimeUtc] [datetime2](7) NOT NULL,
-	[LoggerName] [nvarchar](50) NULL,
+	[LoggerName] [nvarchar](100) NULL,
  CONSTRAINT [PK_SystemLog] PRIMARY KEY NONCLUSTERED 
 (
 	[ID] ASC
@@ -1084,7 +1084,7 @@ GO
 
 CREATE TABLE [dbo].[SrirachaUser](
 	[ID] [nvarchar](50) NOT NULL,
-	[UserName] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
 	[UserGuid] [uniqueidentifier] NOT NULL,
 	[EmailAddress] [nvarchar](500) NOT NULL,
 	[EncryptedPassword] [nvarchar](1000) NULL,
@@ -1097,9 +1097,9 @@ CREATE TABLE [dbo].[SrirachaUser](
 	[MustChangePasswordIndicator] [bit] NOT NULL,
 	[LastActivityDateTimeUtc] [datetime2](7) NOT NULL,
 	[ProjectNotificationItemListJson] [nvarchar](max) NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_SrirachaUser] PRIMARY KEY CLUSTERED 
 (
@@ -1141,9 +1141,9 @@ CREATE TABLE [dbo].[RazorTemplate](
 	[ID] [nvarchar](50) NOT NULL,
 	[ViewName] [nvarchar](100) NOT NULL,
 	[ViewData] [nvarchar](max) NOT NULL,
-	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
  CONSTRAINT [PK_RazorTemplate] PRIMARY KEY NONCLUSTERED 
 (

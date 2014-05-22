@@ -34,5 +34,10 @@ namespace Sriracha.Deploy.Data.Dto.Account
                     && this.DeployStarted == that.DeployStarted
                     && this.DeploySuccess == that.DeploySuccess);
         }
+
+        public override int GetHashCode()
+        {
+            return this.ToJson().Length;
+        }
 	}
 }

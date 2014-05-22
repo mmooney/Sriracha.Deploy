@@ -182,6 +182,10 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             returnValue.Environment.ComponentList[0].ParentId = returnValue.Component.Id;
             foreach(var machine in returnValue.Environment.ComponentList[0].MachineList)
             {
+                if(string.IsNullOrEmpty(machine.Id))
+                {
+                    machine.Id = this.Fixture.Create<string>("Id");
+                }
                 machine.EnvironmentId = returnValue.Environment.Id;
                 machine.EnvironmentName = returnValue.Environment.EnvironmentName;
                 machine.ProjectId = projectId;

@@ -6,18 +6,13 @@ using MMDB.Shared;
 
 namespace Sriracha.Deploy.Data.Dto.Project
 {
-	public class DeployEnvironmentConfiguration
+	public class DeployEnvironmentConfiguration : BaseDto
 	{
-		public string Id { get; set; }
 		public string ProjectId { get; set; }
 		public string EnvironmentId { get; set; }
 		public string ParentId { get; set; }
 		public EnumDeployStepParentType ParentType { get; set; }
 		public string DeployCredentialsId { get; set; }
-        public DateTime CreatedDateTimeUtc { get; set; }
-        public string CreatedByUserName { get; set; }
-        public DateTime UpdatedDateTimeUtc { get; set; }
-        public string UpdatedByUserName { get; set; }
         public List<DeployMachine> MachineList { get; set; }
 		public Dictionary<string, string> ConfigurationValueList { get; set; }
 

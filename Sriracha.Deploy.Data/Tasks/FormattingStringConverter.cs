@@ -38,6 +38,7 @@ namespace Sriracha.Deploy.Data.Tasks
             _machine = machine;
             _component = component;
             _masked = masked;
+            _parameterEvaluator = parameterEvaluator;
         }
 
         public string Convert(AutoMapper.ResolutionContext context)

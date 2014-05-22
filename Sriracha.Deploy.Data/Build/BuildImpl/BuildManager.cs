@@ -19,10 +19,11 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 
 		public BuildManager(IBuildRepository buildRepository, IFileRepository fileRepository, IProjectRepository projectRepository, IProjectNotifier projectNotifier, IManifestBuilder manifestBuilder)
 		{
-			this._fileRepository = DIHelper.VerifyParameter(fileRepository);
-			this._buildRepository = DIHelper.VerifyParameter(buildRepository);
-			this._projectRepository = DIHelper.VerifyParameter(projectRepository);
-			this._projectNotifier = DIHelper.VerifyParameter(projectNotifier);
+			_fileRepository = DIHelper.VerifyParameter(fileRepository);
+			_buildRepository = DIHelper.VerifyParameter(buildRepository);
+			_projectRepository = DIHelper.VerifyParameter(projectRepository);
+			_projectNotifier = DIHelper.VerifyParameter(projectNotifier);
+            _manifestBuilder = DIHelper.VerifyParameter(manifestBuilder);
 		}
 
 		public PagedSortedList<DeployBuild> GetBuildList(ListOptions listOptions, string projectId = null, string branchId = null, string componentId = null)

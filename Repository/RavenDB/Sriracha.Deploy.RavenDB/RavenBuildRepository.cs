@@ -64,14 +64,11 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				case "updateddatetimeutc":
 					return query.PageAndSort(listOptions, i=>i.UpdatedDateTimeUtc);
-					break;
 				case "branchname":
 				case "projectbranchname":
 					return query.PageAndSort(listOptions, i => i.ProjectBranchName);
-					break;
 				case "projectname":
 					return query.PageAndSort(listOptions, i=>i.ProjectName);
-					break;
 				default:
                     throw new UnrecognizedSortFieldException<DeployBuild>(listOptions);
 			}

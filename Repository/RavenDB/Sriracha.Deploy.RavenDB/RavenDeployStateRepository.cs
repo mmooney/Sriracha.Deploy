@@ -266,7 +266,6 @@ namespace Sriracha.Deploy.RavenDB
             }
 
             var query = GetComponentDeployHistoryBaseQuery(baseQuery);
-            IPagedList<ComponentDeployHistory> pagedList;
             listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "DeploymentStartedDateTimeUtc", false);
             switch (listOptions.SortField.ToLower())
             {

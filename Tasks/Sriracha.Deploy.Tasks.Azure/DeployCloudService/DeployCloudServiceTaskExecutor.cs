@@ -20,7 +20,7 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
     public class DeployCloudServiceTaskExecutor : BaseDeployTaskExecutor<DeployCloudServiceTaskDefinition, DeployCloudServiceTaskOptions>
     {
         private readonly ILog _logger;
-        private readonly IParameterEvaluator _parameterEvaluator;
+        //private readonly IParameterEvaluator _parameterEvaluator;
 
         public DeployCloudServiceTaskExecutor(IParameterEvaluator parameterEvaluator, ILog logger, IDeploymentValidator validator) : base(parameterEvaluator, validator)
         {
