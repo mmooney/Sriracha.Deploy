@@ -14,6 +14,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 	[TestFixture]
     public abstract class ProjectRepositoryEnvironmentTests : ProjectRepositoryTestBase
 	{
+        public ProjectRepositoryEnvironmentTests()
+        {
+
+        }
+
         private void AssertCreatedEnvironment(DeployEnvironment result, DeployProject project, string environmentName, List<DeployEnvironmentConfiguration> environmentComponentList, List<DeployEnvironmentConfiguration> environmentConfigurationList, IProjectRepository sut)
         {
             Assert.IsNotNull(result);

@@ -387,6 +387,7 @@ CREATE TABLE [dbo].[DeployEnvironmentConfiguration](
 	[ParentID] [nvarchar](50) NOT NULL,
 	[EnumDeployStepParentTypeID] [int] NOT NULL,
 	[DeployCredentialsId] [nvarchar](50) NULL,
+    [ConfigurationValueListJson] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
@@ -440,6 +441,7 @@ CREATE TABLE [dbo].[DeployMachine](
 	[EnvironmentName] [nvarchar](200) NOT NULL,
 	[DeployEnvironmentConfigurationID] [nvarchar](50) NOT NULL,
 	[MachineName] [nvarchar](200) NOT NULL,
+    [ConfigurationValueListJson] [nvarchar](max) NULL,
 	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
 	[CreatedByUserName] [nvarchar](100) NOT NULL,
 	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
@@ -474,87 +476,6 @@ GO
 CREATE NONCLUSTERED INDEX IX_DeployMachine_DeployEnvironmentConfigurationID ON dbo.DeployMachine (DeployEnvironmentConfigurationID) 
     WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-
-CREATE TABLE [dbo].[DeployMachineConfigurationValue](
-	[ID] [nvarchar](50) NOT NULL,
-	[DeployMachineID] [nvarchar](50) NOT NULL,
-	[ConfigurationName] [nvarchar](200) NOT NULL,
-	[ConfigurationValue] [nvarchar](500) NOT NULL,
-	[CreatedByUserName] [nvarchar](100) NOT NULL,
-	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](100) NOT NULL,
-	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployMachineConfigurationValue] PRIMARY KEY NONCLUSTERED
-(
-	[ID] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-)
-
-GO
-
-ALTER TABLE [dbo].[DeployMachineConfigurationValue] ADD  CONSTRAINT [DF_DeployMachineConfigurationValue_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
-GO
-
-ALTER TABLE [dbo].[DeployMachineConfigurationValue] ADD  CONSTRAINT [DF_DeployMachineConfigurationValue_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
-GO
-
-ALTER TABLE [dbo].[DeployMachineConfigurationValue]  WITH CHECK ADD  CONSTRAINT [FK_DeployMachineConfigurationValue_DeployMachine] FOREIGN KEY([DeployMachineID])
-REFERENCES [dbo].[DeployMachine] ([ID])
-GO
-
-ALTER TABLE [dbo].[DeployMachineConfigurationValue] CHECK CONSTRAINT [FK_DeployMachineConfigurationValue_DeployMachine]
-GO
-
-CREATE NONCLUSTERED INDEX IX_DeployMachineConfigurationValue_DeployMachineID ON dbo.DeployMachineConfigurationValue (DeployMachineID) 
-    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-
-ALTER TABLE dbo.DeployMachineConfigurationValue ADD CONSTRAINT
-	IX_DeployMachineConfigurationValue_UniqueName UNIQUE NONCLUSTERED  (DeployMachineID,ConfigurationName) 
-    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-
-GO
-
-CREATE TABLE [dbo].[DeployEnvironmentConfigurationValue](
-	[ID] [nvarchar](50) NOT NULL,
-	[DeployEnvironmentConfigurationID] [nvarchar](50) NOT NULL,
-	[ConfigurationName] [nvarchar](200) NOT NULL,
-	[ConfigurationValue] [nvarchar](500) NOT NULL,
-	[CreatedByUserName] [nvarchar](100) NOT NULL,
-	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
-	[UpdatedByUserName] [nvarchar](100) NOT NULL,
-	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
- CONSTRAINT [PK_DeployEnvironmentConfigurationValue] PRIMARY KEY NONCLUSTERED 
-(
-	[ID] ASC
-)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
-)
-
-GO
-
-ALTER TABLE [dbo].[DeployEnvironmentConfigurationValue] ADD  CONSTRAINT [DF_DeployEnvironmentConfigurationValue_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
-GO
-
-ALTER TABLE [dbo].[DeployEnvironmentConfigurationValue] ADD  CONSTRAINT [DF_DeployEnvironmentConfigurationValue_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
-GO
-
-ALTER TABLE [dbo].[DeployEnvironmentConfigurationValue]  WITH CHECK ADD  CONSTRAINT [FK_DeployEnvironmentConfigurationValue_DeployEnvironmentConfiguration] FOREIGN KEY([DeployEnvironmentConfigurationID])
-REFERENCES [dbo].[DeployEnvironmentConfiguration] ([ID])
-GO
-
-ALTER TABLE [dbo].[DeployEnvironmentConfigurationValue] CHECK CONSTRAINT [FK_DeployEnvironmentConfigurationValue_DeployEnvironmentConfiguration]
-GO
-
-CREATE NONCLUSTERED INDEX IX_DeployEnvironmentConfigurationValue_DeployEnvironmentConfigurationValue ON dbo.DeployEnvironmentConfigurationValue (DeployEnvironmentConfigurationID) 
-    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-
-ALTER TABLE dbo.DeployEnvironmentConfigurationValue ADD CONSTRAINT
-	IX_DeployEnvironmentConfigurationValue_UniqueName UNIQUE NONCLUSTERED  (DeployEnvironmentConfigurationID,ConfigurationName) 
-    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-
-GO
-
 
 --------------Build
 
