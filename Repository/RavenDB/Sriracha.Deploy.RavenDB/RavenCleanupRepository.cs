@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Transactions;
-using NLog;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -15,9 +15,9 @@ namespace Sriracha.Deploy.RavenDB
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 
-		public RavenCleanupRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
+        public RavenCleanupRepository(IDocumentSession documentSession, IUserIdentity userIdentity, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);

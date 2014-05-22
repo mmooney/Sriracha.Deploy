@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
-using NLog;
 using PagedList;
 using Raven.Abstractions.Data;
 using Raven.Client;
@@ -12,6 +11,7 @@ using Raven.Client.Linq;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -28,9 +28,9 @@ namespace Sriracha.Deploy.RavenDB
         //}
 
 		private readonly IDocumentSession _documentSession;
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 
-		public RavenSystemLogRepository(IDocumentSession documentSession, Logger logger)
+		public RavenSystemLogRepository(IDocumentSession documentSession, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_logger = DIHelper.VerifyParameter(logger);

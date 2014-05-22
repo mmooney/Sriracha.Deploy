@@ -1,5 +1,4 @@
-﻿using NLog;
-using Raven.Client;
+﻿using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Account;

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Common.Logging;
+using Moq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
 using System;
@@ -19,11 +20,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             this.UserName = this.Fixture.Create<string>("UserName");
             this.UserIdentity = new Mock<IUserIdentity>();
             this.UserIdentity.Setup(i => i.UserName).Returns(this.UserName);
-            this.Logger = new Mock<NLog.Logger>();
+            this.Logger = new Mock<ILog>();
         }
 
         protected Mock<IUserIdentity> UserIdentity { get; private set; }
-        protected Mock<NLog.Logger> Logger { get; private set; }
+        protected Mock<ILog> Logger { get; private set; }
         protected string UserName { get; private set; }
         protected Fixture Fixture { get; private set; }
 

@@ -12,20 +12,21 @@ using Sriracha.Deploy.Data.Dto.Credentials;
 using System.Diagnostics;
 using Sriracha.Deploy.Data.Dto;
 using Raven.Abstractions.Data;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB.DataPatcher
 {
     public class Program
     {
         private static IDIFactory _diFactory;
-        private static NLog.Logger _logger;
+        private static ILog _logger;
 
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new SrirachaAutofacorator(EnumDIMode.Service));
             var container = builder.Build();
-            _logger = container.Resolve<NLog.Logger>();
+            _logger = container.Resolve<ILog>();
             _diFactory = container.Resolve<IDIFactory>();
 
             var session = _diFactory.CreateInjectedObject<IDocumentSession>();

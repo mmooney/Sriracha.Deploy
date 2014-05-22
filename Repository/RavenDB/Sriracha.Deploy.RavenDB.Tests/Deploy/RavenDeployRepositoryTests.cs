@@ -21,7 +21,7 @@ namespace Sriracha.Deploy.RavenDB.Tests.Deploy
 
         protected override IDeployRepository GetRepository()
         {
-            return new RavenDeployRepository(this.DocumentSession, this.Logger.Object, this.UserIdentity.Object);
+            return new RavenDeployRepository(this.DocumentSession, this.UserIdentity.Object, this.Logger.Object);
         }
 
         [TearDown]

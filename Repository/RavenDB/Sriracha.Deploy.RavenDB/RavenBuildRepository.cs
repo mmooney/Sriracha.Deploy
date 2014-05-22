@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NLog;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -13,6 +12,7 @@ using PagedList;
 using Raven.Client.Linq;
 using Sriracha.Deploy.Data.Dto.Build;
 using Raven.Client.Indexes;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -20,7 +20,7 @@ namespace Sriracha.Deploy.RavenDB
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 
         public class DeployBuildListIndex : AbstractIndexCreationTask<DeployBuild>
         {
@@ -37,7 +37,7 @@ namespace Sriracha.Deploy.RavenDB
             }
         }
 
-		public RavenBuildRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
+		public RavenBuildRepository(IDocumentSession documentSession, IUserIdentity userIdentity, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
@@ -204,7 +204,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void DeleteBuild(string buildId)
 		{
-			_logger.Info("User {0} deleting build {1}", _userIdentity.UserName, buildId);
+			_logger.Info(string.Format("User {0} deleting build {1}", _userIdentity.UserName, buildId));
 			var build = GetBuild(buildId);
 			this._documentSession.Delete(build);
 			this._documentSession.SaveChanges();

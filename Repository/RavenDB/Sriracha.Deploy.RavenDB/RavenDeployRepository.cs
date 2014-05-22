@@ -5,7 +5,6 @@ using System.Text;
 using System.Transactions;
 using AutoMapper;
 using MMDB.Shared;
-using NLog;
 using PagedList;
 using Raven.Client;
 using Sriracha.Deploy.Data;
@@ -16,16 +15,17 @@ using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Deployment;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Deployment.Plan;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
 	public class RavenDeployRepository : IDeployRepository
 	{
 		private readonly IDocumentSession _documentSession;
-		private readonly Logger _logger;
+        private readonly ILog _logger;
 		private readonly IUserIdentity _userIdentity;
 
-		public RavenDeployRepository(IDocumentSession documentSession, Logger logger, IUserIdentity userIdentity)
+        public RavenDeployRepository(IDocumentSession documentSession, IUserIdentity userIdentity, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_logger = DIHelper.VerifyParameter(logger);

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Transactions;
 using MMDB.Shared;
-using NLog;
 using Raven.Client;
 using Raven.Imports.Newtonsoft.Json;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Dto.Project;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -18,9 +18,9 @@ namespace Sriracha.Deploy.RavenDB
 	{
 		private readonly IDocumentSession _documentSession;
 		private readonly IUserIdentity _userIdentity;
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 
-		public RavenProjectRepository(IDocumentSession documentSession, IUserIdentity userIdentity, Logger logger)
+		public RavenProjectRepository(IDocumentSession documentSession, IUserIdentity userIdentity, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_userIdentity = DIHelper.VerifyParameter(userIdentity);
@@ -107,7 +107,7 @@ namespace Sriracha.Deploy.RavenDB
 					}
 					else
 					{
-						_logger.WarnException(string.Format("GetOrCreateProject concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+						_logger.Warn(string.Format("GetOrCreateProject concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
 					}
 				}
 			}
@@ -160,7 +160,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public void DeleteProject(string projectId)
 		{
-			_logger.Info("User {0} deleting project {1}", _userIdentity.UserName, projectId);
+			_logger.Info(string.Format("User {0} deleting project {1}", _userIdentity.UserName, projectId));
 			var item = _documentSession.LoadEnsure<DeployProject>(projectId);
 			_documentSession.DeleteSaveEvict(item);
 		}
@@ -252,7 +252,7 @@ namespace Sriracha.Deploy.RavenDB
 				throw new ArgumentNullException("Missing Configuration ID");
 			}
 			var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
-			_logger.Info("User {0} deleting configuration {1}", _userIdentity.UserName, configurationId);
+			_logger.Info(string.Format("User {0} deleting configuration {1}", _userIdentity.UserName, configurationId));
 			var configuration = project.ConfigurationList.FirstOrDefault(i => i.Id == configurationId);
             if(configuration == null)
             {
@@ -392,7 +392,7 @@ namespace Sriracha.Deploy.RavenDB
 					}
 					else
 					{
-						_logger.WarnException(string.Format("GetOrCreateComponent concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+						_logger.Warn(string.Format("GetOrCreateComponent concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
 					}
 				}
 			}
@@ -439,7 +439,7 @@ namespace Sriracha.Deploy.RavenDB
 					throw new RecordNotFoundException(typeof(DeployComponent), "Id", componentId);
 				}
 			}
-			_logger.Info("User {0} deleting component {1}", _userIdentity.UserName, componentId);
+			_logger.Info(string.Format("User {0} deleting component {1}", _userIdentity.UserName, componentId));
 			var component = project.ComponentList.FirstOrDefault(i => i.Id == componentId);
 			if(component == null)
 			{
@@ -676,7 +676,7 @@ namespace Sriracha.Deploy.RavenDB
                 throw new ArgumentNullException("Missing deployment step ID");
             }
             var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
-			_logger.Info("User {0} deleting component deployment step {1}", _userIdentity.UserName, deploymentStepId);
+			_logger.Info(string.Format("User {0} deleting component deployment step {1}", _userIdentity.UserName, deploymentStepId));
 			var component = project.ComponentList.SingleOrDefault(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
             if(component == null)
             {
@@ -703,7 +703,7 @@ namespace Sriracha.Deploy.RavenDB
 			{
 				throw new RecordNotFoundException(typeof(DeployStep), "Id", deploymentStepId);
 			}
-			_logger.Info("User {0} deleting configuration deployment step {1}", _userIdentity.UserName, deploymentStepId);
+			_logger.Info(string.Format("User {0} deleting configuration deployment step {1}", _userIdentity.UserName, deploymentStepId));
 			var configuration = project.ConfigurationList.SingleOrDefault(i => i.DeploymentStepList.Any(j => j.Id == deploymentStepId));
             if(configuration == null)
             {
@@ -861,7 +861,7 @@ namespace Sriracha.Deploy.RavenDB
 					}
 					else 
 					{
-						_logger.WarnException(string.Format("GetOrCreateBranch concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
+						_logger.Warn(string.Format("GetOrCreateBranch concurrency exception, {0} retries remaining: {1}", retryCounter, exception.ToString()), exception);
 					}
 				}
 			}
@@ -897,7 +897,7 @@ namespace Sriracha.Deploy.RavenDB
 				throw new ArgumentNullException("Missing branch ID");
 			}
 			var project = _documentSession.LoadEnsure<DeployProject>(projectId);
-			_logger.Info("User {0} deleting branch {1}", _userIdentity.UserName, branchId);
+			_logger.Info(string.Format("User {0} deleting branch {1}", _userIdentity.UserName, branchId));
 			var branch = project.BranchList.FirstOrDefault(i=>i.Id == branchId);
 			if(branch == null)
 			{
@@ -1067,7 +1067,7 @@ namespace Sriracha.Deploy.RavenDB
 				throw new ArgumentNullException("Missing environment ID");
 			}
             var project = this._documentSession.LoadEnsure<DeployProject>(projectId);
-			_logger.Info("User {0} deleting environment {1}", _userIdentity.UserName, environmentId);
+			_logger.Info(string.Format("User {0} deleting environment {1}", _userIdentity.UserName, environmentId));
 			var environment = project.EnvironmentList.SingleOrDefault(i => i.Id == environmentId);
             if(environment == null)
             {

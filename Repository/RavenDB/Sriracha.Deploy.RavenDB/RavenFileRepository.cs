@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
-using NLog;
 using Raven.Client;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
@@ -11,6 +10,7 @@ using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Data.Build;
 using Sriracha.Deploy.Data.Dto.Build;
 using System.IO;
+using Common.Logging;
 
 namespace Sriracha.Deploy.RavenDB
 {
@@ -19,9 +19,9 @@ namespace Sriracha.Deploy.RavenDB
 		private readonly IDocumentSession _documentSession;
 		private readonly IFileStorage _fileStorage;
 		private readonly IUserIdentity _userIdentity;
-		private readonly Logger _logger;
+		private readonly ILog _logger;
 
-		public RavenFileRepository(IDocumentSession documentSession, IFileStorage fileStorage, IUserIdentity userIdentity, Logger logger)
+		public RavenFileRepository(IDocumentSession documentSession, IFileStorage fileStorage, IUserIdentity userIdentity, ILog logger)
 		{
 			_documentSession = DIHelper.VerifyParameter(documentSession);
 			_fileStorage = DIHelper.VerifyParameter(fileStorage);
@@ -85,7 +85,7 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployFile DeleteFile(string fileId)
 		{
-			_logger.Info("User {0} deleting file {1}", _userIdentity.UserName, fileId);
+			_logger.Info(string.Format("User {0} deleting file {1}", _userIdentity.UserName, fileId));
 			var file = _documentSession.LoadEnsure<DeployFile>(fileId);
             this._fileStorage.DeleteFile(file.FileStorageId);
             return _documentSession.DeleteSaveEvict(file);
