@@ -23,8 +23,8 @@ namespace Sriracha.Deploy.SqlServer
             builder.RegisterType<SqlServerDeployRepository>().As<IDeployRepository>();
             builder.RegisterType<SqlServerDeployStateRepository>().As<IDeployStateRepository>();
             builder.RegisterType<SqlServerSystemLogRepository>().As<ISystemLogRepository>();
+            builder.RegisterType<SqlServerMembershipRepository>().As<IMembershipRepository>();
             throw new NotImplementedException();
-            //builder.RegisterType<SqlServerMembershipRepository>().As<IMembershipRepository>();
             //builder.RegisterType<SqlServerEmailQueueRepository>().As<IEmailQueueRepository>();
             //builder.RegisterType<SqlServerCredentialsRepository>().As<ICredentialsRepository>();
             //builder.RegisterType<SqlServerSystemSettingsRepository>().As<ISystemSettingsRepository>();
