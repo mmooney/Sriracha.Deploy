@@ -24,15 +24,15 @@ namespace Sriracha.Deploy.SqlServer
             builder.RegisterType<SqlServerDeployStateRepository>().As<IDeployStateRepository>();
             builder.RegisterType<SqlServerSystemLogRepository>().As<ISystemLogRepository>();
             builder.RegisterType<SqlServerMembershipRepository>().As<IMembershipRepository>();
+            builder.RegisterType<SqlServerEmailQueueRepository>().As<IEmailQueueRepository>();
+            builder.RegisterType<SqlServerCredentialsRepository>().As<ICredentialsRepository>();
             throw new NotImplementedException();
-            //builder.RegisterType<SqlServerEmailQueueRepository>().As<IEmailQueueRepository>();
-            //builder.RegisterType<SqlServerCredentialsRepository>().As<ICredentialsRepository>();
             //builder.RegisterType<SqlServerSystemSettingsRepository>().As<ISystemSettingsRepository>();
             //builder.RegisterType<SqlServerRazorTemplateRepository>().As<IRazorTemplateRepository>();
-            //builder.RegisterType<SqlServerCleanupRepository>().As<ICleanupRepository>();
+            builder.RegisterType<SqlServerCleanupRepository>().As<ICleanupRepository>();
             //builder.RegisterType<SqlServerOfflineDeploymentRepository>().As<IOfflineDeploymentRepository>();
             //builder.RegisterType<SqlServerSystemRoleRepository>().As<ISystemRoleRepository>();
-            //builder.RegisterType<SqlServerBuildPurgeRuleRepository>().As<IBuildPurgeRuleRepository>();
+            builder.RegisterType<SqlServerBuildPurgeRuleRepository>().As<IBuildPurgeRuleRepository>();
 
             //builder.RegisterType<SqlServerConnectionSettingRepository>().As<IConnectionSettingRepository>();
             //builder.RegisterType<SqlServerPermissionRepository>().As<IPermissionRepository>();

@@ -41,6 +41,10 @@ namespace Sriracha.Deploy.RavenDB
 
         public string GetStringSetting(string key, string defaultValue)
         {
+            if(string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key");
+            }
             var settings = GetActiveSettingsData();
             string returnValue;
             if(settings == null || !settings.SettingsDictionary.TryGetValue(key, out returnValue))
@@ -72,10 +76,6 @@ namespace Sriracha.Deploy.RavenDB
         {
             var stringValue = this.GetStringSetting(key, defaultValue.ToString());
             int returnValue;
-            if(stringValue == null)
-            {
-                return defaultValue;
-            }
             if(!int.TryParse(stringValue, out returnValue))
             {
                 throw new FormatException(string.Format("Unable to parse {0} value \"{1}\" into an integer", key, stringValue));
@@ -115,7 +115,14 @@ namespace Sriracha.Deploy.RavenDB
             {
                 return defaultValue;
             }
-            return EnumHelper.Parse<T>(stringValue);
+            try 
+            {
+                return EnumHelper.Parse<T>(stringValue);
+            }
+            catch(EnumCastException err)
+            {
+                throw new FormatException(err.Message, err);
+            }
         }
 
         public void SetEnumSetting<T>(string key, T value) where T : struct, IConvertible
@@ -158,6 +165,21 @@ namespace Sriracha.Deploy.RavenDB
         {
             var x = this.GetActiveSettingsData();
             return (x != null);
+        }
+
+
+        public void InactivateActiveSettings()
+        {
+            var list = _documentSession.QueryNotStale<SystemSettingsData>().Where(i => i.Active);
+            foreach(var item in list)
+            {
+                item.Active = false;
+            }
+            _documentSession.SaveChanges();
+            foreach (var item in list)
+            {
+                _documentSession.Advanced.Evict(item);
+            }
         }
     }
 }

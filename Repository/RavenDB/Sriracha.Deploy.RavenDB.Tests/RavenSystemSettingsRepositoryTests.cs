@@ -1,15 +1,15 @@
 ﻿using NUnit.Framework;
 using Raven.Client;
 using Sriracha.Deploy.Data.Repository;
-using Sriracha.Deploy.Data.Tests.Repository.Account;
+using Sriracha.Deploy.Data.Tests.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Sriracha.Deploy.RavenDB.Tests.Account
+namespace Sriracha.Deploy.RavenDB.Tests
 {
-    public class RavenMembershipRepositoryTests : MembershipRepositoryTests
+    public class RavenSystemSettingsRepositoryTests : SystemSettingsRepositoryTests
     {
         protected IDocumentSession DocumentSession { get; private set; }
 
@@ -19,9 +19,9 @@ namespace Sriracha.Deploy.RavenDB.Tests.Account
             this.DocumentSession = EmbeddedRavenProvider.DocumentStore.OpenSession();
         }
 
-        protected override IMembershipRepository GetRepository()
+        protected override ISystemSettingsRepository GetRepository()
         {
-            return new RavenMembershipRepository(this.DocumentSession, this.UserIdentity.Object);
+            return new RavenSystemSettingsRepository(this.DocumentSession);
         }
 
         [TearDown]

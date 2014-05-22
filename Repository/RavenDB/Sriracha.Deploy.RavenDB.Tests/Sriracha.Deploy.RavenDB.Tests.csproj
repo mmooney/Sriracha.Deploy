@@ -120,6 +120,7 @@
     <Compile Include="Project\RavenProjectRepositoryProjectTests.cs" />
     <Compile Include="RavenCleanupRepositoryTests.cs" />
     <Compile Include="RavenSystemLogRepositoryTests.cs" />
+    <Compile Include="RavenSystemSettingsRepositoryTests.cs" />
     <Compile Include="RavenTestBase.cs" />
     <Compile Include="TempTestDataHelper.cs" />
   </ItemGroup>

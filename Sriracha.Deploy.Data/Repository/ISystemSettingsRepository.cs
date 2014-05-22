@@ -14,15 +14,14 @@ namespace Sriracha.Deploy.Data.Repository
         int GetIntSetting(string key, int defaultValue);
         void SetIntSetting(string key, int value);
 
-        //List<BuildPurgeRule> GetBuildPurgeRetentionRuleList(List<BuildPurgeRule> defaultValue);
-        //List<BuildPurgeRule> SetBuildPurgeRetentionRuleList(List<BuildPurgeRule> value);
-
-        bool AnyActiveSettings();
 
         bool GetBoolSetting(string key, bool defaultValue);
         void SetBoolSetting(string key, bool value);
 
         T GetEnumSetting<T>(string key, T defaultValue) where T:struct, IConvertible;
         void SetEnumSetting<T>(string key, T value) where T : struct, IConvertible;
+
+        bool AnyActiveSettings();
+        void InactivateActiveSettings();
     }
 }
