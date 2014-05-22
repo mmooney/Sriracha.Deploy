@@ -92,6 +92,7 @@
     <Compile Include="ParameterParserTests.cs" />
     <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
+    <Compile Include="Repository\Account\MembershipRepositoryTests.cs" />
     <Compile Include="Repository\AssertHelpers.cs" />
     <Compile Include="Repository\Build\BuildRepositoryTests.cs" />
     <Compile Include="Repository\Build\BuildPurgeRuleRepositoryTests.cs" />

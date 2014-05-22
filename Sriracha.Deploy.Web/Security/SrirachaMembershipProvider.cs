@@ -9,6 +9,7 @@ using System.Web.Security;
 using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
+using System.Threading.Tasks;
 
 namespace Sriracha.Deploy.Web.Security
 {
@@ -82,7 +83,7 @@ namespace Sriracha.Deploy.Web.Security
 										providerUserKey: user.UserGuid,
 										email: user.EmailAddress,
 										passwordQuestion: user.PasswordQuestion,
-										creationDate: user.CreatedDateTimcUtc,
+										creationDate: user.CreatedDateTimeUtc,
 										isLockedOut: user.LockedIndicator,
 										comment: null,
 										isApproved: true,
@@ -224,7 +225,7 @@ namespace Sriracha.Deploy.Web.Security
 			}
 			else 
 			{
-				repository.DeleteUser(user);
+				repository.DeleteUser(user.Id);
 				this.LogInfo("Deleted user {0}", userName);
 				return true;
 			}
@@ -250,7 +251,7 @@ namespace Sriracha.Deploy.Web.Security
 				SortField="EmailAddress", 
 				SortAscending = true
 			};
-            var pagedList = repository.GetUserList_old(listOptions, (i) => i.UserName.Contains(emailToMatch));
+            var pagedList = repository.GetUserList(listOptions, emailAddressList:emailToMatch.ListMe());
 			totalRecords = pagedList.TotalItemCount;
 			return CreateMembershipCollection(pagedList);
 		}
@@ -265,7 +266,7 @@ namespace Sriracha.Deploy.Web.Security
 				SortField="UserName", 
 				SortAscending = true
 			};
-            var pagedList = repository.GetUserList_old(listOptions, (i) => i.UserName.Contains(userNameToMatch));
+            var pagedList = repository.GetUserList(listOptions, userNameList:userNameToMatch.ListMe());
 			totalRecords = pagedList.TotalItemCount;
 			return CreateMembershipCollection(pagedList);
 		}
@@ -289,7 +290,7 @@ namespace Sriracha.Deploy.Web.Security
 		{
 			var repository = this.GetRepository();
 			DateTime fifteenMinutesAgo = DateTime.UtcNow.AddMinutes(-15);
-			return repository.GetUserCount(i=>i.LastActivityDateTimeUtc > fifteenMinutesAgo);
+			return repository.GetUserCount(lastActivityDateTimeUtc: fifteenMinutesAgo);
 		}
 
 		public override string GetPassword(string userName, string answer)
@@ -310,7 +311,7 @@ namespace Sriracha.Deploy.Web.Security
 				if(userIsOnline)
 				{
 					user.LastActivityDateTimeUtc = DateTime.UtcNow;
-					repository.TryUpdateUser(user);
+                    Task.Factory.StartNew(()=> this.GetRepository().UpdateUser(user));
 				}
 				var membershipUser = CreateMembershipUser(user);
 				return membershipUser;

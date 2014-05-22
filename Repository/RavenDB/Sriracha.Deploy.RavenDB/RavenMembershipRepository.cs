@@ -27,65 +27,56 @@ namespace Sriracha.Deploy.RavenDB
 
 		public SrirachaUser CreateUser(SrirachaUser user)
 		{
+            if(user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if(string.IsNullOrEmpty(user.UserName))
+            {
+                throw new ArgumentNullException("user.UserName");
+            }
 			var dbUser = AutoMapper.Mapper.Map(user, new SrirachaUser());
+            if(dbUser.UserGuid == Guid.Empty)
+            {
+                dbUser.UserGuid = Guid.NewGuid();
+            }
 			var existingItem = TryGetUserByUserName(user.UserName);
 			if(existingItem != null)
 			{
 				throw new ArgumentException(string.Format("User with username {0} already exists", user.UserName));
 			}
-			dbUser.CreatedByUserName = _userIdentity.UserName;
-			dbUser.CreatedDateTimcUtc = DateTime.UtcNow;
-			dbUser.UpdatedByUserName = _userIdentity.UserName;
-			dbUser.UpdatedDateTimeUtc = DateTime.UtcNow;
+            dbUser.SetCreatedFields(_userIdentity.UserName);
 			dbUser.Id = FormatId(dbUser.UserName);
-			_documentSession.Store(dbUser);
-			try 
-			{
-				_documentSession.SaveChanges();
-			}
-			catch(Exception err)
-			{
-				Debug.WriteLine(err.ToString());
-				throw;
-			}
-			return dbUser;
+            return _documentSession.StoreSaveEvict(dbUser);
 		}
 
 		private string FormatId(string userName)
 		{
+            if(string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException("userName");
+            }
 			return "SrirachaUser_" + userName.Replace('\\','_');
 		}
 
 		public SrirachaUser UpdateUser(SrirachaUser user)
 		{
+            if(user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            if(string.IsNullOrEmpty(user.UserName))
+            {
+                throw new ArgumentNullException("user.UserName");
+            }
             var sourceUser = _documentSession.LoadEnsureNoCache<SrirachaUser>(FormatId(user.UserName));
 			var targetUser = AutoMapper.Mapper.Map(user, sourceUser);
+            targetUser.CreatedDateTimeUtc = sourceUser.CreatedDateTimeUtc;
+            targetUser.CreatedByUserName = sourceUser.CreatedByUserName;
             targetUser.UpdatedByUserName = _userIdentity.UserName;
             targetUser.UpdatedDateTimeUtc = DateTime.UtcNow;
-            _documentSession.Store(targetUser); //replace existing record
-			_documentSession.SaveChanges();
-            return targetUser;
+            return _documentSession.StoreSaveEvict(targetUser);
 		}
-
-		public SrirachaUser TryUpdateUser(SrirachaUser user)
-		{
-			try 
-			{
-				return this.UpdateUser(user);
-			}
-			catch(Raven.Abstractions.Exceptions.ConcurrencyException)
-			{
-				return null;
-			}
-		}
-
-        public SrirachaUser DeleteUser(SrirachaUser user)
-        {
-            var dbUser = this.GetUserByUserName(user.UserName);
-            _documentSession.Delete(dbUser);
-            _documentSession.SaveChanges();
-            return dbUser;
-        }
 
         public SrirachaUser DeleteUser(string userId)
         {
@@ -100,47 +91,30 @@ namespace Sriracha.Deploy.RavenDB
 
         public SrirachaUser GetUserByUserName(string userName)
 		{
-			var user = this.TryGetUserByUserName(userName);
-			if(user == null)
-			{
-				throw new RecordNotFoundException(typeof(SrirachaUser), "UserName", userName);
-			}
-			return user;
-		}
+            return _documentSession.LoadEnsureNoCache<SrirachaUser>(FormatId(userName));
+        }
 
 		public SrirachaUser TryGetUserByUserName(string userName)
 		{
-			return _documentSession.Load<SrirachaUser>(FormatId(userName));
-		}
-
-		public SrirachaUser GetUserByUserGuid(Guid userGuid)
-		{
-			var user = this.TryGetUserByUserGuid(userGuid);
-			if(user == null)
-			{
-				throw new RecordNotFoundException(typeof(SrirachaUser), "UserGuid", userGuid);
-			}
-			return user;
+			return _documentSession.LoadNoCache<SrirachaUser>(FormatId(userName));
 		}
 
 		public SrirachaUser TryGetUserByUserGuid(Guid userGuid)
 		{
-			return _documentSession.Query<SrirachaUser>().FirstOrDefault(i=>i.UserGuid == userGuid);
-		}
-
-		public SrirachaUser GetUserByEmailAddress(string emailAddress)
-		{
-			var user = this.TryGetUserByEmailAddress(emailAddress);
-			if(user == null)
-			{
-				throw new RecordNotFoundException(typeof(SrirachaUser), "EmailAddress", emailAddress);
-			}
-			return user;
+            if(userGuid == Guid.Empty)
+            {
+                throw new ArgumentNullException("userGuid");
+            }
+			return _documentSession.QueryNoCache<SrirachaUser>().FirstOrDefault(i=>i.UserGuid == userGuid);
 		}
 
 		public SrirachaUser TryGetUserByEmailAddress(string emailAddress)
 		{
-			return _documentSession.Query<SrirachaUser>().FirstOrDefault(i=>i.EmailAddress == emailAddress);
+            if(string.IsNullOrEmpty(emailAddress))
+            {
+                throw new ArgumentNullException("emailAddress");
+            }
+			return _documentSession.QueryNoCache<SrirachaUser>().FirstOrDefault(i=>i.EmailAddress == emailAddress);
 		}
 
 		public bool UserNameExists(string userName)
@@ -151,17 +125,24 @@ namespace Sriracha.Deploy.RavenDB
 
 		public bool EmailAddressExists(string email)
 		{
-			return _documentSession.Query<SrirachaUser>().Any(i=>i.EmailAddress == email);
+            if(string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException("email");
+            }
+			return _documentSession.QueryNoCache<SrirachaUser>().Any(i=>i.EmailAddress == email);
 		}
 
-        public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, List<string> userNameList=null)
+        public PagedSortedList<SrirachaUser> GetUserList(ListOptions listOptions, List<string> userNameList=null, List<string> emailAddressList=null)
         {
             var query = _documentSession.QueryNoCache<SrirachaUser>();
-            if(userNameList != null && userNameList.Count > 0)
+            if(userNameList != null && userNameList.Any())
             {
                 query = query.Where(i=>i.UserName.In(userNameList));
             }
-            PagedList.IPagedList<SrirachaUser> pagedList;
+            if(emailAddressList != null && emailAddressList.Any())
+            {
+                query = query.Where(i=>i.EmailAddress.In(emailAddressList));
+            }
             listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UserName", true);
             switch (listOptions.SortField)
             {
@@ -174,38 +155,31 @@ namespace Sriracha.Deploy.RavenDB
             }
         }
 
-        public PagedSortedList<SrirachaUser> GetUserList_old(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter)
+        //public PagedSortedList<SrirachaUser> GetUserList_old(ListOptions listOptions, Expression<Func<SrirachaUser, bool>> filter)
+        //{
+        //    var query = GetQuery(filter);
+        //    PagedList.IPagedList<SrirachaUser> pagedList;
+        //    listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UserName", true);
+        //    switch(listOptions.SortField)
+        //    {
+        //        case "UserName":
+        //            return query.PageAndSort(listOptions, i=>i.UserName);
+        //        case "EmailAddress":
+        //            return query.PageAndSort(listOptions, i=>i.EmailAddress);
+        //        default:
+        //            throw new UnrecognizedSortFieldException<SrirachaUser>(listOptions);
+        //    }
+        //}
+
+		public int GetUserCount(DateTime? lastActivityDateTimeUtc=null)
 		{
-			var query = GetQuery(filter);
-			PagedList.IPagedList<SrirachaUser> pagedList;
-            listOptions = ListOptions.SetDefaults(listOptions, 20, 1, "UserName", true);
-			switch(listOptions.SortField)
-			{
-				case "UserName":
-				    return query.PageAndSort(listOptions, i=>i.UserName);
-				case "EmailAddress":
-					return query.PageAndSort(listOptions, i=>i.EmailAddress);
-				default:
-					throw new UnrecognizedSortFieldException<SrirachaUser>(listOptions);
-			}
+            var query = _documentSession.QueryNoCache<SrirachaUser>();
+            if(lastActivityDateTimeUtc.HasValue)
+            {
+                query = query.Where(i=>i.LastActivityDateTimeUtc >= lastActivityDateTimeUtc.Value);
+            }
+			return query.Count();
 		}
 
-		public int GetUserCount(Expression<Func<SrirachaUser, bool>> filter=null)
-		{
-			return GetQuery(filter).Count();
-		}
-
-		private IRavenQueryable<SrirachaUser> GetQuery(Expression<Func<SrirachaUser, bool>> filter)
-		{
-			var query = _documentSession.Query<SrirachaUser>();
-			if (filter != null)
-			{
-				return query.Where(filter);
-			}
-			else
-			{
-				return query;
-			}
-		}
     }
 }

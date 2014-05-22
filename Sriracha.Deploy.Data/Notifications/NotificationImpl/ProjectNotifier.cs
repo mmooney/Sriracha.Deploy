@@ -52,24 +52,25 @@ namespace Sriracha.Deploy.Data.Notifications.NotificationImpl
 					SortField = "UserName"
 				};
 
-				var userList = _membershipRepository.GetUserList_old(listOptions,
-									//i => i.ProjectNotificationItemList.Any(j => j.ProjectId == projectId && flagsFilter(j.Flags)));
-									i=>i.ProjectNotificationItemList.Any(j=>j.ProjectId == projectId && j.Flags.DeployRequested));
-				foreach (var user in userList.Items)
-				{
-					if (!string.IsNullOrEmpty(user.EmailAddress))
-					{
-						emailAddresseList.Add(user.EmailAddress);
-					}
-				}
-				if (userList.IsLastPage)
-				{
-					done = true;
-				}
-				else
-				{
-					pageCounter++;
-				}
+                throw new NotSupportedException();
+                //var userList = _membershipRepository.GetUserList_old(listOptions,
+                //                    //i => i.ProjectNotificationItemList.Any(j => j.ProjectId == projectId && flagsFilter(j.Flags)));
+                //                    i=>i.ProjectNotificationItemList.Any(j=>j.ProjectId == projectId && j.Flags.DeployRequested));
+                //foreach (var user in userList.Items)
+                //{
+                //    if (!string.IsNullOrEmpty(user.EmailAddress))
+                //    {
+                //        emailAddresseList.Add(user.EmailAddress);
+                //    }
+                //}
+                //if (userList.IsLastPage)
+                //{
+                //    done = true;
+                //}
+                //else
+                //{
+                //    pageCounter++;
+                //}
 			}
 			return emailAddresseList;
 		}

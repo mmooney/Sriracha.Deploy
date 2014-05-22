@@ -6,9 +6,8 @@ using Sriracha.Deploy.Data.Dto.Account;
 
 namespace Sriracha.Deploy.Data.Dto
 {
-	public class SrirachaUser
+	public class SrirachaUser : BaseDto
 	{
-		public string Id { get; set; }
 		public string UserName { get; set; }
 		public Guid UserGuid { get; set; }
 		public string EmailAddress { get; set; }
@@ -26,11 +25,6 @@ namespace Sriracha.Deploy.Data.Dto
 
 		public bool MustChangePasswordIndicator { get; set; }
 		public DateTime LastActivityDateTimeUtc { get; set; }
-
-		public DateTime CreatedDateTimcUtc { get; set; }
-		public string CreatedByUserName { get; set; }
-		public DateTime UpdatedDateTimeUtc { get; set; }
-		public string UpdatedByUserName { get; set; }
 
 		public List<ProjectNotificationItem> ProjectNotificationItemList { get; set; }
 

@@ -252,6 +252,7 @@
     <Compile Include="ServiceJobs\ServiceJobImpl\OfflineDeploymentPackageJob.cs" />
     <Compile Include="Deployment\IDeployStatusNotifier.cs" />
     <Compile Include="Deployment\DeploymentImpl\DeployStatusNotifier.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="StringWriterWithEncoding.cs" />
     <Compile Include="SystemSettings\ISystemSetterUpper.cs" />
     <Compile Include="SystemSettings\SystemSetterUpper.cs" />
