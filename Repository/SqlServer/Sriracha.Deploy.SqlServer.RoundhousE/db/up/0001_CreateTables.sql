@@ -1082,4 +1082,43 @@ GO
 ALTER TABLE [dbo].[SystemLog] CHECK CONSTRAINT [FK_SystemLog_EnumSystemLogType]
 GO
 
+CREATE TABLE [dbo].[SrirachaUser](
+	[ID] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](50) NOT NULL,
+	[UserGuid] [uniqueidentifier] NOT NULL,
+	[EmailAddress] [nvarchar](500) NOT NULL,
+	[EncryptedPassword] [nvarchar](1000) NULL,
+	[LastPasswordChangedDateTimeUtc] [datetime2](7) NULL,
+	[PasswordQuestion] [nvarchar](500) NULL,
+	[PasswordAnswer] [nvarchar](500) NULL,
+	[LastLockoutDateTimeUtc] [datetime2](7) NULL,
+	[LastLoginDateDateTimeUtc] [datetime2](7) NULL,
+	[LockedIndicator] [bit] NOT NULL,
+	[MustChangePasswordIndicator] [bit] NOT NULL,
+	[LastActivityDateTimeUtc] [datetime2](7) NOT NULL,
+	[ProjectNotificationItemListJson] [nvarchar](max) NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_SrirachaUser] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[SrirachaUser] ADD  CONSTRAINT [DF_SrirachaUser_LockedIndicator]  DEFAULT ((0)) FOR [LockedIndicator]
+GO
+
+ALTER TABLE [dbo].[SrirachaUser] ADD  CONSTRAINT [DF_SrirachaUser_MustChangePasswordIndicator]  DEFAULT ((0)) FOR [MustChangePasswordIndicator]
+GO
+
+ALTER TABLE [dbo].[SrirachaUser] ADD  CONSTRAINT [DF_SrirachaUser_LastActivityDateTimeUtc]  DEFAULT (getutcdate()) FOR [LastActivityDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[SrirachaUser] ADD  CONSTRAINT [DF_SrirachaUser_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
 

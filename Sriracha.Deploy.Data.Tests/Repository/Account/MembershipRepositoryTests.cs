@@ -14,10 +14,10 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Account
 {
     public abstract class MembershipRepositoryTests : RepositoryTestBase<IMembershipRepository>
     {
-        private string FormatId(string userName)
-        {
-            return "SrirachaUser_" + userName.Replace('\\', '_');
-        }
+        //private string FormatId(string userName)
+        //{
+        //    return "SrirachaUser_" + userName.Replace('\\', '_');
+        //}
         
         private void AssertCreatedUser(SrirachaUser expected, SrirachaUser actual)
         {
@@ -30,7 +30,6 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Account
                 Assert.IsNotNull(actual);
                 AssertHelpers.AssertCreatedBaseDto(actual, this.UserName);
                 Assert.AreNotEqual(Guid.Empty, actual.UserGuid);
-                Assert.AreEqual(FormatId(actual.UserName), actual.Id);
                 Assert.AreEqual(expected.UserName, actual.UserName);
                 Assert.AreEqual(expected.EmailAddress, actual.EmailAddress);
                 Assert.AreEqual(expected.EncryptedPassword, actual.EncryptedPassword);
