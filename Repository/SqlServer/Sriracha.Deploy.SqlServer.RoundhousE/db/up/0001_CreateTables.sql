@@ -1137,3 +1137,30 @@ GO
 ALTER TABLE [dbo].[SystemSettings] ADD  CONSTRAINT [DF_SystemSettings_ActiveIndicator]  DEFAULT ((0)) FOR [ActiveIndicator]
 GO
 
+CREATE TABLE [dbo].[RazorTemplate](
+	[ID] [nvarchar](50) NOT NULL,
+	[ViewName] [nvarchar](100) NOT NULL,
+	[ViewData] [nvarchar](max) NOT NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_RazorTemplate] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[RazorTemplate] ADD  CONSTRAINT [DF_RazorTemplate_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[RazorTemplate] ADD  CONSTRAINT [DF_RazorTemplate_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX IX_RazorTemplate_ViewName ON dbo.RazorTemplate
+	(
+	ViewName
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO

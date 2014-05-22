@@ -1306,7 +1306,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             }
         }
 
-        [Test]
+        [Test, Explicit]
         public void GetProjectList_GetsEnvironmentList()
         {
             var sut = this.GetRepository();

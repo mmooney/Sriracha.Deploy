@@ -82,6 +82,7 @@
     <Compile Include="SqlServerFileStorage.cs" />
     <Compile Include="SqlServerMembershipRepository.cs" />
     <Compile Include="SqlServerProjectRepository.cs" />
+    <Compile Include="SqlServerRazorTemplateRepository.cs" />
     <Compile Include="SqlServerRepositoryRegistar.cs" />
     <Compile Include="SqlServerSystemLogRepository.cs" />
     <Compile Include="SqlServerSystemSettingsRepository.cs" />
