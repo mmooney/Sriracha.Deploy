@@ -26,8 +26,8 @@ namespace Sriracha.Deploy.SqlServer
             builder.RegisterType<SqlServerMembershipRepository>().As<IMembershipRepository>();
             builder.RegisterType<SqlServerEmailQueueRepository>().As<IEmailQueueRepository>();
             builder.RegisterType<SqlServerCredentialsRepository>().As<ICredentialsRepository>();
+            builder.RegisterType<SqlServerSystemSettingsRepository>().As<ISystemSettingsRepository>();
             throw new NotImplementedException();
-            //builder.RegisterType<SqlServerSystemSettingsRepository>().As<ISystemSettingsRepository>();
             //builder.RegisterType<SqlServerRazorTemplateRepository>().As<IRazorTemplateRepository>();
             builder.RegisterType<SqlServerCleanupRepository>().As<ICleanupRepository>();
             //builder.RegisterType<SqlServerOfflineDeploymentRepository>().As<IOfflineDeploymentRepository>();

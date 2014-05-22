@@ -105,6 +105,7 @@
     <Compile Include="Project\SqlServerProjectRepositoryProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerSystemLogRepositoryTests.cs" />
+    <Compile Include="SqlServerSystemSettingsRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

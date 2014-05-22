@@ -1122,3 +1122,18 @@ ALTER TABLE [dbo].[SrirachaUser] ADD  CONSTRAINT [DF_SrirachaUser_CreatedDateTim
 GO
 
 
+CREATE TABLE [dbo].[SystemSettings](
+	[ID] [nvarchar](50) NOT NULL,
+	[ActiveIndicator] [bit] NOT NULL,
+	[SettingsJson] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_SystemSettings] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[SystemSettings] ADD  CONSTRAINT [DF_SystemSettings_ActiveIndicator]  DEFAULT ((0)) FOR [ActiveIndicator]
+GO
+

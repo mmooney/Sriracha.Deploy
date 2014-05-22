@@ -84,6 +84,7 @@
     <Compile Include="SqlServerProjectRepository.cs" />
     <Compile Include="SqlServerRepositoryRegistar.cs" />
     <Compile Include="SqlServerSystemLogRepository.cs" />
+    <Compile Include="SqlServerSystemSettingsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
