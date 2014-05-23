@@ -133,11 +133,19 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         public static void AssertBaseDto(BaseDto expected, BaseDto actual)
         {
-            Assert.AreEqual(expected.Id, actual.Id);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
+            if(expected == null)
+            {
+                Assert.IsNull(actual);
+            }
+            else 
+            {
+                Assert.IsNotNull(actual);
+                Assert.AreEqual(expected.Id, actual.Id);
+                AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
+                Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
+                AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
+                Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
+            }
         }
 
         public static void AssertCreatedBaseDto(BaseDto actual, string userName)

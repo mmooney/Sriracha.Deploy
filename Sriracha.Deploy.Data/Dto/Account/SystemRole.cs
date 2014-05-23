@@ -12,19 +12,13 @@ namespace Sriracha.Deploy.Data.Dto.Account
         Administrator
     }
 
-    public class SystemRole
+    public class SystemRole : BaseDto
     {
-        public string Id { get; set; }
         public string RoleName { get; set; }
         public EnumSystemRoleType RoleType { get; set; }
 
         public SystemRolePermissions Permissions { get; set; }
         public SystemRoleAssignments Assignments { get; set; }
-
-        public string CreatedByUserName { get; set; }
-        public DateTime CreatedDateTimeUtc { get; set; }
-        public string UpdatedByUserName { get; set; }
-        public DateTime UpdateDateTimeUtc { get; set; }
 
         public SystemRole()
         {

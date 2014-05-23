@@ -54,14 +54,11 @@ namespace Sriracha.Deploy.RavenDB
             {
                 Id = systemRoleId,
                 RoleName = roleName,
-                Assignments = UpdateAssignments(assignments, systemRoleId),
-                Permissions = UpdatePermissions(permissions, systemRoleId),
-                RoleType = roleType,
-                CreatedByUserName = _userIdentity.UserName,
-                CreatedDateTimeUtc = DateTime.UtcNow,
-                UpdatedByUserName = _userIdentity.UserName,
-                UpdateDateTimeUtc = DateTime.UtcNow
+                Assignments = assignments,
+                Permissions = permissions,  
+                RoleType = roleType
             };
+            role.SetCreatedFields(_userIdentity.UserName);
             
             return _documentSession.StoreSaveEvict(role);
         }
@@ -77,56 +74,29 @@ namespace Sriracha.Deploy.RavenDB
             {
                 throw new ArgumentNullException("Missing role name");
             }
+            var existingItem = _documentSession.QueryNoCacheNotStale<SystemRole>().Any(i=>i.Id != systemRoleId && i.RoleName == roleName);
+            if(existingItem)
+            {
+                throw new ArgumentException("RoleName already exists: " + roleName);
+            }
             var role = _documentSession.LoadEnsure<SystemRole>(systemRoleId);
             role.RoleName = roleName;
             role.RoleType = roleType;
-            role.UpdateDateTimeUtc = DateTime.UtcNow;
-            role.UpdatedByUserName = _userIdentity.UserName;
-            role.Permissions = UpdatePermissions(permissions, systemRoleId);
-            role.Assignments = UpdateAssignments(assignments, systemRoleId);
+            role.SetUpdatedFields(_userIdentity.UserName);
+            role.Permissions = permissions ?? new SystemRolePermissions();
+            role.Assignments = assignments ?? new SystemRoleAssignments();
             return _documentSession.SaveEvict(role);
         }
 
         public SystemRole TryGetSpecialSystemRole(EnumSystemRoleType roleType)
         {
-            return _documentSession.QueryNoCache<SystemRole>().FirstOrDefault(i=>i.RoleType == roleType);
+            return _documentSession.QueryNoCacheNotStale<SystemRole>().FirstOrDefault(i=>i.RoleType == roleType);
         }
 
         public List<SystemRole> GetSystemRoleListForUser(string userName)
         {
-            return _documentSession.QueryNoCache<SystemRole>().Where(i=>i.Assignments.UserNameList.Contains(userName)).ToList();
+            return _documentSession.QueryNoCacheNotStale<SystemRole>().Where(i => i.Assignments.UserNameList.Contains(userName)).ToList();
         }
-
-        private SystemRoleAssignments UpdateAssignments(SystemRoleAssignments assignments, string roleId)
-        {
-            assignments = assignments ?? new SystemRoleAssignments();
-            if (string.IsNullOrEmpty(assignments.Id))
-            {
-                assignments.Id = Guid.NewGuid().ToString();
-                assignments.CreatedByUserName = _userIdentity.UserName;
-                assignments.CreatedDateTimeUtc = DateTime.UtcNow;
-            }
-            assignments.SystemRoleId = roleId;
-            assignments.UpdatedByUserName = _userIdentity.UserName;
-            assignments.UpdateDateTimeUtc = DateTime.UtcNow;
-            return assignments;
-        }
-
-        private SystemRolePermissions UpdatePermissions(SystemRolePermissions permissions, string roleId)
-        {
-            permissions = permissions ?? new SystemRolePermissions();
-            if (string.IsNullOrEmpty(permissions.Id))
-            {
-                permissions.Id = Guid.NewGuid().ToString();
-                permissions.CreatedByUserName = _userIdentity.UserName;
-                permissions.CreatedDateTimeUtc = DateTime.UtcNow;
-            }
-            permissions.SystemRoleId = roleId;
-            permissions.UpdatedByUserName = _userIdentity.UserName;
-            permissions.UpdateDateTimeUtc = DateTime.UtcNow;
-            return permissions;
-        }
-
 
         public SystemRole DeleteSystemRole(string systemRoleId)
         {
