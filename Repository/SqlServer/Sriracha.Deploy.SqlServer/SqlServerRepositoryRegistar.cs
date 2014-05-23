@@ -28,8 +28,8 @@ namespace Sriracha.Deploy.SqlServer
             builder.RegisterType<SqlServerCredentialsRepository>().As<ICredentialsRepository>();
             builder.RegisterType<SqlServerSystemSettingsRepository>().As<ISystemSettingsRepository>();
             builder.RegisterType<SqlServerRazorTemplateRepository>().As<IRazorTemplateRepository>();
-            throw new NotImplementedException();
             builder.RegisterType<SqlServerCleanupRepository>().As<ICleanupRepository>();
+            throw new NotImplementedException();
             //builder.RegisterType<SqlServerOfflineDeploymentRepository>().As<IOfflineDeploymentRepository>();
             //builder.RegisterType<SqlServerSystemRoleRepository>().As<ISystemRoleRepository>();
             builder.RegisterType<SqlServerBuildPurgeRuleRepository>().As<IBuildPurgeRuleRepository>();

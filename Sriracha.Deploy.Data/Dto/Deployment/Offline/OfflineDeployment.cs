@@ -20,20 +20,14 @@ namespace Sriracha.Deploy.Data.Dto.Deployment.Offline
         CreateFailed
     }
 
-	public class OfflineDeployment
+	public class OfflineDeployment : BaseDto
 	{
-		public string Id { get; set; }
 		public string DeployBatchRequestId { get; set; }
 		public EnumOfflineDeploymentStatus Status { get; set; }
         public string StatusDisplayValue { get { return EnumHelper.GetDisplayValue(this.Status); } }
 
         public string FileId { get; set; }
         public string CreateErrorDetails { get; set; }
-
-		public string CreatedByUserName { get; set; }
-		public DateTime CreatedDateTimeUtc { get; set; }
-		public string UpdatedByUserName { get; set; }
-		public DateTime UpdatedDateTimeUtc { get; set; }
 
         public string ResultFileId { get; set; }
     }

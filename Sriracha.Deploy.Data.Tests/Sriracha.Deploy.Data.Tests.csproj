@@ -102,6 +102,7 @@
     <Compile Include="Repository\Credentials\CredentialsRepositoryTests.cs" />
     <Compile Include="Repository\Deploy\DeployRepositoryTests.cs" />
     <Compile Include="Repository\Deploy\DeployStateRepositoryTests.cs" />
+    <Compile Include="Repository\Deploy\OfflineDeploymentRepositoryTests.cs" />
     <Compile Include="Repository\Email\EmailQueueRepositoryTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryEnvironmentTests.cs" />
     <Compile Include="Repository\Project\ProjectRepositoryConfigurationStepTests.cs" />

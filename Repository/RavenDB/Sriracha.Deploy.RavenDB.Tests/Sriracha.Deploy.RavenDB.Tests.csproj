@@ -112,6 +112,7 @@
     <Compile Include="Credentials\RavenCredentialsRepositoryTests.cs" />
     <Compile Include="Deploy\RavenDeployRepositoryTests.cs" />
     <Compile Include="Deploy\RavenDeployStateRepositoryTests.cs" />
+    <Compile Include="Deploy\RavenOfflineDeploymentRepositoryTests.cs" />
     <Compile Include="Email\RavenEmailQueueRepositoryTests.cs" />
     <Compile Include="EmbeddedRavenProvider.cs" />
     <Compile Include="Project\RavenProjectRepositoryBranchTests.cs" />

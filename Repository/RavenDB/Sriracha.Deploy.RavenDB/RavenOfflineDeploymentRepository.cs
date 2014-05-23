@@ -25,6 +25,10 @@ namespace Sriracha.Deploy.RavenDB
 
 		public OfflineDeployment CreateOfflineDeployment(string deployBatchRequestId, EnumOfflineDeploymentStatus initialStatus)
 		{
+            if(string.IsNullOrEmpty(deployBatchRequestId))
+            {
+                throw new ArgumentNullException("deployBatchRequestId");
+            }
 			var item = new OfflineDeployment
 			{
 				Id = Guid.NewGuid().ToString(),
@@ -45,6 +49,10 @@ namespace Sriracha.Deploy.RavenDB
 
         public OfflineDeployment GetOfflineDeploymentForDeploymentBatchRequestId(string deployBatchRequestId)
         {
+            if(string.IsNullOrEmpty(deployBatchRequestId))
+            {
+                throw new ArgumentNullException("deployBatchRequestId");
+            }
             return _documentSession.QueryNoCache<OfflineDeployment>().FirstOrDefault(i=>i.DeployBatchRequestId == deployBatchRequestId);
         }
 
@@ -72,6 +80,10 @@ namespace Sriracha.Deploy.RavenDB
 
         public OfflineDeployment SetReadyForDownload(string offlineDeploymentId, string fileId)
         {
+            if(string.IsNullOrEmpty(fileId))
+            {
+                throw new ArgumentNullException("fileId");
+            }
             var item = _documentSession.LoadEnsure<OfflineDeployment>(offlineDeploymentId);
             item.FileId = fileId;
             item.Status = EnumOfflineDeploymentStatus.ReadyForDownload;
