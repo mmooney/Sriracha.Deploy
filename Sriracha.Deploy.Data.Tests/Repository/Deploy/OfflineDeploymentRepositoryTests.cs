@@ -51,7 +51,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void CreateOfflineDeployment_CreatesOfflineDeployment()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
 
             var result = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
@@ -76,7 +76,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void GetOfflineDeployment_GetsOfflineDeployment()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
 
@@ -105,7 +105,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void GetOfflineDeploymentForDeploymentBatchRequestId_GetsOfflineDeployment()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
 
@@ -118,7 +118,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void GetOfflineDeploymentForDeploymentBatchRequestId_MutipleMatches_GetsOfflineDeployment()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
             var deployment1 = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
             var deployment2 = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
@@ -149,7 +149,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void UpdateStatus_WithoutError_UpdatesStatus()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
             var newStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
@@ -164,7 +164,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void UpdateStatus_WithError_UpdatesStatusAndError()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
             var newStatus = this.Fixture.Create<EnumOfflineDeploymentStatus>();
@@ -185,15 +185,14 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.Throws<ArgumentNullException>(()=>sut.UpdateStatus(null, newStatus, null));
         }
 
-        [Test]
+        [Test, Explicit]
         public void PopNextOfflineDeploymentToCreate_PopsNextItem()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = EnumOfflineDeploymentStatus.CreateRequested;
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
-            var newUserName = this.Fixture.Create("UserName");
-            this.UserIdentity.Setup(i => i.UserName).Returns(newUserName);
+            this.CreateNewUserName();
 
             var result = sut.PopNextOfflineDeploymentToCreate();
 
@@ -203,11 +202,11 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
 
         }
 
-        [Test]
+        [Test, Explicit]
         public void PopNextOfflineDeploymentToCreate_TaskAlreadyInProcess_ReturnsNull()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = EnumOfflineDeploymentStatus.CreateInProcess;
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
 
@@ -216,7 +215,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
             Assert.IsNull(result);
         }
 
-        [Test]
+        [Test, Explicit]
         public void PopNextOfflineDeploymentToCreate_NoCurrentTask_ReturnsNull()
         {
             var sut = this.GetRepository();
@@ -230,7 +229,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void SetReadyForDownload_SetsReadyForDownload()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = EnumOfflineDeploymentStatus.CreateInProcess;
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
             string fileId = this.Fixture.Create<string>("FileId");
@@ -266,7 +265,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         public void SetReadyForDownload_MissingFileID_ThrowsArgumentNullException()
         {
             var sut = this.GetRepository();
-            string deployBatchRequestId = this.Fixture.Create<string>("deployBatchRequestId");
+            string deployBatchRequestId = this.Fixture.Create<string>("dbrId");
             var initialStatus = EnumOfflineDeploymentStatus.CreateInProcess;
             var deployment = sut.CreateOfflineDeployment(deployBatchRequestId, initialStatus);
             this.CreateNewUserName();

@@ -1085,3 +1085,76 @@ CREATE UNIQUE NONCLUSTERED INDEX IX_RazorTemplate_ViewName ON dbo.RazorTemplate
 	ViewName
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+CREATE TABLE [dbo].[EnumOfflineDeploymentStatus](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumOfflineDeploymentStatus] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumOfflineDeploymentStatus] ADD  CONSTRAINT [DF_EnumOfflineDeploymentStatus_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumOfflineDeploymentStatus] ADD  CONSTRAINT [DF_EnumOfflineDeploymentStatus_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE dbo.EnumOfflineDeploymentStatus ADD CONSTRAINT IX_EnumOfflineDeploymentStatus UNIQUE NONCLUSTERED (TypeName) 
+    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+INSERT INTO EnumOfflineDeploymentStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (0, 'Unknown', 'Unknown', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumOfflineDeploymentStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (1, 'CreateRequested', 'Create Requested', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumOfflineDeploymentStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (2, 'Create In Process', 'Create In Process', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumOfflineDeploymentStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (3, 'ReadyForDownload', 'Ready For Download', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumOfflineDeploymentStatus (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (4, 'CreateFailed', 'Create Failed', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+
+GO
+
+CREATE TABLE [dbo].[OfflineDeployment](
+	[ID] [nvarchar](50) NOT NULL,
+	[EnumOfflineDeploymentStatusID] [int] NOT NULL,
+    [DeployBatchRequestID] [nvarchar](50) NOT NULL,
+	[FileID] [nvarchar](50) NULL,
+	[CreateErrorDetails] [nvarchar](max) NULL,
+	[ResultFileID] [nvarchar](50) NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_OfflineDeployment] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[OfflineDeployment] ADD  CONSTRAINT [DF_OfflineDeployment_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[OfflineDeployment] ADD  CONSTRAINT [DF_OfflineDeployment_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[OfflineDeployment]  WITH CHECK ADD  CONSTRAINT [FK_OfflineDeployment_EnumOfflineDeploymentStatus] FOREIGN KEY([EnumOfflineDeploymentStatusID])
+REFERENCES [dbo].[EnumOfflineDeploymentStatus] ([ID])
+GO
+
+ALTER TABLE [dbo].[OfflineDeployment] CHECK CONSTRAINT [FK_OfflineDeployment_EnumOfflineDeploymentStatus]
+GO
+
+

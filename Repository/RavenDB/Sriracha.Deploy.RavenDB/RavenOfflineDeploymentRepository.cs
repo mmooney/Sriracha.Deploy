@@ -74,7 +74,11 @@ namespace Sriracha.Deploy.RavenDB
             return _documentSession.Pop<OfflineDeployment, DateTime>
                         (i=>i.Status == EnumOfflineDeploymentStatus.CreateRequested, 
                         i=>i.CreatedDateTimeUtc, 
-                        i=>{i.Status = EnumOfflineDeploymentStatus.CreateInProcess;});
+                        i=>
+                        {
+                            i.Status = EnumOfflineDeploymentStatus.CreateInProcess;
+                            i.SetUpdatedFields(_userIdentity.UserName);
+                        });
         }
 
 
