@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using PagedList;
+using System.Linq.Expressions;
 
 namespace Sriracha.Deploy.Data.Dto
 {
@@ -74,5 +75,12 @@ namespace Sriracha.Deploy.Data.Dto
 		{
 			get { return _list.TotalItemCount; }
 		}
+
+        public PagedSortedList<TNew> Cast<TNew>(Func<T,TNew> func)
+        {
+            var list = this.Items.Select(func);
+            var pagedList = new StaticPagedList<TNew>(list, this.PageNumber, this.PageSize, this.TotalItemCount);
+            return new PagedSortedList<TNew>(pagedList, this.SortField, this.SortAscending);
+        }
 	}
 }

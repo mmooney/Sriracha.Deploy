@@ -89,6 +89,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\SqlServerSystemRoleRepositoryTests.cs" />
     <Compile Include="Build\SqlServerBuildPurgeRuleRepositoryTests.cs" />
     <Compile Include="Build\SqlServerBuildRepositoryTests.cs" />
     <Compile Include="Build\SqlServerFileRepositoryTests.cs" />

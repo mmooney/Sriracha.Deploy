@@ -281,8 +281,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var list = db.PageAndSort<SqlSrirachaUser>(listOptions, sql);
-                var pagedList = new StaticPagedList<SrirachaUser>(list.Items.Select(i=>i.ToDto()), list.PageNumber, list.PageSize, list.TotalItemCount);
-                return new PagedSortedList<SrirachaUser>(pagedList, list.SortField, list.SortAscending);
+                return list.Cast(i=>i.ToDto());
             }
         }
 

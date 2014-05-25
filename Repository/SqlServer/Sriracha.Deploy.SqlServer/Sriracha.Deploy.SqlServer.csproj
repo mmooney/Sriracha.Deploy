@@ -95,6 +95,7 @@
     <Compile Include="SqlServerRepositoryRegistar.cs" />
     <Compile Include="SqlServerSystemLogRepository.cs" />
     <Compile Include="SqlServerSystemSettingsRepository.cs" />
+    <Compile Include="SqlServerSystemRoleRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

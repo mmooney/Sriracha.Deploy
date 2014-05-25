@@ -1158,3 +1158,115 @@ ALTER TABLE [dbo].[OfflineDeployment] CHECK CONSTRAINT [FK_OfflineDeployment_Enu
 GO
 
 
+CREATE TABLE [dbo].[EnumSystemRoleType](
+	[ID] [int] NOT NULL,
+	[TypeName] [nvarchar](50) NOT NULL,
+	[DisplayValue] [nvarchar](50) NOT NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_EnumSystemRoleType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[EnumSystemRoleType] ADD  CONSTRAINT [DF_EnumSystemRoleType_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[EnumSystemRoleType] ADD  CONSTRAINT [DF_EnumSystemRoleType_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+ALTER TABLE dbo.EnumSystemRoleType ADD CONSTRAINT IX_EnumSystemRoleType UNIQUE NONCLUSTERED (TypeName) 
+    WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+INSERT INTO EnumSystemRoleType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (0, 'Normal', 'Normal', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemRoleType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (1, 'Everyone', 'Everyone', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+INSERT INTO EnumSystemRoleType (ID, TypeName, DisplayValue, CreatedDateTimeUtc, CreatedByUserName, UpdatedDateTimeUtc, UpdatedByUserName) 
+    VALUES (2, 'Administrator', 'Administrator', GETUTCDATE(), 'RoundhousE', GETUTCDATE(), 'RoundhousE')
+
+GO
+
+CREATE TABLE [dbo].[SystemRole](
+	[ID] [nvarchar](50) NOT NULL,
+	[RoleName] [nvarchar](100) NOT NULL,
+	[EnumSystemRoleTypeID] [int] NOT NULL,
+	[PermissionsJson] [nvarchar](max) NULL,
+	[CreatedByUserName] [nvarchar](100) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](100) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_SystemRole] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+SET ANSI_PADDING ON
+
+GO
+
+CREATE NONCLUSTERED INDEX [IX_SystemRole_RoleName] ON [dbo].[SystemRole]
+(
+	[RoleName] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+CREATE NONCLUSTERED INDEX IX_SystemRole_EnumSystemRoleTypeID ON dbo.SystemRole
+	(
+	EnumSystemRoleTypeID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[SystemRole] ADD  CONSTRAINT [DF_SystemRole_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[SystemRole] ADD  CONSTRAINT [DF_SystemRole_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+
+ALTER TABLE dbo.SystemRole ADD CONSTRAINT
+	FK_SystemRole_EnumSystemRoleType FOREIGN KEY
+	( EnumSystemRoleTypeID ) 
+    REFERENCES dbo.EnumSystemRoleType ( ID ) 
+    ON UPDATE  NO ACTION 
+	ON DELETE  NO ACTION 
+GO
+
+CREATE TABLE [dbo].[SystemRoleUser](
+	[ID] [nvarchar](50) NOT NULL,
+	[SystemRoleID] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
+ CONSTRAINT [PK_SystemRoleUser] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+ALTER TABLE [dbo].[SystemRoleUser]  WITH CHECK ADD  CONSTRAINT [FK_SystemRoleUser_SystemRole] FOREIGN KEY([SystemRoleID])
+REFERENCES [dbo].[SystemRole] ([ID])
+GO
+
+ALTER TABLE [dbo].[SystemRoleUser] CHECK CONSTRAINT [FK_SystemRoleUser_SystemRole]
+GO
+
+CREATE NONCLUSTERED INDEX IX_SystemRoleUser_UserName ON dbo.SystemRoleUser
+	(
+	UserName
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX IX_SystemRoleUser_SystemRoleID ON dbo.SystemRoleUser
+	(
+	SystemRoleID
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO

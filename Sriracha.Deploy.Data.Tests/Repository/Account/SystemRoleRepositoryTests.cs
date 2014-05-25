@@ -360,7 +360,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Account
         }
 
         [Test]
-        public void GetSystemList_PageSize()
+        public void GetSystemRoleList_PageSize()
         {
             var sut = this.GetRepository();
 

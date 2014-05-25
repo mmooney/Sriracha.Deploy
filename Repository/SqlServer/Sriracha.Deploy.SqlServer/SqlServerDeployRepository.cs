@@ -111,8 +111,7 @@ namespace Sriracha.Deploy.SqlServer
             using(var db = _sqlConnectionInfo.GetDB())
             {
                 var list = db.PageAndSort<DBDeployBatchRequest>(listOptions, PetaPoco.Sql.Builder.Append(""));
-                var pagedList = new StaticPagedList<DeployBatchRequest>(list.Items.Select(i=>i.ToDto()), list.PageNumber, list.PageSize, list.TotalItemCount);
-                return new PagedSortedList<DeployBatchRequest>(pagedList, list.SortField, list.SortAscending);
+                return list.Cast(i=>i.ToDto());
             }
         }
 
@@ -243,8 +242,7 @@ namespace Sriracha.Deploy.SqlServer
             using (var db = _sqlConnectionInfo.GetDB())
             {
                 var list = db.PageAndSort<DBDeployBatchRequest>(listOptions, sql);
-                var pagedList = new StaticPagedList<DeployBatchRequest>(list.Items.Select(i => i.ToDto()), list.PageNumber, list.PageSize, list.TotalItemCount);
-                return new PagedSortedList<DeployBatchRequest>(pagedList, list.SortField, list.SortAscending);
+                return list.Cast(i=>i.ToDto());
             }
         }
 

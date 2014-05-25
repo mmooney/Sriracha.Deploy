@@ -7,9 +7,9 @@ namespace Sriracha.Deploy.Data.Dto.Account
 {
     public enum EnumSystemRoleType
     {
-        Normal,
-        Everyone,
-        Administrator
+        Normal = 0,
+        Everyone = 1,
+        Administrator = 2
     }
 
     public class SystemRole : BaseDto

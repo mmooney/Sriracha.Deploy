@@ -599,11 +599,7 @@ namespace Sriracha.Deploy.SqlServer
                     var machineSql = GetBaseMachineQuery().Append("WHERE DeployStateID IN (@deployStateIdList)", new { deployStateIdList=idList });
                     dbMachineList = db.Fetch<SqlDeployStateMachine>(machineSql).ToList();
                 }
-                var castedList = (from i in dbStateList.Items
-                                    select PopulateComponentDeployHistory(i, dbMachineList)
-                                 ).ToList();
-                var castedPagedList = new StaticPagedList<ComponentDeployHistory>(castedList, dbStateList.PageNumber, dbStateList.PageSize, dbStateList.TotalItemCount);
-                return new PagedSortedList<ComponentDeployHistory>(castedPagedList, listOptions.SortField, listOptions.SortAscending.GetValueOrDefault());
+                return dbStateList.Cast(i=>PopulateComponentDeployHistory(i, dbMachineList));
             }
         }
 
