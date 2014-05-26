@@ -125,6 +125,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Project\RavenProjectRepositoryProjectTests.cs" />
     <Compile Include="RavenCleanupRepositoryTests.cs" />
+    <Compile Include="RavenConnectionSettingRepositoryTests.cs" />
     <Compile Include="RavenRazorTemplateRepositoryTests.cs" />
     <Compile Include="RavenSystemLogRepositoryTests.cs" />
     <Compile Include="RavenSystemSettingsRepositoryTests.cs" />
@@ -132,6 +133,10 @@
     <Compile Include="TempTestDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
+      <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
+      <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj">
       <Project>{4aabd8d9-ab20-4db6-82ce-8ecb5644255e}</Project>
       <Name>Sriracha.Deploy.Data.Tests</Name>
