@@ -110,6 +110,7 @@
     <Compile Include="Project\SqlServerProjectRepositoryConfigurationTests.cs" />
     <Compile Include="Project\SqlServerProjectRepositoryProjectTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SqlServerConnectionSettingRepositoryTests.cs" />
     <Compile Include="SqlServerSystemLogRepositoryTests.cs" />
     <Compile Include="SqlServerSystemSettingsRepositoryTests.cs" />
     <Compile Include="SqlServerRazorTemplateRepositoryTests.cs" />
@@ -154,6 +155,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MMDB.ConnectionSettings\MMDB.ConnectionSettings.csproj">
+      <Project>{ae684110-7022-4f9a-be0c-26ebffae0f31}</Project>
+      <Name>MMDB.ConnectionSettings</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Sriracha.Deploy.Data.Tests\Sriracha.Deploy.Data.Tests.csproj">
       <Project>{4aabd8d9-ab20-4db6-82ce-8ecb5644255e}</Project>
       <Name>Sriracha.Deploy.Data.Tests</Name>

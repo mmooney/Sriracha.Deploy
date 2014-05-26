@@ -32,9 +32,9 @@ namespace Sriracha.Deploy.SqlServer
             builder.RegisterType<SqlServerOfflineDeploymentRepository>().As<IOfflineDeploymentRepository>();
             builder.RegisterType<SqlServerSystemRoleRepository>().As<ISystemRoleRepository>();
             builder.RegisterType<SqlServerBuildPurgeRuleRepository>().As<IBuildPurgeRuleRepository>();
+            builder.RegisterType<SqlServerConnectionSettingRepository>().As<IConnectionSettingRepository>();
             throw new NotImplementedException();
 
-            //builder.RegisterType<SqlServerConnectionSettingRepository>().As<IConnectionSettingRepository>();
             //builder.RegisterType<SqlServerPermissionRepository>().As<IPermissionRepository>();
         }
     }

@@ -1270,3 +1270,24 @@ CREATE NONCLUSTERED INDEX IX_SystemRoleUser_SystemRoleID ON dbo.SystemRoleUser
 	SystemRoleID
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+
+CREATE TABLE [dbo].[ConnectionSetting](
+	[ID] [nvarchar](50) NOT NULL,
+	[SettingKey] [nvarchar](100) NOT NULL,
+	[ValueJson] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_ConnectionSetting] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [IX_ConnectionSetting_SettingKey] ON [dbo].[ConnectionSetting]
+(
+	[SettingKey] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+
