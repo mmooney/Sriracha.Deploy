@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\RavenMembershipRepositoryTests.cs" />
+    <Compile Include="Account\RavenPermissionRepositoryTests.cs" />
     <Compile Include="Account\RavenSystemRoleRepositoryTests.cs" />
     <Compile Include="AssertEx.cs" />
     <Compile Include="Build\RavenBuildPurgeRuleRepositoryTests.cs" />

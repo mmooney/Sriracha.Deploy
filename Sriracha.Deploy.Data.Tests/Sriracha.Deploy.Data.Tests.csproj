@@ -94,6 +94,7 @@
     <Compile Include="PermissionValidatorTests.cs" />
     <Compile Include="ProcessRunnerTests.cs" />
     <Compile Include="Repository\Account\MembershipRepositoryTests.cs" />
+    <Compile Include="Repository\Account\PermissionRepositoryTests.cs" />
     <Compile Include="Repository\Account\SystemRoleRepositoryTests.cs" />
     <Compile Include="Repository\AssertHelpers.cs" />
     <Compile Include="Repository\Build\BuildRepositoryTests.cs" />

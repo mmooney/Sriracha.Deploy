@@ -25,35 +25,32 @@ namespace Sriracha.Deploy.RavenDB
 		private DeployProjectRoleAssignments UpdateAssignments(DeployProjectRoleAssignments assignments, DeployProjectRole role)
 		{
 			assignments = assignments??new DeployProjectRoleAssignments();
-			if(string.IsNullOrEmpty(assignments.Id))
-			{
-				assignments.Id = Guid.NewGuid().ToString();
-				assignments.CreatedByUserName = _userIdentity.UserName;
-				assignments.CreatedDateTimeUtc = DateTime.UtcNow;
-			}
-			assignments.ProjectId = role.ProjectId;
-			assignments.ProjectRoleId = role.Id;
-			assignments.UpdatedByUserName = _userIdentity.UserName;
-			assignments.UpdateDateTimeUtc = DateTime.UtcNow;
+            //if(string.IsNullOrEmpty(assignments.Id))
+            //{
+            //    assignments.Id = Guid.NewGuid().ToString();
+            //    assignments.CreatedByUserName = _userIdentity.UserName;
+            //    assignments.CreatedDateTimeUtc = DateTime.UtcNow;
+            //}
+            //assignments.ProjectId = role.ProjectId;
+            //assignments.ProjectRoleId = role.Id;
+            //assignments.UpdatedByUserName = _userIdentity.UserName;
+            //assignments.UpdateDateTimeUtc = DateTime.UtcNow;
 			return assignments;
 		}
 
 		private DeployProjectRolePermissions UpdatePermissions(DeployProjectRolePermissions permissions, DeployProjectRole role)
 		{
-			if(permissions == null)
-			{
-				permissions = new DeployProjectRolePermissions();
-			}
-			if(string.IsNullOrEmpty(permissions.Id))
-			{
-				permissions.Id = Guid.NewGuid().ToString();
-				permissions.CreatedByUserName = _userIdentity.UserName;
-				permissions.CreatedDateTimeUtc = DateTime.UtcNow;
-			}
-			permissions.ProjectId = role.ProjectId;
-			permissions.ProjectRoleId = role.Id;
-			permissions.UpdatedByUserName = _userIdentity.UserName;
-			permissions.UpdateDateTimeUtc = DateTime.UtcNow;
+            permissions = permissions ?? new DeployProjectRolePermissions();
+            //if(string.IsNullOrEmpty(permissions.Id))
+            //{
+            //    permissions.Id = Guid.NewGuid().ToString();
+            //    permissions.CreatedByUserName = _userIdentity.UserName;
+            //    permissions.CreatedDateTimeUtc = DateTime.UtcNow;
+            //}
+            //permissions.ProjectId = role.ProjectId;
+            //permissions.ProjectRoleId = role.Id;
+            //permissions.UpdatedByUserName = _userIdentity.UserName;
+            //permissions.UpdateDateTimeUtc = DateTime.UtcNow;
 
 			UpdateEnvironmentPermissions(role, permissions.RequestDeployPermissionList);
 			UpdateEnvironmentPermissions(role, permissions.ApproveRejectDeployPermissionList);
@@ -65,22 +62,22 @@ namespace Sriracha.Deploy.RavenDB
 
 		private void UpdateEnvironmentPermissions(DeployProjectRole role, List<DeployProjectRoleEnvironmentPermission> list)
 		{
-			if (list != null)
-			{
-				foreach (var item in list)
-				{
-					if (string.IsNullOrEmpty(item.Id))
-					{
-						item.Id = Guid.NewGuid().ToString();
-						item.CreatedByUserName = _userIdentity.UserName;
-						item.CreatedDateTimeUtc = DateTime.UtcNow;
-					}
-					item.ProjectId = role.ProjectId;
-					item.ProjectRoleId = role.Id;
-					item.UpdatedByUserName = _userIdentity.UserName;
-					item.UpdateDateTimeUtc = DateTime.UtcNow;
-				}
-			}
+            //if (list != null)
+            //{
+            //    foreach (var item in list)
+            //    {
+            //        if (string.IsNullOrEmpty(item.Id))
+            //        {
+            //            item.Id = Guid.NewGuid().ToString();
+            //            item.CreatedByUserName = _userIdentity.UserName;
+            //            item.CreatedDateTimeUtc = DateTime.UtcNow;
+            //        }
+            //        item.ProjectId = role.ProjectId;
+            //        item.ProjectRoleId = role.Id;
+            //        item.UpdatedByUserName = _userIdentity.UserName;
+            //        item.UpdateDateTimeUtc = DateTime.UtcNow;
+            //    }
+            //}
 		}
 
 		public DeployProjectRole GetProjectRole(string projectRoleId)
@@ -99,11 +96,19 @@ namespace Sriracha.Deploy.RavenDB
 
 		public List<DeployProjectRole> GetProjectRoleList(string projectId)
 		{
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("projectId");
+            }
 			return _documentSession.Query<DeployProjectRole>().Where(i=>i.ProjectId == projectId).ToList();
 		}
 
 		public List<DeployProjectRole> GetProjectRoleListForUser(string userName)
 		{
+            if(string.IsNullOrEmpty(userName))
+            {
+                throw new ArgumentNullException("userName");
+            }
 			return _documentSession.Query<DeployProjectRole>().ToList().Where(i => i.Assignments.UserNameList.Any(j=>j == userName)).ToList();
 		}
 
@@ -111,16 +116,20 @@ namespace Sriracha.Deploy.RavenDB
 		{
 			if(string.IsNullOrEmpty(projectId))
 			{
-				throw new ArgumentNullException("Missing projectId");
+				throw new ArgumentNullException("projectId");
 			}
+            if(string.IsNullOrEmpty(projectName))
+            {
+                throw new ArgumentNullException("projectName");
+            }
 			if(string.IsNullOrEmpty(roleName))
 			{
-				throw new ArgumentNullException("Missing roleName");
+				throw new ArgumentNullException("roleName");
 			}
-			var existingItem = _documentSession.Query<DeployProjectRole>().Any(i=>i.ProjectId == projectId && i.RoleName == roleName);
+			var existingItem = _documentSession.QueryNoCacheNotStale<DeployProjectRole>().Any(i=>i.ProjectId == projectId && i.RoleName == roleName);
 			if(existingItem)
 			{
-				throw new ArgumentNullException(string.Format("DeployProjectRole already exists for Project {0} and RoleName {1}", projectId, roleName));
+				throw new ArgumentException(string.Format("DeployProjectRole already exists for Project {0} and RoleName {1}", projectId, roleName));
 			}
 			var newItem = new DeployProjectRole
 			{
@@ -132,7 +141,7 @@ namespace Sriracha.Deploy.RavenDB
 				CreatedByUserName = _userIdentity.UserName,
 				CreatedDateTimeUtc = DateTime.UtcNow,
 				UpdatedByUserName = _userIdentity.UserName,
-				UpdateDateTimeUtc = DateTime.UtcNow
+				UpdatedDateTimeUtc = DateTime.UtcNow
 			};
 			newItem.Permissions = this.UpdatePermissions(permissions, newItem);
 			newItem.Assignments = this.UpdateAssignments(assignments, newItem);
@@ -143,13 +152,31 @@ namespace Sriracha.Deploy.RavenDB
 
 		public DeployProjectRole UpdateProjectRole(string roleId, string projectId, string projectName, string roleName, DeployProjectRolePermissions permissions, DeployProjectRoleAssignments assignments, bool everyoneRoleIndicator)
 		{
-			var item = this.GetProjectRole(roleId);
+            if(string.IsNullOrEmpty(projectId))
+            {
+                throw new ArgumentNullException("projectId");
+            }
+            if(string.IsNullOrEmpty(projectName))
+            {
+                throw new ArgumentNullException("projectName");
+            }
+            if(string.IsNullOrEmpty(roleName))
+            {
+                throw new ArgumentNullException("roleName");
+            }
+            var existingItem = _documentSession.QueryNoCacheNotStale<DeployProjectRole>().Any(i => i.Id != roleId && i.ProjectId == projectId && i.RoleName == roleName);
+            if (existingItem)
+            {
+                throw new ArgumentException(string.Format("DeployProjectRole already exists for Project {0} and RoleName {1}", projectId, roleName));
+            }
+            var item = this.GetProjectRole(roleId);
+            item.ProjectId = projectId;
 			item.ProjectName = projectName;
 			item.RoleName = roleName;
 			item.Permissions = this.UpdatePermissions(permissions, item);
 			item.Assignments = this.UpdateAssignments(assignments, item);
 			item.UpdatedByUserName = _userIdentity.UserName;
-			item.UpdateDateTimeUtc = DateTime.UtcNow;
+			item.UpdatedDateTimeUtc = DateTime.UtcNow;
 			item.EveryoneRoleIndicator = everyoneRoleIndicator;
 			_documentSession.SaveChanges();
 			return item;

@@ -42,7 +42,7 @@ namespace Sriracha.Deploy.Data.Impl
 			foreach(var projectId in projectIdList)
 			{
 				var projectRoleList = userRoleList.Where(i=>i.ProjectId == projectId);
-				var effectiveProjectPermissions = new DeployProjectRolePermissions
+				var effectiveProjectPermissions = new DeployProjectEffectivePermissions
 				{
 					ProjectId = projectId,
 					ProjectName = StringHelper.IsNullOrEmpty(projectRoleList.Select(i=>i.ProjectName).FirstOrDefault(), "(No Project Name)"),
@@ -97,7 +97,7 @@ namespace Sriracha.Deploy.Data.Impl
 				{
 					EnvironmentId = environmentId,
 					EnvironmentName = StringHelper.IsNullOrEmpty(environmentPermissionList.Select(i=>i.EnvironmentName).FirstOrDefault(), environmentId),
-					ProjectId = environmentPermissionList.Select(i=>i.ProjectId).FirstOrDefault(),
+                    //ProjectId = environmentPermissionList.Select(i=>i.ProjectId).FirstOrDefault(),
 					Access = environmentPermissionList.Any(i=>i.Access == EnumPermissionAccess.Deny) ? EnumPermissionAccess.Deny
 								: environmentPermissionList.Any(i=>i.Access == EnumPermissionAccess.Grant) ? EnumPermissionAccess.Grant
 								: EnumPermissionAccess.None

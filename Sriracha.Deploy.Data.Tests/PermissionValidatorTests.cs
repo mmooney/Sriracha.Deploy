@@ -19,7 +19,7 @@ namespace Sriracha.Deploy.Data.Tests
 	{
 		public class GetUserEffectivePermissions
 		{
-			private void AssertPermission(List<DeployProjectRolePermissions> projectPermissionList, EnumPermissionAccess access)
+            private void AssertPermission(List<DeployProjectEffectivePermissions> projectPermissionList, EnumPermissionAccess access)
 			{
 				foreach(var projectPermission in projectPermissionList)
 				{
@@ -27,7 +27,7 @@ namespace Sriracha.Deploy.Data.Tests
 				}
 			}
 
-			private void AssertPermission(DeployProjectRolePermissions projectPermissions, EnumPermissionAccess access)
+			private void AssertPermission(DeployProjectEffectivePermissions projectPermissions, EnumPermissionAccess access)
 			{
 				Assert.AreEqual(access, projectPermissions.EditComponentConfigurationAccess);
 				Assert.AreEqual(access, projectPermissions.CreateEnvironmentAccess);
@@ -141,8 +141,8 @@ namespace Sriracha.Deploy.Data.Tests
 						{
 							item = new DeployProjectRoleEnvironmentPermission
 							{
-								Id = this.Fixture.Create<string>(),
-								ProjectId = project.Id,
+                                //Id = this.Fixture.Create<string>(),
+                                //ProjectId = project.Id,
 								EnvironmentId = x.Id,
 								EnvironmentName = x.CreatedByUserName
 							};

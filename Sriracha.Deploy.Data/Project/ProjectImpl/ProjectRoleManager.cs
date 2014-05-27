@@ -103,8 +103,8 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
 					{
 						EnvironmentId = environment.Id,
 						EnvironmentName = environment.EnvironmentName,
-						ProjectId = project.Id,
-						ProjectRoleId = projectRoleId,
+                        //ProjectId = project.Id,
+                        //ProjectRoleId = projectRoleId,
 						Access = EnumPermissionAccess.Grant
 					};
 					permissionList.Add(item);

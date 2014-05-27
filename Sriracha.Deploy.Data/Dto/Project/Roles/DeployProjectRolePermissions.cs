@@ -7,10 +7,6 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 {
 	public class DeployProjectRolePermissions
 	{
-		public string Id { get; set; }
-		public string ProjectId { get; set; }
-		public string ProjectRoleId { get; set; }
-
 		public List<DeployProjectRoleEnvironmentPermission> RequestDeployPermissionList { get; set; }
 		public List<DeployProjectRoleEnvironmentPermission> ApproveRejectDeployPermissionList { get; set; }
 		public List<DeployProjectRoleEnvironmentPermission> RunDeploymentPermissionList { get; set; }
@@ -20,11 +16,6 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 		public EnumPermissionAccess CreateEnvironmentAccess { get; set; }
 		public EnumPermissionAccess EditProjectPermissionsAccess { get; set; }
 
-		public string CreatedByUserName { get; set; }
-		public DateTime CreatedDateTimeUtc { get; set; }
-		public string UpdatedByUserName { get; set; }
-		public DateTime UpdateDateTimeUtc { get; set; }
-
 		public DeployProjectRolePermissions ()
 		{
 			this.RequestDeployPermissionList = new List<DeployProjectRoleEnvironmentPermission>();
@@ -33,7 +24,5 @@ namespace Sriracha.Deploy.Data.Dto.Project.Roles
 			this.EditEnvironmentPermissionList = new List<DeployProjectRoleEnvironmentPermission>();
 			this.EditEnvironmentPermissionsPermissionList = new List<DeployProjectRoleEnvironmentPermission>();
 		}
-
-		public string ProjectName { get; set; }
 	}
 }
