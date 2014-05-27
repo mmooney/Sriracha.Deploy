@@ -101,7 +101,7 @@
   </target>
 
 	<target name="DeploySolution" description="Deploy Solution">
-    <exec program="${deployEnvironment}\Roundhouse.bat" workingdir="${BuildDirectory}">
+    <exec program="${deploySettingsDirectory}\Roundhouse.bat" workingdir="${BuildDirectory}">
     </exec>
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
