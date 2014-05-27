@@ -67,7 +67,7 @@ namespace Sriracha.Deploy.Web.Controllers
                 }
                 catch(Exception err)
                 {
-                    this.ModelState.AddModelError("", err);
+                    this.ModelState.AddModelError("CustomError", err.Message);
                 }
             }
 

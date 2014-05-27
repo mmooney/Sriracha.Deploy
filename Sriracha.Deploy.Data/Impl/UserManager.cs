@@ -42,7 +42,8 @@ namespace Sriracha.Deploy.Data.Impl
             var user = new SrirachaUser
             {
                 UserName = userName,
-                EmailAddress = emailAddress
+                EmailAddress = emailAddress,
+                LastActivityDateTimeUtc = DateTime.UtcNow
             };
             if(!string.IsNullOrEmpty(password))
             {
