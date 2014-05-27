@@ -1210,10 +1210,6 @@ CREATE TABLE [dbo].[SystemRole](
 
 GO
 
-SET ANSI_PADDING ON
-
-GO
-
 CREATE NONCLUSTERED INDEX [IX_SystemRole_RoleName] ON [dbo].[SystemRole]
 (
 	[RoleName] ASC
@@ -1288,6 +1284,81 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_ConnectionSetting_SettingKey] ON [dbo].[Con
 (
 	[SettingKey] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+
+
+CREATE TABLE [dbo].[DeployProjectRole](
+	[ID] [nvarchar](50) NOT NULL,
+	[ProjectID] [nvarchar](50) NOT NULL,
+	[ProjectName] [nvarchar](200) NOT NULL,
+	[RoleName] [nvarchar](200) NOT NULL,
+	[EveryoneRoleIndicator] [bit] NOT NULL,
+	[PermissionsJson] [nvarchar](max) NULL,
+	[CreatedByUserName] [nvarchar](50) NOT NULL,
+	[CreatedDateTimeUtc] [datetime2](7) NOT NULL,
+	[UpdatedByUserName] [nvarchar](50) NOT NULL,
+	[UpdatedDateTimeUtc] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_DeployProjectRole] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DeployProjectRole_ProjectID] ON [dbo].[DeployProjectRole]
+(
+	[ProjectID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DeployProjectRole_RoleName] ON [dbo].[DeployProjectRole]
+(
+	[RoleName] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+ALTER TABLE [dbo].[DeployProjectRole] ADD  CONSTRAINT [DF_DeployProjectRole_CreatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [CreatedDateTimeUtc]
+GO
+
+ALTER TABLE [dbo].[DeployProjectRole] ADD  CONSTRAINT [DF_DeployProjectRole_UpdatedDateTimeUtc]  DEFAULT (getutcdate()) FOR [UpdatedDateTimeUtc]
+GO
+
+
+CREATE TABLE [dbo].[DeployProjectRoleUser](
+	[ID] [nvarchar](50) NOT NULL,
+	[DeployProjectRoleID] [nvarchar](50) NOT NULL,
+	[UserName] [nvarchar](100) NOT NULL,
+ CONSTRAINT [PK_DeployProjectRoleUser] PRIMARY KEY NONCLUSTERED 
+(
+	[ID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+
+GO
+
+SET ANSI_PADDING ON
+
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DeployProjectRoleUser_DeployProjectRoleID] ON [dbo].[DeployProjectRoleUser]
+(
+	[DeployProjectRoleID] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DeployProjectRoleUser_UserName] ON [dbo].[DeployProjectRoleUser]
+(
+	[UserName] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, DROP_EXISTING = OFF, ONLINE = OFF)
+GO
+
+ALTER TABLE [dbo].[DeployProjectRoleUser]  WITH CHECK ADD  CONSTRAINT [FK_DeployProjectRoleUser_DeployProjectRole] FOREIGN KEY([DeployProjectRoleID])
+REFERENCES [dbo].[DeployProjectRole] ([ID])
+GO
+
+ALTER TABLE [dbo].[DeployProjectRoleUser] CHECK CONSTRAINT [FK_DeployProjectRoleUser_DeployProjectRole]
 GO
 
 

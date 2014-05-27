@@ -12,5 +12,10 @@ namespace System
 		{
 			return JsonConvert.SerializeObject(thisObject);
 		}
+
+        public static T FromJson<T>(this string thisString)
+        {
+            return JsonConvert.DeserializeObject<T>(thisString);
+        }
 	}
 }
