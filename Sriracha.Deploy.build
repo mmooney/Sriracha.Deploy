@@ -50,6 +50,11 @@
         <include name="**/*.exe"/>
       </fileset>
     </copy>
+    <copy todir=".\Publish\SqlServerDatabase">
+      <fileset basedir=".\Repository\SqlServer\Sriracha.Deploy.SqlServer.RoundhousE\db">
+        <include name="**/*.*"/>
+      </fileset>
+    </copy>
     <msbuild project=".\Sriracha.Deploy.Web\Sriracha.Deploy.Web.csproj" target="ResolveReferences;_CopyWebApplication">
 			<property name="Configuration" value="Release"/>
 			<property name="OutDir" value="..\PublishTemp\Website\\"/>
@@ -96,6 +101,8 @@
   </target>
 
 	<target name="DeploySolution" description="Deploy Solution">
+    <exec program="${deployEnvironment}\Roundhouse.bat" workingdir="${BuildDirectory}">
+    </exec>
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
 			<arg value="/deployment:.\Publish\SelfDeploy\Sriracha.Deploy.SelfDeploy.dll"/>
