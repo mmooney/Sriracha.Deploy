@@ -11,6 +11,7 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Repository;
 using Sriracha.Deploy.Web.Security;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Sriracha.Deploy.Web.Tests
 {
@@ -552,6 +553,7 @@ namespace Sriracha.Deploy.Web.Tests
 				var membershipUser = provider.GetUser(testData.SrirachaUser.UserName, true);
 
 				Assert.IsNotNull(membershipUser);
+                Thread.Sleep(1000); //The update user is run async, try to wait for it
 				testData.Repository.Verify(i => i.UpdateUser(testData.SrirachaUser), Times.Once());
 				Assert.Greater(testData.SrirachaUser.LastActivityDateTimeUtc, DateTime.UtcNow.AddMinutes(-1));
 			}
