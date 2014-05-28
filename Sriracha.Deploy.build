@@ -101,7 +101,10 @@
   </target>
 
 	<target name="DeploySolution" description="Deploy Solution">
-    <exec program="${deploySettingsDirectory}\Roundhouse.bat" workingdir="${BuildDirectory}" verbose="true"/>
+    <exec program="ThirdParty\roundhouse-configfile\rh.exe">
+      <arg value="--configFile:${deploySettingsDirectory}\Roundhouse.json"/>
+      <arg value="--silent"/>
+    </exec>
 		<exec program=".\ThirdParty\dropkick-trunk\dk.exe" verbose="true">
 			<arg value="execute"/>
 			<arg value="/deployment:.\Publish\SelfDeploy\Sriracha.Deploy.SelfDeploy.dll"/>
