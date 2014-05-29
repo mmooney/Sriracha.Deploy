@@ -159,7 +159,7 @@ namespace Sriracha.Deploy.SqlServer
         {
             var sql = PetaPoco.Sql.Builder
                         .Append("DECLARE @@id AS NVARCHAR(50);")
-                        .Append("SET @@id = (SELECT TOP 1 ID FROM DeployBatchRequest WHERE EnumDeployStatusID=@0 ORDER BY SubmittedDateTimeUtc ASC);", EnumDeployStatus.NotStarted)
+                        .Append("SET @@id = (SELECT TOP 1 ID FROM DeployBatchRequest WHERE EnumDeployStatusID=@0 OR (ResumeRequested=1 AND (EnumDeployStatusID=@1 OR EnumDeployStatusID=@2)) ORDER BY SubmittedDateTimeUtc ASC);", EnumDeployStatus.NotStarted, EnumDeployStatus.Error, EnumDeployStatus.Cancelled)
                         .Append("IF(@@id IS NOT NULL) UPDATE DeployBatchRequest SET EnumDeployStatusID=@0, StartedDateTimeUtc=GETUTCDATE(), UpdatedDateTimeUtc=GETUTCDATE(), UpdatedByUserName=@1 WHERE ID=@@id;", EnumDeployStatus.InProcess, _userIdentity.UserName)
                         .Append("SELECT @@id");
             using (var db = _sqlConnectionInfo.GetDB())

@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Sriracha.Deploy.Data.Dto.Build
 {
-	public class DeployBuild
+	public class DeployBuild : BaseDto
 	{
-		public string Id { get; set; }
 		public string ProjectId { get; set; }
 		public string ProjectName { get; set; }
 		public string ProjectBranchId { get; set; }
@@ -16,10 +15,6 @@ namespace Sriracha.Deploy.Data.Dto.Build
 		public string ProjectComponentName { get; set; }
 		public string FileId { get; set; }
 		public string Version { get; set; }
-		public DateTime CreatedDateTimeUtc { get; set; }
-		public string CreatedByUserName { get; set; }
-		public DateTime UpdatedDateTimeUtc { get; set; }
-		public string UpdatedByUserName { get; set; }
 
 		public string DisplayValue
 		{

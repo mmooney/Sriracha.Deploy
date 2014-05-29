@@ -16,17 +16,13 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
 	{
         private void AssertCreatedComponent(DeployComponent result, string projectId, string componentName, EnumDeploymentIsolationType isolationType, IProjectRepository sut)
         {
-            Assert.IsNotNull(result);
-            Assert.IsNotNullOrEmpty(result.Id);
+            AssertHelpers.AssertCreatedBaseDto(result, this.UserName);
             Assert.AreEqual(projectId, result.ProjectId);
             Assert.AreEqual(componentName, result.ComponentName);
             Assert.AreEqual(false, result.UseConfigurationGroup);
             Assert.AreEqual(null, result.ConfigurationId);
             Assert.AreEqual(isolationType, result.IsolationType);
-            AssertIsRecent(result.CreatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.CreatedByUserName);
-            AssertIsRecent(result.UpdatedDateTimeUtc);
-            Assert.AreEqual(this.UserName, result.UpdatedByUserName);
+
 
             var dbItem = sut.GetComponent(result.Id, projectId);
             AssertHelpers.AssertComponent(result, dbItem);
@@ -284,7 +280,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void GetOrCreateComponent_CreatesNewBranch()
+        public void GetOrCreateComponent_CreatesNewComponent()
         {
             var sut = this.GetRepository();
 
@@ -297,7 +293,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void GetOrCreateComponent_GetsBranchByID()
+        public void GetOrCreateComponent_GetsComponentByID()
         {
             var sut = this.GetRepository();
 
@@ -310,7 +306,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
         }
 
         [Test]
-        public void GetOrCreateComponent_GetsBranchByName()
+        public void GetOrCreateComponent_GetsComponentByName()
         {
             var sut = this.GetRepository();
 
@@ -320,6 +316,22 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Project
             var result = sut.GetOrCreateComponent(project.Id, component.ComponentName);
 
             AssertHelpers.AssertComponent(component, result);
+        }
+
+        [Test]
+        public void GetOrCreateComponent_ExistingNameinDifferentProject_CreatesComponent()
+        {
+            var sut = this.GetRepository();
+
+            var project1 = this.CreateTestProject(sut);
+            string componentName = this.Fixture.Create<string>("ComponentName");
+            var existingComponent = sut.GetOrCreateComponent(project1.Id, componentName);
+
+            var project2 = this.CreateTestProject(sut);
+            
+            var result = sut.GetOrCreateComponent(project2.Id, componentName);
+            Assert.AreNotEqual(existingComponent.Id, result.Id);
+            AssertCreatedComponent(result, project2.Id, componentName, EnumDeploymentIsolationType.IsolatedPerMachine, sut);
         }
 
         [Test]

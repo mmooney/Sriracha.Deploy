@@ -665,7 +665,7 @@ namespace Sriracha.Deploy.SqlServer
             var item = TryGetComponent(componentIdOrName, projectId);
             if(item == null)
             {
-                item = TryGetComponentByName(componentIdOrName);
+                item = TryGetComponentByName(componentIdOrName, projectId);
             }
             if(item == null)
             {
@@ -674,11 +674,11 @@ namespace Sriracha.Deploy.SqlServer
             return item;
         }
 
-        private DeployComponent TryGetComponentByName(string componentName)
+        private DeployComponent TryGetComponentByName(string componentName, string projectId)
         {
             using(var db = _sqlConnectionInfo.GetDB())
             {
-                var sql = GetComponentBaseQuery().Append("WHERE ComponentName=@0", componentName);
+                var sql = GetComponentBaseQuery().Append("WHERE ComponentName=@0 AND DeployProjectID=@1", componentName, projectId);
                 var item = db.SingleOrDefault<DeployComponent>(sql);
                 if(item != null)
                 {

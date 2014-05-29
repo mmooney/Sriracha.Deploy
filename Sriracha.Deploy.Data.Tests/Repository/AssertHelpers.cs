@@ -44,7 +44,7 @@ namespace Sriracha.Deploy.Data.Tests.Repository
 
         public static void AssertBuild(DeployBuild expected, DeployBuild actual)
         {
-            Assert.IsNotNull(actual);
+            AssertHelpers.AssertBaseDto(expected, actual);
             Assert.AreEqual(expected.Id, actual.Id);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             Assert.AreEqual(expected.ProjectName, actual.ProjectName);
@@ -54,36 +54,23 @@ namespace Sriracha.Deploy.Data.Tests.Repository
             Assert.AreEqual(expected.ProjectBranchName, actual.ProjectBranchName);
             Assert.AreEqual(expected.FileId, actual.FileId);
             Assert.AreEqual(expected.Version, actual.Version);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
         }
 
         public static void AssertComponent(DeployComponent expected, DeployComponent actual)
         {
-            Assert.AreEqual(expected.Id, actual.Id);
+            AssertHelpers.AssertBaseDto(expected, actual);
             Assert.AreEqual(expected.ProjectId, actual.ProjectId);
             Assert.AreEqual(expected.ComponentName, actual.ComponentName);
             Assert.AreEqual(expected.IsolationType, actual.IsolationType);
-            AssertDateEqual(expected.CreatedDateTimeUtc, actual.CreatedDateTimeUtc);
-            Assert.AreEqual(expected.CreatedByUserName, actual.CreatedByUserName);
-            AssertDateEqual(expected.UpdatedDateTimeUtc, actual.UpdatedDateTimeUtc);
-            Assert.AreEqual(expected.UpdatedByUserName, actual.UpdatedByUserName);
         }
 
         public static void AssertMachine(DeployMachine expectedMachine, DeployMachine actualMachine)
         {
-            Assert.IsNotNull(actualMachine);
-            Assert.AreEqual(expectedMachine.Id, actualMachine.Id);
+            AssertHelpers.AssertBaseDto(expectedMachine, actualMachine);
             Assert.AreEqual(expectedMachine.ProjectId, actualMachine.ProjectId);
             Assert.AreEqual(expectedMachine.EnvironmentId, actualMachine.EnvironmentId);
             Assert.AreEqual(expectedMachine.EnvironmentName, actualMachine.EnvironmentName);
             Assert.AreEqual(expectedMachine.ParentId, actualMachine.ParentId);
-            Assert.AreEqual(expectedMachine.CreatedByUserName, actualMachine.CreatedByUserName);
-            AssertDateEqual(expectedMachine.CreatedDateTimeUtc, actualMachine.CreatedDateTimeUtc);
-            Assert.AreEqual(expectedMachine.UpdatedByUserName, actualMachine.UpdatedByUserName);
-            AssertDateEqual(expectedMachine.UpdatedDateTimeUtc, actualMachine.UpdatedDateTimeUtc);
             AssertDictionary(expectedMachine.ConfigurationValueList, actualMachine.ConfigurationValueList);
         }
 
