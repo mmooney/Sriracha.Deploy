@@ -599,7 +599,9 @@ namespace Sriracha.Deploy.SqlServer
                     var machineSql = GetBaseMachineQuery().Append("WHERE DeployStateID IN (@deployStateIdList)", new { deployStateIdList=idList });
                     dbMachineList = db.Fetch<SqlDeployStateMachine>(machineSql).ToList();
                 }
-                return dbStateList.Cast(i=>PopulateComponentDeployHistory(i, dbMachineList));
+                var returnList = dbStateList.Cast(i=>PopulateComponentDeployHistory(i, dbMachineList));
+                returnList.Items.ForEach(i=>i.BuildDisplayValue = DeployBuild.GetDisplayValue(i.ProjectName, i.ProjectBranchName, i.ProjectComponentName, i.Version));
+                return returnList;
             }
         }
 

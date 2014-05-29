@@ -948,6 +948,29 @@ namespace Sriracha.Deploy.Data.Tests.Repository.Deploy
         }
 
         [Test]
+        public void GetComponentDeployHistory_PopulatesBuildDisplayValue()
+        {
+            var sut = this.GetRepository();
+
+            var deployStateList = new List<DeployState>();
+            for (int i = 0; i < 5; i++)
+            {
+                var deployState = this.CreateTestDeployState(sut);
+                deployStateList.Add(deployState);
+            }
+
+            var result = sut.GetComponentDeployHistory(null);
+
+            Assert.IsNotNull(result);
+            foreach(var item in result.Items)
+            {
+                Assert.IsNotNull(item.BuildDisplayValue);
+                Assert.AreEqual(DeployBuild.GetDisplayValue(item.ProjectName, item.ProjectBranchName, item.ProjectComponentName, item.Version), item.BuildDisplayValue);
+            }
+
+        }
+
+        [Test]
         public void GetComponentDeployHistory_PageSize()
         {
             var sut = this.GetRepository();

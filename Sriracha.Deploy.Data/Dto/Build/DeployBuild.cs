@@ -20,9 +20,20 @@ namespace Sriracha.Deploy.Data.Dto.Build
 		{
 			get 
 			{
-				return string.Format("{0} - {1} - {2} - {3}", this.ProjectName, this.ProjectBranchName, this.ProjectComponentName, this.Version);
+                return GetDisplayValue(this);
 			}
 		}
+
+        public static string GetDisplayValue(DeployBuild build)
+        {
+            return GetDisplayValue(build.ProjectName, build.ProjectBranchName, build.ProjectComponentName, build.Version);
+        }
+
+        public static string GetDisplayValue(string projectName, string branchName, string componentName, string version)
+        {
+            return string.Format("{0} - {1} - {2} - {3}", projectName, branchName, componentName, version);
+        }
+
 
 		public string SortableVersion
 		{

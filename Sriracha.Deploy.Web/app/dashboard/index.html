@@ -33,7 +33,7 @@
                 <h5>{{component.componentName}}</h5>
                 <div ng-repeat="build in component.buildList | orderBy:'deploymentStartedDateTimeUtc':false">
                     <div ng-class="getBuildDisplayClass(build)">
-                        {{build.buildDisplayValue}} - {{deploymentStartedDateTimeUtc}}
+                        {{build.buildDisplayValue}} - {{build.DeploymentCompletedDateTimeUtc}}
                     </div>
                 </div>
             </div>
