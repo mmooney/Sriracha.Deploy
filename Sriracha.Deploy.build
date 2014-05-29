@@ -102,7 +102,7 @@
 
 	<target name="DeploySolution" description="Deploy Solution">
     <exec program="ThirdParty\roundhouse-configfile\rh.exe" verbose="true">
-      <arg value="--configfile:${deploySettingsDirectory}\Roundhouse.json"/>
+      <arg value="--configfile:${deploySettingsDirectory}\${deployEnvironment}.js"/>
       <arg value="--sqlfilesdirectory:{BuildDirectory}\Publish\SqlServerDatabase"/>
       <arg value="--silent"/>
     </exec>
