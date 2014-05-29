@@ -101,7 +101,7 @@
   </target>
 
 	<target name="DeploySolution" description="Deploy Solution">
-    <exec program="ThirdParty\roundhouse-configfile\rh.exe">
+    <exec program="ThirdParty\roundhouse-configfile\rh.exe" verbose="true">
       <arg value="--configFile:${deploySettingsDirectory}\Roundhouse.json"/>
       <arg value="--silent"/>
     </exec>
