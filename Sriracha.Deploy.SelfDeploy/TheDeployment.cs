@@ -27,6 +27,7 @@ using dropkick.Configuration.Dsl.WinService;
 using dropkick.Configuration.Dsl.Xml;
 using dropkick.Configuration.Dsl.Notes;
 using dropkick.Wmi;
+using dropkick.Configuration.Dsl.Authentication;
 
 namespace Sriracha.Deploy.SelfDeploy
 {
@@ -104,19 +105,21 @@ namespace Sriracha.Deploy.SelfDeploy
 									s =>
 									{
 										ValidateSettings(settings);
+
                                         if(string.IsNullOrEmpty(settings.SourceOfflineExePath))
                                         {
                                             throw new Exception("Missing setting SourceOfflineExePath");
                                         }
-										var serviceName = settings.ServiceName;
+                                        if (!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.WithAuthentication(settings.TargetMachineUserName, settings.TargetMachinePassword);
+
+                                            s.OpenFolderShareWithAuthentication(@"{{ServiceTargetPath}}", settings.TargetMachineUserName, settings.TargetMachinePassword);
+                                        }
+                                        
+                                        var serviceName = settings.ServiceName;
                                         var serviceOptions = s.WinService(serviceName);
 
-                                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
-                                        {
-                                            serviceOptions.WithAuthentication(settings.TargetMachineUserName, settings.TargetMachinePassword);
-
-                                            s.OpenFolderShareWithAuthentication(@"{{ServiceTargetPath}}", settings.TargetMachineUserName, settings.TargetMachinePassword); 
-                                        }
 										serviceOptions.Stop();
                                         s.CreateEmptyFolder(@"{{ServiceTargetPath}}");
                                         s.CopyDirectory(settings.ServiceSourcePath).To(@"{{ServiceTargetPath}}").DeleteDestinationBeforeDeploying();
@@ -179,11 +182,17 @@ namespace Sriracha.Deploy.SelfDeploy
 			s.XmlPoke(configPath).Set("/configuration/connectionStrings/add[@name='Email']/@connectionString", settings.EmailConnectionString);
 			s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='SiteUrl']/@value", settings.SiteUrl);
 			s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='EncryptionKey']/@value", settings.EncryptionKey);
-			if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
-			{
-				s.XmlPoke(configPath)
-					.Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
-			}
+            s.XmlPoke(configPath).Set("/configuration/appSettings/add[@key='RepositoryAssemblyName']/@value", settings.RepositoryAssemblyName);
+            if (!string.IsNullOrWhiteSpace(settings.RavenDBConnectionString))
+            {
+                s.XmlPoke(configPath)
+                    .Set("/configuration/connectionStrings/add[@name='RavenDB']/@connectionString", settings.RavenDBConnectionString);
+            }
+            if (!string.IsNullOrWhiteSpace(settings.ConnectionString))
+            {
+                s.XmlPoke(configPath)
+                    .Set("/configuration/connectionStrings/add[@name='SrirachaSql']/@connectionString", settings.ConnectionString);
+            }
 
 			if (!string.IsNullOrEmpty(settings.WebsiteAuthenticationMode))
 			{
@@ -215,6 +224,10 @@ namespace Sriracha.Deploy.SelfDeploy
 			{
 				throw new Exception("Missing EncryptionKey");
 			}
+            if(string.IsNullOrEmpty(settings.RepositoryAssemblyName))
+            {
+                throw new Exception("Missing RepositoryAssemblyName");
+            }
 		}
 
 		#endregion

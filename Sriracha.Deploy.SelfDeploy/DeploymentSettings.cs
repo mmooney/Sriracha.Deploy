@@ -25,7 +25,9 @@ namespace Sriracha.Deploy.SelfDeploy
     {
 		//General Config
 		public string RavenDBConnectionString { get; set; }
-		public string EmailConnectionString { get; set; }
+        public string ConnectionString { get; set; }    //Sure this maybe should be SqlConnectionString, but we want to reuse the config for Roundhouse
+        public string RepositoryAssemblyName { get; set; }
+        public string EmailConnectionString { get; set; }
 		public string SiteUrl { get; set; }
 		public string EncryptionKey { get; set; }
 
