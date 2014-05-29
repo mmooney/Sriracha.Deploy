@@ -69,7 +69,7 @@
 		-->
 		<property name="PublishTempWebDirectory" value="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web.csproj"/>
 		<echo message="Directory exists '${PublishTempWebDirectory}'?: ${directory::exists(PublishTempWebDirectory)}"/>
-    <copy todir="${PublishTempWebDirectory}\bin\Tasks" if="${directory::exists(PublishTempWebDirectory)}">
+    <copy todir="${PublishTempWebDirectory}\bin" if="${directory::exists(PublishTempWebDirectory)}">
       <fileset basedir=".\Sriracha.Deploy.Web\bin">
         <include name="**/*.config"/>
         <include name="**/*.dll"/>
@@ -81,7 +81,7 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
-    <copy todir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin\Tasks" unless="${directory::exists(PublishTempWebDirectory)}">
+    <copy todir="${BuildDirectory}\PublishTemp\Website\_PublishedWebsites\Sriracha.Deploy.Web\bin" unless="${directory::exists(PublishTempWebDirectory)}">
       <fileset basedir=".\Sriracha.Deploy.Web\bin">
         <include name="**/*.config"/>
         <include name="**/*.dll"/>
