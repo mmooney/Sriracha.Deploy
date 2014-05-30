@@ -1,7 +1,6 @@
-﻿using dropkick.Configuration;
-using dropkick.Configuration.Dsl;
-using dropkick.Engine;
+﻿using Sriracha.Deploy.Data;
 using Sriracha.Deploy.Data.Deployment;
+using Sriracha.Deploy.Data.Dropkick;
 using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Tasks.Common.DeployWindowsService.DropkickImpl;
 using System;
@@ -13,14 +12,16 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
 {
     public class DeployWindowsServiceTaskExecutor : BaseDeployTaskExecutor<DeployWindowsServiceTaskDefinition, DeployWindowsServiceTaskOptions>
     {
+        private readonly IDropkickRunner _dropkickRunner;
+
         static DeployWindowsServiceTaskExecutor()
         {
             AutoMapper.Mapper.CreateMap<DeployWindowsServiceTaskOptions, ServiceDeploymentSettings>();
         }
 
-        public DeployWindowsServiceTaskExecutor(IParameterEvaluator parameterEvaluator, IDeploymentValidator validator) : base(parameterEvaluator, validator)
+        public DeployWindowsServiceTaskExecutor(IParameterEvaluator parameterEvaluator, IDeploymentValidator validator, IDropkickRunner dropkickRunner) : base(parameterEvaluator, validator)
         {
-
+            _dropkickRunner = DIHelper.VerifyParameter(dropkickRunner);
         }
 
         protected override DeployTaskExecutionResult InternalExecute(TaskExecutionContext<DeployWindowsServiceTaskDefinition, DeployWindowsServiceTaskOptions> context)
@@ -32,21 +33,16 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
 
             var settings = AutoMapper.Mapper.Map(context.FormattedOptions, new ServiceDeploymentSettings());
 
-            var newArgs = new DeploymentArguments
+            using(var dropkickContext = _dropkickRunner.Create(context))
             {
-                ServerMappings = new RoleToServerMap(),
-                Command = DeploymentCommands.Execute
-            };
-            newArgs.ServerMappings.AddMap("Host", context.FormattedOptions.TargetMachineName);
+                var serverMap = new Dictionary<string, string>();
+                serverMap.Add("Host", context.FormattedOptions.TargetMachineName);
+                dropkickContext.Run<ServiceDeployment>(settings, serverMap);
 
-            //settings.Environment = newArgs.Environment;
-            deployment.Initialize(settings);
+                context.Info("Done DeployWindowsServiceTask");
 
-            DeploymentPlanDispatcher.KickItOutThereAlready(deployment, newArgs);
-
-            context.Info("Done DeployWindowsServiceTask");
-
-            return context.BuildResult();
+                return context.BuildResult();
+            }
         }
     }
 }

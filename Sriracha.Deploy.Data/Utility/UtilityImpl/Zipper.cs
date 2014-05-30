@@ -11,6 +11,7 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 	public class Zipper : IZipper
 	{
 		private readonly ILog _logger;
+
 		public Zipper(ILog logger)
 		{
 			_logger = DIHelper.VerifyParameter(logger);

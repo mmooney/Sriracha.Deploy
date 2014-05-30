@@ -1,8 +1,12 @@
-﻿using Moq;
+﻿using Common.Logging;
+using Moq;
 using NUnit.Framework;
 using Ploeh.AutoFixture;
+using Sriracha.Deploy.Data.Credentials;
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
+using Sriracha.Deploy.Data.Dropkick;
+using Sriracha.Deploy.Data.Dropkick.DropkickImpl;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Dto.Validation;
@@ -23,7 +27,8 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
         {
             public Fixture Fixture { get; set; }
             public Mock<IDeploymentValidator> DeploymentValidator { get; set; }
-            public Mock<IDeployTaskStatusManager> DeployTaskStatusManager { get; set; }
+            public IDeployTaskStatusManager DeployTaskStatusManager { get; set; }
+            public IDropkickRunner DropkickRunner { get; set; }
             public DeployWindowsServiceTaskDefinition TaskDefinition { get; set; }
             public string DeployStateId { get; set; }
             public DeployComponent Component { get; set; }
@@ -42,7 +47,8 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
                     Fixture = fixture,
                     DeploymentValidator = new Mock<IDeploymentValidator>(),
                     TaskDefinition = new DeployWindowsServiceTaskDefinition(new ParameterParser()),
-                    DeployTaskStatusManager = new Mock<IDeployTaskStatusManager>(),
+                    DeployTaskStatusManager = new DeployTaskStatusManager(new Mock<ILog>().Object, new Mock<IDeployStateManager>().Object, new Mock<IDeployStatusNotifier>().Object),
+                    DropkickRunner = new DropkickRunner(new Zipper(new Mock<ILog>().Object), new ProcessRunner(), new Mock<ICredentialsManager>().Object, new Mock<IImpersonator>().Object),
                     Component = project.ComponentList.First(),
                     Environment = project.EnvironmentList.First(),
                     EnvironmentComponent = project.EnvironmentList.First().ComponentList.First(),
@@ -50,7 +56,7 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
                     Build = fixture.Create<DeployBuild>(),
                     DeployStateId = fixture.Create<string>("DeployStateId"),
                 };
-                testData.Sut = new DeployWindowsServiceTaskExecutor(new ParameterEvaluator(), testData.DeploymentValidator.Object);
+                testData.Sut = new DeployWindowsServiceTaskExecutor(new ParameterEvaluator(), testData.DeploymentValidator.Object, testData.DropkickRunner);
 
                 testData.Component.ProjectId = project.Id;
 
@@ -60,6 +66,7 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
                 testData.EnvironmentComponent.EnvironmentId = testData.Environment.Id;
                 testData.EnvironmentComponent.ParentId = testData.Component.Id;
                 testData.EnvironmentComponent.ParentType = EnumDeployStepParentType.Component;
+                testData.EnvironmentComponent.DeployCredentialsId = null;
 
                 testData.Machine.ProjectId = project.Id;
                 testData.Machine.EnvironmentId = testData.Environment.Id;
@@ -90,12 +97,17 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
             }
         }
 
-        [Test]
+        [Test, Explicit, Category("Integration")]
         public void Test1()
         {
             var testData = TestData.Create();
+            var systemSettings = new RuntimeSystemSettings()
+            {
+                LocalDeployDirectory = "C:\\Temp\\DeployTest",
+                LocalMachineName = Environment.MachineName
+            };
 
-            var result = testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager.Object, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.Machine, testData.Build, new RuntimeSystemSettings());
+            var result = testData.Sut.Execute(testData.DeployStateId, testData.DeployTaskStatusManager, testData.TaskDefinition, testData.Component, testData.EnvironmentComponent, testData.Machine, testData.Build, systemSettings);
 
             Assert.AreEqual(EnumDeployTaskExecutionResultStatus.Success, result.Status);
         }

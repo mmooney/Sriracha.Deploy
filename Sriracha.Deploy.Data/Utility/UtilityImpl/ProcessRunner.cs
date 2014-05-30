@@ -276,7 +276,7 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 				//catch {}
 			}
 		}
-		public int Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter)
+		public int Run(string executablePath, string executableParameters, TextWriter standardOutputWriter, TextWriter errorOutputWriter, string workingDirectory=null)
 		{
 			var psi = new ProcessStartInfo(executablePath, executableParameters)
 			{
@@ -284,8 +284,12 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
 				RedirectStandardError = true,
 				RedirectStandardOutput = true,
 				CreateNoWindow = true,
-				WindowStyle = ProcessWindowStyle.Hidden
+				WindowStyle = ProcessWindowStyle.Hidden,
 			};
+            if(!string.IsNullOrEmpty(workingDirectory))
+            {
+                psi.WorkingDirectory = workingDirectory;
+            }
 			var p = new Process()
 			{
 				StartInfo = psi

@@ -95,7 +95,7 @@ namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 					}
 					else 
 					{
-						errorText = "Error Code " + result.ToString();
+						errorText = "Error Code " + exeResult.ToString();
 					}
 					context.Error(errorText);
 					throw new Exception("LocalCommandLine Task Failed: " + errorText);
