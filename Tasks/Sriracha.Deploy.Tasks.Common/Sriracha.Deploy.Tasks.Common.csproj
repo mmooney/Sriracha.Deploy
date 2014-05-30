@@ -32,6 +32,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="dropkick">
+      <HintPath>..\..\ThirdParty\dropkick-trunk\dropkick.dll</HintPath>
+    </Reference>
     <Reference Include="MMDB.Shared, Version=2.0.0.19, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\MMDB.Shared.2.0.0.19\lib\net35\MMDB.Shared.dll</HintPath>
@@ -54,10 +64,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CommonTaskResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="DeployWindowsService\DropkickImpl\ServiceDeployment.cs" />
+    <Compile Include="DeployWindowsService\DropkickImpl\ServiceDeploymentSettings.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DeployWindowsService\DeployWindowsServiceTaskDefinition.cs" />
+    <Compile Include="DeployWindowsService\DeployWindowsServiceTaskExecutor.cs" />
+    <Compile Include="DeployWindowsService\DeployWindowsServiceTaskOptions.cs" />
     <Compile Include="XmlConfigFile\XmlConfigFileTaskDefinition.cs" />
     <Compile Include="XmlConfigFile\XmlConfigFileTaskExecutor.cs" />
     <Compile Include="XmlConfigFile\XmlConfigFileTaskOptions.cs" />
@@ -96,6 +111,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)TaskBinaries /s /i /y</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

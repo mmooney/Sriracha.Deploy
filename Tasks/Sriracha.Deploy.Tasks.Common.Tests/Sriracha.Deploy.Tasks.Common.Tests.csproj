@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="dropkick, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ThirdParty\dropkick-trunk\dropkick.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -55,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeployWindowsService\DeployWindowsServiceTaskExecutorTests.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskDefinitionTests.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskExecutorTests.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTestData.cs" />
