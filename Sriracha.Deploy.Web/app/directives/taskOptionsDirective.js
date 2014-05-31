@@ -13,7 +13,9 @@
 	            scope.addListItem = function (listParent, listName, item) {
 	                listParent = listParent || scope;
 	                listParent[listName] = listParent[listName] || [];
-	                item = item || {};
+	                if (!item && item !== '') {
+	                    item = {};
+	                }
 	                listParent[listName].push(item);
 	            }
 	            scope.deleteListItem = function (listParent, listName, item) {

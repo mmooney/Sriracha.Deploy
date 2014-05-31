@@ -1,0 +1,100 @@
+﻿<h4>Deploy Windows Service</h4>
+<table class="table table-striped">
+    <tr>
+        <th>Service Name:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <!--<button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ExecutablePath')"><i class="icon-folder-open"></i></button>-->
+        </td>
+    </tr>
+    <tr>
+        <th>Service Exe Name:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceExeName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ServiceExeName')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+    <tr>
+        <th>Service Start Model:</th>
+        <td class="form-inline">
+            <select ng-model="deploymentStep.taskOptions.ServiceStartMode" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)">
+                <option>Boot</option>
+                <option>System</option>
+                <option>Automatic</option>
+                <option>Manual</option>
+                <option>Disabled</option>
+            </select> 
+        </td>
+    </tr>
+    <tr>
+        <th>Start Immediately:</th>
+        <td><input type="checkbox" ng-model="deploymentStep.taskOptions.StartImmediately" /></td>
+    </tr>
+    <tr>
+        <th>Service Dependencies</th>
+        <td>
+            <table class="table table-striped">
+                <tr ng-repeat="item in deploymentStep.taskOptions.DependencyList">
+                    <td><input type="text" ng-model="item.ServiceDependency" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'DependencyList', item)"><i class="icon-trash"></i></button></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center"><button class="btn btn-primary" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="addListItem(deploymentStep.taskOptions, 'DependencyList')">Add</button></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <th>Service Source Folder:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceSourcePath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ServiceSourcePath')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+    <tr>
+        <th>Source Exe Config:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceSourceExeConfigPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+            <button class="btn" ng-click="browseContents(deploymentStep.taskOptions, 'ServiceSourceExeConfigPath')"><i class="icon-folder-open"></i></button>
+        </td>
+    </tr>
+    <tr>
+        <th>Service Target Folder:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceTargetPath" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+        <th>Service User Name:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceUserName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+        <th>Service User Password:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.ServiceUserPassword" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+        <th>Target Machine Name:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetMachineName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Target Machine Local Admin Name<br/>
+            (used for deployment if necessary):
+        </th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetMachineUserName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+    <tr>
+        <th>Target Machine Local Admin Password:</th>
+        <td class="form-inline">
+            <input type="text" class="input-xxlarge" ng-model="deploymentStep.taskOptions.TargetMachinePassword" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" />
+        </td>
+    </tr>
+</table>

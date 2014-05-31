@@ -8,10 +8,15 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
 {
     public class DeployWindowsServiceTaskOptions
     {
+        public class ServiceDependency
+        {
+            public string ServiceName { get; set; }
+        }
+
         public string ServiceName { get; set; }
         public string ServiceExeName { get; set; }
         public ServiceStartMode ServiceStartMode { get; set; }
-        public List<string> DependencyList { get; set; }
+        public List<ServiceDependency> DependencyList { get; set; }
         public bool StartImmediately { get; set; }
 
         public string ServiceSourcePath { get; set; }

@@ -80,6 +80,23 @@ namespace Sriracha.Deploy.Tasks.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;h4&gt;Deploy Windows Service&lt;/h4&gt;
+        ///&lt;table class=&quot;table table-striped&quot;&gt;
+        ///    &lt;tr&gt;
+        ///        &lt;th&gt;Service Name:&lt;/th&gt;
+        ///        &lt;td class=&quot;form-inline&quot;&gt;
+        ///            &lt;input type=&quot;text&quot; class=&quot;input-xxlarge&quot; ng-model=&quot;deploymentStep.taskOptions.ServiceName&quot; ng-disabled=&quot;!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)&quot; /&gt;
+        ///            &lt;!--&lt;button class=&quot;btn&quot; ng-click=&quot;browseContents(deploymentStep.taskOptions, &apos;ExecutablePath&apos;)&quot;&gt;&lt;i class=&quot;icon-folder-open&quot;&gt;&lt;/i&gt;&lt;/button&gt;--&gt;
+        ///        &lt;/td&gt;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WindowsServiceTaskOptionsView {
+            get {
+                return ResourceManager.GetString("WindowsServiceTaskOptionsView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;h4&gt;XML Config File &lt;/h4&gt;
         ///&lt;table class=&quot;table table-striped&quot;&gt;
         ///    &lt;tr&gt;

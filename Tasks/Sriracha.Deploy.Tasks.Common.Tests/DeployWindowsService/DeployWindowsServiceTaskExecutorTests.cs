@@ -80,7 +80,11 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
                 testData.TaskDefinition.Options = new DeployWindowsServiceTaskOptions
                 {
                     TargetMachineName = "localhost",
-                    DependencyList = new List<string> { "RavenDB", "MSSQL" },
+                    DependencyList = new List<DeployWindowsServiceTaskOptions.ServiceDependency>
+                    {
+                        new DeployWindowsServiceTaskOptions.ServiceDependency { ServiceName="RavenDB" },
+                        new DeployWindowsServiceTaskOptions.ServiceDependency { ServiceName="MSSQL" }
+                    },
                     ServiceExeName = "Sriracha.Deploy.Server.exe", 
                     ServiceName = "Sriracha - TEST Service Deploy Task",
                     ServiceSourceExeConfigPath = @"C:\Projects\Sriracha.Deploy\Sriracha.Deploy.Server\App.Config",

@@ -104,6 +104,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DeployWindowsService\WindowsServiceTaskOptionsView.html" />
     <Content Include="LocalCommandLine\LocalCommandLineTaskOptionsView.html" />
     <Content Include="XmlConfigFile\XmlConfigFileTaskOptionsView.html" />
   </ItemGroup>
@@ -125,7 +126,7 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)TaskBinaries /s /i /y</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)TaskBinaries\$(ProjectName) /s /i /y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
