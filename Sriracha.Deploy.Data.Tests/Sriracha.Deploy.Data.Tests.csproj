@@ -84,7 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildParameterEvaluatorTests.cs" />
+    <Compile Include="ParameterEvaluatorTests.cs" />
     <Compile Include="DeployComponentRunnerTests.cs" />
     <Compile Include="DeploymentPlanBuilderTests.cs" />
     <Compile Include="FileManagerTests.cs" />

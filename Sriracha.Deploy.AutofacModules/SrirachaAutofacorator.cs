@@ -180,7 +180,7 @@ namespace Sriracha.Deploy.AutofacModules
             var taskDirectory = Path.Combine(Path.GetDirectoryName(this.ThisAssembly.Location), "Tasks");
             if(Directory.Exists(taskDirectory))
             {
-                var taskAssemblyList = Directory.GetFiles(taskDirectory, "*.dll")
+                var taskAssemblyList = Directory.GetFiles(taskDirectory, "*Tasks*.dll", SearchOption.AllDirectories)
                                             .Where(i=>!existingBinaryList.Contains(Path.GetFileName(i), StringComparer.CurrentCultureIgnoreCase))
                                             .Select(i=>Assembly.LoadFrom(i)).ToArray();
                 builder.RegisterAssemblyTypes(taskAssemblyList);

@@ -149,13 +149,16 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
                         }
                     }
                 }
-                if(definition.MachineTaskParameterList != null)
+                if(definition.MachineTaskParameterList != null && newEnvironmentConfiguration.MachineList != null)
                 {
                     foreach (var parameterDefinition in definition.MachineTaskParameterList.Where(i => i.Sensitive))
                     {
-                        if (newEnvironmentConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName))
+                        foreach(var newMachineConfiguration in newEnvironmentConfiguration.MachineList)
                         {
-                            newEnvironmentConfiguration.ConfigurationValueList[parameterDefinition.FieldName] = this.MaskValue;
+                            if (newMachineConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName))
+                            {
+                                newMachineConfiguration.ConfigurationValueList[parameterDefinition.FieldName] = this.MaskValue;
+                            }
                         }
                     }
                 }
@@ -272,16 +275,23 @@ namespace Sriracha.Deploy.Data.Project.ProjectImpl
                         }
                     }
                 }
-                if (definition.MachineTaskParameterList != null)
+                if (definition.MachineTaskParameterList != null && newEnvironmentConfiguration.MachineList != null && originalEnviromentConfiguration.MachineList != null) 
                 {
                     foreach (var parameterDefinition in definition.MachineTaskParameterList.Where(i => i.Sensitive))
                     {
-                        if (newEnvironmentConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName)
-                                && originalEnviromentConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName))
+                        foreach(var newMachineConfiguration in newEnvironmentConfiguration.MachineList)
                         {
-                            if (newEnvironmentConfiguration.ConfigurationValueList[parameterDefinition.FieldName] == this.MaskValue)
+                            var originalMachineConfiguration = originalEnviromentConfiguration.MachineList.FirstOrDefault(i=>i.Id == newMachineConfiguration.Id);
+                            if(originalMachineConfiguration != null)
                             {
-                                newEnvironmentConfiguration.ConfigurationValueList[parameterDefinition.FieldName] = originalEnviromentConfiguration.ConfigurationValueList[parameterDefinition.FieldName];
+                                if(newMachineConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName)
+                                        && originalMachineConfiguration.ConfigurationValueList.ContainsKey(parameterDefinition.FieldName))
+                                {
+                                    if (newMachineConfiguration.ConfigurationValueList[parameterDefinition.FieldName] == this.MaskValue)
+                                    {
+                                        newMachineConfiguration.ConfigurationValueList[parameterDefinition.FieldName] = originalMachineConfiguration.ConfigurationValueList[parameterDefinition.FieldName];
+                                    }
+                                }
                             }
                         }
                     }
