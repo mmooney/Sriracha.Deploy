@@ -59,6 +59,7 @@
 					<th>Config Level</th>
 					<th>Value Name</th>
                     <th>Sensitive</th>
+                    <th>Optional</th>
                     <th></th>
 				</tr>
                 <tr ng-repeat="item in deploymentStep.taskOptions.XPathValueList">
@@ -72,6 +73,7 @@
                     </td>
                     <td><input type="text" ng-model="item.valueName" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
                     <td><input type="checkbox" ng-model="item.sensitive" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
+                    <td><input type="checkbox" ng-model="item.optional" ng-disabled="!permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" /></td>
                     <td><button class="btn btn-danger" ng-show="permissionVerifier.canEditComponentConfiguration(deploymentStep.projectId)" ng-click="deleteListItem(deploymentStep.taskOptions, 'XPathValueList', item)"><i class="icon-trash"></i></button></td>
                 </tr>
 				<tr>

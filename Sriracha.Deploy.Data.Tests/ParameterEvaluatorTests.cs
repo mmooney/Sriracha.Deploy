@@ -9,6 +9,7 @@ using Sriracha.Deploy.Data.Impl;
 using Sriracha.Deploy.Data.Build.BuildImpl;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Deployment.DeploymentImpl;
+using Sriracha.Deploy.Data.Utility.UtilityImpl;
 
 namespace Sriracha.Deploy.Data.Tests
 {
@@ -17,7 +18,7 @@ namespace Sriracha.Deploy.Data.Tests
 		[Test]
 		public void NullParameter_ThrowsArgumentNullException()
 		{
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentNullException>(()=>sut.EvaluateBuildParameter(null, new DeployBuild()));
 		}
@@ -25,7 +26,7 @@ namespace Sriracha.Deploy.Data.Tests
 		[Test]
 		public void NullBuild_ThrowsArgumentNullException()
 		{
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentNullException>(()=>sut.EvaluateBuildParameter(Guid.NewGuid().ToString(), null));
 		}
@@ -33,7 +34,7 @@ namespace Sriracha.Deploy.Data.Tests
 		[Test]
 		public void InvalidParameterName_ThrowsArgumentException()
 		{
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentException>(()=>sut.EvaluateBuildParameter(Guid.NewGuid().ToString(), new DeployBuild()));
 		}
@@ -46,7 +47,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = fixture.Create<string>()
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("Version", build);
 
@@ -61,7 +62,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("MajorVersion", build);
 
@@ -76,7 +77,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("MinorVersion", build);
 
@@ -91,7 +92,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("BuildVersion", build);
 
@@ -106,7 +107,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123.456.789.012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("RevisionVersion", build);
 
@@ -121,7 +122,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("MajorVersion", build);
 
@@ -136,7 +137,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentException>(()=>sut.EvaluateBuildParameter("MinorVersion", build));
 		}
@@ -149,7 +150,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentException>(() => sut.EvaluateBuildParameter("BuildVersion", build));
 		}
@@ -162,7 +163,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = "123456789012"
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			Assert.Throws<ArgumentException>(() => sut.EvaluateBuildParameter("RevisionVersion", build));
 		}
@@ -175,7 +176,7 @@ namespace Sriracha.Deploy.Data.Tests
 			{
 				Version = fixture.Create<string>()
 			};
-			var sut = new ParameterEvaluator();
+			var sut = new ParameterEvaluator(new ParameterParser());
 
 			var result = sut.EvaluateBuildParameter("veRsIon", build);
 

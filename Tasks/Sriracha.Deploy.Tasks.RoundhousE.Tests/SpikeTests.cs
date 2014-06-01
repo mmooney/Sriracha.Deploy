@@ -33,7 +33,7 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.Tests
                 SqlFilesDirectory = @"C:\Projects\Sriracha.Deploy\Repository\SqlServer\Sriracha.Deploy.SqlServer.RoundhousE\db",
                 ConnectionString = "Data Source=(local); Initial Catalog=TestRoundhouseTask; Integrated Security=SSPI;"
             };
-            var executor = new DeployRoundhouseDatabaseExecutor(new ParameterEvaluator(), new DeploymentValidator(new DeployTaskFactory(new Mock<IDIFactory>().Object, new ModuleInspector())));
+            var executor = new DeployRoundhouseDatabaseExecutor(new ParameterEvaluator(new ParameterParser()), new DeploymentValidator(new DeployTaskFactory(new Mock<IDIFactory>().Object, new ModuleInspector())));
             var fixture = new Fixture();
 
             string deployStateId = fixture.Create<string>("DeployStateId");

@@ -70,15 +70,32 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
                         string value = (string)propInfo.GetValue(options, null);
                         if (!string.IsNullOrEmpty(value))
                         {
-                            var x = (from i in findFunction(value)
-                                     select new TaskParameter
-                                     {
-                                        FieldName = (i.StartsWith("SENSITIVE:", StringComparison.CurrentCultureIgnoreCase))
-                                                        ? i.Substring("SENSITIVE:".Length)
-                                                        : i,
-                                        FieldType = EnumTaskParameterType.String,
-                                        Sensitive = i.StartsWith("SENSITIVE:", StringComparison.CurrentCultureIgnoreCase)
-                                     }).ToList();
+                            var valueList = findFunction(value);
+                            var x = new List<TaskParameter>();
+                            foreach(var valueItem in valueList)
+                            {
+                                var taskParameter = new TaskParameter()
+                                {
+                                    FieldName = valueItem,
+                                    FieldType = EnumTaskParameterType.String 
+                                };
+                                if(taskParameter.FieldName.StartsWith("SENSITIVE:", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    taskParameter.FieldName = taskParameter.FieldName.Substring("SENSITIVE:".Length);
+                                    taskParameter.Sensitive = true;
+                                }
+                                if(taskParameter.FieldName.StartsWith("OPTIONAL:", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    taskParameter.FieldName = taskParameter.FieldName.Substring("OPTIONAL:".Length);
+                                    taskParameter.Optional = true;
+                                }
+                                if (taskParameter.FieldName.StartsWith("SENSITIVE:", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    taskParameter.FieldName = taskParameter.FieldName.Substring("SENSITIVE:".Length);
+                                    taskParameter.Sensitive = true;
+                                }
+                                x.Add(taskParameter);
+                            }
                             if (x != null && x.Any())
                             {
                                 list.AddRange(x);
@@ -135,6 +152,45 @@ namespace Sriracha.Deploy.Data.Utility.UtilityImpl
         public List<TaskParameter> FindNestedEnvironmentParameters(object options)
         {
             return this.FindNestedParameters(options, (i)=>this.FindEnvironmentParameters(i));
+        }
+
+        public string ReplaceParameter(string input, string prefix, string fieldName, string fieldValue)
+        {
+            List<string> replaceStrings = new List<string>();
+            replaceStrings.Add(string.Format("${{{0}:{1}}}", prefix, fieldName));
+            replaceStrings.Add(string.Format("${{{0}:sensitive:{1}}}", prefix, fieldName));
+            replaceStrings.Add(string.Format("${{{0}:optional:{1}}}", prefix, fieldName));
+            replaceStrings.Add(string.Format("${{{0}:sensitive:optional:{1}}}", prefix, fieldName));
+            replaceStrings.Add(string.Format("${{{0}:optional:sensitive:{1}}}", prefix, fieldName));
+            
+            string returnValue = input;
+            foreach(var replaceString in replaceStrings)
+            {
+                returnValue = ReplaceString(returnValue, replaceString, fieldValue, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return returnValue;
+        }
+
+        //http://stackoverflow.com/questions/244531/is-there-an-alternative-to-string-replace-that-is-case-insensitive
+        //http://stackoverflow.com/a/244933/203479
+        private static string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int previousIndex = 0;
+            int index = str.IndexOf(oldValue, comparison);
+            while (index != -1)
+            {
+                sb.Append(str.Substring(previousIndex, index - previousIndex));
+                sb.Append(newValue);
+                index += oldValue.Length;
+
+                previousIndex = index;
+                index = str.IndexOf(oldValue, index, comparison);
+            }
+            sb.Append(str.Substring(previousIndex));
+
+            return sb.ToString();
         }
     }
 }

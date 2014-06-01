@@ -20,7 +20,8 @@ namespace Sriracha.Deploy.Data.Dto.Validation
 			public string FieldValue { get; set; }
 			public bool Present { get; set; }
 			public bool Sensitive { get; set; }
-		}
+            public bool Optional { get; set; }
+        }
 
 		public List<TaskDefinitionValidationResultItem> EnvironmentResultList { get; set; }
 		public Dictionary<string, List<TaskDefinitionValidationResultItem>> MachineResultList { get; set; }
@@ -39,7 +40,7 @@ namespace Sriracha.Deploy.Data.Dto.Validation
 		{
 			get
 			{
-				if(this.EnvironmentResultList.Any(i=>!i.Present) || this.MachineResultList.Values.Any(i=>i.Any(j=>!j.Present)))
+				if(this.EnvironmentResultList.Any(i=>!i.Present && !i.Optional) || this.MachineResultList.Values.Any(i=>i.Any(j=>!j.Present && !j.Optional)))
 				{
 					return EnumRuntimeValidationStatus.Incomplete;
 				}

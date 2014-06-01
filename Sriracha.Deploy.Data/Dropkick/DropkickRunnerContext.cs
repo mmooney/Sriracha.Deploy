@@ -64,7 +64,7 @@ namespace Sriracha.Deploy.Data.Dropkick
             string deploymentFilePath = typeof(DeploymentType).Assembly.Location;
 
             string dropkickExePath = string.Format("{0}\\dk.exe", _dropkickDirectory);
-            #pragma warning Need to wrap these parameters in quotes, but need a fix in dropkick first.
+            #warning Need to wrap these parameters in quotes, but need a fix in dropkick first.
             string exeParameters = string.Format("execute /deployment:{0} /environment:{1} /settings:{2} --silent", deploymentFilePath, environmentName, settingsDirectory);
 
             using (var standardOutputWriter = new StringWriter())

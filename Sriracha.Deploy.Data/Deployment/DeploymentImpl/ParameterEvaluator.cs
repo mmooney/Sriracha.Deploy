@@ -7,11 +7,18 @@ using Sriracha.Deploy.Data.Dto;
 using Sriracha.Deploy.Data.Dto.Build;
 using Sriracha.Deploy.Data.Dto.Project;
 using Sriracha.Deploy.Data.Tasks;
+using Sriracha.Deploy.Data.Utility;
 
 namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 {
 	public class ParameterEvaluator : IParameterEvaluator
 	{
+        private readonly IParameterParser _parameterParser;
+
+        public ParameterEvaluator(IParameterParser parameterParser)
+        {
+            _parameterParser = DIHelper.VerifyParameter(parameterParser);
+        }
 		public string EvaluateBuildParameter(string parameterName, DeployBuild build)
 		{
 			if(string.IsNullOrEmpty(parameterName))
@@ -71,5 +78,11 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					throw new ArgumentException(string.Format("Unrecognized deploy parameter \"{0}\"", parameterName));
 			}
 		}
-	}
+
+
+        public string ReplaceParameter(string input, string prefix, string fieldName, string fieldValue)
+        {
+            return _parameterParser.ReplaceParameter(input, prefix, fieldName, fieldValue);
+        }
+    }
 }

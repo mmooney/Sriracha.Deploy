@@ -23,8 +23,8 @@
 					<td>{{item.taskName}}</td>
 					<td>{{item.settingName}}</td>
 					<td>
-						<div ng-show="item.present">{{item.settingValue}}</div>
-						<div ng-hide="item.present" style="color:red">N/A</div>
+						<div ng-show="item.present || item.optional">{{item.settingValue}}</div>
+						<div ng-hide="item.present || item.optional" style="color:red">N/A</div>
 					</td>
 				</tr>
 			</tbody>
@@ -55,8 +55,8 @@
 						<td>{{item.taskName}}</td>
 						<td>{{item.settingName}}</td>
 						<td>
-							<div ng-show="item.present">{{item.settingValue}}</div>
-							<div ng-hide="item.present" style="color:red">N/A</div>
+							<div ng-show="item.present || item.optional">{{item.settingValue}}</div>
+							<div ng-hide="item.present || item.optional" style="color:red">N/A</div>
 						</td>
 					</tr>
 				</tbody>

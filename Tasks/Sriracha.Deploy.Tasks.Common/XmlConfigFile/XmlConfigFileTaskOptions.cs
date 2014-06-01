@@ -20,7 +20,8 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 			public EnumConfigLevel ConfigLevel { get; set; }
 			public string ValueName { get; set; }
             public bool Sensitive { get; set; }
-		}
+            public bool Optional { get; set; }
+        }
 
         public class XmlNamespaceDefinition
         {

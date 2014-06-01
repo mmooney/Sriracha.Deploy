@@ -13,5 +13,6 @@ namespace Sriracha.Deploy.Data.Deployment
 	{
 		string EvaluateBuildParameter(string parameterName, DeployBuild build);
 		string EvaluateDeployParameter(string parameterName, RuntimeSystemSettings runtimeSettings, DeployMachine machine, DeployComponent component);
-	}
+        string ReplaceParameter(string input, string prefix, string fieldName, string fieldValue);
+    }
 }

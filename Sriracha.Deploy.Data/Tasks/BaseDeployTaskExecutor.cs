@@ -17,12 +17,12 @@ namespace Sriracha.Deploy.Data.Tasks
 		where TaskDefinition: IDeployTaskDefinition
 	{
         private const string ValueMask = "*****";
-        private readonly IParameterEvaluator _buildParameterEvaluator;
+        private readonly IParameterEvaluator _parameterEvaluator;
         private readonly IDeploymentValidator _validator;
 
 		public BaseDeployTaskExecutor(IParameterEvaluator buildParamterEvaluator, IDeploymentValidator validator)
 		{
-			_buildParameterEvaluator = DIHelper.VerifyParameter(buildParamterEvaluator);
+			_parameterEvaluator = DIHelper.VerifyParameter(buildParamterEvaluator);
             _validator = DIHelper.VerifyParameter(validator);
 		}
 
@@ -43,12 +43,12 @@ namespace Sriracha.Deploy.Data.Tasks
 
 		protected string GetBuildParameterValue(string parameterName, DeployBuild build)
 		{
-			return _buildParameterEvaluator.EvaluateBuildParameter(parameterName, build);
+			return _parameterEvaluator.EvaluateBuildParameter(parameterName, build);
 		}
 
 		protected string GetDeployParameterValue(string parameterName, RuntimeSystemSettings runtimeSystemSettings, DeployMachine machine, DeployComponent component)
 		{
-			return _buildParameterEvaluator.EvaluateDeployParameter(parameterName, runtimeSystemSettings, machine, component);
+			return _parameterEvaluator.EvaluateDeployParameter(parameterName, runtimeSystemSettings, machine, component);
 		}
 
         protected TaskExecutionContext<TaskDefinition, TaskDefinitionOptions> GetTaskExecutionContext(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition taskDefinition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings)
@@ -118,129 +118,39 @@ namespace Sriracha.Deploy.Data.Tasks
             string returnValue = format;
             foreach (var item in environmentValues)
             {
-                string value;
-                string fieldName;
-                if (item.Sensitive)
-                {
-                    fieldName = string.Format("${{env:sensitive:{0}}}", item.FieldName);
-                }
-                else
-                {
-                    fieldName = string.Format("${{env:{0}}}", item.FieldName);
-                }
-                if (masked && item.Sensitive)
-                {
-                    value = ValueMask;
-                }
-                else
-                {
-                    value = item.FieldValue;
-                    //if(!string.IsNullOrEmpty(value))
-                    //{
-                    //	//Because this is going into a DOS command line, need to escape certain characters
-                    //	//	http://www.robvanderwoude.com/escapechars.php
-                    //	value = value.Replace("%","%%")
-                    //				.Replace("^","^^")
-                    //				.Replace("&","^&")
-                    //				.Replace("<","^<")
-                    //				.Replace(">","^>")
-                    //				.Replace("|","|^")
-                    //				;	
-                    //}
-                }
-                returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+                returnValue = ReplaceParameter(returnValue, "env", item.FieldName, item.Sensitive, item.FieldValue, masked); 
             }
             foreach (var item in machineValues)
             {
-                string value;
-                string fieldName;
-                if (item.Sensitive)
-                {
-                    fieldName = string.Format("${{machine:sensitive:{0}}}", item.FieldName);
-                }
-                else
-                {
-                    fieldName = string.Format("${{machine:{0}}}", item.FieldName);
-                }
-                if (masked && item.Sensitive)
-                {
-                    value = ValueMask;
-                }
-                else
-                {
-                    value = item.FieldValue;
-                }
-                returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+                returnValue = ReplaceParameter(returnValue, "machine", item.FieldName, item.Sensitive, item.FieldValue, masked);
             }
             foreach (var item in buildParameters)
             {
-                string value;
-                string fieldName;
-                if (item.Sensitive)
-                {
-                    fieldName = string.Format("${{build:sensitive:{0}}}", item.FieldName);
-                }
-                else
-                {
-                    fieldName = string.Format("${{build:{0}}}", item.FieldName);
-                }
-                if (masked && item.Sensitive)
-                {
-                    value = ValueMask;
-                }
-                else
-                {
-                    value = this.GetBuildParameterValue(item.FieldName, build);
-                }
-                returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+                string value = this.GetBuildParameterValue(item.FieldName, build);
+                returnValue = ReplaceParameter(returnValue, "build", item.FieldName, item.Sensitive, value, masked);
             }
             foreach (var item in deployParameters)
             {
-                string value;
-                string fieldName;
-                if (item.Sensitive)
-                {
-                    fieldName = string.Format("${{deploy:sensitive:{0}}}", item.FieldName);
-                }
-                else
-                {
-                    fieldName = string.Format("${{deploy:{0}}}", item.FieldName);
-                }
-                if (masked && item.Sensitive)
-                {
-                    value = ValueMask;
-                }
-                else
-                {
-                    value = this.GetDeployParameterValue(item.FieldName, runtimeSystemSettings, machine, component);
-                }
-                returnValue = ReplaceString(returnValue, fieldName, value, StringComparison.CurrentCultureIgnoreCase);
+                string value = this.GetDeployParameterValue(item.FieldName, runtimeSystemSettings, machine, component);
+                returnValue = ReplaceParameter(returnValue, "deploy", item.FieldName, item.Sensitive, value, masked);
             }
             return returnValue;
         }
 
-        //http://stackoverflow.com/questions/244531/is-there-an-alternative-to-string-replace-that-is-case-insensitive
-        //http://stackoverflow.com/a/244933/203479
-        public static string ReplaceString(string str, string oldValue, string newValue, StringComparison comparison)
+        private string ReplaceParameter(string input, string prefix, string fieldName, bool sensitive, string fieldValue, bool masked)
         {
-            StringBuilder sb = new StringBuilder();
-
-            int previousIndex = 0;
-            int index = str.IndexOf(oldValue, comparison);
-            while (index != -1)
+            string value;
+            if (masked && sensitive)
             {
-                sb.Append(str.Substring(previousIndex, index - previousIndex));
-                sb.Append(newValue);
-                index += oldValue.Length;
-
-                previousIndex = index;
-                index = str.IndexOf(oldValue, index, comparison);
+                value = ValueMask;
             }
-            sb.Append(str.Substring(previousIndex));
-
-            return sb.ToString();
+            else
+            {
+                value = fieldValue;
+            }
+            return _parameterEvaluator.ReplaceParameter(input, prefix, fieldName, value);
         }
-        
+
         //protected abstract DeployTaskExecutionResult InternalExecute(string deployStateId, IDeployTaskStatusManager statusManager, TaskDefinition definition, DeployComponent component, DeployEnvironmentConfiguration environmentComponent, DeployMachine machine, DeployBuild build, RuntimeSystemSettings runtimeSystemSettings);
         protected abstract DeployTaskExecutionResult InternalExecute(TaskExecutionContext<TaskDefinition, TaskDefinitionOptions> context);
     }

@@ -80,7 +80,8 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 			var item = new TaskDefinitionValidationResult.TaskDefinitionValidationResultItem
 			{
 				FieldName = parameter.FieldName,
-				Sensitive = parameter.Sensitive
+				Sensitive = parameter.Sensitive,
+                Optional = parameter.Optional
 			};
 			if (!valueDictionary.ContainsKey(parameter.FieldName) || string.IsNullOrEmpty(valueDictionary[parameter.FieldName]))
 			{

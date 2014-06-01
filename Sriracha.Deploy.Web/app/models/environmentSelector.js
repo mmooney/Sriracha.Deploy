@@ -49,7 +49,8 @@
 						var item = {
 							taskName: resultItem.deploymentStep.stepName,
 							settingName: machineResultItem.fieldName,
-							present: machineResultItem.present
+							present: machineResultItem.present,
+                            optional: machineResultItem.optional
 						};
 						if (machineResultItem.present) {
 							if (machineResultItem.sensitive) {
@@ -88,7 +89,7 @@
 		self.validationResult = srirachaResource.validateEnvironment.get({ buildId: self.build.id, environmentId: self.environment.id },
 			function () {
 				self.environmentResults = getEnvironmentResults(self.validationResult);
-				self.environmentResultsIncomplete = _.any(self.environmentResults, function (x) { return !x.present; });
+				self.environmentResultsIncomplete = _.any(self.environmentResults, function (x) { return !x.present && !x.optional; });
 
 				self.machineResults = {};
 				self.machineResultsIncomplete = {};
@@ -98,7 +99,7 @@
 				else {
 					_.each(self.environmentComponent.machineList, function (machine) {
 						self.machineResults[machine.id] = getMachineResults(self.validationResult, machine.id);
-						self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present; });
+						self.machineResultsIncomplete[machine.id] = _.any(self.machineResults[machine.id], function (x) { return !x.present && !x.optional; });
 					});
 				}
 				if (dataLoadedCallback) {

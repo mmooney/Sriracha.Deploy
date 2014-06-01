@@ -60,7 +60,8 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 				{
 					FieldName = i.ValueName,
 					FieldType = EnumTaskParameterType.String,
-                    Sensitive = i.Sensitive
+                    Sensitive = i.Sensitive,
+                    Optional = i.Optional
 				}
 			).ToList();
 

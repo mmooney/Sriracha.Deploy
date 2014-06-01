@@ -18,5 +18,7 @@ namespace Sriracha.Deploy.Data.Utility
         List<TaskParameter> FindNestedBuildParameters(object options);
         List<TaskParameter> FindNestedMachineParameters(object options);
         List<TaskParameter> FindNestedEnvironmentParameters(object options);
+
+        string ReplaceParameter(string input, string prefix, string fieldName, string fieldValue);
     }
 }

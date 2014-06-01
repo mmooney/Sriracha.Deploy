@@ -56,7 +56,7 @@ namespace Sriracha.Deploy.Tasks.Common.Tests.DeployWindowsService
                     Build = fixture.Create<DeployBuild>(),
                     DeployStateId = fixture.Create<string>("DeployStateId"),
                 };
-                testData.Sut = new DeployWindowsServiceTaskExecutor(new ParameterEvaluator(), testData.DeploymentValidator.Object, testData.DropkickRunner);
+                testData.Sut = new DeployWindowsServiceTaskExecutor(new ParameterEvaluator(new ParameterParser()), testData.DeploymentValidator.Object, testData.DropkickRunner);
 
                 testData.Component.ProjectId = project.Id;
 
