@@ -123,10 +123,11 @@ namespace Sriracha.Deploy.SqlServer
             }
             foreach(var item in itemList)
             {
-                if(string.IsNullOrEmpty(item.Id))
-                {
+                //We're creating data, make sure we give the children new IDs, otherwise copying gets all busted up.
+                //if(string.IsNullOrEmpty(item.Id))
+                //{
                     item.Id = Guid.NewGuid().ToString();
-                }
+                //}
             }
             if(status == EnumDeployStatus.Unknown)
             {

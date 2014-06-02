@@ -83,6 +83,54 @@
     <NamedTestSelector>
       <TestName>Sriracha.Deploy.SqlServer.Tests.SqlServerProjectRepositoryTests.ProjectRepositoryBaseTests:GetOrCreateProject_MissingProjectIdOrName_ThrowsNullException</TestName>
     </NamedTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Account.SqlServerMembershipRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Account.SqlServerSystemRoleRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Build.SqlServerBuildPurgeRuleRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Build.SqlServerBuildRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Build.SqlServerFileRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Build.SqlServerFileStorageTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Cleanup.SqlServerCleanupRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Credentials.SqlServerCredentialsRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Deploy.SqlServerDeployRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Deploy.SqlServerDeployStateRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Deploy.SqlServerOfflineDeploymentRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.Email.SqlServerEmailQueueRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.SqlServerConnectionSettingRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.SqlServerRazorTemplateRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.SqlServerSystemLogRepositoryTests</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Sriracha.Deploy.SqlServer.Tests.SqlServerSystemSettingsRepositoryTests</FixtureName>
+    </FixtureTestSelector>
     <AllTestsSelector />
   </IgnoredTests>
 </ProjectConfiguration>
