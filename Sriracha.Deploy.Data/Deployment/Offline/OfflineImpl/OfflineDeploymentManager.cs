@@ -78,10 +78,7 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
                 {
                     Directory.CreateDirectory(targetDirectory);
                 }
-                foreach(var fileName in Directory.GetFiles(_systemSettings.OfflineExeDirectory))
-                {
-                    File.Copy(fileName, Path.Combine(targetDirectory, Path.GetFileName(fileName)));
-                }
+                CopyDirectory(_systemSettings.OfflineExeDirectory, targetDirectory);
                 foreach(var exeConfigFileName in Directory.GetFiles(targetDirectory, "*.exe.config"))
                 {
                     var xmlDoc = new XmlDocument();
@@ -174,6 +171,20 @@ namespace Sriracha.Deploy.Data.Deployment.Offline.OfflineImpl
             {
                 _offlineDeploymentRepository.UpdateStatus(offlineDeploymentId, EnumOfflineDeploymentStatus.CreateFailed, err);
             }
+        }
+
+        //http://stackoverflow.com/questions/58744/best-way-to-copy-the-entire-contents-of-a-directory-in-c-sharp
+        //http://stackoverflow.com/a/3822913/203479
+        private void CopyDirectory(string sourceDirectory, string targetDirectory)
+        {
+            foreach (string dirPath in Directory.GetDirectories(sourceDirectory, "*",
+                SearchOption.AllDirectories))
+                Directory.CreateDirectory(dirPath.Replace(sourceDirectory, targetDirectory));
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(sourceDirectory, "*.*",
+                SearchOption.AllDirectories))
+                File.Copy(newPath, newPath.Replace(sourceDirectory, targetDirectory), true);
         }
 
         public OfflineDeployment ImportHistory(string offlineDeploymentId, string fileId)

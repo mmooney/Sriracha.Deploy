@@ -215,9 +215,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y
-xcopy $(TargetDir)*.exe $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y
-xcopy $(TargetDir)*.exe.config $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y
+    <PostBuildEvent>xcopy $(TargetDir)*.dll $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y /s
+xcopy $(TargetDir)*.exe $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y /s
+xcopy $(TargetDir)*.exe.config $(SolutionDir)Sriracha.Deploy.Server\bin\$(ConfigurationName)\offlineExe /i /y /s
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
