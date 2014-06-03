@@ -148,6 +148,7 @@
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineFileRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineProjectRepository.cs" />
     <Compile Include="Deployment\Offline\OfflineImpl\OfflineSystemLogRepository.cs" />
+    <Compile Include="Deployment\Offline\OfflineImpl\OfflineSystemSettingsRepository.cs" />
     <Compile Include="Dropkick\DropkickImpl\DropkickRunner.cs" />
     <Compile Include="Dropkick\DropkickRunnerContext.cs" />
     <Compile Include="Dropkick\IDropkickRunner.cs" />

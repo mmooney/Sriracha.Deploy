@@ -172,6 +172,7 @@ namespace Sriracha.Deploy.AutofacModules
                 builder.RegisterType<OfflineCredentialsRepository>().As<Sriracha.Deploy.Data.Repository.ICredentialsRepository>();
                 builder.RegisterType<OfflineFileRepository>().As<Sriracha.Deploy.Data.Repository.IFileRepository>();
                 builder.RegisterType<OfflineSystemLogRepository>().As<Sriracha.Deploy.Data.Repository.ISystemLogRepository>();
+                builder.RegisterType<OfflineSystemSettingsRepository>().As<Sriracha.Deploy.Data.Repository.ISystemSettingsRepository>();
                 builder.RegisterType<OfflineDeploymentPlanBuilder>().As<IDeploymentPlanBuilder>();
             }
 			this.SetupLogging(builder);
