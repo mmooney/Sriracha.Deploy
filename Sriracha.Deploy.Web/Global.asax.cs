@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MMDB.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +19,19 @@ namespace Sriracha.Deploy.Web
 		public MvcApplication()
 		{
 			this.AuthenticateRequest += MvcApplication_AuthenticateRequest;
+            this.BeginRequest += MvcApplication_BeginRequest;
 		}
+
+        void MvcApplication_BeginRequest(object sender, EventArgs e)
+        {
+            if(HttpContext.Current != null && !HttpContext.Current.Request.IsLocal 
+                && !HttpContext.Current.Request.IsSecureConnection && AppSettingsHelper.GetBoolSetting("RequireSSL", true))
+            {
+                string redirectUrl = HttpContext.Current.Request.Url.ToString().Replace("http://", "https://");
+                HttpContext.Current.Response.Redirect(redirectUrl, false);
+                this.CompleteRequest();
+            }
+        }
 
 		void MvcApplication_AuthenticateRequest(object sender, EventArgs e)
 		{
