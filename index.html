@@ -1,72 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Sriracha Deployment System by mmooney</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Sriracha Deployment System by mmooney</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Sriracha Deployment System</h1>
-        <p class="header">An Open Source Deployment Platform</p>
+    <div id="container">
+      <div class="inner">
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/mmooney/Sriracha.Deploy/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/mmooney/Sriracha.Deploy/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/mmooney/Sriracha.Deploy">View On GitHub</a></li>
-        </ul>
+        <header>
+          <h1>Sriracha Deployment System</h1>
+          <h2>An Open Source Deployment Platform</h2>
+        </header>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/mmooney">mmooney</a></p>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/mmooney/Sriracha.Deploy/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/mmooney/Sriracha.Deploy/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/mmooney/Sriracha.Deploy" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
+        <hr>
 
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <section id="main_content">
+          <h1>
+<a name="sriracha-deployment-system" class="anchor" href="#sriracha-deployment-system"><span class="octicon octicon-link"></span></a>Sriracha Deployment System</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><a href="http://build.mmdbsolutions.com/viewType.html?buildTypeId=bt7&amp;guest=1">TeamCity Build Status: Core
+<img src="http://build.mmdbsolutions.com/app/rest/builds/buildType:(id:bt7)/statusIcon" alt="TeamCity Build Status" title="TeamCity Build Status"></a></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<p><a href="http://build.mmdbsolutions.com/viewType.html?buildTypeId=Sriracha_SrirachaBuild_SrirachaBuildRavenDBServerTests&amp;guest=1">TeamCity Build Status: Raven DB
+<img src="http://build.mmdbsolutions.com/app/rest/builds/buildType:(id:Sriracha_SrirachaBuild_SrirachaBuildRavenDBServerTests)/statusIcon" alt="TeamCity Build Status" title="TeamCity Build Status"></a></p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p><a href="http://build.mmdbsolutions.com/viewType.html?buildTypeId=Sriracha_SrirachaBuild_SrirachaBuildContinuousSqlServerTests&amp;guest=1">TeamCity Build Status: SQL Server
+<img src="http://build.mmdbsolutions.com/app/rest/builds/buildType:(id:Sriracha_SrirachaBuild_SrirachaBuildContinuousSqlServerTests)/statusIcon" alt="TeamCity Build Status" title="TeamCity Build Status"></a></p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p>Sriracha is a free, open source deployment system.  It manages the release builds of your projects, and automates and tracks deployments to various environments.</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How Does It Work?</h2>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<p>Sriracha is a combination of a website and Windows service that runs on any server in your network.  Preferably you'll want that server to have WMI access to the machines you are deploying to, but it's not necessary.  </p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>Sriracha picks up where you're build server leaves off.  Once your build server has created your release build, you can add a line to your build script to publish it as a package to Sriracha REST(-like) API.  Then in the Sriracha website you can configure how and where to deploy that build using a simple web interface.  </p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>Once you've set up your deployment steps for a component and the parameters for a given environment, you can run a deployment of that component, or a batch deployment of several components.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h2>
+<a name="key-features" class="anchor" href="#key-features"><span class="octicon octicon-link"></span></a>Key Features</h2>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<ul>
+<li>Easy, intuitive setup of projects/components/environments</li>
+<li>Dashboard overview of what versions are deployed to which environments</li>
+<li>Unopinionated deployment - deploy how you want to, Sriracha does not dictate and specific deployment package format or technique.  If you already have deployment scripts that you maintain and run manually, you can automate those with Sriracha</li>
+<li>Publish builds to the deployment tool from Team City or Cruise Control or anything else with single command line, autocreating  projects and components and branches if they don’t already exist</li>
+<li>Easily promote a previous deployment of a specific build to a new environment</li>
+<li>Define a common set of deployment steps for each component, specifying the environment-specific and machine-specific parameters </li>
+<li>Fully extensible - All deployment steps are built as extensions.  Add your own deployment steps with some simple .NET code, implementing a few simple interfaces.</li>
+<li>Database agnostic - Can be used with any transactionally-safe database.  Data providers for Raven DB and SQL Server have already been built.  Additional providers can be created by implementing the necessary repository interfaces.  A large battery of automated tests (650+) have been defined to ensure that any data provider implementation behaves as expected.</li>
+<li>A full REST-like API for every action that is available in the website, so any other web or desktop front end could be created for it, or anyone could build some automation/monitoring tools to interact with it</li>
+<li>Workflows for requesting and approving deployments on a per-environment basis</li>
+<li>Per-project and per-environment permissions, controlling who can submit builds, request deployments, approve deployments, and start deployments</li>
+<li>"Run-As" functionality, allowing the deployment process to impersonate a specific network user </li>
+<li>Remove user impersonation, allowing the deployment to impersonate a user on a local administrator on the target machine even if it's not a network user in the same domain, as is often necessary when deploying in Amazon EC2.</li>
+<li>Configurable email notification subscriptions for when builds are published, and when deployments requested/approved/completed/failed/etc</li>
+<li>No need to install an agent on the target machines, as long one of the existing deployment methods can access the target server (e.g. dropkick or another command line tool).</li>
+<li>Configurable parallel deployment plans - When deploying a series of components across many different machines, you can define which components should be deployed all by themselves (like a database), and which components can be deployed in parallel with other components (like a series of websites being deployed to multiple servers at a time), and Sriracha will determine the fastest possible way to deploy those components.  This allows you to optimize your deployment times as much as your environment and configuration will allow.</li>
+<li>Offline deployment packages - If your production environment is completely locked down and won't allow remote access, you can still use Sriracha.  It will allow you to download an offline deployment package, which you can then copy to the restricted servers and run from there.  It will run the exact same deployment code with the same configurable settings.  Once you deployment is complete, you can tell it to phone-home to the Sriracha server to publish the deployment results back to the central system, allowing you to maintain a consistent history of deployments across all environments.</li>
+</ul><h2>
+<a name="frequently-asked-questions" class="anchor" href="#frequently-asked-questions"><span class="octicon octicon-link"></span></a>Frequently Asked Questions</h2>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+<ul>
+<li>How much does it cost?</li>
+</ul><p>Sriracha is a free open source project, using a permissibile MIT licence.  Feel free to use it or modify it however you'd like, or build your own custom extensions or providers.</p>
+
+<p>(Note: if you build custom proprietary extensions, you would not be eligible for Raven DB's open source license any more, in which case you'd have to purchase a Raven DB license or use different database type)</p>
+
+<ul>
+<li>How can I get started? </li>
+</ul><p>We will be building out the Wiki documentation and creating some YouTube walkthrough videos in the coming months.  In the meantime, feel free to contact us at <a href="mailto:sriracha@mmdbsolutions.com">sriracha@mmdbsolutions.com</a> with questions or to schedule a demo.</p>
+
+<ul>
+<li>Do we really need yet another automated deployment tool?  Why should I use this instead of the 100 other tools out there?</li>
+</ul><p>We built Sriracha because it filled a need that we had, which was a free, extensible, an unopinionated deployment tool for Windows applications.  Many of our clients had existing deployment scripts, but needed a tool for automating and tracking those deployments, but did not want to completely recreate their whole deployment strategy.  Some flinched at having to get a PO approved to purchase some software, or were concerned about getting invested with a freemium product, then being trapped into paying for it down the line.  Others didn't like having to install an agent.  Others still needed a way to ensure that they were using the same deployment process and history tracking in restricted production servers that were using more-accessible environments like QA and Staging.  Lastly, every one had something specifically weird they needed to do during their deployments, and we needed the ability to build custom deployment tasks for those situations, and wanted them to be first-class citizens just like any other deployment task in the system.</p>
+
+<p>For all these reasons, we decided to build a tool that was exactly what we wanted.  We did not want to get bogged down with the viability building a commercial product, but instead wanted to focus our efforts on building the features that were of most use to our clients and would be of most use to the community. There are a lot of VERY good commercial tools out there, such as <a href="http://inedo.com/buildmaster/overview">Inedo BuildMaster</a> and <a href="http://octopusdeploy.com/">Octopus Deploy</a>, and there is a very good chance that they will meet your needs. If they do, by all means defintiely use them.  </p>
+
+<p>However we wanted to provide a free and open source option.  While it may never be as polished and feature-rich as some commercial products, we feel having a diverse community of options is good for everyone.</p>
+
+<p>In the end, we wanted to push the automated deployment and DevOps story in Windows a few steps farther.  To do this, we want to get as many people was possible using something to automate their processes.  <a href="http://mooneyblog.mmdbsolutions.com/index.php/2013/11/06/devops-reality/">While there is a lot more to DevOps than tools</a>, every piece of friction you can smooth out helps nudge the whole movement forward.  </p>
+
+<ul>
+<li>Does it work in the cloud?</li>
+</ul><p>Yes, Sriracha can run on Amazon EC servers (which is how we run it ourselves).  It can deploy to Amazon EC2 Windows servers (<a href="http://mooneyblog.mmdbsolutions.com/index.php/2013/11/01/accessing-an-amazon-vm-through-wmi/">using a few WMI firewall tricks here</a>) and can deploy to Azure Cloud Services (<a href="http://mooneyblog.mmdbsolutions.com/index.php/2014/04/17/windows-azure-5-deploying-via-c-using-mmdb-azure-management/">using the MMDB.Azure.Management library described here</a>).  </p>
+
+<p>Several other deployment task types are still in development to simplify cloud deployments, such as publishing to Amazon S3 buckets, manipulating Amazon EC2 load balancers, and publishing to Azure Websites.</p>
+
+<ul>
+<li>Why multiple databases?</li>
+</ul><p>Sriracha was originally built with <a href="http://ravendb.net/">Raven DB</a>, and most of the our existing setups have used this.  Raven DB is very awesome, and we have used it for several projects. While there is can be some learning curve and quirks, it makes development go so fast that it was a slam dunk decision for the initial implementation.</p>
+
+<p>However, we knew that Raven DB would not be the best options for everyone.  While Raven DB is free for open source projects like Sriracha, if you have a proprietary or commercial product you need to buy a license.  In other words, if you were building priority extensions for Sriracha, you would have to buy a Raven DB license.  We would definitely encourage you to do so, because Raven DB is great, and definitely worth the cost of a license, but at the same time we know how hard it is to get software purchase approved at some companies, and we know it would be a deal breaker for some folks.</p>
+
+<p>Also, while Raven DB is really simple to set up and get started with, many companies already have big shiny SQL Servers and big shiny DBAs to support them, any it makes sense for them to keep using the technologies that they are already familiar with.</p>
+
+<p>Again, our goal here is to drive adoption as much as possible, and the reality is that a choice of database technology would prevent some people from using the tool.  At the same time, the reality is that in the grand scheme of things the data access for Sriracha is really simple.  We're not building a web scale application that needs to support millions of users but optimizing as close to the metal as possible, this is a relatively small application with a handful of object types that need to be persistent.  So while in many cases it is not a good idea to take the lowest common denominator approach necessary to support dumb database-agnostic repository interfaces, and while it is a LOT more work than just coding against a given DB technology, we felt it was a worthwhile tradeoff to be able to offer users a choice of database.</p>
+
+<p>Currently Raven DB and SQL Server are supported, and Postgres is almost certainly next.</p>
+
+<ul>
+<li>OK, sounds good, but we don't know where to start, know anyone who can help?</li>
+</ul><p>Glad you asked!  Mike Mooney and MMDB Solutions have years of experience in supporting various companies of all sizes, including development, automated testing, deployment automation, and training.  </p>
+
+<p>Please contact us at <a href="mailto:info@mmdbsolutions.com">info@mmdbsolutions.com</a> and we'll be happy to set up a call to talk about how we can help you get started using Sriracha, or just helping your team develop the culture and tools necessary to lead their own revolution.</p>
+
+<ul>
+<li>Is there a hosted/supported version available?</li>
+</ul><p>MMDB Solutions would be happy to set up and maintain a hosted version for you.  Please contact us at <a href="mailto:info@mmdbsolutions.com">info@mmdbsolutions.com</a> to discuss options.</p>
+        </section>
+
+        <footer>
+          Sriracha Deployment System is maintained by <a href="https://github.com/mmooney">mmooney</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
   </body>
 </html>
