@@ -80,8 +80,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CommonTaskResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="DeployWindowsService\DropkickImpl\ServiceDeployment.cs" />
-    <Compile Include="DeployWindowsService\DropkickImpl\ServiceDeploymentSettings.cs" />
+    <Compile Include="DeployWebsite\DeployWebsiteTaskDefinition.cs" />
+    <Compile Include="DeployWebsite\DeployWebsiteTaskExecutor.cs" />
+    <Compile Include="DeployWebsite\DeployWebsiteTaskOptions.cs" />
+    <Compile Include="DropkickImpl\CommonDeployment.cs" />
+    <Compile Include="DropkickImpl\CommonDeploymentSettings.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskDefinition.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskExecutor.cs" />
     <Compile Include="LocalCommandLine\LocalCommandLineTaskOptions.cs" />

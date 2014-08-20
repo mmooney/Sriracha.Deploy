@@ -16,10 +16,5 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
         {
 
         }
-
-        public override string TaskDefintionName
-        {
-            get { return "Deploy Windows Service"; }
-        }
     }
 }

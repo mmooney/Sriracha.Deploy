@@ -2,23 +2,25 @@
 using dropkick.Configuration.Dsl.Files;
 using dropkick.Configuration.Dsl.WinService;
 using dropkick.Configuration.Dsl.Authentication;
+using dropkick.Configuration.Dsl.Iis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MMDB.Shared;
 
-namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService.DropkickImpl
+namespace Sriracha.Deploy.Tasks.Common.DropkickImpl
 {
-    internal class ServiceDeployment : Deployment<ServiceDeployment, ServiceDeploymentSettings>
+    internal class CommonDeployment : Deployment<CommonDeployment, CommonDeploymentSettings>
     {
-        public static Role Host { get; set; }
-        
-        public ServiceDeployment()
+        public static Role Service { get; set; }
+        public static Role Website { get; set; }
+
+        public CommonDeployment()
 		{
 			Define(settings =>
 			{
-				DeploymentStepsFor(Host,
+				DeploymentStepsFor(Service,
 									s =>
 									{
                                         //ValidateSettings(settings);
@@ -84,6 +86,41 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService.DropkickImpl
                                         }
 									});
 			});
-		}
+            Define(settings =>
+            {
+                DeploymentStepsFor(Website,
+                                    s =>
+                                    {
+                                        if (!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.WithAuthentication(settings.TargetMachineUserName, settings.TargetMachinePassword);
+
+                                            s.OpenFolderShareWithAuthentication(@"{{TargetWebsitePath}}", settings.TargetMachineUserName, settings.TargetMachinePassword);
+                                        }
+
+                                        string appPoolName = settings.ApplicationPoolName;
+                                        if (string.IsNullOrWhiteSpace(appPoolName))
+                                        {
+                                            appPoolName = settings.SiteName;
+                                        }
+                                        var iis = s.Iis7Site(settings.SiteName, @"{{TargetWebsitePath}}", default(int))
+                                            .VirtualDirectory(StringHelper.IsNullOrEmpty(settings.VirtualDirectoryName,"/"))
+                                            .SetAppPoolTo(appPoolName, pool =>
+                                            {
+                                                pool.SetRuntimeToV4();
+                                                //pool.UseClassicPipeline();
+                                                //pool.Enable32BitAppOnWin64();
+                                            }).SetPathTo(@"{{TargetWebsitePath}}");
+                                    });
+            });
+        }
+
+        public Dictionary<string, string> GetDefaultServerMap()
+        {
+            var returnValue = new Dictionary<string, string>();
+            returnValue.Add("Service", string.Empty);
+            returnValue.Add("Website", string.Empty);
+            return returnValue;
+        }
     }
 }

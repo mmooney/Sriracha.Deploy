@@ -44,11 +44,6 @@ namespace Sriracha.Deploy.Data.Tests
                 throw new NotImplementedException();
             }
 
-            public string TaskDefintionName
-            {
-                get { throw new NotImplementedException(); }
-            }
-
             public Type GetTaskOptionType()
             {
                 throw new NotImplementedException();
@@ -65,6 +60,11 @@ namespace Sriracha.Deploy.Data.Tests
             public IList<TaskParameter> GetDeployTaskParameterList()
             {
                 throw new NotImplementedException();
+            }
+
+            public string TaskDefintionName
+            {
+                get { throw new NotImplementedException(); }
             }
         }
         

@@ -2,7 +2,7 @@
 using Sriracha.Deploy.Data.Deployment;
 using Sriracha.Deploy.Data.Dropkick;
 using Sriracha.Deploy.Data.Tasks;
-using Sriracha.Deploy.Tasks.Common.DeployWindowsService.DropkickImpl;
+using Sriracha.Deploy.Tasks.Common.DropkickImpl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
 
         static DeployWindowsServiceTaskExecutor()
         {
-            AutoMapper.Mapper.CreateMap<DeployWindowsServiceTaskOptions, ServiceDeploymentSettings>();
+            AutoMapper.Mapper.CreateMap<DeployWindowsServiceTaskOptions, CommonDeploymentSettings>();
         }
 
         public DeployWindowsServiceTaskExecutor(IParameterEvaluator parameterEvaluator, IDeploymentValidator validator, IDropkickRunner dropkickRunner) : base(parameterEvaluator, validator)
@@ -28,16 +28,17 @@ namespace Sriracha.Deploy.Tasks.Common.DeployWindowsService
         {
             context.Info("Starting DeployWindowsServiceTask");
 
-            var deployment = new ServiceDeployment();
+            var deployment = new CommonDeployment();
             Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-            var settings = AutoMapper.Mapper.Map(context.FormattedOptions, new ServiceDeploymentSettings());
+            var settings = AutoMapper.Mapper.Map(context.FormattedOptions, new CommonDeploymentSettings());
 
             using(var dropkickContext = _dropkickRunner.Create(context))
             {
                 var serverMap = new Dictionary<string, string>();
-                serverMap.Add("Host", context.FormattedOptions.TargetMachineName);
-                dropkickContext.Run<ServiceDeployment>(settings, serverMap);
+                serverMap = deployment.GetDefaultServerMap();
+                serverMap["Service"] = context.FormattedOptions.TargetMachineName;
+                dropkickContext.Run<CommonDeployment>(settings, serverMap, "Service".ListMe());
 
                 context.Info("Done DeployWindowsServiceTask");
 

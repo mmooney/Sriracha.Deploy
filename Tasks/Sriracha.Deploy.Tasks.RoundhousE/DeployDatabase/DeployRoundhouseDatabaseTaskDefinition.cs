@@ -13,10 +13,5 @@ namespace Sriracha.Deploy.Tasks.RoundhousE.DeployDatabase
         {
 
         }
-
-        public override string TaskDefintionName
-        {
-            get { return "Deploy RoundhousE Database"; }
-        }
     }
 }

@@ -5,6 +5,7 @@ using Sriracha.Deploy.Data.Tasks;
 using Sriracha.Deploy.Data.Utility;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Sriracha.Deploy.Data.Dropkick
             //}
         }
 
-        public void Run<DeploymentType>(object settings, Dictionary<string, string> serverMaps)
+        public void Run<DeploymentType>(object settings, Dictionary<string, string> serverMaps, IEnumerable<string> rolesToRun)
         {
             string settingsDirectory = Path.Combine(_dropkickDirectory, "settings");
             if(!Directory.Exists(settingsDirectory))
@@ -63,9 +64,11 @@ namespace Sriracha.Deploy.Data.Dropkick
  
             string deploymentFilePath = typeof(DeploymentType).Assembly.Location;
 
+            string roleParameter = string.Join(",", rolesToRun);
+
             string dropkickExePath = string.Format("{0}\\dk.exe", _dropkickDirectory);
             #warning Need to wrap these parameters in quotes, but need a fix in dropkick first.
-            string exeParameters = string.Format("execute /deployment:{0} /environment:{1} /settings:{2} --silent", deploymentFilePath, environmentName, settingsDirectory);
+            string exeParameters = string.Format("execute /deployment:{0} /environment:{1} /settings:{2} /roles:{3} --silent", deploymentFilePath, environmentName, settingsDirectory, roleParameter);
 
             using (var standardOutputWriter = new StringWriter())
             using (var errorOutputWriter = new StringWriter())

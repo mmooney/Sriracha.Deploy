@@ -14,10 +14,5 @@ namespace Sriracha.Deploy.Tasks.Azure.DeployCloudService
         public DeployCloudServiceTaskDefinition(IParameterParser parameterParser) : base(parameterParser)
         {
         }
-
-        public override string TaskDefintionName
-        {
-            get { return "Deploy Cloud Service"; }
-        }
     }
 }

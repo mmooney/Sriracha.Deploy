@@ -263,6 +263,7 @@
     <Compile Include="SystemSettings\SystemSetterUpper.cs" />
     <Compile Include="TaskDefinitionMetadataAttribute.cs" />
     <Compile Include="Tasks\FormattingStringConverter.cs" />
+    <Compile Include="Tasks\TaskDefinitionMetadata.cs" />
     <Compile Include="Tasks\TaskExecutionContext.cs" />
     <Compile Include="Utility\UtilityImpl\RegexResolver.cs" />
     <Compile Include="Notifications\IProjectNotifier.cs" />

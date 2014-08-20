@@ -28,6 +28,24 @@ namespace Sriracha.Deploy.Data.Tasks
 			return typeof(TaskOptions);
 		}
 
+        public virtual string TaskDefintionName
+        {
+            get 
+            { 
+                var type = this.GetType();
+                var attribtutes = type.GetCustomAttributes(typeof(TaskDefinitionMetadataAttribute), true);
+                if(attribtutes != null && attribtutes.Any())
+                {
+                    var item = attribtutes.FirstOrDefault(i=>!string.IsNullOrEmpty(((TaskDefinitionMetadataAttribute)i).TaskName));
+                    if(item != null)
+                    {
+                        return ((TaskDefinitionMetadataAttribute)item).TaskName;
+                    }
+                }
+                return type.FullName;
+            }
+        }
+
 		public object DeployTaskOptions
 		{
 			get
@@ -76,8 +94,6 @@ namespace Sriracha.Deploy.Data.Tasks
             return _parameterParser.FindNestedDeployParameters(this.Options);
         }
         
-        public abstract string TaskDefintionName { get; }
-
 		public Type GetTaskExecutorType()
 		{
 			return typeof(TaskExecutor);

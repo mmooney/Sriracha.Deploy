@@ -13,10 +13,5 @@ namespace Sriracha.Deploy.Tasks.Common.LocalCommandLine
 		public LocalCommandLineTaskDefinition(IParameterParser parameterParser) : base(parameterParser)
 		{
 		}
-
-		public override string TaskDefintionName
-		{
-			get { return "LocalCommandLine"; }
-		}
 	}
 }

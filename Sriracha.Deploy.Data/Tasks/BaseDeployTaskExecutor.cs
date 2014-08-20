@@ -20,9 +20,9 @@ namespace Sriracha.Deploy.Data.Tasks
         private readonly IParameterEvaluator _parameterEvaluator;
         private readonly IDeploymentValidator _validator;
 
-		public BaseDeployTaskExecutor(IParameterEvaluator buildParamterEvaluator, IDeploymentValidator validator)
+		public BaseDeployTaskExecutor(IParameterEvaluator paramterEvaluator, IDeploymentValidator validator)
 		{
-			_parameterEvaluator = DIHelper.VerifyParameter(buildParamterEvaluator);
+			_parameterEvaluator = DIHelper.VerifyParameter(paramterEvaluator);
             _validator = DIHelper.VerifyParameter(validator);
 		}
 
