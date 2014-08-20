@@ -67,10 +67,5 @@ namespace Sriracha.Deploy.Tasks.Common.XmlConfigFile
 
             return xpathParameters;
 		}
-
-		public override string TaskDefintionName
-		{
-			get { return "XmlConfigFile"; }
-		}
 	}
 }
