@@ -137,6 +137,7 @@ namespace Sriracha.Deploy.RavenDB
 				case EnumDeployStatus.Success:
 				case EnumDeployStatus.Error:
 					batchRequest.CompleteDateTimeUtc = DateTime.UtcNow;
+                    batchRequest.CancelRequested = false;
 					break;
 				case EnumDeployStatus.InProcess:
 					batchRequest.ResumeRequested = false;

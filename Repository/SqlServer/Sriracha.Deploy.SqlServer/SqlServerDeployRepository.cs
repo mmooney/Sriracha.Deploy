@@ -214,6 +214,7 @@ namespace Sriracha.Deploy.SqlServer
                 case EnumDeployStatus.Success:
                 case EnumDeployStatus.Error:
                     sql = sql.Append(", CompleteDateTimeUtc=GETUTCDATE()");
+                    sql = sql.Append(", CancelRequested=0");
                     break;
                 case EnumDeployStatus.InProcess:
                     sql = sql.Append(", ResumeRequested=0");

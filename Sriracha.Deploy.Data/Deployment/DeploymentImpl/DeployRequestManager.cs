@@ -159,6 +159,14 @@ namespace Sriracha.Deploy.Data.Deployment.DeploymentImpl
 					return _deployRepository.SetCancelRequested(deployBatchRequestId, userMessage);
 				case EnumDeployBatchAction.Resume:
 					return _deployRepository.SetResumeRequested(deployBatchRequestId, userMessage);
+                case EnumDeployBatchAction.MarkFailed:
+                    string failMessage;
+                    failMessage = _userIdentity.UserName + " marked deployment as failed";
+                    if(!string.IsNullOrEmpty(userMessage))
+                    {   
+                        failMessage += ": " + userMessage;
+                    }
+					return _deployRepository.UpdateBatchDeploymentStatus(deployBatchRequestId, EnumDeployStatus.Error, null, failMessage, true);
 				default:
 					throw new UnknownEnumValueException(action);
 			}

@@ -27,5 +27,6 @@ namespace Sriracha.Deploy.Data.Repository
 		DeployBatchRequest SetResumeRequested(string deployBatchRequestId, string userMessage);
 
         //DeploymentPlan SaveDeploymentPlan(DeploymentPlan plan);
-	}
+
+    }
 }

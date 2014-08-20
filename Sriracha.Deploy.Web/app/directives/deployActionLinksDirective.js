@@ -82,6 +82,41 @@
 							}
 						}
 					}
+					scope.canMarkFailed = function () {
+					    if (scope.deployBatchRequest) {
+					        if (scope.deployBatchRequest.cancelRequested) {
+					            var isValid = scope.validateEnvironmentPermission(scope.deployBatchRequest, function (projectId, environmentId) {
+					                return PermissionVerifier.canRunDeployment(projectId, environmentId)
+					            });
+					            return isValid;
+					        }
+					    }
+					}
+					scope.markFailed = function () {
+					    if (scope.canMarkFailed()) {
+					        if (confirm("Are you sure you want to mark this deployment as failed?  You should only do this if you know that the deployment is no longer running.")) {
+					            var params = {
+					                id: scope.deployBatchRequest.id,
+					                action: "MarkFailed"
+					            };
+					            var resourceItem = new SrirachaResource.deployBatchAction();
+					            resourceItem.$save(
+									params,
+									function () {
+									    if (scope.refreshDataCallback) {
+									        scope.refreshDataCallback();
+									    }
+									    else {
+									        scope.navigator.deployment.batchStatus.go(scope.deployBatchRequest.id);
+									    }
+									},
+									function (err) {
+									    ErrorReporter.handleResourceError(err);
+									}
+								)
+					        }
+					    }
+					}
 					scope.validateEnvironmentPermission = function (request, callback) {
 						var isValid = true;
 						_.each(request.itemList, function (item) {

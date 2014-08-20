@@ -20,7 +20,8 @@ namespace Sriracha.Deploy.Data
 		Cancel,
 		Resume,
 		Restart,
-		Archive
+		Archive,
+        MarkFailed
 	}
 
     public enum EnumDeployStatus
