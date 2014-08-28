@@ -14,6 +14,8 @@ using Sriracha.Deploy.Data.Dto.Build;
 using System.Net;
 using System.Diagnostics;
 using MMDB.Shared;
+using Sriracha.Deploy.Data.Dto.Deployment;
+using Sriracha.Deploy.Data.Dto.Project;
 
 namespace Sriracha.Deploy.Data.Build.BuildImpl
 {
@@ -65,7 +67,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			_zipper.ZipDirectory(options.Directory, zipPath);
 
-			PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath, options.UserName, options.Password);
+			var buildData = PublishZip(options.ApiUrl, options.ProjectId, options.ComponentId, options.BranchId, options.Version, zipPath, options.UserName, options.Password);
+            DeployBuilds(options.ApiUrl, options.UserName, options.Password, options.DeployEnvironmentName, buildData);
 
 			try 
 			{
@@ -77,6 +80,98 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			}
 			_logger.Info("Done publishing directory {0} to URL {1}", options.Directory, options.ApiUrl);
 		}
+
+        private DeployBatchRequest DeployBuilds(string apiUrl, string userName, string password, string environmentName, params DeployBuild[] buildData)
+        {
+            if(string.IsNullOrEmpty(environmentName))
+            {
+                return null;
+            }
+            string url = apiUrl;
+            if (!url.EndsWith("/"))
+            {
+                url += "/";
+            }
+            if (!url.EndsWith("/api/", StringComparison.CurrentCultureIgnoreCase))
+            {
+                url += "api/";
+            }
+
+            Cookie authCookie = null;
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+            {
+                authCookie = GetAuthCookie(apiUrl, userName, password);
+            }
+            using (var client = new JsonServiceClient(url))
+            {
+                //var x = client.Send<DeployFileDto>(deployFile);
+                client.Credentials = System.Net.CredentialCache.DefaultCredentials;
+                client.Timeout = TimeSpan.FromMinutes(5);
+                client.ReadWriteTimeout = TimeSpan.FromMinutes(5);
+                if (authCookie != null)
+                {
+                    client.CookieContainer.Add(authCookie);
+                }
+
+                var projectIdList = buildData.Select(i=>i.ProjectId).Distinct().ToList();
+                var componentIdMachines = new Dictionary<string, DeployMachine>();
+                foreach(var build in buildData)
+                {
+                    string projectUrl = url + "project/?format=json&id=" + System.Uri.EscapeDataString(build.ProjectId);
+                    var project = client.Get<DeployProject>(projectUrl);
+                    var environment = project.EnvironmentList.FirstOrDefault(i=> environmentName.Equals(i.EnvironmentName, StringComparison.CurrentCultureIgnoreCase));
+                    if(environment == null)
+                    {
+                        throw new Exception("Unable to find environment " + environmentName + " in project " + project.ProjectName);
+                    }
+                    var component = project.GetComponent(build.ProjectComponentId);
+                    if(component.UseConfigurationGroup && !string.IsNullOrEmpty(component.ConfigurationId))
+                    {
+                        var environmentConfiguration = environment.GetConfigurationItem(component.ConfigurationId);
+                        foreach(var machine in environmentConfiguration.MachineList)
+                        {
+                            componentIdMachines.Add(component.Id, machine);
+                        }
+                    }
+                    else 
+                    {
+                        var environmentComponent = environment.GetComponentItem(component.Id);
+                        foreach(var machine in environmentComponent.MachineList)
+                        {
+                            componentIdMachines.Add(component.Id, machine);
+                        }
+                    }
+                }
+                var deployBatchRequest = new DeployBatchRequest
+                {
+                    DeploymentLabel = "Auto-Deploy " + DateTime.UtcNow.ToString(),
+                    Status = EnumDeployStatus.Requested, 
+                    ItemList = (from b in buildData
+                                select new DeployBatchRequestItem
+                                {
+                                    Build = b,
+                                    MachineList = componentIdMachines.Where(i=>i.Key == b.ProjectComponentId).Select(i=>i.Value).ToList()
+                                }).ToList()
+                };
+
+                var batchRequestUrl = url + "deploy/batch/request";
+                _logger.Debug("Posting DeployBatchRequest object to URL {0}, sending{1}", batchRequestUrl, deployBatchRequest.ToJson());
+                DeployBatchRequest response;
+                try
+                {
+                    response = client.Post<DeployBatchRequest>(batchRequestUrl, deployBatchRequest);
+                }
+                catch (Exception err)
+                {
+                    _logger.WarnException(string.Format("Error posting DeployBatchRequest object to URL {0}: {1}, ERROR: {2}", url, deployBatchRequest.ToJson(), err.ToString()), err);
+                    throw;
+                }
+                _logger.Debug("Posting DeployBuild object to URL {0}, returned {1}", url, response.ToJson());
+
+                return response;
+            }
+        }
+
 
 		public void PublishFilePattern(BuildPublishOptions options)
 		{
@@ -142,7 +237,8 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 						FilePattern = null,
 						NewFileName = options.NewFileName,
 						ProjectId = options.ProjectId,
-						Version = options.Version
+						Version = options.Version,
+                        DeployEnvironmentName = options.DeployEnvironmentName
 					};
 					fileOptions.FilePattern = null;
 					this.PublishFile(fileOptions);
@@ -275,7 +371,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 			_logger.Info("Done publishing file {0} to URL {1}", options.File, options.ApiUrl);
 		}
 
-		private void PublishZip(string apiUrl, string projectId, string componentId, string branchId, string version, string zipPath, string userName, string password)
+		private DeployBuild PublishZip(string apiUrl, string projectId, string componentId, string branchId, string version, string zipPath, string userName, string password)
 		{
 			string url = apiUrl;
 			if (!url.EndsWith("/"))
@@ -314,7 +410,7 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 				var fileResponse = client.PostFile<DeployFileDto>(fileUrl, fileToUpload, MimeTypes.GetMimeType(fileToUpload.Name));
 				_logger.Debug("Done posting file {0} to URL {1}, returned fileId {2} and fileStorageId {3}", zipPath, url, fileResponse.Id, fileResponse.FileStorageId);
 
-				DeployBuild build = new DeployBuild
+				var buildRequest = new DeployBuild
 				{
 					FileId = fileResponse.Id,
 					ProjectId = projectId,
@@ -322,18 +418,19 @@ namespace Sriracha.Deploy.Data.Build.BuildImpl
 					ProjectComponentId = componentId,
 					Version = version
 				};
-				_logger.Debug("Posting DeployBuild object to URL {0}, sending{1}", url, build.ToJson());
+				_logger.Debug("Posting DeployBuild object to URL {0}, sending{1}", url, buildRequest.ToJson());
 				string buildUrl = url + "build";
 				try 
 				{
-					var buildResponse = client.Post<DeployBuild>(buildUrl, build);
-				}
+					var buildResponse = client.Post<DeployBuild>(buildUrl, buildRequest);
+                    _logger.Debug("Posting DeployBuild object to URL {0}, returned {1}", url, buildRequest.ToJson());
+                    return buildResponse;
+                }
 				catch(Exception err)
 				{
-					_logger.WarnException(string.Format("Error posting DeployBuild object to URL {0}: {1}, ERROR: {2}", url, build.ToJson(), err.ToString()), err);
+					_logger.WarnException(string.Format("Error posting DeployBuild object to URL {0}: {1}, ERROR: {2}", url, buildRequest.ToJson(), err.ToString()), err);
 					throw;
 				}
-				_logger.Debug("Posting DeployBuild object to URL {0}, returned {1}", url, build.ToJson());
 			}
 
 		}

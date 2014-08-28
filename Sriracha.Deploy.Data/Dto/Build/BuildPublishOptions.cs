@@ -18,5 +18,6 @@ namespace Sriracha.Deploy.Data.Dto.Build
 		public string FilePattern { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string DeployEnvironmentName { get; set; }
     }
 }
