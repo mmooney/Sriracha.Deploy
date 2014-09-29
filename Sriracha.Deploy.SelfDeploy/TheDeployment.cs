@@ -79,27 +79,27 @@ namespace Sriracha.Deploy.SelfDeploy
 										});
 									});
 
-                //DeploymentStepsFor(VirtualDirectory,
-                //                    s =>
-                //                    {
-                //                        string appPoolName = settings.ApplicationPoolName;
-                //                        if (string.IsNullOrWhiteSpace(appPoolName))
-                //                        {
-                //                            appPoolName = settings.VirtualDirectorySite;
-                //                        }
-                //                        var iis = s.Iis7Site(settings.VirtualDirectorySite)
-                //                         .VirtualDirectory(settings.VirtualDirectoryName)
-                //                         .SetAppPoolTo(appPoolName, pool =>
-                //                                         {
-                //                                             pool.SetRuntimeToV4();
-                //                                             //pool.UseClassicPipeline();
-                //                                             //pool.Enable32BitAppOnWin64();
-                //                                         }).SetPathTo(@"{{TargetWebsitePath}}");
-                //                        if(!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
-                //                        {
-                //                            iis.WithAdministratorAccount(settings.TargetMachineUserName, settings.TargetMachineUserName);
-                //                        }
-                //                    });
+                DeploymentStepsFor(VirtualDirectory,
+                                    s =>
+                                    {
+                                        string appPoolName = settings.ApplicationPoolName;
+                                        if (string.IsNullOrWhiteSpace(appPoolName))
+                                        {
+                                            appPoolName = settings.VirtualDirectorySite;
+                                        }
+                                        if (!string.IsNullOrEmpty(settings.TargetMachineUserName) && !string.IsNullOrEmpty(settings.TargetMachinePassword))
+                                        {
+                                            s.WithAuthentication(settings.TargetMachineUserName, settings.TargetMachineUserName);
+                                        }
+                                        var iis = s.Iis7Site(settings.VirtualDirectorySite)
+                                         .VirtualDirectory(settings.VirtualDirectoryName)
+                                         .SetAppPoolTo(appPoolName, pool =>
+                                                         {
+                                                             pool.SetRuntimeToV4();
+                                                             //pool.UseClassicPipeline();
+                                                             //pool.Enable32BitAppOnWin64();
+                                                         }).SetPathTo(@"{{TargetWebsitePath}}");
+                                    });
 
 				DeploymentStepsFor(Host,
 									s =>

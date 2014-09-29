@@ -11,8 +11,11 @@ SET NANT="%BUILD_DIR%ThirdParty\nant-0.92\NAnt.exe"
 SET BUILD_NUMBER="0.0.0.0""
 
 %NANT% -logger:NAnt.Core.DefaultLogger /f:%BUILD_DIR%Sriracha.Deploy.build BuildSolution
-
 if %ERRORLEVEL% NEQ 0 goto errors
+
+%NANT% -logger:NAnt.Core.DefaultLogger /f:%BUILD_DIR%Sriracha.Deploy.build PackageSolution
+if %ERRORLEVEL% NEQ 0 goto errors
+
 
 goto finish
 
