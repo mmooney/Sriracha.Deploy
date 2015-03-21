@@ -1,5 +1,7 @@
 # Sriracha Deployment System
 
+### NOTE: Sriracha is currently being rebuilt in Sriracha v2.0.  Follow the progress here: [https://github.com/mmooney/Sriracha2](https://github.com/mmooney/Sriracha2)
+
 [TeamCity Build Status: Core
 ![TeamCity Build Status](http://build.mmdbsolutions.com/app/rest/builds/buildType:(id:bt7)/statusIcon "TeamCity Build Status")] (http://build.mmdbsolutions.com/viewType.html?buildTypeId=bt7&guest=1)
 
@@ -22,7 +24,7 @@ Once you've set up your deployment steps for a component and the parameters for 
 * Easy, intuitive setup of projects/components/environments
 * Dashboard overview of what versions are deployed to which environments
 * Unopinionated deployment - deploy how you want to, Sriracha does not dictate and specific deployment package format or technique.  If you already have deployment scripts that you maintain and run manually, you can automate those with Sriracha
-* Publish builds to the deployment tool from Team City or Cruise Control or anything else with single command line, autocreating  projects and components and branches if they don’t already exist
+* Publish builds to the deployment tool from Team City or Cruise Control or anything else with single command line, autocreating  projects and components and branches if they donâ€™t already exist
 * Easily promote a previous deployment of a specific build to a new environment
 * Define a common set of deployment steps for each component, specifying the environment-specific and machine-specific parameters 
 * Fully extensible - All deployment steps are built as extensions.  Add your own deployment steps with some simple .NET code, implementing a few simple interfaces.
